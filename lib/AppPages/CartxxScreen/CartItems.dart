@@ -8,11 +8,13 @@ import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.d
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
+import 'package:provider/provider.dart';
 
 class CartItem extends StatefulWidget {
   CartItem(
       {Key? key,
-        required this.quantity2,
+      required this.quantity2,
       required this.id,
       required this.itemID,
       required this.imageUrl,
@@ -60,8 +62,8 @@ class _CartItemState extends State<CartItem> {
               child: Row(
                 children: <Widget>[
                   Container(
-                      margin: EdgeInsets.only(
-                          right: 8, left: 8, top: 8, bottom: 8),
+                      margin:
+                          EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
                       width: 80,
                       height: 80,
                       child: CachedNetworkImage(
@@ -113,6 +115,7 @@ class _CartItemState extends State<CartItem> {
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
                                       InkWell(
+                                        radius: 36,
                                         onTap: () async {
                                           print('SomeOne Tap on Me');
                                           print(widget.id);
@@ -128,6 +131,22 @@ class _CartItemState extends State<CartItem> {
                                                       context)
                                                   .then((value) {
                                                 //TODO need to refresh the data in the cart
+
+                                                var val = 0;
+
+                                                ApiCalls.readCounter(
+                                                        customerGuid: ConstantsVar
+                                                            .prefs
+                                                            .getString(
+                                                                'guestGUID')!)
+                                                    .then((value) {
+                                                  setState(() {
+                                                    val = int.parse(value);
+                                                  });
+                                                  context
+                                                      .read<cartCounter>()
+                                                      .changeCounter(val);
+                                                });
 
                                                 widget.reload();
                                                 // widget.updateUi;
@@ -145,6 +164,22 @@ class _CartItemState extends State<CartItem> {
                                                       widget.itemID,
                                                       context)
                                                   .then((value) {
+                                                var val = 0;
+
+                                                ApiCalls.readCounter(
+                                                        customerGuid: ConstantsVar
+                                                            .prefs
+                                                            .getString(
+                                                                'guestGUID')!)
+                                                    .then((value) {
+                                                  setState(() {
+                                                    val = int.parse(value);
+                                                  });
+                                                  context
+                                                      .read<cartCounter>()
+                                                      .changeCounter(val);
+                                                });
+
                                                 widget.updateUi();
                                                 widget.reload();
                                               });
@@ -179,6 +214,7 @@ class _CartItemState extends State<CartItem> {
                                       ),
                                       SizedBox(width: 5),
                                       InkWell(
+                                        radius: 36,
                                         onTap: () async {
                                           print('SomeOne Tap on Me');
                                           if (widget.quantity < 11) {
@@ -196,6 +232,22 @@ class _CartItemState extends State<CartItem> {
                                                         widget.itemID,
                                                         context)
                                                     .then((value) {
+                                                  var val = 0;
+
+                                                  ApiCalls.readCounter(
+                                                          customerGuid: ConstantsVar
+                                                              .prefs
+                                                              .getString(
+                                                                  'guestGUID')!)
+                                                      .then((value) {
+                                                    setState(() {
+                                                      val = int.parse(value);
+                                                    });
+                                                    context
+                                                        .read<cartCounter>()
+                                                        .changeCounter(val);
+                                                  });
+
                                                   widget.reload();
                                                 });
                                               });
@@ -239,13 +291,25 @@ class _CartItemState extends State<CartItem> {
             Align(
               alignment: Alignment.topRight,
               child: InkWell(
+                radius: 36,
                 onTap: () {
                   // showpopup();
-                  ApiCalls.deleteCartItem(widget.id, widget.itemID,context)
+                  ApiCalls.deleteCartItem(widget.id, widget.itemID, context)
                       .then((value) {
+                    var val = 0;
+
+                    ApiCalls.readCounter(
+                            customerGuid:
+                                ConstantsVar.prefs.getString('guestGUID')!)
+                        .then((value) {
+                      setState(() {
+                        val = int.parse(value);
+                      });
+                      context.read<cartCounter>().changeCounter(val);
+                    });
+
                     widget.reload();
-                    Fluttertoast.showToast(
-                        msg: 'Removed from Cart');
+                    Fluttertoast.showToast(msg: 'Removed from Cart');
                   });
                 },
                 child: Container(

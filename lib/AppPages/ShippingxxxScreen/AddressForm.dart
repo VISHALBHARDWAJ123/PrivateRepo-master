@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
@@ -24,7 +25,8 @@ class AddressScreen extends StatefulWidget {
   _AddressScreenState createState() => _AddressScreenState();
 }
 
-class _AddressScreenState extends State<AddressScreen> {
+class _AddressScreenState extends State<AddressScreen>
+    with InputValidationMixin {
   var eController = TextEditingController();
   var apiToken;
   late TextEditingController textController1;
@@ -62,27 +64,29 @@ class _AddressScreenState extends State<AddressScreen> {
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: new AppBar(
-            toolbarHeight: 18.w,
-            centerTitle: true,
-            title: InkWell(
-              onTap: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (BuildContext context) => MyHomePage()),
-                  (route) => false),
-              child: Image.asset(
-                'MyAssets/logo.png',
-                width: 15.w,
-                height: 15.w,
-              ),
-            )),
-        // resizeToAvoidBottomInset: false,
-        key: scaffoldKey,
-        body: SafeArea(
-          child: Container(
+      child: SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: new AppBar(
+              toolbarHeight: 18.w,
+              centerTitle: true,
+              title: InkWell(
+                onTap: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (BuildContext context) => MyHomePage()),
+                    (route) => false),
+                child: Image.asset(
+                  'MyAssets/logo.png',
+                  width: 15.w,
+                  height: 15.w,
+                ),
+              )),
+          // resizeToAvoidBottomInset: false,
+          key: scaffoldKey,
+          body: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -144,11 +148,10 @@ class _AddressScreenState extends State<AddressScreen> {
                             ),
                             maxLines: 1,
                             validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please Provide Your Name';
-                              }
-
-                              return null;
+                              if (isFirstName(textController1.text))
+                                return null;
+                              else
+                                return 'Please Enter Your First Name';
                             },
                           ),
                         ),
@@ -184,11 +187,10 @@ class _AddressScreenState extends State<AddressScreen> {
                             ),
                             maxLines: 1,
                             validator: (val) {
-                              if (val!.isEmpty) {
+                              if (isLastName(val!))
+                                return null;
+                              else
                                 return 'Please Provide Your Last Name';
-                              }
-
-                              return null;
                             },
                           ),
                         ),
@@ -230,6 +232,9 @@ class _AddressScreenState extends State<AddressScreen> {
                                 if (val.length < 9) {
                                   return 'Please Enter Your Number Correctly';
                                 }
+                                if (val.length > 9) {
+                                  return 'Please Enter Your Number Correctly';
+                                }
                                 return null;
                               },
                             ),
@@ -252,11 +257,10 @@ class _AddressScreenState extends State<AddressScreen> {
                               keyboardType: TextInputType.emailAddress,
                               controller: eController,
                               validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Please Provide Your Email Address';
-                                }
-
-                                return null;
+                                if (isEmailValid(val!))
+                                  return null;
+                                else
+                                  return 'Enter Your Email Address';
                               },
                               cursorColor: Colors.black,
                               style:
@@ -288,11 +292,12 @@ class _AddressScreenState extends State<AddressScreen> {
                               keyboardType: TextInputType.emailAddress,
                               controller: controllerAddress,
                               validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Please Provide Your Address';
-                                }
+                                if (isAddress(val!)) {
+                                  return null;
 
-                                return null;
+                                }
+                                return 'Please Provide Your Address';
+
                               },
                               cursorColor: Colors.black,
                               style:
@@ -335,7 +340,6 @@ class _AddressScreenState extends State<AddressScreen> {
                               labelStyle: TextStyle(
                                 color: Colors.grey,
                               ),
-
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                             ),
@@ -364,6 +368,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     InkWell(
                       onTap: () => Navigator.pop(context),
                       child: Container(
+                        height: 40,
                         width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: ConstantsVar.appColor,
@@ -386,15 +391,8 @@ class _AddressScreenState extends State<AddressScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        if (textController1.text.isEmpty ||
-                            textController2.text.isEmpty ||
-                            textControllerLast.text.isEmpty ||
-                            eController.text.isEmpty ||
-                            controllerAddress.text.isEmpty ||
-                            textController6.text.isEmpty) {
-                          Fluttertoast.showToast(
-                              msg: 'Please enter your details');
-                        } else {
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState!.save();
                           Map<String, dynamic> body = {
                             'FirstName': '${textController1.text}',
                             'LastName': textControllerLast.text,
@@ -410,13 +408,17 @@ class _AddressScreenState extends State<AddressScreen> {
                             'FaxNumber': '',
                             'Country': 'UAE',
                           };
-                          ConstantsVar.prefs.setString('addressJsonString',jsonEncode(body));
-                          ApiCalls.addBillingORShippingAddress(context,'${apiToken}',
-                                  guestId, jsonEncode(body));
-
+                          ConstantsVar.prefs
+                              .setString('addressJsonString', jsonEncode(body));
+                          ApiCalls.addBillingORShippingAddress(context,
+                              '${apiToken}', guestId, jsonEncode(body));
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Please Provide correct details');
                         }
                       },
                       child: Container(
+                        height: 40,
                         width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: ConstantsVar.appColor,

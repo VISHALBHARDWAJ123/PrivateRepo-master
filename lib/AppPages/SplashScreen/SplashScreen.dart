@@ -1,5 +1,5 @@
 //import 'dart:html';
-
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -14,6 +14,8 @@ import 'package:untitled2/AppPages/SplashScreen/GuestxxResponsexx/GuestResponsex
 import 'package:untitled2/AppPages/SplashScreen/TokenResponse/TokenxxResponsexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 
 import '../LoginScreen/LoginScreen.dart';
 
@@ -47,22 +49,38 @@ class _SplashScreenState extends State<SplashScreen> {
           _guestGUID = myResponse.cutomer.customerGuid;
           ConstantsVar.prefs.setString('guestCustomerID', '$_guestCustomerID');
           ConstantsVar.prefs.setString('guestGUID', _guestGUID);
+          int val = 0;
+          ApiCalls.readCounter(
+                  customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+              .then((value) {
+            setState(() {
+              val = int.parse(value);
+            });
+            context.read<cartCounter>().changeCounter(val);
+            Navigator.pushReplacement(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MyApp(),
+                ));
+          });
+        }
+            // },
+            );
+      } else {
+        int val = 0;
+        ApiCalls.readCounter(
+                customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+            .then((value) {
+          setState(() {
+            val = int.parse(value);
+          });
+          context.read<cartCounter>().changeCounter(val);
           Navigator.pushReplacement(
               context,
               CupertinoPageRoute(
                 builder: (context) => MyApp(),
               ));
-        }
-            // },
-            );
-      } else {
-        Future.delayed(
-            Duration(seconds: 2),
-            () => Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => MyApp(),
-                )));
+        });
       }
     });
 
@@ -147,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future getGuestCustomer() async {
     Fluttertoast.showToast(msg: 'Guest Customer');
-    final guestUri = Uri.parse('http://www.theone.com/apis/AddGuestCustomer');
+    final guestUri = Uri.parse(BuildConfig.base_url + 'apis/AddGuestCustomer');
     try {
       var response = await http.get(guestUri);
 
@@ -161,7 +179,4 @@ class _SplashScreenState extends State<SplashScreen> {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
-
-
-
 }

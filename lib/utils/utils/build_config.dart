@@ -14,8 +14,10 @@ class BuildConfig {
   static final String get_shipping_address_url = 'apis/GetShippingAddresses';
   static final String select_shipping_address_url =
       'apis/SelectShippingAddress';
+  static final String add_select_shipping_address_url =
+      'apis/AddSelectNewShippingAddress';
   static final String show_order_summary_url = 'apis/GetOrderSummary';
   static final String update_cart_url = 'apis/UpdateCart';
 
-  static var countryCode = '+91';
+  static var countryCode = '91';
 }

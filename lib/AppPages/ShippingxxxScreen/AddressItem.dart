@@ -11,6 +11,7 @@ import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/SelectBilli
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import 'BillingxxScreen/ShippingAddress.dart';
@@ -255,11 +256,9 @@ class _AddressItemState extends State<AddressItem> {
                                     widget.id.toString())
                                 .then((value) {
                               print('$value');
-                              Fluttertoast.showToast(
-                                  msg: 'Shipping Address Selected');
 
-                              String paymentUrl =
-                                  'https://www.theone.com/customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
+                              String paymentUrl = BuildConfig.base_url +
+                                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
 
                               Navigator.push(
                                   context,

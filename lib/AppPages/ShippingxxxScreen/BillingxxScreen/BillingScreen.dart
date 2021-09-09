@@ -48,7 +48,7 @@ class _BillingDetailsState extends State<BillingDetails>
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     getCustomerId().then((value) =>
-        ApiCalls.allAddresses(ConstantsVar.apiTokken.toString(), value)
+        ApiCalls.allAddresses(ConstantsVar.apiTokken.toString(), value, context)
             .then((value) {
           print(value);
           setState(() {
@@ -92,7 +92,7 @@ class _BillingDetailsState extends State<BillingDetails>
     switch (state) {
       case AppLifecycleState.resumed:
         ApiCalls.allAddresses(
-                ConstantsVar.apiTokken.toString(), guestCustomerId)
+                ConstantsVar.apiTokken.toString(), guestCustomerId, context)
             .then((value) {
           print('Resumed>>>  $value');
           setState(() {
@@ -184,29 +184,35 @@ class _BillingDetailsState extends State<BillingDetails>
                         ),
                       ),
                     ),
-                    addVerticalSpace(12.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                          margin: EdgeInsets.only(left: 10.0),
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: Text(
-                              'Select a Billing Address',
-                              style: TextStyle(
-                                  fontSize: 6.4.w, fontWeight: FontWeight.bold),
-                            ),
-                          )),
+                    Visibility(
+                        visible: existingAddress.isEmpty ? false : true,
+                        child: addVerticalSpace(12.0)),
+                    Visibility(
+                      visible: existingAddress.isEmpty ? false : true,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                            margin: EdgeInsets.only(left: 10.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                'Select a Billing Address',
+                                style: TextStyle(
+                                    fontSize: 6.4.w,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                      ),
                     ),
 
                     /************** Show Address List ******************/
                     Visibility(
-                      visible: showAddresses,
+                      visible: existingAddress.isEmpty ? false : true,
                       child: CarouselSlider(
                         options: CarouselOptions(
                             disableCenter: true,
                             pageSnapping: true,
-                            height: 24.h,
+                            // height: 26.h,
                             viewportFraction: .9,
                             aspectRatio: 2.0,
                             enlargeCenterPage: false),

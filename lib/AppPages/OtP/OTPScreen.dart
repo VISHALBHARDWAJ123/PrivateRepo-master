@@ -10,21 +10,29 @@ import 'package:http/http.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
+import 'package:untitled2/AppPages/OtP/OTP_Response.dart';
+import 'package:untitled2/AppPages/OtP/OTP_Verify_Response.dart';
 
 // import 'package:sms_autofill/sms_autofill.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 class OTP_Screen extends StatefulWidget {
-  OTP_Screen(
-      {Key? key,
-      required this.title,
-      // required this.otpController,
-      required this.mainBtnTitle,
-      required this.phoneNumber})
-      : super(key: key);
+  final String email;
+  final password;
+
+  OTP_Screen({
+    Key? key,
+    required this.title,
+    // required this.otpController,
+    required this.mainBtnTitle,
+    required this.phoneNumber,
+    required this.email,
+    required this.password,
+  }) : super(key: key);
   final String title;
   final phoneNumber;
 
@@ -39,6 +47,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
 
   String appSign = '';
 
+  var reason;
+
   @override
   void initState() {
     initSharedPrefs().then((val) => getOtp());
@@ -51,25 +61,17 @@ class _OTP_ScreenState extends State<OTP_Screen> {
       widget: SpinKitRipple(color: Colors.red, size: 90),
     );
     // await SmsAutoFill().listenForCode;
-    final uri = Uri.parse(
-        'https://www.theone.com/Customer/CustomerVerification?PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
-    print(uri);
+    // final uri = Uri.parse(
+    //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
 
+    final uri = Uri.parse(BuildConfig.base_url + 'customer/SendOTP');
+    print(uri);
+    final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
     try {
-      var response = await post(
-        uri,
-      );
-      String hashOtp = jsonDecode(response.body);
-      print(hashOtp);
-      if (hashOtp.contains('Please enter Phone Number')) {
-        print(jsonDecode(response.body));
-        Fluttertoast.showToast(msg: 'Failed to get OTP');
-        context.loaderOverlay.hide();
-      } else {
-        ConstantsVar.prefs.setString('hashOTP', hashOtp);
-        context.loaderOverlay.hide();
-        return hashOtp;
-      }
+      var response = await post(uri, body: body);
+
+      OtpResponse otpResponse = OtpResponse.fromJson(jsonDecode(response.body));
+      Fluttertoast.showToast(msg: otpResponse.status);
     } on Exception catch (e) {
       Fluttertoast.showToast(
         msg: e.toString(),
@@ -267,7 +269,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
           return CustomDialogBox1(
             descriptions: 'Registration failed',
             text: 'Okay',
-            img: 'MyAssets/logo.png', reason: '',
+            img: 'MyAssets/logo.png',
+            reason: '',
           );
         });
   }
@@ -286,23 +289,19 @@ class _OTP_ScreenState extends State<OTP_Screen> {
 
   Future verifyOTP(String hashOTP, String otp) async {
     final body = {
-      'CodeByAPI': hashOTP,
-      'CodeByCustomer': otp,
+      'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber,
+      'otp': otp,
     };
-    String url2 = BuildConfig.base_url +
-        'customer/CodeVerification?Code=' +
-        jsonEncode(body);
+    String url2 = BuildConfig.base_url + 'customer/VerifyOTP';
     final url = Uri.parse(url2);
     print(url2);
     try {
-      var response = await get(url);
-      final result = jsonDecode(response.body);
-      if (result.contains('Approved')) {
-        Fluttertoast.showToast(msg: 'OTP verify Sucessfully');
-        // showSucessDialog();
-      } else {
-        Fluttertoast.showToast(msg: 'Something went wrong');
-      }
+      var response = await post(url, body: body);
+      OtpVerifyResponse model =
+          OtpVerifyResponse.fromJson(jsonDecode(response.body));
+      if (model.status.contains('Success')) {
+        register();
+      } else {}
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -312,38 +311,46 @@ class _OTP_ScreenState extends State<OTP_Screen> {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
 
-
-
   Future register() async {
     String dataBody = ConstantsVar.prefs.getString('regBody')!;
     print(dataBody);
 
-    String urL = BuildConfig.base_url +
-        'Customer/CustomerRegister?apiToken=${ConstantsVar.apiTokken}&CustomerGuid=${ConstantsVar.prefs.getString('guestGUID')}&data=$dataBody';
+    String urL = BuildConfig.base_url + 'Customer/CustomerRegister?';
     context.loaderOverlay.show(
         widget: SpinKitRipple(
-          size: 90,
-          color: Colors.red,
-        ));
-
+      size: 90,
+      color: Colors.red,
+    ));
+    final body = {
+      'apiToken': ConstantsVar.apiTokken,
+      'CustomerGuid': ConstantsVar.prefs.getString('guestGUID'),
+      'data': dataBody
+    };
     final url = Uri.parse(urL);
+
     try {
-      var response = await post(url);
+      var response = await post(url, body: body);
       var result = jsonDecode(response.body);
       print(result);
       String status = result['status'];
       if (status.contains('Sucess')) {
-        context.loaderOverlay.hide();
-        showSucessDialog();
+        ApiCalls.login(context, widget.email,
+                Uri.encodeComponent(widget.password))
+            .then((value) {
+          context.loaderOverlay.hide();
+          showSucessDialog();
+        });
       } else {
         context.loaderOverlay.hide();
-        showErrorDialog('');
+
+        setState(() => reason = result['Message']);
+        showErrorDialog(reason);
+        print(result);
       }
     } on Exception catch (e) {
       context.loaderOverlay.hide();
       Fluttertoast.showToast(msg: e.toString());
+      print(e.toString());
     }
   }
-
-
 }

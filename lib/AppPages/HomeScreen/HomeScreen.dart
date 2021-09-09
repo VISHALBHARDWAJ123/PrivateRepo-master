@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/GridViewModel.dart';
 import 'package:untitled2/PojoClass/itemGridModel.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/mobX/MobXBtmNav.dart';
 
 class MyApp extends StatefulWidget {
@@ -119,45 +121,52 @@ class _MyHomePageState extends State<MyHomePage>
         child: Scaffold(
           // transitionBackgroundColor: Colors.black54,
           key: _scaffoldKey,
-          body: viewsList.elementAt(activeIndex),
+          body: getBodies(activeIndex),
           bottomNavigationBar: Container(
             color: Colors.black,
             height: 50,
-            child: Observer(
-              builder: (_) => RollingNavBar.iconData(
-                activeIndex: activeIndex,
-                iconData: <IconData>[
-                  Icons.home_filled,
-                  Icons.shopping_bag,
-                  Icons.search,
-                  Icons.shopping_cart,
-                  Icons.menu,
-                ],
-                indicatorColors: <Color>[
-                  Colors.red,
-                  Colors.red,
-                  Colors.red,
-                  Colors.red,
-                  Colors.red,
-                ],
-                iconText: <Widget>[
-                  Text('Home',
-                      style: TextStyle(color: Colors.black, fontSize: 11)),
-                  Text('Products',
-                      style: TextStyle(color: Colors.black, fontSize: 11)),
-                  Text('Search',
-                      style: TextStyle(color: Colors.black, fontSize: 11)),
-                  Text('Cart',
-                      style: TextStyle(color: Colors.black, fontSize: 11)),
-                  Text('Profile',
-                      style: TextStyle(color: Colors.black, fontSize: 11)),
-                ],
-                onTap: (index) {
-                  setState(() {
-                    activeIndex = index;
-                  });
-                },
-              ),
+            child: RollingNavBar.iconData(
+              activeIndex: activeIndex,
+              badges: [
+                null,
+                null,
+                null,
+                Consumer<cartCounter>(builder: (context, value, child) {
+                  return Text(value.badgeNumber.toString());
+                }),
+                null
+              ],
+              iconData: <IconData>[
+                Icons.home_filled,
+                Icons.shopping_bag,
+                Icons.search,
+                Icons.shopping_cart,
+                Icons.menu,
+              ],
+              indicatorColors: <Color>[
+                Colors.red,
+                Colors.red,
+                Colors.red,
+                Colors.red,
+                Colors.red,
+              ],
+              iconText: <Widget>[
+                Text('Home',
+                    style: TextStyle(color: Colors.black, fontSize: 11)),
+                Text('Products',
+                    style: TextStyle(color: Colors.black, fontSize: 11)),
+                Text('Search',
+                    style: TextStyle(color: Colors.black, fontSize: 11)),
+                Text('Cart',
+                    style: TextStyle(color: Colors.black, fontSize: 11)),
+                Text('Profile',
+                    style: TextStyle(color: Colors.black, fontSize: 11)),
+              ],
+              onTap: (index) {
+                setState(() {
+                  activeIndex = index;
+                });
+              },
             ),
           ),
         ),

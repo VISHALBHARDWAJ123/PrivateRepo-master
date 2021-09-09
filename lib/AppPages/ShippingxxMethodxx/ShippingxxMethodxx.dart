@@ -14,6 +14,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/SelectxxShippingxxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/ShippingxxMethodxxResponse.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 
 class ShippingMethod extends StatefulWidget {
   const ShippingMethod(
@@ -220,7 +221,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
       ),
     );
     final uri = Uri.parse(
-        'http://www.theone.com/apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
+        BuildConfig.base_url+'apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
     try {
       print('Shipping method Apis >>>>>> $uri');
       var response = await http.get(uri);
@@ -248,7 +249,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
 
   Future selectShippingMethod() async {
     final uri = Uri.parse(
-        'https://www.theone.com/apis/SelectShippingMethodForApp?apiToken=${ConstantsVar.apiTokken}&customerId=${widget.customerId}&shippingoption=$selectedVal');
+        BuildConfig.base_url+'apis/SelectShippingMethodForApp?apiToken=${ConstantsVar.apiTokken}&customerId=${widget.customerId}&shippingoption=$selectedVal');
     print(uri);
     try {
       var response = await http.get(uri);

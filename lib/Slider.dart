@@ -10,7 +10,7 @@ Widget SliderImages(
     List<String> images, List<String> largeImage, BuildContext context) {
   return Center(
     child: Container(
-      width: 80.w,
+      width: 60.w,
       padding: EdgeInsets.all(0),
       height: 40.h,
       child: Center(

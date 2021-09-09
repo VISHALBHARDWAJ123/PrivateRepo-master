@@ -157,7 +157,7 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
               Text(
                 widget.reason.length == 0
                     ? widget.descriptions
-                    : widget.descriptions + '\n' + '${widget.reason + '.!'}',
+                    : widget.descriptions+'!' + '\n' + '${widget.reason + '.'}',
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),

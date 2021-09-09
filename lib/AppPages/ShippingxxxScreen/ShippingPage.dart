@@ -10,7 +10,11 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/ShippingxxMethodxx/ShippingxxMethodxx.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
 class ShippingDetails extends StatefulWidget {
@@ -23,7 +27,8 @@ class ShippingDetails extends StatefulWidget {
   _ShippingDetailsState createState() => _ShippingDetailsState();
 }
 
-class _ShippingDetailsState extends State<ShippingDetails> {
+class _ShippingDetailsState extends State<ShippingDetails>
+    with InputValidationMixin {
   late TextEditingController textController1;
   late TextEditingController textController2;
   late TextEditingController textController3;
@@ -58,7 +63,7 @@ class _ShippingDetailsState extends State<ShippingDetails> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      autovalidateMode: AutovalidateMode.always,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Scaffold(
         appBar: new AppBar(
             toolbarHeight: 18.w,
@@ -138,11 +143,10 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                             ),
                             maxLines: 1,
                             validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please Provide Your Name';
-                              }
-
-                              return null;
+                              if (isFirstName(val!))
+                                return null;
+                              else
+                                return 'Please Enter Your First Name';
                             },
                           ),
                         ),
@@ -177,11 +181,10 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                             ),
                             maxLines: 1,
                             validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please Provide Your Last Name';
-                              }
-
-                              return null;
+                              if (isLastName(val!))
+                                return null;
+                              else
+                                return 'Please Enter Your Last Name';
                             },
                           ),
                         ),
@@ -223,6 +226,9 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                                 if (val.length < 9) {
                                   return 'Please Enter Your Number Correctly';
                                 }
+                                if (val.length > 9) {
+                                  return 'Please Enter Your Number Correctly';
+                                }
                                 return null;
                               },
                             ),
@@ -245,11 +251,11 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                                 keyboardType: TextInputType.emailAddress,
                                 controller: eController,
                                 validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return 'Please Provide Your Email Address';
+                                  if (isEmailValid(val!)) {
+                                    return null;
                                   }
 
-                                  return null;
+                                  return 'Enter your email address';
                                 },
                                 cursorColor: Colors.black,
                                 style: TextStyle(
@@ -280,11 +286,10 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                               keyboardType: TextInputType.emailAddress,
                               controller: controllerAddress,
                               validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Please Provide Your Address';
-                                }
-
-                                return null;
+                                if (isAddress(val!))
+                                  return null;
+                                else
+                                  return 'Enter your Address';
                               },
                               cursorColor: Colors.black,
                               style:
@@ -301,34 +306,6 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                           ),
                         ),
                       ),
-                      // Card(
-                      //   shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(12.0)),
-                      //   elevation: 4.0,
-                      //   child: Container(
-                      //     padding: EdgeInsets.only(right: 12.0),
-                      //     child: TextFormField(
-                      //         textInputAction: TextInputAction.next,
-                      //         keyboardType: TextInputType.emailAddress,
-                      //         controller: countryController,
-                      //         validator: (val) {
-                      //           if (val!.isEmpty) {
-                      //             return 'Please Provide Your Country';
-                      //           }
-                      //
-                      //           return null;
-                      //         },
-                      //         cursorColor: Colors.black,
-                      //         style:
-                      //             TextStyle(color: Colors.black, fontSize: 14),
-                      //         decoration: editBoxDecoration(
-                      //             'Country'.toUpperCase(),
-                      //             Icon(
-                      //               Icons.flag_outlined,
-                      //               color: AppColor.PrimaryAccentColor,
-                      //             ))),
-                      //   ),
-                      // ),
                       SizedBox(
                         height: 10,
                       ),
@@ -403,51 +380,56 @@ class _ShippingDetailsState extends State<ShippingDetails> {
                     ),
                     InkWell(
                       onTap: () async {
-                        context.loaderOverlay.show(
-                            widget: SpinKitRipple(
-                          color: Colors.red,
-                          size: 90,
-                        ));
-                        print('Tap appear on Add Shipping Address');
-                        Map<String, dynamic> body = {
-                          'FirstName': '${textController1.text}',
-                          'LastName': textControllerLast.text,
-                          'Email': eController.text,
-                          'Company': '',
-                          'CountryId': '79',
-                          'StateProvinceId': '',
-                          'City': '${textController6.text}',
-                          'Address1': controllerAddress.text,
-                          'Address2': '',
-                          'ZipPostalCode': '',
-                          'PhoneNumber': '971${textController2.text}',
-                          'FaxNumber': '',
-                          'Country': 'UAE',
-                        };
-                        print(widget.tokken);
-                        // String bodx = jsonEncode(body);
-                        Map<String, dynamic> shipBody = {
-                          'address': body,
-                          'PickUpInStore': false,
-                          'pickupPointId': null
-                        };
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState!.save();
+                          context.loaderOverlay.show(
+                              widget: SpinKitRipple(
+                            color: Colors.red,
+                            size: 90,
+                          ));
+                          print('Tap appear on Add Shipping Address');
+                          Map<String, dynamic> body = {
+                            'FirstName': '${textController1.text}',
+                            'LastName': textControllerLast.text,
+                            'Email': eController.text,
+                            'Company': '',
+                            'CountryId': '79',
+                            'StateProvinceId': '',
+                            'City': '${textController6.text}',
+                            'Address1': controllerAddress.text,
+                            'Address2': '',
+                            'ZipPostalCode': '',
+                            'PhoneNumber': '971${textController2.text}',
+                            'FaxNumber': '',
+                            'Country': 'UAE',
+                          };
+                          print(widget.tokken);
+                          Map<String, dynamic> shipBody = {
+                            'address': body,
+                            'PickUpInStore': false,
+                            'pickupPointId': null
+                          };
 
-                        Map<String, dynamic> shippingModel = {
-                          // ApiParams.PARAM_API_TOKEN: widget.tokken,
-                          // 'customerid': widget.customerId,
-                          // 'ShippingAddressModel': jsonEncode(shipBody)
-                        };
-
-                        // String shippingJson = jsonEncode(shipBody);
-
-                        addShippingAddress(jsonEncode(shipBody)).then((value) {
-                          print(value);
-                          context.loaderOverlay.hide();
-                          Navigator.pushReplacement(
+                          addShippingAddress(jsonEncode(shipBody))
+                              .then((value) {
+                            print(value);
+                            context.loaderOverlay.hide();
+                            String paymentUrl = BuildConfig.base_url +
+                                'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.customerId.toString()}&PaymentMethod=Payments.CyberSource';
+                            Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => ShippingAddress()));
-                        });
+                                builder: (context) => ShippingMethod(
+                                  paymentUrl: paymentUrl,
+                                  customerId: widget.customerId,
+                                ),
+                              ),
+                            );
+                          });
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Please provide correct details');
+                        }
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.5,
@@ -483,6 +465,7 @@ class _ShippingDetailsState extends State<ShippingDetails> {
 
   InputDecoration editBoxDecoration(String name, Icon icon, String prefixText) {
     return new InputDecoration(
+      counterText: '',
       prefixText: prefixText,
       prefixIcon: icon,
       // alignLabelWithHint: true,
@@ -503,8 +486,8 @@ class _ShippingDetailsState extends State<ShippingDetails> {
   }
 
   Future addShippingAddress(String encodedResponse) async {
-    final uri = Uri.parse(
-        'https://www.theone.com/apis/AddSelectNewShippingAddress?apiToken=${widget.tokken}&customerid=${widget.customerId}&ShippingAddressModel=$encodedResponse');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/AddSelectNewShippingAddress?apiToken=${widget.tokken}&customerid=${widget.customerId}&ShippingAddressModel=$encodedResponse');
     try {
       var response = await http.post(uri);
       print('Response>>>>>>>' + response.body);

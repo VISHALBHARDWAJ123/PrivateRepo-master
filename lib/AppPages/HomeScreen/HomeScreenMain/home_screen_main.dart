@@ -58,7 +58,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   //
   @override
   Widget build(BuildContext context) {
-    return SafeArea(top: true, child: buildSafeArea(context));
+    return SafeArea(top: true, child: Scaffold(body: buildSafeArea(context)));
   }
 
   Widget buildSafeArea(BuildContext context) {
@@ -112,9 +112,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                   // enlargeStrategy: CenterPageEnlargeStrategy.height,
                                   disableCenter: true,
                                   pageSnapping: true,
-                                  height: 20.h,
+                                  height: 24.h,
                                   viewportFraction: 1,
-                                  aspectRatio: 4 / 3,
+                                  // aspectRatio: 4 / 3,
                                   autoPlay: true,
                                   enlargeCenterPage: false),
                               items: banners.map((banner) {
@@ -160,7 +160,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             ),
                           ),
                           Container(
-                            height: 29.h,
+                            height: 29.5.h,
                               // margin: EdgeInsets.only(top: 20.0, left: 10, right: 10),
                               // height: Adaptive.h(24),
                               child: Column(

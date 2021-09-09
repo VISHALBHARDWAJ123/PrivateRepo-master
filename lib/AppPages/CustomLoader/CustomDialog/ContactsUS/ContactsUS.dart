@@ -11,7 +11,11 @@ import 'package:http/http.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
+import 'package:untitled2/utils/utils/general_functions.dart';
 
 class ContactUS extends StatefulWidget {
   final id;
@@ -46,13 +50,14 @@ class _ContactUSState extends State<ContactUS> {
     // TODO: implement initState
     init();
     super.initState();
-    getUserCreds().then((value) => setState(() {
+    getUserCreds().then((value) =>
+        setState(() {
           name.text = _userName;
           email.text = _email;
           emailBody.text = 'Name : ' +
               widget.name +
               '\n' '\n' +
-              'Product Id : ' +
+              'SKU : ' +
               widget.id.toString() +
               '\n' '\n' +
               'Short Descritption :' +
@@ -64,116 +69,153 @@ class _ContactUSState extends State<ContactUS> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: contentBox(context),
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+        appBar: new AppBar(
+          toolbarHeight: 18.w,
+          centerTitle: true,
+          title: InkWell(
+            onTap: () =>
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => MyApp(),
+                    ),
+                        (route) => false),
+            child: Image.asset(
+              'MyAssets/logo.png',
+              width: 15.w,
+              height: 15.w,
+            ),
+          ),
+        ),
+        body: Container(
+          height: 100.h,
+          child: contentBox(context),
+        ),
+      ),
     );
   }
 
   Widget contentBox(context) {
-    return Stack(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 50.0),
-          child: Card(
-            elevation: 100,
-            color: Colors.grey,
-            child: Container(
-              width: 100.w,
-              height: 60.h,
-              padding: EdgeInsets.only(top: 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ListTile(
-                    title: Text(
-                      'YOUR NAME:',
+    return
+      Container(
+        width: 100.w,
+        height: 100.h,
+        // padding: EdgeInsets.only(top: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 8,
+                ),
+                child: Container(
+                  width: 100.w,
+                  child: Center(
+                    child: Text(
+                      'Contact Us'.toUpperCase(),
                       style: TextStyle(
-                        color: selected ? Colors.white : Colors.black,
+                        fontSize: 6.w,
                         fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: TextFormField(
-                      maxLines: 1,
-                      controller: name,
-                      style: TextStyle(
-                        color: selected ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'YOUR EMAIL:',
-                      style: TextStyle(
-                        color: selected ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: TextFormField(
-                      maxLines: 1,
-                      // maxLength: 20,
-                      controller: email,
-                      style: TextStyle(
-                        color: selected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'ENQUIRY:',
-                      style: TextStyle(
-                        color: selected ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: Container(
-                      height: 15.h,
-                      child: CupertinoScrollbar(
-                        isAlwaysShown: true,
-                        thickness: 4,
-                        child: TextFormField(
-                          maxLines: 15,
-                          // maxLength: ,
-                          controller: emailBody,
-                          style: TextStyle(
-                            color: selected ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  FlatButton(
-                      onPressed: () async {
-                        sendEnquiry().then((value) => Navigator.pop(context));
-                      },
-                      child: Text(
-                        'SUBMIT',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: selected ? Colors.white : Colors.black,
-                        ),
-                      )),
-                ],
+                ),
               ),
             ),
-          ),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  // padding: EdgeInsets.all(10),
+                  shrinkWrap: true,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'YOUR NAME:',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 4.w,
+                        ),
+                      ),
+                      subtitle: TextFormField(
+                        maxLines: 1,
+                        controller: name,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    addVerticalSpace(10),
+                    ListTile(
+                      title: Text(
+                        'YOUR EMAIL:',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 4.w,
+                        ),
+                      ),
+                      subtitle: TextFormField(
+                        maxLines: 1,
+                        // maxLength: 20,
+                        controller: email,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    addVerticalSpace(10),
+                    ListTile(
+                      title: Text(
+                        'ENQUIRY:',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 4.w,
+                        ),
+                      ),
+                      subtitle: TextFormField(
+                        maxLines: 12,
+                        // maxLength: ,
+                        controller: emailBody,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    // Container(height: 2,child: Divider(color: Colors.black,))
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+                onTap: () async {
+                  sendEnquiry().then((value) => Navigator.pop(context));
+                },
+                child: Container(
+                  color: ConstantsVar.appColor,
+                  height: 15.w,
+                  width: 100.w,
+                  child: Center(
+                    child: Text(
+                      'SUBMIT',
+                      style: TextStyle(
+                        fontSize: 5.4.w,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )),
+          ],
         ),
-        Positioned(
-          left: 20,
-          right: 20,
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: 45,
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(45)),
-                child: Image.asset("MyAssets/logo.png")),
-          ),
-        ),
-      ],
-    );
+      );
   }
 
   Future sendEnquiry() async {
@@ -182,9 +224,9 @@ class _ContactUSState extends State<ContactUS> {
     // var apiToken;
     context.loaderOverlay.show(
         widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+          color: Colors.red,
+          size: 90,
+        ));
     setState(() {
       // apiToken = '${ConstantsVar.apiTokken}';
       print(apiToken);
@@ -220,13 +262,17 @@ class _ContactUSState extends State<ContactUS> {
     });
     // String url = ;
     final uri =
-        Uri.parse(BuildConfig.base_url + 'customer/SendContactUsEnquiry');
+    Uri.parse(BuildConfig.base_url + 'customer/SendContactUsEnquiry');
     print(uri);
     try {
       var response = await post(uri, body: body);
       context.loaderOverlay.hide();
 
       print('${jsonDecode(response.body)}');
+      showDialog(builder: (context) {
+        return CustomDialogBox(
+            descriptions:jsonDecode(response.body) , text:'' , img: '');
+      }, context: context);
     } on Exception catch (e) {
       print(e.toString());
       Fluttertoast.showToast(

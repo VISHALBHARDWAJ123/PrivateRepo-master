@@ -143,17 +143,16 @@ class _CartScreen2State extends State<CartScreen2>
             discountPrice != null &&
             totalAmount != null &&
             totalAmount != '') {
-          var tp = double.parse(totalAmount.replaceAll(RegExp('[^0-9]'), ''));
-          var tax = double.parse(taxPrice.replaceAll(RegExp('[^0-9]'), ''));
-          var dis = discountPrice == null ||discountPrice == 'No Discount Available'
+          var dis = discountPrice == null ||
+                  discountPrice == 'No Discount Available'
               ? 0
               : double.parse(discountPrice.replaceAll(RegExp('[^0-9]'), ''));
           var total;
 
-dis==0?          total ='During Checkout':'';
+          dis == 0 ? total = 'During Checkout' : '';
           setState(() {
             print(dis);
-            totalAmount = total ;
+            totalAmount = total;
           });
         } else if (shipping != null) {
           if (discountPrice == null &&
@@ -424,12 +423,14 @@ dis==0?          total ='During Checkout':'';
                                 price: cartItems[index].subTotal,
                                 imageUrl: cartItems[index].picture.imageUrl,
                                 updateUi: () {
-                                  _refreshController.requestRefresh();
                                   showAndUpdateUi();
+                                  _refreshController.requestRefresh();
+
                                 },
                                 reload: () {
-                                  _refreshController.requestRefresh();
                                   showAndUpdateUi();
+                                  _refreshController.requestRefresh();
+
                                 },
                                 id: guestCustomerID,
                                 productId: cartItems[index].productId,

@@ -55,7 +55,7 @@ class _HomeCategoryState extends State<HomeCategory> {
             title: InkWell(
               onTap: () => Navigator.pushAndRemoveUntil(
                   context,
-                  CupertinoPageRoute(builder: (context) => MyHomePage()),
+                  CupertinoPageRoute(builder: (context) => MyApp()),
                   (route) => false),
               child: Image.asset(
                 'MyAssets/logo.png',

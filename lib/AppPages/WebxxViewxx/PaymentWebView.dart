@@ -27,12 +27,16 @@ class _PaymentPageState extends State<PaymentPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+      context.loaderOverlay.show(
+          widget: SpinKitRipple(
+        color: Colors.red,
+        size: 90,
+      ));
+    } else {
+      context.loaderOverlay.show(widget: CupertinoActivityIndicator());
+    }
   }
 
   @override
@@ -57,7 +61,7 @@ class _PaymentPageState extends State<PaymentPage> {
               title: GestureDetector(
                 onTap: () => Navigator.pushAndRemoveUntil(context,
                     CupertinoPageRoute(builder: (context) {
-                  return MyHomePage();
+                  return MyApp();
                 }), (route) => false),
                 child: Image.asset(
                   'MyAssets/logo.png',
@@ -89,6 +93,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 return NavigationDecision.navigate;
               },
               onPageStarted: (String url) {
+                context.loaderOverlay.show(
+                    widget: SpinKitRipple(
+                      color: Colors.red,
+                      size: 90,
+                    ));
                 print('Page started loading: $url');
               },
               onPageFinished: (String url) {

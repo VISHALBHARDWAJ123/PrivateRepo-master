@@ -1,9 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
@@ -11,6 +13,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Slider.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -44,6 +47,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   var connectionStatus;
   bool isScroll = true;
   var assemblyCharges;
+  FocusNode yourfoucs = FocusNode();
 
   @override
   void dispose() {
@@ -68,12 +72,20 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         appBar: new AppBar(
           actions: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
               child: InkWell(
                 radius: 48,
-                child: Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.white,
+                child: Consumer<cartCounter>(
+                  builder: (context, value, child) {
+                    return Badge(
+                      badgeColor: Colors.white,
+                      badgeContent: new Text(value.badgeNumber.toString()),
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
                 ),
                 onTap: () => Navigator.push(
                   context,
@@ -157,11 +169,12 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         : '';
 
                     return Column(
+                      mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                          flex: 9,
+                          // flex: 9,
                           child: customList(
                             context: context,
                             name: name,
@@ -208,11 +221,11 @@ class _NewProductDetailsState extends State<NewProductDetails> {
     return ListView(
       children: [
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(6.0),
           child: Container(child: SliderImages(imageList, largeImage, context)),
         ),
         Container(
-          height: 36.h,
+          height: 38.h,
           width: MediaQuery.of(context).size.width,
           color: Color.fromARGB(255, 234, 235, 235),
           child: Padding(
@@ -269,7 +282,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 2.w, bottom: 2.w),
+                  padding: EdgeInsets.only(top: 6, bottom: 6),
                   child: RichText(
                     text: TextSpan(
                       text: 'Availablity: '.toUpperCase(),
@@ -291,13 +304,14 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   ),
                 ),
                 Visibility(
+                  maintainSize: false,
                   visible: assemblyCharges.length != 0 ||
                           assemblyCharges.isNotEmpty ||
                           assemblyCharges != null
                       ? true
                       : false,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 1.w, bottom: 1.w),
+                    padding: EdgeInsets.only(top: 4, bottom: 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -319,7 +333,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 1.5.w, bottom: 1.5.w),
+                  padding: EdgeInsets.only(top: 1.w, bottom: 1.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -365,7 +379,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 child: Text(
-                  name.toUpperCase(),
+                  name,
                   style: TextStyle(
                     fontSize: 6.w,
                     fontWeight: FontWeight.bold,
@@ -377,7 +391,11 @@ class _NewProductDetailsState extends State<NewProductDetails> {
           ),
         ),
         InkWell(
-          onTap: () => HiOverlay.show(context, child: ContactUS(id: id, name: name, desc: descritption)),
+          onTap: () => Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) =>
+                      ContactUS(id: sku, name: name, desc: descritption))),
           child: Container(
             decoration: BoxDecoration(
                 border: Border.symmetric(

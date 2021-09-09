@@ -9,13 +9,13 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
 enum AniProps { color }
@@ -48,6 +48,7 @@ class _SearchPageState extends State<SearchPage> {
     Alignment.topLeft,
   ];
   int index = 0;
+  var totalCount;
   Color topColor = ConstantsVar.appColor;
   Color bottomColor = Colors.black26;
   Alignment begin = Alignment.bottomLeft;
@@ -203,7 +204,8 @@ class _SearchPageState extends State<SearchPage> {
                                 radius: Radius.circular(8),
                                 child: SmartRefresher(
                                   onLoading: _onLoading,
-                                  enablePullUp: isLoading ==false?true:false,
+                                  enablePullUp:
+                                      isLoading == false ? true : false,
                                   enablePullDown: false,
                                   enableTwoLevel: false,
                                   footer: CustomFooter(
@@ -441,22 +443,40 @@ class _SearchPageState extends State<SearchPage> {
       isLoading = true;
       isListVisible = false;
     });
-    final uri = Uri.parse(
-        'https://www.theone.com/apis/GetSearchProducts?searchkeyword=$productName&pagesize=8&pageindex=$pageNumber');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetSearchProducts?searchkeyword=$productName&pagesize=8&pageindex=$pageNumber');
     try {
       var response = await http.get(uri);
       var jsonMap = jsonDecode(response.body);
       print(jsonMap);
       SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
+
+
       setState(() {
         isLoadVisible = false;
         isLoading = false;
         searchedProducts = mySearchResponse.products;
         isListVisible = true;
+        totalCount = int.parse(mySearchResponse.totalproducts);
       });
-      if(searchedProducts.length == int.parse(mySearchResponse.totalproducts)){
+
+      if(totalCount == 0){
+        setState(() {
+          isListVisible = true;
+          isLoading = false;
+
+          Fluttertoast.showToast(msg: 'No Products found');
+        });
+      }
+
+
+
+      if (searchedProducts.length ==
+          int.parse(mySearchResponse.totalproducts)) {
         setState(() {
           isLoading = false;
+          isLoadVisible = false;
+
         });
       }
       return searchedProducts;
@@ -472,21 +492,29 @@ class _SearchPageState extends State<SearchPage> {
       prodName = _searchController.text.toString();
       pageIndex = pageIndex + 1;
     });
-    final uri = Uri.parse(
-        'https://www.theone.com/apis/GetSearchProducts?searchkeyword=$prodName&pagesize=20&pageindex=$pageIndex');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetSearchProducts?searchkeyword=$prodName&pagesize=20&pageindex=$pageIndex');
     try {
       var response = await http.get(uri);
       var result = jsonDecode(response.body);
       print(result);
       SearchResponse mySearchResponse = SearchResponse.fromJson(result);
+
       setState(() {
         searchedProducts.addAll(mySearchResponse.products);
         _refreshController.loadComplete();
+
         // if (mySearchResponse.products.length == 0) {
         //   _refreshController.loadComplete();
         //   _refreshController.loadNoData();
         // }
       });
+
+      if (searchedProducts.length == totalCount) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       _refreshController.loadFailed();

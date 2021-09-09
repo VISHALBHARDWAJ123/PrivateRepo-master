@@ -23,11 +23,11 @@ import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ApiCalls {
-  static Future getCategoryById(
-      String id, BuildContext context, int pageIndex) async {
+  static Future getCategoryById(String id, BuildContext context,
+      int pageIndex) async {
     print('Testing Api');
-    final baseUrl = Uri.parse(
-        'https://www.theone.com/apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
+    final baseUrl = Uri.parse(BuildConfig.base_url +
+        'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
 
     print(baseUrl);
     try {
@@ -66,30 +66,37 @@ class ApiCalls {
     }
   }
 
-  static Future login(
-    BuildContext context,
-    String email,
-    String password,
-  ) async {
+  static Future login(BuildContext context,
+      String email,
+      String password,) async {
+    print(password);
+
     context.loaderOverlay.show(
         widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+          color: Colors.red,
+          size: 90,
+        ));
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
     ConstantsVar.isVisible = true;
-    final uri = Uri.parse(
-        'http://www.theone.com/Customer/LogIn?apiToken=${ConstantsVar.apiTokken}&Guid=${guestUId}&Password=$password&EMail=$email');
+    final uri = Uri.parse(BuildConfig.base_url + 'Customer/LogIn');
+    print(uri);
+    final body = {
+      'apiToken': ConstantsVar.apiTokken,
+      'email': email,
+      'UserName': '',
+      'Password': password,
+      'Guid': guestUId
+    };
     try {
-      var response = await http.get(uri);
+      var response = await http.post(uri, body: body);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         print(responseData);
 
         if (responseData
-                .toString()
-                .contains('The credentials provided are incorrect') ||
+            .toString()
+            .contains('The credentials provided are incorrect') ||
             responseData.toString().contains('No customer account found')) {
           print('Wrong account');
           Fluttertoast.showToast(
@@ -135,13 +142,12 @@ class ApiCalls {
     }
   }
 
-  static Future forgotPass(
-    BuildContext context,
-    String email,
-  ) async {
+  static Future forgotPass(BuildContext context,
+      String email,) async {
     bool? boolean;
     final uri = Uri.parse(BuildConfig.base_url +
-        'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
+        'customer/ForgotPassword?apiToken=${ConstantsVar
+            .apiTokken}&email=$email');
 
     try {
       var response = await http.get(uri);
@@ -228,10 +234,11 @@ class ApiCalls {
     }
   }
 
-  static Future addToCart(
-      String customerId, String productId, BuildContext context) async {
+  static Future addToCart(String customerId, String productId,
+      BuildContext context) async {
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1');
+        'apis/AddToCart?apiToken=${ConstantsVar
+            .apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1');
     try {
       dynamic response = await http.post(uri);
 
@@ -240,36 +247,34 @@ class ApiCalls {
       AddToCartResponse resp = AddToCartResponse.fromJson(result1);
       print(resp.warning);
       if (resp.warning != null) {
-        if (resp.warning.first == 'Out of stock') {
-          // if (Theme.of(context).platform == TargetPlatform.android) {
-          showDialog(
-            context: context,
-            builder: (context) => CustomDialogBox1(
+        // if (Theme.of(context).platform == TargetPlatform.android) {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              CustomDialogBox1(
                 descriptions: '${resp.warning.first}',
                 text: 'Okay',
-                img: 'MyAssets/logo.png', reason: '',),
-          );
-        } else if (resp.warning.elementAt(0) == 'Product is not published') {
-          showDialog(
-            context: context,
-            builder: (context) => CustomDialogBox1(
-                descriptions: '${resp.warning.first}',
-                text: 'Okay',
-                img: 'MyAssets/logo.png', reason: '',),
-          );
-        } else if (resp.error.toString() != null) {
-          showDialog(
-            context: context,
-            builder: (context) => CustomDialogBox1(
-                descriptions: '${resp.error.toString()}',
-                text: 'Okay',
-                img: 'MyAssets/logo.png', reason: '',),
-          );
-        }
+                img: 'MyAssets/logo.png',
+                reason: '',
+              ),
+        );
       } else {
         // Constan
         // context.read<cartCounter>()
         print('noting');
+      }
+
+      if (resp.error == null) {} else {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              CustomDialogBox1(
+                descriptions: '${resp.error.toString()}',
+                text: 'Okay',
+                img: 'MyAssets/logo.png',
+                reason: '',
+              ),
+        );
       }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
@@ -279,7 +284,8 @@ class ApiCalls {
   static Future showCart(String customerId) async {
     //
     final uri = Uri.parse(BuildConfig.base_url +
-        'customer/Cart?apiToken=${ConstantsVar.apiTokken}&CustomerId=$customerId');
+        'customer/Cart?apiToken=${ConstantsVar
+            .apiTokken}&CustomerId=$customerId');
     print(uri);
     try {
       var response = await http.get(uri);
@@ -302,13 +308,13 @@ class ApiCalls {
   }
 
   /// Delete cart item id */
-  static Future deleteCartItem(
-      String customerId, int itemID, BuildContext ctx) async {
+  static Future deleteCartItem(String customerId, int itemID,
+      BuildContext ctx) async {
     ctx.loaderOverlay.show(
         widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+          color: Colors.red,
+          size: 90,
+        ));
     final queryParameters = {
       'apiToken': ConstantsVar.apiTokken,
       'CustomerId': customerId,
@@ -422,8 +428,8 @@ class ApiCalls {
   }
 
   /// Adding gift card number //
-  static Future<String> applyGiftCard(
-      String apiToken, String customerId, String giftcard) async {
+  static Future<String> applyGiftCard(String apiToken, String customerId,
+      String giftcard) async {
     String success = '';
     final uri = Uri.parse(BuildConfig.base_url + BuildConfig.gift_card_url);
 
@@ -460,7 +466,7 @@ class ApiCalls {
       String giftcard, RefreshController refreshController) async {
     String success = '';
     final uri =
-        Uri.parse(BuildConfig.base_url + BuildConfig.remove_gift_card_url);
+    Uri.parse(BuildConfig.base_url + BuildConfig.remove_gift_card_url);
 
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
@@ -492,7 +498,8 @@ class ApiCalls {
   }
 
   ///Get all addresses api
-  static Future allAddresses(String apiToken, String customerId) async {
+  static Future allAddresses(String apiToken, String customerId,
+      BuildContext ctx) async {
     // bool apiresult = false;
     final queryParameters = {
       ApiParams.PARAM_API_TOKEN: apiToken,
@@ -521,12 +528,13 @@ class ApiCalls {
       Fluttertoast.showToast(
         msg: e.toString(),
       );
+      ctx.loaderOverlay.hide();
     }
   }
 
   /// Select billing address api
-  static Future selectBillingAddress(
-      String apiToken, String customerId, String addressId) async {
+  static Future selectBillingAddress(String apiToken, String customerId,
+      String addressId) async {
     final queryParameters = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
@@ -539,7 +547,7 @@ class ApiCalls {
     print('select address url>>> $uri');
     try {
       var response =
-          await http.get(uri, headers: {HttpHeaders.cookieHeader: customerId});
+      await http.get(uri, headers: {HttpHeaders.cookieHeader: customerId});
       if (response.statusCode == 200) {
         Map<String, dynamic> result = json.decode(response.body);
         print('selectbillingaddress>>> $result');
@@ -586,8 +594,8 @@ class ApiCalls {
   }
 
   ///Select shipping address
-  static Future selectShippingAddress(
-      String apiToken, String customerid, String addressId) async {
+  static Future selectShippingAddress(String apiToken, String customerid,
+      String addressId) async {
     final queryParameters = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerid,
@@ -646,15 +654,15 @@ class ApiCalls {
   }
 
   ///Update cart url
-  static Future updateCart(
-      String customerId, String quantity, int itemId, BuildContext ctx) async {
+  static Future updateCart(String customerId, String quantity, int itemId,
+      BuildContext ctx) async {
     ctx.loaderOverlay.show(
         widget: SpinKitRipple(
-      size: 90,
-      color: Colors.red,
-    ));
+          size: 90,
+          color: Colors.red,
+        ));
     final uri = Uri.parse(
-        'https://www.theone.com/apis/UpdateCart?ShoppingCartItemIds=$itemId&Qty=$quantity&CustomerId=$customerId');
+        BuildConfig.base_url+'apis/UpdateCart?ShoppingCartItemIds=$itemId&Qty=$quantity&CustomerId=$customerId');
     // String success = 'false';
 
     try {
@@ -662,7 +670,7 @@ class ApiCalls {
       var result = jsonDecode(response.body);
       print('update cart result>>>> $result');
       ctx.loaderOverlay.hide();
-      Fluttertoast.showToast(msg: result);
+      // Fluttertoast.showToast(msg: result);
     } on Exception catch (e) {
       ctx.loaderOverlay.hide();
       Fluttertoast.showToast(msg: e.toString());
@@ -707,7 +715,7 @@ class ApiCalls {
     };
 
     final uri =
-        Uri.parse('https://www.theone.com/apis/AddSelectNewBillingAddress');
+    Uri.parse(BuildConfig.base_url + 'apis/AddSelectNewBillingAddress?');
     print(uri);
     try {
       var response = await http.post(uri, body: body);
@@ -715,10 +723,55 @@ class ApiCalls {
       Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => ShippingAddress(
+              builder: (context) =>
+                  ShippingAddress(
                     // tokken: apiToken,
                     // customerId: customerId,
                   )));
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  static Future addAndSelectShippingAddress(String apiToken, String customerId,
+      String id2) async {
+    final uri = Uri.parse(
+        BuildConfig.base_url + BuildConfig.add_select_shipping_address_url);
+    final snippingModel = jsonEncode({
+      'address': {},
+      'PickUpInStore': true,
+      'pickupPointId': id2,
+    });
+    final body = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID: customerId,
+      'ShippingAddressModel': snippingModel,
+    };
+    try {
+      var resp = await http.post(uri, body: body);
+      print(jsonDecode(resp.body));
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+// static addandselectShippingAddress(String s, id, String id2) {}
+
+// For BadgeCounter
+  static Future readCounter({required String customerGuid}) async {
+    final uri = Uri.parse(
+        'https://www.theone.com/apis/CartCount?cutomerGuid=$customerGuid');
+    try {
+      var response = await http.get(uri);
+      dynamic result = jsonDecode(response.body);
+      print(response.body);
+      if (result['ResponseData'] != null &&
+          result['status'].contains('success')){
+
+        return result['ResponseData'];
+      }else{
+        return 0;
+      }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }

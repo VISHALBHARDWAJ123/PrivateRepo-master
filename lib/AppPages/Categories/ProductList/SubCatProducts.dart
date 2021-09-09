@@ -1,3 +1,4 @@
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,20 +68,24 @@ class _ProductListState extends State<ProductList> {
           actions: [
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 1.0),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               child: InkWell(
-                splashColor: Colors.amber,
+                // splashColor: Colors.amber,
                 radius: 48,
-                child: Badge(
-                  ignorePointer:
-                      // context.watch<cartCounter>().bagdgeNumber == null
-                      //     ? true
-                      false,
-                  // badgeContent: Text('3'),
-                  child: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.white,
-                  ),
+                child: Consumer<cartCounter>(
+                  builder: (context, value, child) {
+                    return Badge(
+                      badgeColor: Colors.white,
+                      padding: EdgeInsets.all(5),
+                      shape: BadgeShape.circle,
+                      position: BadgePosition.topEnd(),
+                      badgeContent: new Text('${value.badgeNumber}'),
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
                 ),
                 onTap: () => Navigator.push(
                   context,
@@ -109,8 +114,7 @@ class _ProductListState extends State<ProductList> {
           ),
         ),
         body: FutureBuilder<dynamic>(
-          future: ApiCalls.getCategoryById(
-              '${widget.categoryId}', context,0 ),
+          future: ApiCalls.getCategoryById('${widget.categoryId}', context, 0),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -199,7 +203,10 @@ class _AddCartBtnState extends State<AddCartBtn> {
     // TODO: implement initState
     super.initState();
     stateId = AddToCartButtonStateId.idle;
+    getGuid();
   }
+
+  final cartCounte = cartCounter();
 
   @override
   Widget build(BuildContext context) {
@@ -237,6 +244,16 @@ class _AddCartBtnState extends State<AddCartBtn> {
                   widget.guestCustomerId, '${widget.productId}', context)
               .then((response) {
             setState(() {
+              int val = 0;
+              ApiCalls.readCounter(
+                      customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+                  .then((value) {
+                    setState(() {
+                      val =int.parse(value);
+                    });
+                context.read<cartCounter>().changeCounter(val);
+              });
+
               stateId = AddToCartButtonStateId.done;
               Future.delayed(Duration(seconds: 1), () {
                 setState(() {
@@ -256,5 +273,9 @@ class _AddCartBtnState extends State<AddCartBtn> {
         stateId = AddToCartButtonStateId.idle;
       });
     }
+  }
+
+  void getGuid() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
 }

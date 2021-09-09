@@ -19,6 +19,7 @@ import 'package:untitled2/AppPages/models/ShippingResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart'; // import 'package:untitled2/models/OrderSummaryResponse.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import '../AddressItem.dart';
@@ -45,7 +46,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       _isPanDown = false;
   List<String> _list = [];
   String _selectedItem = '';
-  var addressString ;
+  var addressString;
 
   /// this func is used to close dropDown (if open) when you tap or pandown anywhere in the screen
   void _removeFocus() {
@@ -58,7 +59,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
   Future<void> getPickupPoints(String? addressString) async {
     final pickUri = Uri.parse(
-        'https://www.theone.com/apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
+        BuildConfig.base_url+'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
     try {
       var pickPointResponse = await http.get(pickUri);
       print('${pickPointResponse.body}');
@@ -106,7 +107,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
               getPickupPoints(addressString);
               paymentUrl =
-                  'https://www.theone.com/customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${id}&PaymentMethod=Payments.CyberSource';
+                  BuildConfig.base_url+'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${id}&PaymentMethod=Payments.CyberSource';
               /*************************Get all order summary*********************/
               ApiCalls.showOrderSummary(ConstantsVar.apiTokken.toString(), id)
                   .then(
@@ -289,41 +290,50 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               _selectedItem = selectedItem;
 
                               // int index = _list.indexOf(_selectedItem);
+                              int index = _list.indexOf(_selectedItem);
 
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(
-                                    'This will lead you to payment page.',
-                                    softWrap: true,
-                                    style: TextStyle(fontSize: 3.7.w),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text(
-                                        'Cancel'.toUpperCase(),
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) => PaymentPage(
-                                            paymentUrl: paymentUrl,
-                                            // customerId: ID,
+                              ApiCalls.addAndSelectShippingAddress  (
+                                      '${ConstantsVar.apiTokken}',
+                                      ID,
+                                      myPickPoint[index].id)
+                                  .then((value) => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                            'This will lead you to payment page.',
+                                            softWrap: true,
+                                            style: TextStyle(fontSize: 3.7.w),
                                           ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text(
+                                                'Cancel'.toUpperCase(),
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      PaymentPage(
+                                                    paymentUrl: paymentUrl,
+                                                    // customerId: ID,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Confirm'.toUpperCase(),
+                                                style: TextStyle(
+                                                    color: Colors.green),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                      child: Text(
-                                        'Confirm'.toUpperCase(),
-                                        style: TextStyle(color: Colors.green),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
+                                      ));
                             },
                             dropStateChanged: (isOpened) {
                               _isDropDownOpened = isOpened;
@@ -345,37 +355,39 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
               addVerticalSpace(12.0),
               Visibility(
-                visible: isVisible,
+                visible: existingAddress.isEmpty?false:true,
                 child: Visibility(
-                  visible: existingAddress.length==0?false:true,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Container(
-                        margin: EdgeInsets.only(left: 10.0),
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: Text(
-                            'Or Select a Shipping Address',
-                            style: TextStyle(
-                                fontSize: 6.w, fontWeight: FontWeight.bold),
-                          ),
-                        )),
+                  visible: isVisible,
+                  child: Visibility(
+                    visible: existingAddress.length == 0 ? false : true,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                          margin: EdgeInsets.only(left: 10.0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text(
+                              'Or Select a Shipping Address',
+                              style: TextStyle(
+                                  fontSize: 6.w, fontWeight: FontWeight.bold),
+                            ),
+                          )),
+                    ),
                   ),
                 ),
               ),
 
               /************** Show Address List ******************/
               Visibility(
-                replacement: SizedBox.shrink(),
-                visible: isVisible,
+                visible: existingAddress.isEmpty ? false : true,
                 child: Visibility(
-                  visible: existingAddress.length==0?false:true,
+                  visible: isVisible,
                   child: CarouselSlider(
                     options: CarouselOptions(
                         // enlargeStrategy: CenterPageEnlargeStrategy.height,
                         disableCenter: true,
                         pageSnapping: true,
-                        height: 22.h,
+                        // height: 26.h,
                         viewportFraction: .9,
                         aspectRatio: 2.0,
                         // autoPlay: true,
@@ -489,7 +501,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: Card(
                     color: Colors.white60,
                     child: Padding(

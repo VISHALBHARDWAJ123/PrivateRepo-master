@@ -97,20 +97,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               Container(
                                 alignment: Alignment.bottomCenter,
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          5.h, 3.5.h, 6.h, 3.5.h),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        child: Container(
-                                            width: 20.h,
-                                            height: 20.h,
-                                            child: Image.asset(
-                                              "MyAssets/logo.png",
-                                              fit: BoxFit.fill,
-                                            )),
+                                    InkWell(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.h, 3.5.h, 5.h, 3.5.h),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          child: Container(
+                                              width: 20.h,
+                                              height: 20.h,
+                                              child: Image.asset(
+                                                "MyAssets/logo.png",
+                                                fit: BoxFit.fill,
+                                              )),
+                                        ),
                                       ),
                                     ),
                                     Text(
@@ -119,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.black,
                                           fontSize: 26.dp,
                                           fontWeight: FontWeight.w900,
-                                          letterSpacing: 1),
+                                          letterSpacing: 2),
                                     )
                                   ],
                                 ),
@@ -142,7 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Container(
                                             height: 15.w,
                                             child: TextFormField(
-                                              autofocus: true,
                                               controller: emailController,
                                               style: TextStyle(
                                                   color: Colors.black),
@@ -265,9 +270,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             ApiCalls.login(
                                                               context,
                                                               emailController
-                                                                  .text.toString().trim(),
+                                                                  .text
+                                                                  .toString()
+                                                                  .trim(),
                                                               passController
-                                                                  .text.trim(),
+                                                                  .text,
                                                             ).then((value) {
                                                               Navigator.pushReplacement(
                                                                   context,
