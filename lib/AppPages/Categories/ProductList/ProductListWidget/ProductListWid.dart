@@ -9,10 +9,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:untitled2/utils/HeartIcon.dart';
 
 import '../SubCatProducts.dart';
 
@@ -254,20 +256,26 @@ class _prodListWidgetState extends State<prodListWidget> {
                                       ],
                                     ),
                                   ),
-                                  IgnorePointer(
-                                    ignoring: widget
+                                  AddCartBtn(
+                                    productId: widget.products[index].id,
+                                    // width: 2.w,
+                                    isTrue: true,
+                                    guestCustomerId: widget.guestCustomerId,
+                                    checkIcon: widget
                                             .products[index].stockQuantity
-                                            .toString()
                                             .contains('Out of stock')
-                                        ? true
-                                        : false,
-                                    child: AddCartBtn(
-                                      productId: widget.products[index].id,
-                                      // width: 2.w,
-                                      isTrue: true,
-                                      guestCustomerId: widget.guestCustomerId,
-                                      // fontSize: 12,
-                                    ),
+                                        ? Icon(HeartIcon.cross)
+                                        : Icon(Icons.check),
+                                    text: widget.products[index].stockQuantity
+                                            .contains('Out of stock')
+                                        ? 'Out of Stock'.toUpperCase()
+                                        : 'ADD TO CArt'.toUpperCase(),
+                                    color: widget
+                                            .products[index].stockQuantity
+                                            .contains('Out of stock')
+                                        ? Colors.grey
+                                        : ConstantsVar.appColor,
+                                    // fontSize: 12,
                                   )
                                 ],
                               ),

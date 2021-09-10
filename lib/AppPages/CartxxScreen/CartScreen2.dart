@@ -199,144 +199,94 @@ class _CartScreen2State extends State<CartScreen2>
       if (guestCustomerID == null || guestCustomerID == '') {
         return CartLoginNotice();
       } else if (cartItems.isNotEmpty) {
-        return Scaffold(
-          appBar: new AppBar(
-            backgroundColor: ConstantsVar.appColor,
-            toolbarHeight: 18.w,
-            centerTitle: true,
-            title: InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    CupertinoPageRoute(builder: (context) => MyHomePage()),
-                  );
-                },
-                child: Image.asset('MyAssets/logo.png',
-                    width: 15.w, height: 15.w)),
-          ),
-          body: Visibility(
-            visible: visibility,
-            child: SmartRefresher(
-              controller: _refreshController,
-              enablePullDown: true,
-              enablePullUp: false,
-              onRefresh: showAndUpdateUi,
-              header: WaterDropHeader(),
-              child: Stack(
-                children: [
-                  Container(
-                      child: SingleChildScrollView(
-                    physics: ScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(20.0),
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: Text(
-                              'My Cart'.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 6.w, fontWeight: FontWeight.w900),
+        return SafeArea(
+          top: true,
+          bottom: true,
+          child: Scaffold(
+            appBar: new AppBar(
+              backgroundColor: ConstantsVar.appColor,
+              toolbarHeight: 18.w,
+              centerTitle: true,
+              title: InkWell(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      CupertinoPageRoute(builder: (context) => MyHomePage()),
+                    );
+                  },
+                  child: Image.asset('MyAssets/logo.png',
+                      width: 15.w, height: 15.w)),
+            ),
+            body: Visibility(
+              visible: visibility,
+              child: SmartRefresher(
+                controller: _refreshController,
+                enablePullDown: true,
+                enablePullUp: false,
+                onRefresh: showAndUpdateUi,
+                header: WaterDropHeader(),
+                child: Stack(
+                  children: [
+                    Container(
+                        child: SingleChildScrollView(
+                      physics: ScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(20.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                'My Cart'.toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 6.w, fontWeight: FontWeight.w900),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFEEEEEE),
+                          SizedBox(
+                            height: 4,
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  'price details'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                    color: Colors.grey,
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFEEEEEE),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(
+                                    'price details'.toUpperCase(),
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 18,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Sub-Total:',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Text(
-                                      subTotal,
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Shipping:',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Text(
-                                      shipping == null
-                                          ? 'No Shipping Available for now '
-                                          : shipping,
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontSize: 15,
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Visibility(
-                                  visible: showDiscount,
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Discount:',
+                                        'Sub-Total:',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
-                                          fontSize: 14,
+                                          fontSize: 15,
                                         ),
                                       ),
                                       Text(
-                                        discountPrice,
+                                        subTotal,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 15,
@@ -345,227 +295,540 @@ class _CartScreen2State extends State<CartScreen2>
                                     ],
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 4.0, right: 4.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Tax 5%:',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    Text(
-                                      taxPrice,
-                                      style: TextStyle(
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Shipping:',
+                                        style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Divider(
-                            thickness: 2,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total Amount ',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                totalAmount,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Divider(
-                            thickness: 2,
-                          ),
-                        ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.all(8.0),
-                            itemCount: cartItems.length,
-                            itemBuilder: (context, index) {
-                              return CartItem(
-                                itemID: cartItems[index].itemId,
-                                quantity: cartItems[index].quantity,
-                                title: cartItems[index].productName,
-                                sku: '${cartItems[index].sku}',
-                                price: cartItems[index].subTotal,
-                                imageUrl: cartItems[index].picture.imageUrl,
-                                updateUi: () {
-                                  showAndUpdateUi();
-                                  _refreshController.requestRefresh();
-
-                                },
-                                reload: () {
-                                  showAndUpdateUi();
-                                  _refreshController.requestRefresh();
-
-                                },
-                                id: guestCustomerID,
-                                productId: cartItems[index].productId,
-                                quantity2: cartItems[index].quantity,
-                              );
-                            }),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Divider(
-                            thickness: 2,
-                          ),
-                        ),
-
-                        /******* Discount layout started **********/
-                        Container(
-                            margin: EdgeInsets.all(12.0),
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    'Discount Code',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: 5.4.w),
+                                        ),
+                                      ),
+                                      Text(
+                                        shipping == null
+                                            ? 'No Shipping Available for now '
+                                            : shipping,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 15,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
                                   ),
                                 ),
-
-                                /******* Apply coupon Code design *************/
-                                Visibility(
-                                  visible: applyCouponCode,
-                                  child: Container(
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Visibility(
+                                    visible: showDiscount,
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Flexible(
-                                          flex: 4,
-                                          child: Container(
-                                            child: new TextField(
-                                                controller: discountController,
-                                                decoration: InputDecoration(
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .black)),
-                                                    border: OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.black)),
-                                                    contentPadding:
-                                                        EdgeInsets.all(12.0))),
+                                      children: [
+                                        Text(
+                                          'Discount:',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 14,
                                           ),
                                         ),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            textStyle: TextStyle(
-                                                // fontSize: 26.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          onPressed: () async {
-                                            if (discountController.text
-                                                    .toString()
-                                                    .trim()
-                                                    .length ==
-                                                0) {
-                                              Fluttertoast.showToast(
-                                                  msg: 'Enter coupon code');
-                                            } else {
-                                              ApiCalls.applyCoupon(
-                                                      ConstantsVar.apiTokken
-                                                          .toString(),
-                                                      ConstantsVar.customerID,
-                                                      discountController.text
-                                                          .toString(),
-                                                      _refreshController)
-                                                  .then((value) {
-                                                setState(() {
-                                                  if (value == 'true') {
-                                                    removeCouponCode = true;
-                                                  }
-                                                });
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(6.0)),
-                                            child: Center(
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 4.w,
-                                                    horizontal: 1.w),
-                                                child: Text(
-                                                  'Apply Coupon',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      fontSize: 4.w,
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        Text(
+                                          discountPrice,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        )
                                       ],
                                     ),
                                   ),
                                 ),
-                                Visibility(
-                                  visible: false,
-                                  child: Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text('Entered coupon code - ' +
-                                            discountController.text.toString()),
-                                        addHorizontalSpace(20),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: InkWell(
-                                            onTap: () {
-                                              ApiCalls.removeCoupon(
-                                                      context,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 4.0, right: 4.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Tax 5%:',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        taxPrice,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(
+                              thickness: 2,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total Amount ',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  totalAmount,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(
+                              thickness: 2,
+                            ),
+                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.all(8.0),
+                              itemCount: cartItems.length,
+                              itemBuilder: (context, index) {
+                                return CartItem(
+                                  itemID: cartItems[index].itemId,
+                                  quantity: cartItems[index].quantity,
+                                  title: cartItems[index].productName,
+                                  sku: '${cartItems[index].sku}',
+                                  price: cartItems[index].subTotal,
+                                  imageUrl: cartItems[index].picture.imageUrl,
+                                  updateUi: () {
+                                    showAndUpdateUi();
+                                    _refreshController.requestRefresh();
+                                  },
+                                  reload: () {
+                                    showAndUpdateUi();
+                                    _refreshController.requestRefresh();
+                                  },
+                                  id: guestCustomerID,
+                                  productId: cartItems[index].productId,
+                                  quantity2: cartItems[index].quantity,
+                                );
+                              }),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(
+                              thickness: 2,
+                            ),
+                          ),
+
+                          /******* Discount layout started **********/
+                          Container(
+                              margin: EdgeInsets.all(12.0),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Text(
+                                      'Discount Code',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 5.4.w),
+                                    ),
+                                  ),
+
+                                  /******* Apply coupon Code design *************/
+                                  Visibility(
+                                    visible: applyCouponCode,
+                                    child: Container(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Flexible(
+                                            flex: 4,
+                                            child: Container(
+                                              child: new TextField(
+                                                  controller:
+                                                      discountController,
+                                                  decoration: InputDecoration(
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Colors
+                                                                      .black)),
+                                                      border: OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  color: Colors
+                                                                      .black)),
+                                                      contentPadding:
+                                                          EdgeInsets.all(
+                                                              12.0))),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              textStyle: TextStyle(
+                                                  // fontSize: 26.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            onPressed: () async {
+                                              if (discountController.text
+                                                      .toString()
+                                                      .trim()
+                                                      .length ==
+                                                  0) {
+                                                Fluttertoast.showToast(
+                                                    msg: 'Enter coupon code');
+                                              } else {
+                                                ApiCalls.applyCoupon(
+                                                        ConstantsVar.apiTokken
+                                                            .toString(),
+                                                        ConstantsVar.customerID,
+                                                        discountController.text
+                                                            .toString(),
+                                                        _refreshController)
+                                                    .then((value) {
+                                                  setState(() {
+                                                    if (value == 'true') {
+                                                      removeCouponCode = true;
+                                                    }
+                                                  });
+                                                });
+                                              }
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          6.0)),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 4.w,
+                                                      horizontal: 1.w),
+                                                  child: Text(
+                                                    'Apply Coupon',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontSize: 4.w,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: false,
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('Entered coupon code - ' +
+                                              discountController.text
+                                                  .toString()),
+                                          addHorizontalSpace(20),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: InkWell(
+                                              onTap: () {
+                                                ApiCalls.removeCoupon(
+                                                        context,
+                                                        ConstantsVar.apiTokken
+                                                            .toString(),
+                                                        ConstantsVar.customerID,
+                                                        discountController.text
+                                                            .toString(),
+                                                        _refreshController)
+                                                    .then((value) {
+                                                  if (value == 'true') {
+                                                    removeCouponCode = false;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                width: 24,
+                                                height: 24,
+                                                alignment: Alignment.center,
+                                                margin: EdgeInsets.only(
+                                                    right: 10, top: 8),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20)),
+                                                    color:
+                                                        ConstantsVar.appColor),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  /****** Remove coupon design *************/
+                                  // Visibility(
+                                  //   visible: removeCouponCode,
+                                  //   child: Container(
+                                  //     child: Row(
+                                  //       mainAxisAlignment:
+                                  //           MainAxisAlignment.spaceBetween,
+                                  //       children: <Widget>[
+                                  //         Flexible(
+                                  //           child: Container(
+                                  //               padding: EdgeInsets.all(4.0),
+                                  //               width: MediaQuery.of(context)
+                                  //                   .size
+                                  //                   .width,
+                                  //               height: 6.h,
+                                  //               decoration: BoxDecoration(
+
+                                  //                       BorderRadius.circular(6.0)),
+                                  //               child: Center(
+                                  //                 child: Text(
+                                  //                   discountController.text
+                                  //                           .toString() +
+                                  //                       ' ' +
+                                  //                       'coupon applied',
+                                  //                   maxLines: 1,
+                                  //                 ),
+                                  //               )),
+                                  //         ),
+                                  //         TextButton(
+                                  //           style: TextButton.styleFrom(
+                                  //             textStyle: TextStyle(
+                                  //                 fontSize: 26.sp,
+                                  //                 fontWeight: FontWeight.bold,
+                                  //                 color: Colors.black),
+                                  //           ),
+                                  //           onPressed: () async {
+                                  //             print('remove button clicked');
+                                  //             ApiCalls.removeCoupon(
+                                  //                     ConstantsVar.apiTokken
+                                  //                         .toString(),
+                                  //                     ConstantsVar.customerID,
+                                  //                     discountController.text
+                                  //                         .toString(),
+                                  //                     _refreshController)
+                                  //                 .then((value) {
+                                  //               if (value == 'true') {
+                                  //                 applyCouponCode = true;
+                                  //                 removeCouponCode = false;
+                                  //               }
+                                  //             });
+                                  //           },
+                                  //           child: Container(
+                                  //             height: 6.h,
+                                  //             padding: EdgeInsets.only(
+                                  //                 left: 12.0, right: 12.0),
+                                  //             decoration: BoxDecoration(
+                                  //                 color: Colors.black,
+                                  //                 borderRadius:
+                                  //                     BorderRadius.circular(6.0)),
+                                  //             child: Center(
+                                  //               child: Text(
+                                  //                 'Remove Coupon',
+                                  //                 style: TextStyle(
+                                  //                     color: Colors.white),
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
+
+                                  /****************Gift cards design ************/
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Text(
+                                        'Gift Cards',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontSize: 5.4.w),
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: applyGiftCard,
+                                    child: Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Flexible(
+                                            flex: 4,
+                                            child: Container(
+                                              // height: 5.h,
+                                              child: new TextField(
+                                                  controller:
+                                                      giftCardController,
+                                                  decoration: InputDecoration(
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Colors
+                                                                      .black)),
+                                                      border: OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  color: Colors
+                                                                      .black)),
+                                                      contentPadding:
+                                                          EdgeInsets.all(
+                                                              12.0))),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              textStyle: TextStyle(
+                                                  fontSize: 4.w,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            onPressed: () async {
+                                              if (giftCardController.text
+                                                      .toString()
+                                                      .length ==
+                                                  0) {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        'Please enter gift card number');
+                                              } else {
+                                                ApiCalls.applyGiftCard(
+                                                        ConstantsVar.apiTokken
+                                                            .toString(),
+                                                        ConstantsVar.customerID,
+                                                        giftCardController.text
+                                                            .toString())
+                                                    .then((value) {
+                                                  print('val $value');
+                                                  if (value == 'false') {
+                                                    setState(() {
+                                                      giftCardController
+                                                          .clear();
+                                                    });
+                                                  } else {}
+                                                });
+                                              }
+                                              print('clicked');
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          6.0)),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 4.w,
+                                                      horizontal: 1.w),
+                                                  child: Text(
+                                                    'Add Gift Card',
+                                                    style: TextStyle(
+                                                        fontSize: 4.w,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  /**************** remove Gift card ***************/
+                                  Visibility(
+                                    visible: removeGiftCard,
+                                    child: Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Container(
+                                                padding: EdgeInsets.all(4.0),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 6.h,
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        AppColor.PrimaryColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6.0)),
+                                                child: Center(
+                                                  child: Text(
+                                                    discountController.text
+                                                            .toString() +
+                                                        ' ' +
+                                                        'gift applied',
+                                                    maxLines: 1,
+                                                  ),
+                                                )),
+                                          ),
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              textStyle: TextStyle(
+                                                  fontSize: 26.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            onPressed: () async {
+                                              print(
+                                                  'remove gift button clicked');
+                                              ApiCalls.removeGiftCoupon(
                                                       ConstantsVar.apiTokken
                                                           .toString(),
                                                       ConstantsVar.customerID,
@@ -574,195 +837,23 @@ class _CartScreen2State extends State<CartScreen2>
                                                       _refreshController)
                                                   .then((value) {
                                                 if (value == 'true') {
-                                                  removeCouponCode = false;
+                                                  applyGiftCard = true;
+                                                  removeGiftCard = false;
                                                 }
                                               });
                                             },
                                             child: Container(
-                                              width: 24,
-                                              height: 24,
-                                              alignment: Alignment.center,
-                                              margin: EdgeInsets.only(
-                                                  right: 10, top: 8),
-                                              child: Icon(
-                                                Icons.close,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
+                                              height: 3.h,
+                                              padding: EdgeInsets.only(
+                                                  left: 12.0, right: 12.0),
                                               decoration: BoxDecoration(
+                                                  color: Colors.black,
                                                   borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(20)),
-                                                  color: ConstantsVar.appColor),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                /****** Remove coupon design *************/
-                                // Visibility(
-                                //   visible: removeCouponCode,
-                                //   child: Container(
-                                //     child: Row(
-                                //       mainAxisAlignment:
-                                //           MainAxisAlignment.spaceBetween,
-                                //       children: <Widget>[
-                                //         Flexible(
-                                //           child: Container(
-                                //               padding: EdgeInsets.all(4.0),
-                                //               width: MediaQuery.of(context)
-                                //                   .size
-                                //                   .width,
-                                //               height: 6.h,
-                                //               decoration: BoxDecoration(
-
-                                //                       BorderRadius.circular(6.0)),
-                                //               child: Center(
-                                //                 child: Text(
-                                //                   discountController.text
-                                //                           .toString() +
-                                //                       ' ' +
-                                //                       'coupon applied',
-                                //                   maxLines: 1,
-                                //                 ),
-                                //               )),
-                                //         ),
-                                //         TextButton(
-                                //           style: TextButton.styleFrom(
-                                //             textStyle: TextStyle(
-                                //                 fontSize: 26.sp,
-                                //                 fontWeight: FontWeight.bold,
-                                //                 color: Colors.black),
-                                //           ),
-                                //           onPressed: () async {
-                                //             print('remove button clicked');
-                                //             ApiCalls.removeCoupon(
-                                //                     ConstantsVar.apiTokken
-                                //                         .toString(),
-                                //                     ConstantsVar.customerID,
-                                //                     discountController.text
-                                //                         .toString(),
-                                //                     _refreshController)
-                                //                 .then((value) {
-                                //               if (value == 'true') {
-                                //                 applyCouponCode = true;
-                                //                 removeCouponCode = false;
-                                //               }
-                                //             });
-                                //           },
-                                //           child: Container(
-                                //             height: 6.h,
-                                //             padding: EdgeInsets.only(
-                                //                 left: 12.0, right: 12.0),
-                                //             decoration: BoxDecoration(
-                                //                 color: Colors.black,
-                                //                 borderRadius:
-                                //                     BorderRadius.circular(6.0)),
-                                //             child: Center(
-                                //               child: Text(
-                                //                 'Remove Coupon',
-                                //                 style: TextStyle(
-                                //                     color: Colors.white),
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-
-                                /****************Gift cards design ************/
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Text(
-                                      'Gift Cards',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 5.4.w),
-                                    ),
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: applyGiftCard,
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Flexible(
-                                          flex: 4,
-                                          child: Container(
-                                            // height: 5.h,
-                                            child: new TextField(
-                                                controller: giftCardController,
-                                                decoration: InputDecoration(
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .black)),
-                                                    border: OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.black)),
-                                                    contentPadding:
-                                                        EdgeInsets.all(12.0))),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            textStyle: TextStyle(
-                                                fontSize: 4.w,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          onPressed: () async {
-                                            if (giftCardController.text
-                                                    .toString()
-                                                    .length ==
-                                                0) {
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      'Please enter gift card number');
-                                            } else {
-                                              ApiCalls.applyGiftCard(
-                                                      ConstantsVar.apiTokken
-                                                          .toString(),
-                                                      ConstantsVar.customerID,
-                                                      giftCardController.text
-                                                          .toString())
-                                                  .then((value) {
-                                                print('val $value');
-                                                if (value == 'false') {
-                                                  setState(() {
-                                                    giftCardController.clear();
-                                                  });
-                                                } else {}
-                                              });
-                                            }
-                                            print('clicked');
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(6.0)),
-                                            child: Center(
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 4.w,
-                                                    horizontal: 1.w),
+                                                      BorderRadius.circular(
+                                                          6.0)),
+                                              child: Center(
                                                 child: Text(
-                                                  'Add Gift Card',
+                                                  'Remove Gift',
                                                   style: TextStyle(
                                                       fontSize: 4.w,
                                                       color: Colors.white),
@@ -770,114 +861,38 @@ class _CartScreen2State extends State<CartScreen2>
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-
-                                /**************** remove Gift card ***************/
-                                Visibility(
-                                  visible: removeGiftCard,
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: Container(
-                                              padding: EdgeInsets.all(4.0),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 6.h,
-                                              decoration: BoxDecoration(
-                                                  color: AppColor.PrimaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          6.0)),
-                                              child: Center(
-                                                child: Text(
-                                                  discountController.text
-                                                          .toString() +
-                                                      ' ' +
-                                                      'gift applied',
-                                                  maxLines: 1,
-                                                ),
-                                              )),
-                                        ),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            textStyle: TextStyle(
-                                                fontSize: 26.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          onPressed: () async {
-                                            print('remove gift button clicked');
-                                            ApiCalls.removeGiftCoupon(
-                                                    ConstantsVar.apiTokken
-                                                        .toString(),
-                                                    ConstantsVar.customerID,
-                                                    discountController.text
-                                                        .toString(),
-                                                    _refreshController)
-                                                .then((value) {
-                                              if (value == 'true') {
-                                                applyGiftCard = true;
-                                                removeGiftCard = false;
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 3.h,
-                                            padding: EdgeInsets.only(
-                                                left: 12.0, right: 12.0),
-                                            decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(6.0)),
-                                            child: Center(
-                                              child: Text(
-                                                'Remove Gift',
-                                                style: TextStyle(
-                                                    fontSize: 4.w,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Divider(
-                            thickness: 2,
+                                  )
+                                ],
+                              )),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(
+                              thickness: 2,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10.w,
-                        ),
-                      ],
+                          SizedBox(
+                            height: 10.w,
+                          ),
+                        ],
+                      ),
+                    )),
+                    Visibility(
+                      visible: showLoading,
+                      child: Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.centerRight,
+                            child: showloader()),
+                      ),
                     ),
-                  )),
-                  Visibility(
-                    visible: showLoading,
-                    child: Positioned.fill(
-                      child: Align(
-                          alignment: Alignment.centerRight,
-                          child: showloader()),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: bottomButtons(context),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: bottomButtons(context),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -930,8 +945,7 @@ class _CartScreen2State extends State<CartScreen2>
             body: Container(
               child: Center(
                 child: Text(
-                  'no items in cart.\n \n \n whoever said that money cannot buy happiness, does not know where to do shopping.\n\n\n enjoy shopping on The One'
-                      .toUpperCase(),
+                  'NO ITEMS IN CART.\n \n \n WHOEVER SAID THAT MONEY CANNOT BUY HAPPINESS, DID NOT KNOW WHERE TO DO SHOPPING.\n\n\n ENJOY SHOPPING ON THE One!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       letterSpacing: 1,
@@ -975,7 +989,7 @@ class _CartScreen2State extends State<CartScreen2>
         }
       },
       child: Container(
-        height: 45,
+        height: 11.w,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2.0),

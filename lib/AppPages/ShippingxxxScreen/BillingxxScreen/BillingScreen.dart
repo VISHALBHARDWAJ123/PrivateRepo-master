@@ -208,60 +208,63 @@ class _BillingDetailsState extends State<BillingDetails>
                     /************** Show Address List ******************/
                     Visibility(
                       visible: existingAddress.isEmpty ? false : true,
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                            disableCenter: true,
-                            pageSnapping: true,
-                            // height: 26.h,
-                            viewportFraction: .9,
-                            aspectRatio: 2.0,
-                            enlargeCenterPage: false),
-                        items: existingAddress.map((existingAddress) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return AddressItem(
-                                buttonName: "Bill To This Address",
-                                firstName: existingAddress.firstName,
-                                lastName: existingAddress.lastName,
-                                email: existingAddress.email,
-                                companyEnabled: existingAddress.companyEnabled,
-                                companyRequired:
-                                    existingAddress.companyRequired,
-                                countryEnabled: existingAddress.countryEnabled,
-                                countryId: existingAddress.countryId,
-                                countryName: existingAddress.countryName,
-                                stateProvinceEnabled:
-                                    existingAddress.stateProvinceEnabled,
-                                cityEnabled: existingAddress.cityEnabled,
-                                cityRequired: existingAddress.cityRequired,
-                                city: existingAddress.city,
-                                streetAddressEnabled:
-                                    existingAddress.streetAddressEnabled,
-                                streetAddressRequired:
-                                    existingAddress.streetAddressRequired,
-                                address1: existingAddress.address1,
-                                streetAddress2Enabled:
-                                    existingAddress.streetAddress2Enabled,
-                                streetAddress2Required:
-                                    existingAddress.streetAddress2Required,
-                                zipPostalCodeEnabled:
-                                    existingAddress.zipPostalCodeEnabled,
-                                zipPostalCodeRequired:
-                                    existingAddress.zipPostalCodeRequired,
-                                zipPostalCode: existingAddress.zipPostalCode,
-                                phoneEnabled: existingAddress.phoneEnabled,
-                                phoneRequired: existingAddress.phoneRequired,
-                                phoneNumber: existingAddress.phoneNumber,
-                                faxEnabled: existingAddress.faxEnabled,
-                                faxRequired: existingAddress.faxRequired,
-                                faxNumber: existingAddress.faxNumber,
-                                id: existingAddress.id,
-                                callback: (String value) {},
-                                guestId: guestCustomerId,
-                              );
-                            },
-                          );
-                        }).toList(),
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: List.generate(
+                            existingAddress.length,
+                            (index) => AddressItem(
+                                  buttonName: "Bill To This Address",
+                                  firstName: existingAddress[index].firstName,
+                                  lastName: existingAddress[index].lastName,
+                                  email: existingAddress[index].email,
+                                  companyEnabled:
+                                      existingAddress[index].companyEnabled,
+                                  companyRequired:
+                                      existingAddress[index].companyRequired,
+                                  countryEnabled:
+                                      existingAddress[index].countryEnabled,
+                                  countryId: existingAddress[index].countryId,
+                                  countryName:
+                                      existingAddress[index].countryName,
+                                  stateProvinceEnabled: existingAddress[index]
+                                      .stateProvinceEnabled,
+                                  cityEnabled:
+                                      existingAddress[index].cityEnabled,
+                                  cityRequired:
+                                      existingAddress[index].cityRequired,
+                                  city: existingAddress[index].city,
+                                  streetAddressEnabled: existingAddress[index]
+                                      .streetAddressEnabled,
+                                  streetAddressRequired: existingAddress[index]
+                                      .streetAddressRequired,
+                                  address1: existingAddress[index].address1,
+                                  streetAddress2Enabled: existingAddress[index]
+                                      .streetAddress2Enabled,
+                                  streetAddress2Required: existingAddress[index]
+                                      .streetAddress2Required,
+                                  zipPostalCodeEnabled: existingAddress[index]
+                                      .zipPostalCodeEnabled,
+                                  zipPostalCodeRequired: existingAddress[index]
+                                      .zipPostalCodeRequired,
+                                  zipPostalCode:
+                                      existingAddress[index].zipPostalCode,
+                                  phoneEnabled:
+                                      existingAddress[index].phoneEnabled,
+                                  phoneRequired:
+                                      existingAddress[index].phoneRequired,
+                                  phoneNumber:
+                                      existingAddress[index].phoneNumber,
+                                  faxEnabled: existingAddress[index].faxEnabled,
+                                  faxRequired:
+                                      existingAddress[index].faxRequired,
+                                  faxNumber: existingAddress[index].faxNumber,
+                                  id: existingAddress[index].id,
+                                  callback: (String value) {},
+                                  guestId: guestCustomerId,
+                                  // isLoading: isLoading,
+                                )),
                       ),
                     ),
                     Padding(

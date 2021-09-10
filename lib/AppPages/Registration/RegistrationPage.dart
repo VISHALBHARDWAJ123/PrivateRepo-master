@@ -72,9 +72,10 @@ class _RegstrationPageState extends State<RegstrationPage>
         context: context,
         builder: (context) {
           return CustomDialogBox(
-            descriptions: 'Registration and Login Successfully Complete.',
+            descriptions: 'Registration and Login Successfully Completed.',
             text: 'Okay',
             img: 'MyAssets/logo.png',
+            isOkay: true,
           );
         });
   }
@@ -184,13 +185,14 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 elevation: 8.0,
                                 child: Container(
                                   child: TextFormField(
+                                    maxLength: 100,
                                     textInputAction: TextInputAction.next,
                                     controller: widget.fController,
                                     validator: (firstName) {
                                       if (isFirstName(firstName!))
                                         return null;
                                       else
-                                        return 'Enter a valid email address';
+                                        return 'Enter a valid First Name';
                                     },
                                     cursorColor: Colors.black,
                                     style: TextStyle(
@@ -212,6 +214,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 elevation: 8.0,
                                 child: Container(
                                   child: TextFormField(
+                                    maxLength: 100,
                                     validator: (lastName) {
                                       if (isLastName(lastName!))
                                         return null;
@@ -530,8 +533,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   Map<String, dynamic> regBody = {
                                     'Email': widget.eController.text,
                                     'Username': '',
-                                    'Password':
-                                        widget.pController.text,
+                                    'Password': widget.pController.text,
                                     'ConfirmPassword': widget.cpController.text,
                                     'Gender': "M",
                                     'FirstName': widget.fController.text,
@@ -550,12 +552,22 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     'Phone': '+971' + phnNumber,
                                     'Newsletter': false,
                                   };
-                                  print(
-                                      widget.pController.text);
+                                  print(widget.pController.text);
                                   String jsonString = jsonEncode(regBody);
                                   ConstantsVar.prefs
                                       .setString('regBody', jsonString)
-                                      .then((val) => register());
+                                      .then((val) => Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => OTP_Screen(
+                                                  title: 'OTP SCREEN',
+                                                  mainBtnTitle: 'Verify otp'
+                                                      .toUpperCase(),
+                                                  phoneNumber: phnNumbe,
+                                                  email: widget.eController.text
+                                                      .toString(),
+                                                  password: widget
+                                                      .cpController.text))));
                                 }
                               },
                               color: ConstantsVar.appColor,
@@ -612,7 +624,8 @@ class _RegstrationPageState extends State<RegstrationPage>
 }
 
 mixin InputValidationMixin {
-  bool isPasswordValid(String password) => password.length < 6||password.length ==0;
+  bool isPasswordValid(String password) =>
+      password.length < 6 || password.length == 0;
 
   bool isPasswordMatch(String password, String confirmPass) =>
       password == confirmPass;

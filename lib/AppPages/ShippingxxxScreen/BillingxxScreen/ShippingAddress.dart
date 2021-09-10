@@ -58,8 +58,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
   }
 
   Future<void> getPickupPoints(String? addressString) async {
-    final pickUri = Uri.parse(
-        BuildConfig.base_url+'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
+    final pickUri = Uri.parse(BuildConfig.base_url +
+        'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
     try {
       var pickPointResponse = await http.get(pickUri);
       print('${pickPointResponse.body}');
@@ -106,8 +106,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
               showAddresses = true;
 
               getPickupPoints(addressString);
-              paymentUrl =
-                  BuildConfig.base_url+'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${id}&PaymentMethod=Payments.CyberSource';
+              paymentUrl = BuildConfig.base_url +
+                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${id}&PaymentMethod=Payments.CyberSource';
               /*************************Get all order summary*********************/
               ApiCalls.showOrderSummary(ConstantsVar.apiTokken.toString(), id)
                   .then(
@@ -278,7 +278,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                           padding: const EdgeInsets.all(15.0),
                           child: AwesomeDropDown(
                             selectedItemTextStyle: TextStyle(fontSize: 14),
-                            dropDownIcon: Icon(Icons.arrow_drop_down_circle),
+                            dropDownIcon: Icon(Icons.arrow_drop_down_circle,size: 24,),
                             padding: 16,
                             numOfListItemToShow: _list.length,
                             isPanDown: _isPanDown,
@@ -292,7 +292,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               // int index = _list.indexOf(_selectedItem);
                               int index = _list.indexOf(_selectedItem);
 
-                              ApiCalls.addAndSelectShippingAddress  (
+                              ApiCalls.addAndSelectShippingAddress(
                                       '${ConstantsVar.apiTokken}',
                                       ID,
                                       myPickPoint[index].id)
@@ -355,7 +355,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
               addVerticalSpace(12.0),
               Visibility(
-                visible: existingAddress.isEmpty?false:true,
+                visible: existingAddress.isEmpty ? false : true,
                 child: Visibility(
                   visible: isVisible,
                   child: Visibility(
@@ -382,62 +382,58 @@ class _ShippingAddressState extends State<ShippingAddress> {
                 visible: existingAddress.isEmpty ? false : true,
                 child: Visibility(
                   visible: isVisible,
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                        // enlargeStrategy: CenterPageEnlargeStrategy.height,
-                        disableCenter: true,
-                        pageSnapping: true,
-                        // height: 26.h,
-                        viewportFraction: .9,
-                        aspectRatio: 2.0,
-                        // autoPlay: true,
-                        enlargeCenterPage: false),
-                    items: existingAddress.map((existingAddress) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return AddressItem(
-                            buttonName: "Ship To This Address",
-                            firstName: existingAddress.firstName,
-                            lastName: existingAddress.lastName,
-                            email: existingAddress.email,
-                            companyEnabled: existingAddress.companyEnabled,
-                            companyRequired: existingAddress.companyRequired,
-                            countryEnabled: existingAddress.countryEnabled,
-                            countryId: existingAddress.countryId,
-                            countryName: existingAddress.countryName,
-                            stateProvinceEnabled:
-                                existingAddress.stateProvinceEnabled,
-                            cityEnabled: existingAddress.cityEnabled,
-                            cityRequired: existingAddress.cityRequired,
-                            city: existingAddress.city,
-                            streetAddressEnabled:
-                                existingAddress.streetAddressEnabled,
-                            streetAddressRequired:
-                                existingAddress.streetAddressRequired,
-                            address1: existingAddress.address1,
-                            streetAddress2Enabled:
-                                existingAddress.streetAddress2Enabled,
-                            streetAddress2Required:
-                                existingAddress.streetAddress2Required,
-                            zipPostalCodeEnabled:
-                                existingAddress.zipPostalCodeEnabled,
-                            zipPostalCodeRequired:
-                                existingAddress.zipPostalCodeRequired,
-                            zipPostalCode: existingAddress.zipPostalCode,
-                            phoneEnabled: existingAddress.phoneEnabled,
-                            phoneRequired: existingAddress.phoneRequired,
-                            phoneNumber: existingAddress.phoneNumber,
-                            faxEnabled: existingAddress.faxEnabled,
-                            faxRequired: existingAddress.faxRequired,
-                            faxNumber: existingAddress.faxNumber,
-                            id: existingAddress.id,
-                            callback: (String value) {},
-                            guestId: ID,
-                            // isLoading: isLoading,
-                          );
-                        },
-                      );
-                    }).toList(),
+                  child: ListView(
+                    physics: NeverScrollableScrollPhysics(),
+
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: List.generate(
+                        existingAddress.length,
+                        (index) => AddressItem(
+                              buttonName: "Ship To This Address",
+                              firstName: existingAddress[index].firstName,
+                              lastName: existingAddress[index].lastName,
+                              email: existingAddress[index].email,
+                              companyEnabled:
+                                  existingAddress[index].companyEnabled,
+                              companyRequired:
+                                  existingAddress[index].companyRequired,
+                              countryEnabled:
+                                  existingAddress[index].countryEnabled,
+                              countryId: existingAddress[index].countryId,
+                              countryName: existingAddress[index].countryName,
+                              stateProvinceEnabled:
+                                  existingAddress[index].stateProvinceEnabled,
+                              cityEnabled: existingAddress[index].cityEnabled,
+                              cityRequired: existingAddress[index].cityRequired,
+                              city: existingAddress[index].city,
+                              streetAddressEnabled:
+                                  existingAddress[index].streetAddressEnabled,
+                              streetAddressRequired:
+                                  existingAddress[index].streetAddressRequired,
+                              address1: existingAddress[index].address1,
+                              streetAddress2Enabled:
+                                  existingAddress[index].streetAddress2Enabled,
+                              streetAddress2Required:
+                                  existingAddress[index].streetAddress2Required,
+                              zipPostalCodeEnabled:
+                                  existingAddress[index].zipPostalCodeEnabled,
+                              zipPostalCodeRequired:
+                                  existingAddress[index].zipPostalCodeRequired,
+                              zipPostalCode:
+                                  existingAddress[index].zipPostalCode,
+                              phoneEnabled: existingAddress[index].phoneEnabled,
+                              phoneRequired:
+                                  existingAddress[index].phoneRequired,
+                              phoneNumber: existingAddress[index].phoneNumber,
+                              faxEnabled: existingAddress[index].faxEnabled,
+                              faxRequired: existingAddress[index].faxRequired,
+                              faxNumber: existingAddress[index].faxNumber,
+                              id: existingAddress[index].id,
+                              callback: (String value) {},
+                              guestId: ID,
+                              // isLoading: isLoading,
+                            )),
                   ),
                 ),
               ),

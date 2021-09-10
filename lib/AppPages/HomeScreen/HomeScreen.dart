@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
@@ -16,6 +19,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/GridViewModel.dart';
 import 'package:untitled2/PojoClass/itemGridModel.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/mobX/MobXBtmNav.dart';
 
@@ -26,28 +30,50 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+getCartBagdge(0);
+  }
+
+  Future getCartBagdge(int val) async {
+    ApiCalls.readCounter(
+            customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+        .then((value) {
+      setState(() {
+        context.read<cartCounter>().changeCounter(int.parse(value));
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LoaderOverlay(
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            primarySwatch: Colors.blue,
-            appBarTheme: AppBarTheme(
-              backgroundColor: ConstantsVar.appColor,
-            )),
-        home: MyHomePage(),
+      child: FlutterSizer(
+        builder: (context, ori, deviceType) => MaterialApp(
+          title: 'THE One',
+          theme: ThemeData(
+              primarySwatch: Colors.blue,
+              appBarTheme: AppBarTheme(
+                backgroundColor: ConstantsVar.appColor,
+              )),
+          home: MyHomePage(),
+        ),
       ),
     );
   }
-}
+
+  }
 
 class MyHomePage extends StatefulWidget {
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage>
     with AutomaticKeepAliveClientMixin {
+
   List<GridViewModel> mList = [];
   final counter = Counter();
   List<GridPojo> mList1 = [];
@@ -91,7 +117,8 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    initSharedPrefs();
+    initSharedPrefs().then((value) => getCartBagdge(0));
+
     // _controller = TabController(length: 4, vsync: this);
   }
 
@@ -174,8 +201,17 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  void initSharedPrefs() async {
+  Future initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
+  }
+  Future getCartBagdge(int val) async {
+    ApiCalls.readCounter(
+        customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+        .then((value) {
+      setState(() {
+        context.read<cartCounter>().changeCounter(int.parse(value));
+      });
+    });
   }
 
   @override

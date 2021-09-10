@@ -109,7 +109,7 @@ class _AddressItemState extends State<AddressItem> {
         ),
         color: Colors.white,
         child: Container(
-          height: 35.h,
+          height: 25.h,
           margin: EdgeInsets.only(
             left: 10,
             right: 10,

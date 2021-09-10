@@ -15,6 +15,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
@@ -33,7 +34,6 @@ class _SearchPageState extends State<SearchPage> {
   late Animation<double> size;
   bool isLoadVisible = false;
   bool isListVisible = false;
-  bool isLoading = true;
   TextEditingController _searchController = TextEditingController();
 
   List<Color> colorList = [
@@ -56,6 +56,7 @@ class _SearchPageState extends State<SearchPage> {
   Color btnColor = Colors.black;
   int pageIndex = 0;
   var guestCustomerId;
+  late bool noMore;
 
   RefreshController _refreshController = RefreshController();
 
@@ -66,6 +67,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    noMore = false;
     // currentFocus = FocusScope.of(context);
     guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
   }
@@ -182,6 +184,9 @@ class _SearchPageState extends State<SearchPage> {
                                           if (!currentFocus.hasPrimaryFocus) {
                                             currentFocus.unfocus();
                                           }
+                                          setState(() {
+                                            noMore = false;
+                                          });
                                           searchProducts(
                                                   _searchController.text
                                                       .toString(),
@@ -205,7 +210,9 @@ class _SearchPageState extends State<SearchPage> {
                                 child: SmartRefresher(
                                   onLoading: _onLoading,
                                   enablePullUp:
-                                      isLoading == false ? true : false,
+                                      searchedProducts.length == totalCount
+                                          ? false
+                                          : true,
                                   enablePullDown: false,
                                   enableTwoLevel: false,
                                   footer: CustomFooter(
@@ -394,6 +401,36 @@ class _SearchPageState extends State<SearchPage> {
                                                             isTrue: true,
                                                             guestCustomerId:
                                                                 guestCustomerId,
+                                                            checkIcon: searchedProducts[
+                                                                        index]
+                                                                    .stockAvailability
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'Out of stock')
+                                                                ? Icon(HeartIcon
+                                                                    .cross)
+                                                                : Icon(Icons
+                                                                    .check),
+
+                                                            text: searchedProducts[
+                                                                        index]
+                                                                    .stockAvailability
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'Out of stock')
+                                                                ? 'OUT OF STOCK'
+                                                                : 'add to cart'
+                                                                    .toUpperCase(),
+
+                                                            color: searchedProducts[
+                                                                        index]
+                                                                    .stockAvailability
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'Out of stock')
+                                                                ? Colors.grey
+                                                                : ConstantsVar
+                                                                    .appColor,
                                                             // fontSize: 4.w,
                                                           ),
                                                         ],
@@ -416,7 +453,9 @@ class _SearchPageState extends State<SearchPage> {
                                 size: 90,
                               ),
                             ),
-                          )
+                          ),
+                          Visibility(
+                              visible: noMore, child: Text('No Products Found'))
                         ],
                       ),
                     ),
@@ -440,7 +479,6 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       searchedProducts.clear();
       isLoadVisible = true;
-      isLoading = true;
       isListVisible = false;
     });
     final uri = Uri.parse(BuildConfig.base_url +
@@ -449,37 +487,45 @@ class _SearchPageState extends State<SearchPage> {
       var response = await http.get(uri);
       var jsonMap = jsonDecode(response.body);
       print(jsonMap);
-      SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
-
-
-      setState(() {
-        isLoadVisible = false;
-        isLoading = false;
-        searchedProducts = mySearchResponse.products;
-        isListVisible = true;
-        totalCount = int.parse(mySearchResponse.totalproducts);
-      });
-
-      if(totalCount == 0){
+      if (jsonMap['products'] == null) {
+        Fluttertoast.showToast(msg: 'No Product found');
         setState(() {
-          isListVisible = true;
-          isLoading = false;
-
-          Fluttertoast.showToast(msg: 'No Products found');
-        });
-      }
-
-
-
-      if (searchedProducts.length ==
-          int.parse(mySearchResponse.totalproducts)) {
-        setState(() {
-          isLoading = false;
           isLoadVisible = false;
-
+          noMore = true;
         });
+      } else {
+        SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
+        if (mySearchResponse.products == null) {
+          setState(() {
+            noMore = true;
+            isListVisible = false;
+            isLoadVisible = false;
+          });
+        } else {
+          setState(() {
+            isLoadVisible = false;
+
+            searchedProducts = mySearchResponse.products;
+            isListVisible = true;
+            totalCount = int.parse(mySearchResponse.totalproducts);
+          });
+
+          if (totalCount == 0) {
+            setState(() {
+              isListVisible = true;
+              //
+
+              Fluttertoast.showToast(msg: 'No Products found');
+            });
+          } else if (searchedProducts.length ==
+              int.parse(mySearchResponse.totalproducts)) {
+            setState(() {
+              isLoadVisible = false;
+            });
+          }
+          return searchedProducts;
+        }
       }
-      return searchedProducts;
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -511,9 +557,7 @@ class _SearchPageState extends State<SearchPage> {
       });
 
       if (searchedProducts.length == totalCount) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() {});
       }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());

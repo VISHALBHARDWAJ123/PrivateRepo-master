@@ -20,4 +20,5 @@ class BuildConfig {
   static final String update_cart_url = 'apis/UpdateCart';
 
   static var countryCode = '91';
+  static final apiTokenx = 'e9e3cb11b67dd0d8646d8e437274061ed537803b281e45a504321cafcdb7218a';
 }

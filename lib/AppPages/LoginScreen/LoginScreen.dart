@@ -10,8 +10,10 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -275,18 +277,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                   .trim(),
                                                               passController
                                                                   .text,
-                                                            ).then((value) {
-                                                              Navigator.pushReplacement(
-                                                                  context,
-                                                                  CupertinoPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              MyHomePage()));
+                                                            ).then((val) {
+                                                              val == true
+                                                                  ? getCartBagdge(0).then((value) => Navigator.pushAndRemoveUntil(
+                                                                      context,
+                                                                      CupertinoPageRoute(
+                                                                          builder: (context) =>
+                                                                              MyApp()),
+                                                                      (route) =>
+                                                                          false))
+                                                                  : null;
+
                                                               setState(() {
                                                                 ConstantsVar
                                                                         .isVisible =
                                                                     false;
-                                                                print(value);
+                                                                print(val);
                                                               });
                                                             });
                                                           },
@@ -401,5 +407,16 @@ class _LoginScreenState extends State<LoginScreen> {
         labelStyle: TextStyle(fontSize: 5.w, color: Colors.grey),
         labelText: name,
         border: InputBorder.none);
+  }
+
+  Future getCartBagdge(int val) async {
+    ApiCalls.readCounter(
+            customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+        .then((value) {
+      setState(() {
+        val = int.parse(value);
+        context.read<cartCounter>().changeCounter(val);
+      });
+    });
   }
 }

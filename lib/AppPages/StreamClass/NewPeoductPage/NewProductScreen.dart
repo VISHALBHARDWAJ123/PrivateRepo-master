@@ -14,6 +14,7 @@ import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Slider.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
+import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -72,7 +73,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         appBar: new AppBar(
           actions: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: InkWell(
                 radius: 48,
                 child: Consumer<cartCounter>(
@@ -195,6 +197,21 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                             productId: id,
                             isTrue: false,
                             guestCustomerId: guestCustomerID,
+                            checkIcon: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? Icon(HeartIcon.cross)
+                                : Icon(Icons.check),
+                            text: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? 'out of stock'.toUpperCase()
+                                : 'add to cart'.toUpperCase(),
+                            color: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? Colors.grey
+                                : ConstantsVar.appColor,
                           ),
                         )
                       ],

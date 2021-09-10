@@ -146,9 +146,9 @@ class _CartItemState extends State<CartItem> {
                                                   context
                                                       .read<cartCounter>()
                                                       .changeCounter(val);
+                                                  widget.reload();
                                                 });
 
-                                                widget.reload();
                                                 // widget.updateUi;
                                               });
                                             } else {
@@ -306,9 +306,9 @@ class _CartItemState extends State<CartItem> {
                         val = int.parse(value);
                       });
                       context.read<cartCounter>().changeCounter(val);
+                      widget.reload();
                     });
 
-                    widget.reload();
                     Fluttertoast.showToast(msg: 'Removed from Cart');
                   });
                 },

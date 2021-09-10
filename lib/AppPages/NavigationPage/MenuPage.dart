@@ -315,7 +315,7 @@ class _MenuPageState extends State<MenuPage> {
                                   builder: (context) => LoginScreen()));
                         } else {
                           clearUserDetails()
-                              .then((value) => Phoenix.rebirth(context));
+                              .whenComplete(() => Phoenix.rebirth(context));
                         }
                       },
                       child: Card(

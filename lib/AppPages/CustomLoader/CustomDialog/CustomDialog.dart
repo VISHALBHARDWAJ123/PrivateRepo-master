@@ -13,11 +13,13 @@ import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 class CustomDialogBox extends StatefulWidget {
   final String descriptions, text;
   final String img;
+  final bool isOkay;
 
   // final Route route;
 
   const CustomDialogBox({
     Key? key,
+    required this.isOkay,
     // required this.title,
     required this.descriptions,
     required this.text,
@@ -66,22 +68,35 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
+                height: 6,
+              ),
+              Text(
+                widget.text,
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
                 height: 22,
               ),
               Align(
-                alignment: Alignment.bottomRight,
-                child: FlatButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => MyHomePage()),
-                          (route) => false);
-                    },
-                    child: Text(
-                      widget.text,
-                      style: TextStyle(fontSize: 18),
-                    )),
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: widget.isOkay,
+                  child: FlatButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyHomePage()),
+                            (route) => false);
+                      },
+                      child: Container(
+                        child: Text(
+                          widget.text,
+                          style: TextStyle(fontSize: 18, color: Colors.black),
+                        ),
+                      )),
+                ),
               ),
             ],
           ),
@@ -157,7 +172,10 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
               Text(
                 widget.reason.length == 0
                     ? widget.descriptions
-                    : widget.descriptions+'!' + '\n' + '${widget.reason + '.'}',
+                    : widget.descriptions +
+                        '!' +
+                        '\n' +
+                        '${widget.reason + '.'}',
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),

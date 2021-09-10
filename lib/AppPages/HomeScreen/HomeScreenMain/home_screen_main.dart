@@ -112,9 +112,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                   // enlargeStrategy: CenterPageEnlargeStrategy.height,
                                   disableCenter: true,
                                   pageSnapping: true,
-                                  height: 24.h,
+                                  // height: 24.h,
                                   viewportFraction: 1,
-                                  // aspectRatio: 4 / 3,
+                                  aspectRatio: 4.8 / 2.1,
                                   autoPlay: true,
                                   enlargeCenterPage: false),
                               items: banners.map((banner) {
@@ -160,25 +160,25 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             ),
                           ),
                           Container(
-                            height: 29.5.h,
-                              // margin: EdgeInsets.only(top: 20.0, left: 10, right: 10),
-                              // height: Adaptive.h(24),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: ListView.builder(
-                                        padding: EdgeInsets.all(8),
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: productList.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return listContainer(
-                                              productList[index]);
-                                        }),
-                                  ),
-                                ],
-                              )),
+                            height: 30.h,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.all(8),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: productList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return listContainer(
+                                            productList[index]);
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ),
                           Visibility(
                             visible: categoryVisible,
                             child: Container(
@@ -222,7 +222,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         }));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         // height: Adaptive.w(50),
         // color: Colors.white60,
         width: Adaptive.w(32),
@@ -234,7 +234,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
             ClipRRect(
               borderRadius: BorderRadius.circular(4.0),
               child: Container(
-
                 color: Colors.white,
                 height: 16.h,
                 // width: Adaptive.w(32),
@@ -242,27 +241,33 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                 child: Card(
                   elevation: 20,
                   child: CachedNetworkImage(
-                      imageUrl: list.imageUrl[0], fit: BoxFit.fill,),
-                ),
-              ),
-            ),
-            addVerticalSpace(4.0),
-            Padding(
-              padding: EdgeInsets.only(left: 12, right: 12),
-              child: Center(
-                child: Text(
-                  list.name.toUpperCase(),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
+                    imageUrl: list.imageUrl[0],
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
             ),
+            addVerticalSpace(4.0),
+            Center(
+              child: Text(
+                list.name.toUpperCase(),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 2.8.w,
+
+                ),
+              ),
+            ),
             addVerticalSpace(1.0),
-            Text(
-              list.price,
-              style: TextStyle(color: Colors.white),
+            Center(
+              child: Text(
+                list.price,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 2.6.w,
+                ),
+              ),
             ),
           ],
         ),
@@ -341,14 +346,32 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Card(
-            elevation: 10,
-            shadowColor: Colors.grey,
-            child: Container(
-                width: Adaptive.w(41),
-                height: Adaptive.w(25),
-                child:
-                    CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+          InkWell(
+            onTap: () {
+              if (type == true) {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            SubCatNew(catId: '$categoryId', title: name)));
+              } else {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
+                }));
+              }
+            },
+            child: Card(
+              elevation: 10,
+              shadowColor: Colors.grey,
+              child: Container(
+                  width: Adaptive.w(41),
+                  height: Adaptive.w(25),
+                  child:
+                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+            ),
           ),
           InkWell(
             onTap: () {
@@ -429,14 +452,33 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
               ),
             ),
           ),
-          Card(
-            shadowColor: Colors.grey,
-            elevation: 10,
-            child: Container(
-                width: Adaptive.w(41),
-                height: Adaptive.w(25),
-                child:
-                    CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+          InkWell(
+            onTap: () {
+              if (type == true) {
+                print('$categoryId');
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            SubCatNew(catId: '$categoryId', title: name)));
+              } else {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
+                }));
+              }
+            },
+            child: Card(
+              shadowColor: Colors.grey,
+              elevation: 10,
+              child: Container(
+                  width: Adaptive.w(41),
+                  height: Adaptive.w(25),
+                  child:
+                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+            ),
           ),
         ],
       ),

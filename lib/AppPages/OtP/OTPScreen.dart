@@ -49,6 +49,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
 
   var reason;
 
+  var otpRefs;
+
   @override
   void initState() {
     initSharedPrefs().then((val) => getOtp());
@@ -69,9 +71,14 @@ class _OTP_ScreenState extends State<OTP_Screen> {
     final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
     try {
       var response = await post(uri, body: body);
+      // context.loaderOverlay.hide();
 
       OtpResponse otpResponse = OtpResponse.fromJson(jsonDecode(response.body));
+      setState(() {
+        otpRefs = otpResponse.responseData.otpReference;
+      });
       Fluttertoast.showToast(msg: otpResponse.status);
+      context.loaderOverlay.hide();
     } on Exception catch (e) {
       Fluttertoast.showToast(
         msg: e.toString(),
@@ -222,12 +229,10 @@ class _OTP_ScreenState extends State<OTP_Screen> {
                                   context.loaderOverlay.show(
                                       widget: SpinKitRipple(
                                           size: 90, color: Colors.red));
-                                  await verifyOTP(
-                                          '${ConstantsVar.prefs.getString('hashOTP')}',
-                                          otpString)
+                                  await verifyOTP(int.parse('$otpString'))
                                       .then((otp) {
                                     context.loaderOverlay.hide();
-                                    register();
+                                    // register();
                                   });
                                 }
                               },
@@ -270,7 +275,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
             descriptions: 'Registration failed',
             text: 'Okay',
             img: 'MyAssets/logo.png',
-            reason: '',
+            reason: reason,
           );
         });
   }
@@ -281,29 +286,40 @@ class _OTP_ScreenState extends State<OTP_Screen> {
         builder: (context) {
           return CustomDialogBox(
             descriptions: 'Registration Successfully Complete',
-            text: 'Okay',
+            text: '',
             img: 'MyAssets/logo.png',
+            isOkay: true,
           );
         });
   }
 
-  Future verifyOTP(String hashOTP, String otp) async {
+  Future verifyOTP(int otp) async {
     final body = {
       'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber,
-      'otp': otp,
+      'otp': "$otp",
+      'otpReference': otpRefs,
     };
-    String url2 = BuildConfig.base_url + 'customer/VerifyOTP';
+    print(body);
+    String url2 = BuildConfig.base_url +
+        'customer/VerifyOTP';
     final url = Uri.parse(url2);
-    print(url2);
+    print(url);
     try {
-      var response = await post(url, body: body);
-      OtpVerifyResponse model =
-          OtpVerifyResponse.fromJson(jsonDecode(response.body));
-      if (model.status.contains('Success')) {
+      var response = await post(url,body: body);
+      dynamic result = jsonDecode(response.body);
+
+      print(result);
+      if (result['Status'] == 'Failed') {
+        Fluttertoast.showToast(msg: 'Verification failed');
+      } else {
+        OtpVerifyResponse model =
+            OtpVerifyResponse.fromJson(jsonDecode(response.body));
+
         register();
-      } else {}
+      }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+      context.loaderOverlay.hide();
     }
   }
 
@@ -334,8 +350,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
       print(result);
       String status = result['status'];
       if (status.contains('Sucess')) {
-        ApiCalls.login(context, widget.email,
-                Uri.encodeComponent(widget.password))
+        ApiCalls.login(
+                context, widget.email, Uri.encodeComponent(widget.password))
             .then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();

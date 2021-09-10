@@ -70,43 +70,59 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
               ),
             ),
-            body: WebView(
-              initialUrl: widget.paymentUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller.complete(webViewController);
-              },
-              onProgress: (int progress) {
-                setState(() {
-                  progressCount = progress;
-                });
-              },
-              javascriptChannels: <JavascriptChannel>{
-                _toasterJavascriptChannel(context),
-              },
-              navigationDelegate: (NavigationRequest request) {
-                if (request.url.startsWith('https://www.youtube.com/')) {
-                  print('blocking navigation to $request}');
-                  return NavigationDecision.prevent;
-                }
-                print('allowing navigation to $request');
-                return NavigationDecision.navigate;
-              },
-              onPageStarted: (String url) {
-                context.loaderOverlay.show(
-                    widget: SpinKitRipple(
-                      color: Colors.red,
-                      size: 90,
-                    ));
-                print('Page started loading: $url');
-              },
-              onPageFinished: (String url) {
-                print('Page finished loading: $url');
-                setState(() {
-                  context.loaderOverlay.hide();
-                });
-              },
-              gestureNavigationEnabled: true,
+            body: Stack(
+              children: <Widget>[
+                WebView(
+                  initialUrl: widget.paymentUrl,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _controller.complete(webViewController);
+                  },
+                  onProgress: (int progress) {
+                    context.loaderOverlay.show(widget: Text('$progress'));
+
+                    setState(() {
+                      isLoading = false;
+                      progressCount = progress;
+                    });
+                  },
+                  javascriptChannels: <JavascriptChannel>{
+                    _toasterJavascriptChannel(context),
+                  },
+                  navigationDelegate: (NavigationRequest request) {
+                    if (request.url.startsWith('https://www.youtube.com/')) {
+                      print('blocking navigation to $request}');
+                      return NavigationDecision.prevent;
+                    }
+                    print('allowing navigation to $request');
+                    return NavigationDecision.navigate;
+                  },
+                  onPageStarted: (String url) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    context.loaderOverlay.show(
+                      widget: CupertinoActivityIndicator(),
+                    );
+                    print('Page started loading: $url');
+                  },
+                  onPageFinished: (String url) {
+                    print('Page finished loading: $url');
+                    setState(() {
+                      context.loaderOverlay.hide();
+                      isLoading = false;
+                    });
+                  },
+                  gestureNavigationEnabled: true,
+                ),
+                isLoading
+                    ? Center(
+                        child: SpinKitRipple(
+                        color: Colors.red,
+                        size: 90,
+                      ))
+                    : Stack()
+              ],
             ),
           ),
         ),

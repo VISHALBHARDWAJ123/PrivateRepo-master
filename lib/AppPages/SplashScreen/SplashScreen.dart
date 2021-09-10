@@ -41,7 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
       _guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
       print('init');
       print('$_guestCustomerID');
-      if (_guestCustomerID == null || _guestCustomerID == '') {
+      if (_guestCustomerID == null ||
+          _guestCustomerID == '' ||
+          _guestCustomerID.toString().isEmpty) {
         print('guestCustomerID is null');
         ApiCalls.getApiTokken(context).then((value) {
           TokenResponse myResponse = TokenResponse.fromJson(value);
@@ -67,20 +69,9 @@ class _SplashScreenState extends State<SplashScreen> {
             // },
             );
       } else {
-        int val = 0;
-        ApiCalls.readCounter(
-                customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
-            .then((value) {
-          setState(() {
-            val = int.parse(value);
-          });
-          context.read<cartCounter>().changeCounter(val);
-          Navigator.pushReplacement(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MyApp(),
-              ));
-        });
+        // int val = 0;
+        getCartBagdge().then((value) => Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (context) => MyApp())));
       }
     });
 
@@ -163,20 +154,15 @@ class _SplashScreenState extends State<SplashScreen> {
           );
   }
 
-  Future getGuestCustomer() async {
-    Fluttertoast.showToast(msg: 'Guest Customer');
-    final guestUri = Uri.parse(BuildConfig.base_url + 'apis/AddGuestCustomer');
-    try {
-      var response = await http.get(guestUri);
-
-      GuestCustomerResponse result =
-          GuestCustomerResponse.fromJson(jsonDecode(response.body));
-
-      _guestCustomerID = result.responseData.customerId.toString();
-      var guestGuId = result.responseData.customerGuid;
-      print(_guestCustomerID);
-    } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
+  Future getCartBagdge() async {
+    int val = 0;
+    ApiCalls.readCounter(
+            customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+        .then((value) {
+      setState(() {
+        val = int.parse(value);
+        context.read<cartCounter>().changeCounter(val);
+      });
+    });
   }
 }

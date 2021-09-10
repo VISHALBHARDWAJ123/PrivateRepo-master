@@ -170,17 +170,20 @@ class _ProductListState extends State<ProductList> {
 }
 
 class AddCartBtn extends StatefulWidget {
-  AddCartBtn(
-      {Key? key,
-      this.productId,
-      // required this.width,
-      required this.isTrue,
-      required this.guestCustomerId
-      // required this.fontSize,
-      })
-      : super(key: key);
+  AddCartBtn({
+    Key? key,
+    this.productId,
+    required this.text,
+    required this.isTrue,
+    required this.guestCustomerId,
+    required this.checkIcon,
+    required this.color,
+  }) : super(key: key);
   final productId;
   final guestCustomerId;
+  Icon checkIcon;
+  String text;
+  Color color;
 
   // double width;
   bool isTrue;
@@ -211,9 +214,9 @@ class _AddCartBtnState extends State<AddCartBtn> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ConstantsVar.appColor,
+      color: widget.color,
       child: AddToCartButton(
-        backgroundColor: ConstantsVar.appColor,
+        backgroundColor: widget.color,
         stateId: stateId,
         trolley: widget.isTrue == true
             ? Icon(
@@ -222,12 +225,12 @@ class _AddCartBtnState extends State<AddCartBtn> {
               )
             : Container(color: Colors.black),
         text: Text(
-          'ADD TO cart'.toUpperCase(),
+          widget.text,
           style: TextStyle(
             fontSize: 4.w,
           ),
         ),
-        check: Icon(Icons.check),
+        check: widget.checkIcon,
         onPressed: (id) => checkStateId(stateId),
       ),
     );
@@ -248,9 +251,9 @@ class _AddCartBtnState extends State<AddCartBtn> {
               ApiCalls.readCounter(
                       customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
                   .then((value) {
-                    setState(() {
-                      val =int.parse(value);
-                    });
+                setState(() {
+                  val = int.parse(value);
+                });
                 context.read<cartCounter>().changeCounter(val);
               });
 
