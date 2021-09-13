@@ -19,10 +19,12 @@ class ForgotPassScreen extends StatefulWidget {
   _ForgotPassScreenState createState() => _ForgotPassScreenState();
 }
 
-class _ForgotPassScreenState extends State<ForgotPassScreen> {
+class _ForgotPassScreenState extends State<ForgotPassScreen>
+    with InputValidationMixin {
   TextEditingController emailController = TextEditingController();
 
   // TextEditingController otpController = TextEditingController();
+  GlobalKey<FormState> _forgotState = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,149 +49,147 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               currentFocus.unfocus();
             }
           },
-          child: Container(
-            width: ConstantsVar.width,
-            height: ConstantsVar.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: AppBarLogo('RECOVER PASSWORD', context),
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'ENTER YOUR EMAIL',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: ConstantsVar.textSize,
-                              fontWeight: FontWeight.bold),
-                          softWrap: false,
-                          // maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40.0),
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20, right: 20),
-                          child: ListTile(
-                            title: TextFormField(
-                              maxLines: 1,
-                              textAlign: TextAlign.start,
-                              controller: emailController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              cursorColor: Colors.black,
-                              // validator: (input) => input!.isValidEmail()
-                              //     ? null
-                              //     : "Check your Email",
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                  suffixText: '*',
-                                  counterText: '',
-                                  border: OutlineInputBorder(gapPadding: 2),
-                                  errorText: emailController.text.length == 0
-                                      ? 'Please Enter Your Email'
-                                      : null,
-                                  focusColor: Colors.black,
-                                  hintText: "E-Mail Address",
-                                  hintStyle: TextStyle(color: Colors.black),
-                                  errorStyle: TextStyle(color: Colors.black)),
-                            ),
+          child: Form(
+            key: _forgotState,
+            child: Container(
+              width: ConstantsVar.width,
+              height: ConstantsVar.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: AppBarLogo('RECOVER PASSWORD', context),
+                  ),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'ENTER YOUR EMAIL',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: ConstantsVar.textSize,
+                                fontWeight: FontWeight.bold),
+                            softWrap: false,
+                            // maxLines: 1,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: ConstantsVar.width,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: RaisedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              color: ConstantsVar.appColor,
-                              shape: RoundedRectangleBorder(),
-                              child: SizedBox(
-                                height: 60,
-                                width: ConstantsVar.width / 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Center(
-                                    child: Text(
-                                      "CANCEL",
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )),
-                        ),
-                        Expanded(
-                          child: RaisedButton(
-                              onPressed: () {
-                                context.loaderOverlay.show(
-                                    widget: SpinKitRipple(
-                                  color: Colors.red,
-                                  size: 90,
-                                ));
-                                if (emailController.text.length == 0) {
-                                  ConstantsVar.showSnackbar(
-                                      context, 'Please Provide Email', 5);
-                                } else if (RegExp(ConstantsVar.email_Pattern)
-                                    .hasMatch(emailController.text)) {
-                                  ApiCalls.forgotPass(
-                                          context, emailController.text)
-                                      .whenComplete(() {
-                                    context.loaderOverlay.hide();
-                                    return showDialog(
-                                      context: context,
-                                      builder: (_) => loginCheck(),
-                                    );
-                                  });
-                                }
-                              },
-                              color: ConstantsVar.appColor,
-                              shape: RoundedRectangleBorder(),
-                              child: SizedBox(
-                                height: 60,
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Center(
-                                    child: Text(
-                                      'CONFIRM',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0),
-                                    ),
-                                  ),
-                                ),
-                              )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40.0),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            child: ListTile(
+                              title: TextFormField(
+                                maxLines: 1,
+                                textAlign: TextAlign.start,
+                                controller: emailController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                cursorColor: Colors.black,
+                                validator: (val) {
+                                  if (isEmailValid(val!)) {
+                                    return null;
+                                  }
+                                  return 'Plase Enter a valid email';
+                                },
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                    suffixText: '*',
+                                    counterText: '',
+                                    border: OutlineInputBorder(gapPadding: 2),
+                                    errorText: emailController.text.length == 0
+                                        ? 'Please Enter Your Email'
+                                        : null,
+                                    focusColor: Colors.black,
+                                    hintText: "E-Mail Address",
+                                    hintStyle: TextStyle(color: Colors.black),
+                                    errorStyle: TextStyle(color: Colors.black)),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                )
-              ],
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: ConstantsVar.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: RaisedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                color: ConstantsVar.appColor,
+                                shape: RoundedRectangleBorder(),
+                                child: SizedBox(
+                                  height: 60,
+                                  width: ConstantsVar.width / 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Center(
+                                      child: Text(
+                                        "CANCEL",
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                                onPressed: () {
+                                  if (_forgotState.currentState!.validate()) {
+                                    _forgotState.currentState!.save();
+                                    ApiCalls.forgotPass(
+                                            context, emailController.text)
+                                        .whenComplete(() {
+                                      context.loaderOverlay.hide();
+                                      return showDialog(
+                                        context: context,
+                                        builder: (_) => loginCheck(),
+                                      );
+                                    });
+                                  } else {}
+                                },
+                                color: ConstantsVar.appColor,
+                                shape: RoundedRectangleBorder(),
+                                child: SizedBox(
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Center(
+                                      child: Text(
+                                        'CONFIRM',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

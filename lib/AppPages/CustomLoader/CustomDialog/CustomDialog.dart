@@ -71,7 +71,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 height: 6,
               ),
               Text(
-                widget.text,
+                'OKAY',
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -83,6 +83,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 child: Visibility(
                   visible: widget.isOkay,
                   child: FlatButton(
+                      color: Colors.black,
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(
                             context,
@@ -93,7 +94,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                       child: Container(
                         child: Text(
                           widget.text,
-                          style: TextStyle(fontSize: 18, color: Colors.black),
+                          style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       )),
                 ),
@@ -185,6 +186,7 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
+                    color: Colors.black,
                     onPressed: () async {
                       ConstantsVar.prefs =
                           await SharedPreferences.getInstance();
@@ -193,7 +195,10 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
                     },
                     child: Text(
                       widget.text,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
                     )),
               ),
             ],

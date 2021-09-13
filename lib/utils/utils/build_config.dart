@@ -19,6 +19,11 @@ class BuildConfig {
   static final String show_order_summary_url = 'apis/GetOrderSummary';
   static final String update_cart_url = 'apis/UpdateCart';
 
-  static var countryCode = '91';
+  static var countryCode = '971';
   static final apiTokenx = 'e9e3cb11b67dd0d8646d8e437274061ed537803b281e45a504321cafcdb7218a';
+
+  static var uaeCountryCode = '+971';
+static const phnVal = 9;
+
+
 }

@@ -283,12 +283,14 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     child: Container(
                                       width: 88.w,
                                       child: TextFormField(
-                                        maxLength: 10,
+                                        maxLength: BuildConfig.phnVal,
                                         textInputAction: TextInputAction.next,
                                         validator: (mobInput) {
                                           mobInput = widget.mController.text;
-                                          mobInput.length >= 10 ||
-                                                  mobInput.length <= 10 ||
+                                          mobInput.length >
+                                                      BuildConfig.phnVal ||
+                                                  mobInput.length <
+                                                      BuildConfig.phnVal ||
                                                   mobInput.length == 0
                                               ? null
                                               : 'Please Enter 10 Digit Number';
@@ -351,6 +353,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 elevation: 8.0,
                                 child: Container(
                                   child: TextFormField(
+                                    enableInteractiveSelection: false,
                                     validator: (password) {
                                       if (isPasswordValid(password!))
                                         return 'Minimum 6 Characters. ';
@@ -416,6 +419,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: TextFormField(
+                                        enableInteractiveSelection: false,
                                         validator: (password) {
                                           if (isPasswordMatch(
                                             widget.pController.text.toString(),
@@ -549,7 +553,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     'AvailableCountries': null,
                                     'StateProvinceId': 12,
                                     'AvailableStates': null,
-                                    'Phone': '+971' + phnNumber,
+                                    'Phone':
+                                        BuildConfig.uaeCountryCode + phnNumber,
                                     'Newsletter': false,
                                   };
                                   print(widget.pController.text);
@@ -634,7 +639,8 @@ mixin InputValidationMixin {
 
   bool isLastName(String lastName) => lastName.trim().length != 0;
 
-  bool isPhoneNumber(String phnNumber) => phnNumber.trim().length != 10;
+  bool isPhoneNumber(String phnNumber) =>
+      phnNumber.trim().length != BuildConfig.phnVal;
 
   bool isAddress(String addressString) => addressString.trim().length != 5;
 

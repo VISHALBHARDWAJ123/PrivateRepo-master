@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/ForgotPass/ForgotPassword.dart';
@@ -20,7 +21,7 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
   var passController = TextEditingController();
   var emailController = TextEditingController();
   var otpController = TextEditingController();
@@ -33,6 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
   DateTime currentBackPressTime = DateTime.now();
 
   var isSuffix = true;
+
+  GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
 
   void initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
@@ -94,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: MediaQuery.of(context).size.height,
                         color: Colors.white10,
                         child: Form(
+                          key: _loginKey,
                           child: ListView(
                             children: <Widget>[
                               Container(
@@ -150,6 +154,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Container(
                                             height: 15.w,
                                             child: TextFormField(
+                                              validator: (val) {
+                                                if (isEmailValid(val!)) {
+                                                  return null;
+                                                }
+                                                return 'Please enter a valid email address!.';
+                                              },
                                               controller: emailController,
                                               style: TextStyle(
                                                   color: Colors.black),
@@ -173,10 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                             padding:
                                                 EdgeInsets.only(right: 12.0),
                                             child: TextFormField(
+                                              enableInteractiveSelection: false,
                                               textInputAction:
                                                   TextInputAction.next,
                                               obscureText: passError,
-                                              // validator: (input) =>
+                                              // validator: (inputz) =>
                                               //     input!.isValidPass() ? null : "Check your Password",
                                               controller: passController,
                                               autovalidateMode: AutovalidateMode
@@ -263,38 +274,45 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               : true,
                                                       child: TextButton(
                                                           onPressed: () async {
-                                                            var email =
-                                                                emailController
-                                                                    .text;
-                                                            var pass =
-                                                                passController
-                                                                    .text;
-                                                            ApiCalls.login(
-                                                              context,
-                                                              emailController
-                                                                  .text
-                                                                  .toString()
-                                                                  .trim(),
-                                                              passController
-                                                                  .text,
-                                                            ).then((val) {
-                                                              val == true
-                                                                  ? getCartBagdge(0).then((value) => Navigator.pushAndRemoveUntil(
-                                                                      context,
-                                                                      CupertinoPageRoute(
-                                                                          builder: (context) =>
-                                                                              MyApp()),
-                                                                      (route) =>
-                                                                          false))
-                                                                  : null;
+                                                            if (_loginKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              _loginKey
+                                                                  .currentState!
+                                                                  .save();
 
-                                                              setState(() {
-                                                                ConstantsVar
-                                                                        .isVisible =
-                                                                    false;
-                                                                print(val);
+                                                              ApiCalls.login(
+                                                                context,
+                                                                emailController
+                                                                    .text
+                                                                    .toString()
+                                                                    .trim(),
+                                                                passController
+                                                                    .text,
+                                                              ).then((val) {
+                                                                val == true
+                                                                    ? getCartBagdge(0).then((value) => Navigator.pushAndRemoveUntil(
+                                                                        context,
+                                                                        CupertinoPageRoute(
+                                                                            builder: (context) =>
+                                                                                MyApp()),
+                                                                        (route) =>
+                                                                            false))
+                                                                    : null;
+
+                                                                setState(() {
+                                                                  ConstantsVar
+                                                                          .isVisible =
+                                                                      false;
+                                                                  print(val);
+                                                                });
                                                               });
-                                                            });
+                                                            } else {
+                                                              Fluttertoast
+                                                                  .showToast(
+                                                                      msg:
+                                                                          'Please Enter Correct Details');
+                                                            }
                                                           },
                                                           child: Text(
                                                             "LOGIN",

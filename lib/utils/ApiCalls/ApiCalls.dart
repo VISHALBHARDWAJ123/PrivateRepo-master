@@ -113,11 +113,10 @@ class ApiCalls {
           Fluttertoast.showToast(msg: 'Account is not active yet.');
           context.loaderOverlay.hide();
           return false;
-        }else if (responseData.toString().contains('Customer is deleted')){
+        } else if (responseData.toString().contains('Customer is deleted')) {
           Fluttertoast.showToast(msg: 'Customer is deleted');
-        }
-
-        else {
+          context.loaderOverlay.hide();
+        } else {
           Fluttertoast.showToast(
             msg: 'Successfully Login',
             gravity: ToastGravity.CENTER,
@@ -148,11 +147,10 @@ class ApiCalls {
       } else {
         context.loaderOverlay.hide();
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
-      return false;
+        return false;
       }
 
       // return true;
-
 
     } on Exception catch (e) {
       context.loaderOverlay.hide();
@@ -165,6 +163,12 @@ class ApiCalls {
     BuildContext context,
     String email,
   ) async {
+    context.loaderOverlay.show(
+      widget: SpinKitRipple(
+        color: Colors.red,
+        size: 90,
+      ),
+    );
     bool? boolean;
     final uri = Uri.parse(BuildConfig.base_url +
         'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
@@ -172,10 +176,12 @@ class ApiCalls {
     try {
       var response = await http.get(uri);
       print('${jsonDecode(response.body)}');
+      context.loaderOverlay.hide();
     } on Exception catch (e) {
       boolean = false;
       ConstantsVar.showSnackbar(context, e.toString(), 5);
       return boolean;
+      context.loaderOverlay.hide();
     }
   }
 
