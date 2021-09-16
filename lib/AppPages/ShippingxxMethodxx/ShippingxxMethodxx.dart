@@ -14,6 +14,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/SelectxxShippingxxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/ShippingxxMethodxxResponse.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 class ShippingMethod extends StatefulWidget {
@@ -35,7 +36,6 @@ class _ShippingMethodState extends State<ShippingMethod> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getInitSharedPrefs().then((value) => getShippingMethods(widget.customerId));
   }
@@ -121,11 +121,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Center(
                               child: Text(
-                                shippingMethods[index].name.replaceAll(
-                                      RegExp(r'<br[^>]*>|&[^;]+;',
-                                          multiLine: true),
-                                      ' ',
-                                    ),
+                                shippingMethods[index].name,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 6.w),
                               ),
@@ -133,7 +129,9 @@ class _ShippingMethodState extends State<ShippingMethod> {
                             subtitle: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(shippingMethods[index].description,
+                              child: Text(
+                                  removeAllHtmlTags(
+                                      shippingMethods[index].description),
                                   textAlign: TextAlign.justify,
                                   style: TextStyle(fontSize: 4.w)),
                             ),
@@ -185,30 +183,6 @@ class _ShippingMethodState extends State<ShippingMethod> {
         ),
       ),
     );
-
-    //   Scaffold(
-    //   body: Container(
-    //     child: Center(
-    //       child: ListView(
-    //         children: List.generate(
-    //           shippingMethods.length,
-    //           (index) => Padding(
-    //             padding: const EdgeInsets.all(8.0),
-    //             child: Card(
-    //               child: ListTile(
-    //                 leading: RoundCheckBox(
-    //                   onTap: (bool) {},
-    //                 ),
-    //                 title: Text('${shippingMethods[index].name}'),
-    //                 subtitle: Text('${shippingMethods[index].description}'),
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   Future<void> getShippingMethods(String customerId) async {
@@ -220,8 +194,8 @@ class _ShippingMethodState extends State<ShippingMethod> {
         ),
       ),
     );
-    final uri = Uri.parse(
-        BuildConfig.base_url+'apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
     try {
       print('Shipping method Apis >>>>>> $uri');
       var response = await http.get(uri);
@@ -232,10 +206,6 @@ class _ShippingMethodState extends State<ShippingMethod> {
         shippingMethods.addAll(methodResponse.shippingmethods.shippingMethods);
       });
       context.loaderOverlay.hide();
-      // warning = methodResponse.shippingmethods.warnings;
-      // if (warning != null) {
-      //   Fluttertoast.showToast(msg: warning[0].toString());
-      // }
     } on Exception catch (e) {
       context.loaderOverlay.hide();
 
@@ -248,8 +218,8 @@ class _ShippingMethodState extends State<ShippingMethod> {
   }
 
   Future selectShippingMethod() async {
-    final uri = Uri.parse(
-        BuildConfig.base_url+'apis/SelectShippingMethodForApp?apiToken=${ConstantsVar.apiTokken}&customerId=${widget.customerId}&shippingoption=$selectedVal');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/SelectShippingMethodForApp?apiToken=${ConstantsVar.apiTokken}&customerId=${widget.customerId}&shippingoption=$selectedVal');
     print(uri);
     try {
       var response = await http.get(uri);
@@ -274,5 +244,11 @@ class _ShippingMethodState extends State<ShippingMethod> {
 
       context.loaderOverlay.hide();
     }
+  }
+
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+
+    return htmlText.replaceAll(exp, '');
   }
 }

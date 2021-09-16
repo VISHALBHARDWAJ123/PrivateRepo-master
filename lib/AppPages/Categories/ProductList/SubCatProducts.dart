@@ -32,140 +32,161 @@ class _ProductListState extends State<ProductList> {
   var customerId;
   int pageIndex = 0;
   var color;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-
-  // int pageNumber = 1;
+  int productCount = 0;
+  List<ResponseDatum> products = [];
   var guestCustomerId;
+  ProductListModel? inititalData;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
-    });
+    getId().whenComplete(() =>
+        ApiCalls.getCategoryById('${widget.categoryId}', context, 0)
+            .then((value) {
+          setState(() {
+            inititalData = ProductListModel.fromJson(value);
+            productCount = inititalData!.productCount;
+            products = inititalData!.responseData;
+          });
+        }));
     print('${widget.categoryId}');
-    // _myController.addStream(ApiCalls.getCategoryData('${widget.categoryId}',context));
-  }
-
-  void _onLoading() async {
-    print('object');
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        appBar: new AppBar(
-          actions: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              child: InkWell(
-                // splashColor: Colors.amber,
-                radius: 48,
-                child: Consumer<cartCounter>(
-                  builder: (context, value, child) {
-                    return Badge(
-                      badgeColor: Colors.white,
-                      padding: EdgeInsets.all(5),
-                      shape: BadgeShape.circle,
-                      position: BadgePosition.topEnd(),
-                      badgeContent: new Text('${value.badgeNumber}'),
-                      child: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                ),
-                onTap: () => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => CartScreen2(),
+    if (products == null) {
+      return SafeArea(
+        top: true,
+        child: Scaffold(
+          appBar: new AppBar(
+            actions: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: InkWell(
+                  // splashColor: Colors.amber,
+                  radius: 48,
+                  child: Consumer<cartCounter>(
+                    builder: (context, value, child) {
+                      return Badge(
+                        badgeColor: Colors.white,
+                        padding: EdgeInsets.all(5),
+                        shape: BadgeShape.circle,
+                        position: BadgePosition.topEnd(),
+                        badgeContent: new Text('${value.badgeNumber}'),
+                        child: Icon(
+                          Icons.shopping_cart_outlined,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => CartScreen2(),
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
 
-          toolbarHeight: 18.w,
-          backgroundColor: ConstantsVar.appColor,
-          centerTitle: true,
-          // leading: Icon(Icons.arrow_back_ios),
-          title: InkWell(
-            onTap: () => Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute(builder: (context) => MyHomePage()),
-                (route) => false),
-            child: Image.asset(
-              'MyAssets/logo.png',
-              width: 15.w,
-              height: 15.w,
+            toolbarHeight: 18.w,
+            backgroundColor: ConstantsVar.appColor,
+            centerTitle: true,
+            // leading: Icon(Icons.arrow_back_ios),
+            title: InkWell(
+              onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(builder: (context) => MyHomePage()),
+                  (route) => false),
+              child: Image.asset(
+                'MyAssets/logo.png',
+                width: 15.w,
+                height: 15.w,
+              ),
+            ),
+          ),
+          body: Container(
+            child: Center(
+              child: SpinKitRipple(
+                color: Colors.red,
+                size: 90,
+              ),
             ),
           ),
         ),
-        body: FutureBuilder<dynamic>(
-          future: ApiCalls.getCategoryById('${widget.categoryId}', context, 0),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(
-                  child: SpinKitRipple(
-                    size: 90,
-                    color: Colors.red,
-                  ),
-                );
-              case ConnectionState.none:
-                return Center(
-                  child: Text('Please Check Your Connection'),
-                );
-              default:
-                if (snapshot.hasError) {
-                  return Scaffold(
-                      body: Container(
-                          child:
-                              Center(child: Text(snapshot.error.toString()))));
-                } else {
-                  dynamic result = snapshot.data;
-                  ProductListModel model = ProductListModel.fromJson(result);
-                  // var title = result['Name'];
-                  List<ResponseDatum> products = model.responseData;
-                  int productCount = model.productCount;
-
-                  if (products.length != 0) {
-                    return prodListWidget(
-                      products: products,
-                      title: widget.title,
-                      // result: result,
-                      pageIndex: pageIndex,
-                      id: '${widget.categoryId}',
-                      productCount: productCount,
-                      guestCustomerId: guestCustomerId,
-                    );
-                  } else {
-                    return Scaffold(
-                      body: Container(
-                        child: Center(
-                          child: Text('No Product Found'),
+      );
+    } else {
+      return SafeArea(
+          top: true,
+          child: Scaffold(
+              appBar: new AppBar(
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8.0),
+                    child: InkWell(
+                      // splashColor: Colors.amber,
+                      radius: 48,
+                      child: Consumer<cartCounter>(
+                        builder: (context, value, child) {
+                          return Badge(
+                            badgeColor: Colors.white,
+                            padding: EdgeInsets.all(5),
+                            shape: BadgeShape.circle,
+                            position: BadgePosition.topEnd(),
+                            badgeContent: new Text('${value.badgeNumber}'),
+                            child: Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => CartScreen2(),
                         ),
                       ),
-                    );
-                  }
-                }
-            }
-          },
-        ),
-      ),
-    );
+                    ),
+                  )
+                ],
+
+                toolbarHeight: 18.w,
+                backgroundColor: ConstantsVar.appColor,
+                centerTitle: true,
+                // leading: Icon(Icons.arrow_back_ios),
+                title: InkWell(
+                  onTap: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(builder: (context) => MyHomePage()),
+                      (route) => false),
+                  child: Image.asset(
+                    'MyAssets/logo.png',
+                    width: 15.w,
+                    height: 15.w,
+                  ),
+                ),
+              ),
+              body: prodListWidget(
+                products: products,
+                title: widget.title,
+                // result: result,
+                pageIndex: pageIndex,
+                id: '${widget.categoryId}',
+                productCount: productCount,
+                guestCustomerId: guestCustomerId,
+              )));
+    }
+  }
+
+  Future getId() async {
+    setState(() {
+      guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
+    });
   }
 }
 

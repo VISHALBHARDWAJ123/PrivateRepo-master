@@ -10,9 +10,9 @@ Widget SliderImages(
     List<String> images, List<String> largeImage, BuildContext context) {
   return Center(
     child: Container(
-      width: 60.w,
-      padding: EdgeInsets.all(0),
-      height: 40.h,
+      width: 70.w,
+      // padding: EdgeInsets.all(0),
+      height: 70.w,
       child: Center(
         child: CarouselSlider.builder(
           enableAutoSlider: images.length > 1 ? true : false,

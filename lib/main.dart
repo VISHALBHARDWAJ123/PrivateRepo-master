@@ -9,6 +9,7 @@ import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 
 import 'AppPages/LoginScreen/LoginScreen.dart';
+
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
 
@@ -17,28 +18,33 @@ Future<void> main() async {
   GestureBinding.instance!.resamplingEnabled = true;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
-    ConstantsVar.prefs = await SharedPreferences.getInstance();
-    runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_)=>cartCounter())
-      ],
-      child: Phoenix(
-        child: MaterialApp(
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
+        .then((_) async {
+      ConstantsVar.prefs = await SharedPreferences.getInstance();
 
-          debugShowCheckedModeBanner: false,
-          routes: {
-            '/LoginScreen': (context) => LoginScreen(),
-            '/CartScreen': (context) => CartScreen2(),
-          },
-          title: 'The One',
-          home: SplashScreen(),
-          theme: ThemeData(
-              fontFamily: 'Arial',
-              primarySwatch: MaterialColor(0xFF800E4F, color),
-              primaryColor: ConstantsVar.appColor),
+      runApp(MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => cartCounter(),
+          ),
+        ],
+        child: Phoenix(
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            routes: {
+              '/LoginScreen': (context) => LoginScreen(),
+              '/CartScreen': (context) => CartScreen2(),
+            },
+            title: 'The One',
+            home: SplashScreen(),
+            theme: ThemeData(
+                fontFamily: 'Arial',
+                primarySwatch: MaterialColor(0xFF800E4F, color),
+                primaryColor: ConstantsVar.appColor),
+          ),
         ),
-      ),
-    ));
+      ));
+    });
   });
 }
 

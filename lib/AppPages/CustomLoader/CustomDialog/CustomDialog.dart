@@ -71,7 +71,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 height: 6,
               ),
               Text(
-                'OKAY',
+                widget.text,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -92,8 +92,9 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                             (route) => false);
                       },
                       child: Container(
+                        color: Colors.black,
                         child: Text(
-                          widget.text,
+                          'OKAY',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       )),

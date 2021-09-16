@@ -14,7 +14,15 @@ class HeartIcon {
   static const _kFontFamlog = 'MyFlutterApp';
   static const _kFontFamRemove = 'Remove';
   static const String? _kFontPkg = null;
+  static const _kFontFamAddress = 'Address';
+  static const _kFontFamOrder = 'Orders';
+  static const _kFontFamChangePassword = 'ChangePassword';
 
+  static const IconData password = IconData(0xe800, fontFamily: _kFontFamChangePassword, fontPackage: _kFontPkg);
+  static const IconData order =
+      IconData(0xe800, fontFamily: _kFontFamOrder, fontPackage: _kFontPkg);
+  static const IconData address =
+      IconData(0xe800, fontFamily: _kFontFamAddress, fontPackage: _kFontPkg);
   static const _kFontFamArrow = 'Forward_arrow';
   static const IconData right_arrow =
       IconData(0xe800, fontFamily: _kFontFamArrow, fontPackage: _kFontPkg);

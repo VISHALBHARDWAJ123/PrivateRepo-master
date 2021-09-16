@@ -124,7 +124,10 @@ class _prodListWidgetState extends State<prodListWidget> {
                     builder: (context, mode) {
                       Widget body;
                       if (mode == LoadStatus.idle) {
-                        body = CupertinoActivityIndicator();
+                        body = SpinKitRipple(
+                          color: Colors.red,
+                          size: 90,
+                        );
                       } else if (mode == LoadStatus.loading) {
                         body = CupertinoActivityIndicator();
                       } else if (mode == LoadStatus.failed) {
@@ -270,8 +273,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                             .contains('Out of stock')
                                         ? 'Out of Stock'.toUpperCase()
                                         : 'ADD TO CArt'.toUpperCase(),
-                                    color: widget
-                                            .products[index].stockQuantity
+                                    color: widget.products[index].stockQuantity
                                             .contains('Out of stock')
                                         ? Colors.grey
                                         : ConstantsVar.appColor,

@@ -926,6 +926,7 @@ class _CartScreen2State extends State<CartScreen2>
           top: true,
           child: Scaffold(
             appBar: new AppBar(
+              backgroundColor: ConstantsVar.appColor,
               toolbarHeight: 18.w,
               centerTitle: true,
               title: InkWell(

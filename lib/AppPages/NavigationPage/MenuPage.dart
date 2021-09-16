@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/Cart%20Screen/CartScreen2.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
+import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
+import 'package:untitled2/AppPages/NotificationxxScreen/Notification_Screen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/AppPages/Registration/register_page.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
+import 'package:untitled2/utils/utils/colors.dart';
 
 enum AniProps { color }
 
@@ -51,6 +56,9 @@ class _MenuPageState extends State<MenuPage> {
   Color btnColor = Colors.black;
   int pageIndex = 0;
   var customerId;
+  var userName, email, phnNumber;
+
+  bool isEmailVisible = true, isPhoneNumberVisible = true;
 
   // var gUId;
 
@@ -58,9 +66,15 @@ class _MenuPageState extends State<MenuPage> {
   @override
   void initState() {
     // TODO: implement initState
+    getCustomerId();
+    setState(() {
+      customerId = ConstantsVar.prefs.getString('userId');
+      email = ConstantsVar.prefs.getString('email');
+      userName = ConstantsVar.prefs.getString('userName');
+      phnNumber = ConstantsVar.prefs.getString('phone');
+    });
 
     super.initState();
-    getCustomerId();
   }
 
   @override
@@ -98,71 +112,172 @@ class _MenuPageState extends State<MenuPage> {
               height: 100.h,
               child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DelayedDisplay(
-                      delay: Duration(milliseconds: 50),
-                      slidingBeginOffset: Offset(
-                        1,
-                        0,
+                  Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 2.w, horizontal: 4.w),
+                        child: DelayedDisplay(
+                          delay: Duration(milliseconds: 50),
+                          slidingBeginOffset: Offset(
+                            -1,
+                            0,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.0),
+                                child: Text(
+                                  'Welcome',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 8.5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Visibility(
+                                    visible: userName == null ? false : true,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: ConstantsVar.appColor,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Visibility(
+                                    visible: userName == null ? false : true,
+                                    child: Text(
+                                      userName == null ? '' : userName,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Visibility(
+                                visible: email == null ? false : true,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.email,
+                                        color: ConstantsVar.appColor,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        email == null ? '' : email,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: phnNumber == null ? false : true,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.phone,
+                                          color: ConstantsVar.appColor),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        phnNumber == null ? '' : phnNumber,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      child: Container(
+                    ],
+                  ),
+                  DelayedDisplay(
+                    delay: Duration(
+                      milliseconds: 70,
+                    ),
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => MyAccount())),
+                      child: Card(
                         color: Colors.white,
-                        height: 25.h,
-                        width: 100.w,
-                        // color: Colors.black,
-                        child: Center(
-                          child: Image.asset(
-                            'MyAssets/logo.png',
-                            width: 45.w,
-                            height: 25.h,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6.w,
+                            horizontal: 8.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: Icon(
+                                  Icons.account_circle_sharp,
+                                  color: ConstantsVar.appColor,
+                                  size: 34,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                // color: Colors.white,
+                                child: Text(
+                                  'My Account'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  // DelayedDisplay(
-                  //   delay: Duration(
-                  //     seconds: 1,
-                  //     microseconds: 100,
-                  //   ),
-                  //   child: Card(
-                  //     color: Colors.white,
-                  //
-                  //     // color: Colors.white,
-                  //     child: Padding(
-                  //       padding: EdgeInsets.symmetric(
-                  //         vertical: 6.w,
-                  //         horizontal: 8.w,
-                  //       ),
-                  //       child: Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           Card(
-                  //             child: Icon(
-                  //               HeartIcon.user,
-                  //               color: ConstantsVar.appColor,
-                  //               size: 34,
-                  //             ),
-                  //           ),
-                  //           SizedBox(
-                  //             width: 20,
-                  //           ),
-                  //           Container(
-                  //             child: Text(
-                  //               'My Account'.toUpperCase(),
-                  //               style: TextStyle(
-                  //                 color: Colors.black,
-                  //                 fontSize: 5.w,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   DelayedDisplay(
                     delay: Duration(
                       milliseconds: 70,
@@ -213,38 +328,44 @@ class _MenuPageState extends State<MenuPage> {
                     delay: Duration(
                       milliseconds: 70,
                     ),
-                    child: Card(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 6.w,
-                          horizontal: 8.w,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Card(
-                              child: Icon(
-                                Icons.notifications,
-                                color: ConstantsVar.appColor,
-                                size: 34,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Container(
-                              // color: Colors.white,
-                              child: Text(
-                                'notifications'.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 5.w,
-                                  fontWeight: FontWeight.bold,
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => NotificationClass())),
+                      child: Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6.w,
+                            horizontal: 8.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: Icon(
+                                  Icons.notifications,
+                                  color: ConstantsVar.appColor,
+                                  size: 34,
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                // color: Colors.white,
+                                child: Text(
+                                  'notifications'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -367,11 +488,80 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   Future getCustomerId() async {
-    customerId = ConstantsVar.prefs.getString('userId')!;
-    print(ConstantsVar.customerID);
+    ConstantsVar.prefs = await SharedPreferences.getInstance().whenComplete(() {
+      print('customerId ==>>' + ConstantsVar.customerID);
+    });
+  }
+
+  void getUserCreds() async {
+    print(userName + email + phnNumber);
+
+    if (email == '') {
+      setState(() {
+        isEmailVisible = false;
+        email = '';
+      });
+    }
+    if (userName == '') {
+      setState(() {
+        userName =
+            'Guestuser' + ConstantsVar.prefs.getString('guestCustomerID')!;
+
+        print(userName);
+      });
+    }
+    if (phnNumber == '') {
+      setState(() {
+        isPhoneNumberVisible = false;
+        phnNumber = '';
+      });
+    }
   }
 
   Future clearUserDetails() async {
     ConstantsVar.prefs.clear();
   }
 }
+
+// DelayedDisplay(
+//   delay: Duration(
+//     seconds: 1,
+//     microseconds: 100,
+//   ),
+//   child: Card(
+//     color: Colors.white,
+//
+//     // color: Colors.white,
+//     child: Padding(
+//       padding: EdgeInsets.symmetric(
+//         vertical: 6.w,
+//         horizontal: 8.w,
+//       ),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Card(
+//             child: Icon(
+//               HeartIcon.user,
+//               color: ConstantsVar.appColor,
+//               size: 34,
+//             ),
+//           ),
+//           SizedBox(
+//             width: 20,
+//           ),
+//           Container(
+//             child: Text(
+//               'My Account'.toUpperCase(),
+//               style: TextStyle(
+//                 color: Colors.black,
+//                 fontSize: 5.w,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     ),
+//   ),
+// ),

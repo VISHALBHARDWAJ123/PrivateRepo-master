@@ -11,6 +11,7 @@ import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 // import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 
 class SubCatNew extends StatefulWidget {
   SubCatNew({Key? key, required this.catId, required this.title})
@@ -244,7 +245,7 @@ class _SubCatNewState extends State<SubCatNew> {
 
   Future getSubCategories(String catId) async {
     final uri = Uri.parse(
-        'http://www.theone.com/apis/GetSubCategories?categoryid=$catId');
+        BuildConfig.base_url+'apis/GetSubCategories?categoryid=$catId');
     try {
       var response = await http.get(uri);
       print(json.decode(response.body));

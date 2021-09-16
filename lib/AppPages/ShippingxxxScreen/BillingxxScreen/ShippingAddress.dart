@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:awesome_dropdown/awesome_dropdown.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingxxModel/ShippingxxModel.dart';
@@ -41,21 +42,12 @@ class _ShippingAddressState extends State<ShippingAddress> {
   bool isChecked = false, isVisible = true;
   String paymentUrl = '';
 
-  bool _isBackPressedOrTouchedOutSide = true,
-      _isDropDownOpened = false,
-      _isPanDown = false;
   List<String> _list = [];
-  String _selectedItem = '';
   var addressString;
+  bool isSelected = false;
+  var selectedVal = '';
 
   /// this func is used to close dropDown (if open) when you tap or pandown anywhere in the screen
-  void _removeFocus() {
-    if (_isDropDownOpened) {
-      setState(() {
-        _isBackPressedOrTouchedOutSide = true;
-      });
-    }
-  }
 
   Future<void> getPickupPoints(String? addressString) async {
     final pickUri = Uri.parse(BuildConfig.base_url +
@@ -90,7 +82,6 @@ class _ShippingAddressState extends State<ShippingAddress> {
         size: 90,
       ),
     );
-    _selectedItem = 'Select PickUp Point'.toUpperCase();
     getId().then(
       (id) =>
           ApiCalls.getShippingAddresses(ConstantsVar.apiTokken.toString(), id)
@@ -148,12 +139,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
         ),
       );
     } else {
-      return GestureDetector(
-        onTap: _removeFocus,
-        onPanDown: (focus) {
-          _isPanDown = true;
-          _removeFocus();
-        },
+      return WillPopScope(
+        onWillPop: hideCxt,
         child: SafeArea(
           top: true,
           child: Scaffold(
@@ -182,516 +169,398 @@ class _ShippingAddressState extends State<ShippingAddress> {
   }
 
   Widget buildStack(BuildContext context) {
-    return ListView(
-      children: [
-        Stack(children: [
-          Column(
-            children: <Widget>[
-              Card(
-                child: Container(
-                  width: 100.w,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    child: Center(
-                        child: Text(
-                      'Shipping Details'.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 6.w,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100.w,
-                // height: 30.h,
+    return ListView(children: [
+      Column(
+        children: <Widget>[
+          Card(
+            child: Container(
+              width: 100.w,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15),
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 100.w,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Center(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              // mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                RoundCheckBox(
-                                  size: 30,
-                                  onTap: (selected) {
-                                    setState(() {
-                                      print('Tera kaam  bngya');
-                                      isChecked
-                                          ? isChecked = selected!
-                                          : isChecked = selected!;
-
-                                      isVisible
-                                          ? isVisible = false
-                                          : isVisible = true;
-                                    });
-                                  },
-                                  isChecked: isChecked,
-                                  checkedWidget: Icon(
-                                    Icons.check,
-                                    size: 25,
-                                    color: ConstantsVar.appColor,
-                                  ),
-                                  uncheckedWidget: null,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 3.w),
-                                  child: Text(
-                                    'Click & Collect',
-                                    style: TextStyle(
-                                      fontSize: 5.7.w,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Text(
-                          ConstantsVar.stringShipping,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 3.8.w,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: isChecked,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: AwesomeDropDown(
-                            selectedItemTextStyle: TextStyle(fontSize: 14),
-                            dropDownIcon: Icon(Icons.arrow_drop_down_circle,size: 24,),
-                            padding: 16,
-                            numOfListItemToShow: _list.length,
-                            isPanDown: _isPanDown,
-                            dropDownList: _list,
-                            isBackPressedOrTouchedOutSide:
-                                _isBackPressedOrTouchedOutSide,
-                            selectedItem: _selectedItem,
-                            onDropDownItemClick: (selectedItem) {
-                              _selectedItem = selectedItem;
-
-                              // int index = _list.indexOf(_selectedItem);
-                              int index = _list.indexOf(_selectedItem);
-
-                              ApiCalls.addAndSelectShippingAddress(
-                                      '${ConstantsVar.apiTokken}',
-                                      ID,
-                                      myPickPoint[index].id)
-                                  .then((value) => showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: Text(
-                                            'This will lead you to payment page.',
-                                            softWrap: true,
-                                            style: TextStyle(fontSize: 3.7.w),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: Text(
-                                                'Cancel'.toUpperCase(),
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      PaymentPage(
-                                                    paymentUrl: paymentUrl,
-                                                    // customerId: ID,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: Text(
-                                                'Confirm'.toUpperCase(),
-                                                style: TextStyle(
-                                                    color: Colors.green),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ));
-                            },
-                            dropStateChanged: (isOpened) {
-                              _isDropDownOpened = isOpened;
-                              if (!isOpened) {
-                                _isBackPressedOrTouchedOutSide = false;
-                              }
-                            },
-                            dropDownListTextStyle: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    child: Text(
+                  'Shipping Details'.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 6.w,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
+                )),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100.w,
+                  child: Center(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RoundCheckBox(
+                          size: 30,
+                          onTap: (selected) {
+                            setState(() {
+                              print('Tera kaam  bngya');
+                              isChecked
+                                  ? isChecked = selected!
+                                  : isChecked = selected!;
 
-              addVerticalSpace(12.0),
-              Visibility(
-                visible: existingAddress.isEmpty ? false : true,
-                child: Visibility(
-                  visible: isVisible,
-                  child: Visibility(
-                    visible: existingAddress.length == 0 ? false : true,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                          margin: EdgeInsets.only(left: 10.0),
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: Text(
-                              'Or Select a Shipping Address',
-                              style: TextStyle(
-                                  fontSize: 6.w, fontWeight: FontWeight.bold),
+                              isVisible ? isVisible = false : isVisible = true;
+                            });
+                          },
+                          isChecked: isChecked,
+                          checkedWidget: Icon(
+                            Icons.check,
+                            size: 25,
+                            color: ConstantsVar.appColor,
+                          ),
+                          uncheckedWidget: null,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3.w),
+                          child: Text(
+                            'Click & Collect',
+                            style: TextStyle(
+                              fontSize: 5.7.w,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins',
                             ),
-                          )),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
-
-              /************** Show Address List ******************/
-              Visibility(
-                visible: existingAddress.isEmpty ? false : true,
-                child: Visibility(
-                  visible: isVisible,
-                  child: ListView(
-                    physics: NeverScrollableScrollPhysics(),
-
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: List.generate(
-                        existingAddress.length,
-                        (index) => AddressItem(
-                              buttonName: "Ship To This Address",
-                              firstName: existingAddress[index].firstName,
-                              lastName: existingAddress[index].lastName,
-                              email: existingAddress[index].email,
-                              companyEnabled:
-                                  existingAddress[index].companyEnabled,
-                              companyRequired:
-                                  existingAddress[index].companyRequired,
-                              countryEnabled:
-                                  existingAddress[index].countryEnabled,
-                              countryId: existingAddress[index].countryId,
-                              countryName: existingAddress[index].countryName,
-                              stateProvinceEnabled:
-                                  existingAddress[index].stateProvinceEnabled,
-                              cityEnabled: existingAddress[index].cityEnabled,
-                              cityRequired: existingAddress[index].cityRequired,
-                              city: existingAddress[index].city,
-                              streetAddressEnabled:
-                                  existingAddress[index].streetAddressEnabled,
-                              streetAddressRequired:
-                                  existingAddress[index].streetAddressRequired,
-                              address1: existingAddress[index].address1,
-                              streetAddress2Enabled:
-                                  existingAddress[index].streetAddress2Enabled,
-                              streetAddress2Required:
-                                  existingAddress[index].streetAddress2Required,
-                              zipPostalCodeEnabled:
-                                  existingAddress[index].zipPostalCodeEnabled,
-                              zipPostalCodeRequired:
-                                  existingAddress[index].zipPostalCodeRequired,
-                              zipPostalCode:
-                                  existingAddress[index].zipPostalCode,
-                              phoneEnabled: existingAddress[index].phoneEnabled,
-                              phoneRequired:
-                                  existingAddress[index].phoneRequired,
-                              phoneNumber: existingAddress[index].phoneNumber,
-                              faxEnabled: existingAddress[index].faxEnabled,
-                              faxRequired: existingAddress[index].faxRequired,
-                              faxNumber: existingAddress[index].faxNumber,
-                              id: existingAddress[index].id,
-                              callback: (String value) {},
-                              guestId: ID,
-                              // isLoading: isLoading,
-                            )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Text(
+                    ConstantsVar.stringShipping,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      fontSize: 3.8.w,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
+                Visibility(
+                    visible: isChecked,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: List.generate(
+                          myPickPoint.length,
+                          (index) => Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            child: LoadingButton(
+                              color: Colors.white,
+                              defaultWidget: Text(myPickPoint[index].name,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 4.6.w, color: Colors.black)),
+                              width: 100.w,
+                              height: 18.w,
+                              onPressed: () async {
+                                context.loaderOverlay.show(widget: Container());
+                                await ApiCalls.addAndSelectShippingAddress(
+                                        '${ConstantsVar.apiTokken}',
+                                        ID,
+                                        myPickPoint[index].id)
+                                    .then(
+                                  (value) {
+                                    context.loaderOverlay.hide();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: RichText(
 
-              /**************** Show order summary here ****************/
-              Visibility(
-                visible: isVisible,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 40.0,
-                    bottom: 10,
+                                          textAlign: TextAlign.center,
+                                          text: TextSpan(
+                                            text: 'You have selected:\n',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 3.5.w,fontWeight: FontWeight.bold),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: '${myPickPoint[index].name}',
+                                                  style: TextStyle(
+                                                      fontSize: 3.w,fontWeight: FontWeight.bold))
+                                            ],
+                                          ),
+                                        ),
+                                        title: Text(
+                                          'This will lead you to payment page.',
+
+                                          textAlign:TextAlign.center,
+
+                                          softWrap: true,
+                                          style: TextStyle(fontSize: 5.w,fontWeight: FontWeight.bold,),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              'Cancel'.toUpperCase(),
+                                              style: TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) => PaymentPage(
+                                                  paymentUrl: paymentUrl,
+                                                  // customerId: ID,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Confirm'.toUpperCase(),
+                                              style:
+                                                  TextStyle(color: Colors.green),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    )),
+
+                addVerticalSpace(12.0),
+                Visibility(
+                  visible: existingAddress.isEmpty ? false : true,
+                  child: Visibility(
+                    visible: isVisible,
+                    child: Visibility(
+                      visible: existingAddress.length == 0 ? false : true,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                            margin: EdgeInsets.only(left: 10.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                'Or Select a Shipping Address',
+                                style: TextStyle(
+                                    fontSize: 6.w, fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                      ),
+                    ),
                   ),
+                ),
+
+                /************** Show Address List ******************/
+                Visibility(
+                  visible: existingAddress.isEmpty ? false : true,
+                  child: Visibility(
+                    visible: isVisible,
+                    child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      children: List.generate(
+                          existingAddress.length,
+                          (index) => AddressItem(
+                                buttonName: "Ship To This Address",
+                                firstName: existingAddress[index].firstName,
+                                lastName: existingAddress[index].lastName,
+                                email: existingAddress[index].email,
+                                companyEnabled:
+                                    existingAddress[index].companyEnabled,
+                                companyRequired:
+                                    existingAddress[index].companyRequired,
+                                countryEnabled:
+                                    existingAddress[index].countryEnabled,
+                                countryId: existingAddress[index].countryId,
+                                countryName: existingAddress[index].countryName,
+                                stateProvinceEnabled:
+                                    existingAddress[index].stateProvinceEnabled,
+                                cityEnabled: existingAddress[index].cityEnabled,
+                                cityRequired: existingAddress[index].cityRequired,
+                                city: existingAddress[index].city,
+                                streetAddressEnabled:
+                                    existingAddress[index].streetAddressEnabled,
+                                streetAddressRequired:
+                                    existingAddress[index].streetAddressRequired,
+                                address1: existingAddress[index].address1,
+                                streetAddress2Enabled:
+                                    existingAddress[index].streetAddress2Enabled,
+                                streetAddress2Required:
+                                    existingAddress[index].streetAddress2Required,
+                                zipPostalCodeEnabled:
+                                    existingAddress[index].zipPostalCodeEnabled,
+                                zipPostalCodeRequired:
+                                    existingAddress[index].zipPostalCodeRequired,
+                                zipPostalCode:
+                                    existingAddress[index].zipPostalCode,
+                                phoneEnabled: existingAddress[index].phoneEnabled,
+                                phoneRequired:
+                                    existingAddress[index].phoneRequired,
+                                phoneNumber: existingAddress[index].phoneNumber,
+                                faxEnabled: existingAddress[index].faxEnabled,
+                                faxRequired: existingAddress[index].faxRequired,
+                                faxNumber: existingAddress[index].faxNumber,
+                                id: existingAddress[index].id,
+                                callback: (String value) {},
+                                guestId: ID,
+                                // isLoading: isLoading,
+                              )),
+                    ),
+                  ),
+                ),
+
+                /**************** Show order summary here ****************/
+                Visibility(
+                  visible: isVisible,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 40.0,
+                      bottom: 10,
+                    ),
+                    child: Container(
+                        // margin: EdgeInsets.only(left: 10.0),
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            'Or Add a New Shipping Address',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 6.w, fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                  ),
+                ),
+                Visibility(
+                  visible: isVisible,
                   child: Container(
-                      // margin: EdgeInsets.only(left: 10.0),
+                      margin: EdgeInsets.symmetric(horizontal: 40),
                       width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Text(
-                          'Or Add a New Shipping Address',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: 6.w, fontWeight: FontWeight.bold),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: TextStyle(
+                              fontSize: 6.w,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                        onPressed: () async {
+                          Navigator.push(context,
+                              CupertinoPageRoute(builder: (context) {
+                            return ShippingDetails(
+                              customerId: ID,
+                              tokken: ConstantsVar.apiTokken.toString(),
+                            );
+                          }));
+                        },
+                        child: Container(
+                          height: 5.h,
+                          decoration: BoxDecoration(
+                              color: ConstantsVar.appColor,
+                              borderRadius: BorderRadius.circular(6.0)),
+                          child: Center(
+                            child: Text(
+                              'Add New Address',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 4.w),
+                            ),
+                          ),
                         ),
                       )),
                 ),
-              ),
-              Visibility(
-                visible: isVisible,
-                child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40),
-                    width: MediaQuery.of(context).size.width,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: TextStyle(
-                            fontSize: 6.w,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      onPressed: () async {
-                        Navigator.push(context,
-                            CupertinoPageRoute(builder: (context) {
-                          return ShippingDetails(
-                            customerId: ID,
-                            tokken: ConstantsVar.apiTokken.toString(),
-                          );
-                        }));
-                      },
-                      child: Container(
-                        height: 5.h,
-                        decoration: BoxDecoration(
-                            color: ConstantsVar.appColor,
-                            borderRadius: BorderRadius.circular(6.0)),
-                        child: Center(
-                          child: Text(
-                            'Add New Address',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 4.w),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Card(
+                      color: Colors.white60,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              'Order Summary',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 6.4.w),
+                            ),
                           ),
                         ),
-                      ),
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Card(
-                    color: Colors.white60,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: Center(
-                          child: Text(
-                            'Order Summary',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 6.4.w),
-                          ),
-                        ),
-                      ),
-                    )),
-              ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(8.0),
-                  itemCount: orderSummaryResponse != null
-                      ? orderSummaryResponse!.ordersummary.items.length
-                      : 0,
-                  itemBuilder: (context, index) {
-                    // setState(() {
-                    //   showCartSummary = true;
-                    //   // This val is used to show the view at bottom(summary)
-                    // });
+                      )),
+                ),
+                ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(8.0),
+                    itemCount: orderSummaryResponse != null
+                        ? orderSummaryResponse!.ordersummary.items.length
+                        : 0,
+                    itemBuilder: (context, index) {
+                      // setState(() {
+                      //   showCartSummary = true;
+                      //   // This val is used to show the view at bottom(summary)
+                      // });
 
-                    return cartItemView(
-                        orderSummaryResponse!.ordersummary.items[index]);
-                  }),
-              Card(
-                elevation: 10,
-                child: Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFEEEEEE),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Container(
-                      //   width: MediaQuery.of(context).size.width,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(6.0),
-                      //     child: Center(
-                      //       child: Text(
-                      //         'Order Details'.toUpperCase(),
-                      //         style: TextStyle(
-                      //           fontWeight: FontWeight.bold,
-                      //           fontFamily: 'Poppins',
-                      //           fontSize: 20,
-                      //           color: Colors.black,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Sub-Total:',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              orderSummaryResponse!.ordertotals.subTotal
-                                  .toString(),
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Shipping:',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              'shipping' == null
-                                  ? 'No Shipping Available for now '
-                                  : orderSummaryResponse!.ordertotals.shipping
-                                      .toString(),
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Visibility(
-                          visible: true,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Visibility(
-                                visible: orderSummaryResponse!
-                                            .ordertotals.orderTotalDiscount ==
-                                        null
-                                    ? false
-                                    : true,
-                                child: Text(
-                                  'Discount:',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              Visibility(
-                                visible: orderSummaryResponse!
-                                            .ordertotals.orderTotalDiscount ==
-                                        null
-                                    ? false
-                                    : true,
-                                child: Text(
-                                  orderSummaryResponse!
-                                      .ordertotals.orderTotalDiscount
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Tax 5%:',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              orderSummaryResponse!.ordertotals.tax,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Visibility(
-                          visible: true,
+                      return cartItemView(
+                          orderSummaryResponse!.ordersummary.items[index]);
+                    }),
+                Card(
+                  elevation: 10,
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Container(
+                        //   width: MediaQuery.of(context).size.width,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(6.0),
+                        //     child: Center(
+                        //       child: Text(
+                        //         'Order Details'.toUpperCase(),
+                        //         style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           fontFamily: 'Poppins',
+                        //           fontSize: 20,
+                        //           color: Colors.black,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Total:',
+                                'Sub-Total:',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
-                                  fontSize: 14,
+                                  fontSize: 15,
                                 ),
                               ),
                               Text(
-                                orderSummaryResponse!.ordertotals.orderTotal
+                                orderSummaryResponse!.ordertotals.subTotal
                                     .toString(),
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
@@ -701,20 +570,139 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Shipping:',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                'shipping' == null
+                                    ? 'No Shipping Available for now '
+                                    : orderSummaryResponse!.ordertotals.shipping
+                                        .toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Visibility(
+                            visible: true,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Visibility(
+                                  visible: orderSummaryResponse!
+                                              .ordertotals.orderTotalDiscount ==
+                                          null
+                                      ? false
+                                      : true,
+                                  child: Text(
+                                    'Discount:',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: orderSummaryResponse!
+                                              .ordertotals.orderTotalDiscount ==
+                                          null
+                                      ? false
+                                      : true,
+                                  child: Text(
+                                    orderSummaryResponse!
+                                        .ordertotals.orderTotalDiscount
+                                        .toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Tax 5%:',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                orderSummaryResponse!.ordertotals.tax,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Visibility(
+                            visible: true,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total:',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  orderSummaryResponse!.ordertotals.orderTotal
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              /******************* Show cart summary ********************/
-              // Visibility(
-              //     visible: showCartSummary,
-              //     child: Container(
-              //         child: orderSummaryResponse != null
-              //             ? showCartSummaryView(orderSummaryResponse)
-              //             : Text('No result found')))
-            ],
+                /******************* Show cart summary ********************/
+                // Visibility(
+                //     visible: showCartSummary,
+                //     child: Container(
+                //         child: orderSummaryResponse != null
+                //             ? showCartSummaryView(orderSummaryResponse)
+                //             : Text('No result found')))
+              ],
+            ),
           ),
           Visibility(
             visible: showLoading,
@@ -722,9 +710,9 @@ class _ShippingAddressState extends State<ShippingAddress> {
               child: Align(alignment: Alignment.center, child: showloader()),
             ),
           ),
-        ]),
-      ],
-    );
+        ],
+      )
+    ]);
   }
 
   Card cartItemView(Item item) {
@@ -974,5 +962,18 @@ class _ShippingAddressState extends State<ShippingAddress> {
       addressString = ConstantsVar.prefs.getString('addressJsonString')!;
     });
     return customerID;
+  }
+
+  Future<bool> hideCxt() async {
+    context.loaderOverlay.hide();
+    return true;
+  }
+
+  Future showOverload() async {
+    context.loaderOverlay.show(
+        widget: SpinKitRipple(
+      color: Colors.red,
+      size: 90,
+    ));
   }
 }

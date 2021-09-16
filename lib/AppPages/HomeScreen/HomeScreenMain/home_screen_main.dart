@@ -58,151 +58,164 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   //
   @override
   Widget build(BuildContext context) {
-    return SafeArea(top: true, child: Scaffold(body: buildSafeArea(context)));
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+        body: buildSafeArea(context),
+      ),
+    );
   }
 
   Widget buildSafeArea(BuildContext context) {
     return Container(
       color: Colors.black,
       child: Stack(
-          overflow: Overflow.visible,
-          clipBehavior: Clip.hardEdge,
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                      height: 30.h,
-                      child: Image.asset(
-                        "MyAssets/imagebackground.png",
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter,
-                      ),
+        overflow: Overflow.visible,
+        clipBehavior: Clip.hardEdge,
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: Container(
+                    height: 30.h,
+                    child: Image.asset(
+                      "MyAssets/imagebackground.png",
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.topCenter,
                     ),
                   ),
-                  ListView(
-                    // physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 6),
-                        child: Container(
-                          width: 100.w,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Image.asset('MyAssets/logo.png',
-                                fit: BoxFit.fill,
-                                width: Adaptive.w(18),
-                                height: Adaptive.w(18)),
-                          ),
+                ),
+                ListView(
+                  // physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 6),
+                      child: Container(
+                        width: 100.w,
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Image.asset('MyAssets/logo.png',
+                              fit: BoxFit.fill,
+                              width: Adaptive.w(14),
+                              height: Adaptive.w(14)),
                         ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: 4,
-                              right: 4,
-                            ),
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                  // enlargeStrategy: CenterPageEnlargeStrategy.height,
-                                  disableCenter: true,
-                                  pageSnapping: true,
-                                  // height: 24.h,
-                                  viewportFraction: 1,
-                                  aspectRatio: 4.8 / 2.1,
-                                  autoPlay: true,
-                                  enlargeCenterPage: false),
-                              items: banners.map((banner) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return InkWell(
-                                      onTap: () {
-                                        String type = banner.type;
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            left: 2,
+                            right: 2,
+                            bottom: 4,
+                          ),
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                                // enlargeStrategy: CenterPageEnlargeStrategy.height,
+                                disableCenter: true,
+                                pageSnapping: true,
+                                // height: 24.h,
+                                viewportFraction: 1,
+                                aspectRatio: 4.5 / 2,
+                                autoPlay: true,
+                                enlargeCenterPage: false),
+                            items: banners.map((banner) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return InkWell(
+                                    onTap: () {
+                                      String type = banner.type;
 
-                                        if (type.contains('Category')) {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) => ProductList(
-                                                  categoryId: banner.id,
-                                                  title: ''),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 2.0),
-                                          child: Container(
-                                            child: CachedNetworkImage(
-                                              imageUrl: banner.imageUrl,
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, reason) =>
-                                                  Center(
-                                                child: SpinKitRipple(
-                                                  color: Colors.red,
-                                                  size: 90,
-                                                ),
+                                      if (type.contains('Category')) {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) => ProductList(
+                                                categoryId: banner.id,
+                                                title: ''),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: Container(
+                                          child: CachedNetworkImage(
+                                            imageUrl: banner.imageUrl,
+                                            fit: BoxFit.fill,
+                                            placeholder: (context, reason) =>
+                                                Center(
+                                              child: SpinKitRipple(
+                                                color: Colors.red,
+                                                size: 90,
                                               ),
                                             ),
-                                          )),
-                                    );
-                                  },
-                                );
-                              }).toList(),
-                            ),
+                                          ),
+                                        )),
+                                  );
+                                },
+                              );
+                            }).toList(),
                           ),
-                          Container(
-                            height: 30.h,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 7.0),
+                          color: Colors.black,
+                          height:52.w,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                    // padding: EdgeInsets.symmetric(vertical:6),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: productList.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return listContainer(productList[index]);
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                          visible: categoryVisible,
+                          child: Container(
+                            color: Colors.white,
+                            padding: EdgeInsets.all(4),
+                            // margin: EdgeInsets.all(10),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.all(8),
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: productList.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return listContainer(
-                                            productList[index]);
-                                      }),
-                                ),
-                              ],
+                              mainAxisSize: MainAxisSize.max,
+                              // crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: viewsList,
                             ),
                           ),
-                          Visibility(
-                            visible: categoryVisible,
-                            child: Container(
-                              color: Colors.white,
-                              padding: EdgeInsets.all(10),
-                              // margin: EdgeInsets.all(10),
-                              child: Column(children: viewsList),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
             ),
-            Visibility(
-              visible: showLoading,
-              child: Positioned.fill(
-                child: Align(
-                    alignment: Alignment.centerRight, child: showloader()),
-              ),
+          ),
+          Visibility(
+            visible: showLoading,
+            child: Positioned.fill(
+              child:
+                  Align(alignment: Alignment.centerRight, child: showloader()),
             ),
-          ]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -222,50 +235,47 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         }));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
         // height: Adaptive.w(50),
         // color: Colors.white60,
-        width: Adaptive.w(32),
+        width: Adaptive.w(37),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4.0),
+            Flexible(
               child: Container(
                 color: Colors.white,
-                height: 16.h,
+                width: 36.w,
+                padding: EdgeInsets.all(3.w),
+                height: 36.w,
                 // width: Adaptive.w(32),
                 // height: Adaptive.w(40),
-                child: Card(
-                  elevation: 20,
-                  child: CachedNetworkImage(
-                    imageUrl: list.imageUrl[0],
-                    fit: BoxFit.fill,
+                child: CachedNetworkImage(
+                  imageUrl: list.imageUrl[0],
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            addVerticalSpace(6),
+            Container(
+              width: 36.w,
+              child: Center(
+                child: Text(
+                  list.price.splitBefore('incl') +
+                      '   ' +
+                      '\n' +
+                      'i' +
+                      list.price.splitAfter('i'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    wordSpacing: 4,
+                    color: Colors.white,
+                    fontSize: 4.1.w,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
-              ),
-            ),
-            addVerticalSpace(4.0),
-            Center(
-              child: Text(
-                list.name.toUpperCase(),
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 2.8.w,
-
-                ),
-              ),
-            ),
-            addVerticalSpace(1.0),
-            Center(
-              child: Text(
-                list.price,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 2.6.w,
                 ),
               ),
             ),
@@ -340,147 +350,155 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   Widget categroryLeftView(
       String name, String imageUrl, final categoryId, final type) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              elevation: 10,
-              shadowColor: Colors.grey,
-              child: Container(
-                  width: Adaptive.w(41),
-                  height: Adaptive.w(25),
-                  child:
-                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
+              child: Card(
+                elevation: 10,
+                shadowColor: Colors.grey,
+                child: Container(
+                    width: Adaptive.w(45),
+                    height: Adaptive.w(45),
+                    child: CachedNetworkImage(
+                        imageUrl: imageUrl, fit: BoxFit.fill)),
+              ),
             ),
-          ),
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
-              elevation: 10,
-              child: Container(
-                width: Adaptive.w(41),
-                height: Adaptive.w(25), color: AppColor.greyColor,
-                // height: 12.h,
-                child: Center(
-                  child: Text(name,
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center),
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
+              child: Card(
+                shadowColor: Colors.grey,
+                elevation: 10,
+                child: Container(
+                  width: Adaptive.w(45),
+                  height: Adaptive.w(45), color: AppColor.greyColor,
+                  // height: 12.h,
+                  child: Center(
+                    child: Text(name,
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget categoryRightView(
       String name, String imageUrl, final categoryId, final type) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                print('$categoryId');
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
-              elevation: 10,
-              child: Container(
-                // width: 41.w,
-                color: AppColor.greyColor,
-                width: Adaptive.w(41),
-                height: Adaptive.w(27),
-                child: Center(
-                  child: Text(name,
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical:4.0),
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  print('$categoryId');
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
+              child: Card(
+                shadowColor: Colors.grey,
+                elevation: 10,
+                child: Container(
+                  // width: 45.w,
+                  color: AppColor.greyColor,
+                  width: Adaptive.w(45),
+                  height: Adaptive.w(45),
+                  child: Center(
+                    child: Text(name,
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center),
+                  ),
                 ),
               ),
             ),
-          ),
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                print('$categoryId');
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
-              elevation: 10,
-              child: Container(
-                  width: Adaptive.w(41),
-                  height: Adaptive.w(25),
-                  child:
-                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  print('$categoryId');
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
+              child: Card(
+                shadowColor: Colors.grey,
+                elevation: 10,
+                child: Container(
+                    width: Adaptive.w(45),
+                    height: Adaptive.w(45),
+                    child:
+                        CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

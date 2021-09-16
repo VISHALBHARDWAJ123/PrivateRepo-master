@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
               }
             },
             child: FlutterSizer(
-              builder: (BuildContext, Orientation, ScreenType) {
+              builder: (context, ori, screenType) {
                 return Center(
                   child: SingleChildScrollView(
                     child: Container(
@@ -431,10 +431,11 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
     ApiCalls.readCounter(
             customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
-      setState(() {
-        val = int.parse(value);
-        context.read<cartCounter>().changeCounter(val);
-      });
+      if (mounted)
+        setState(() {
+          val = int.parse(value);
+          context.read<cartCounter>().changeCounter(val);
+        });
     });
   }
 }

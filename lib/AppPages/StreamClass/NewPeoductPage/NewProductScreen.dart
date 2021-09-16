@@ -18,6 +18,8 @@ import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
+import 'ProductResponse.dart';
+
 class NewProductDetails extends StatefulWidget {
   NewProductDetails({Key? key, required this.productId}) : super(key: key);
   final productId;
@@ -49,6 +51,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   bool isScroll = true;
   var assemblyCharges;
   FocusNode yourfoucs = FocusNode();
+  ProductResponse? initialData;
 
   @override
   void dispose() {
@@ -62,165 +65,138 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       productID = widget.productId;
       guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
     });
+    ApiCalls.getProductData('$productID').then((value) {
+      ProductResponse myResponse = ProductResponse.fromJson(value);
+      setState(() {
+        initialData = myResponse;
+
+        for (int i = 0; i <= initialData!.pictureModels.length - 1; i++) {
+          image1 = initialData!.pictureModels[i].imageUrl;
+          image2 = initialData!.pictureModels[i].fullSizeImageUrl;
+          imageList.add(image1);
+          largeImage.add(image2);
+        }
+
+        // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
+
+        id = initialData!.id;
+
+        name = initialData!.name;
+        description = initialData!.shortDescription;
+        price = initialData!.productPrice.price;
+        priceValue =
+            double.parse(initialData!.productPrice.priceValue.toString());
+        sku = initialData!.sku;
+        stockAvailabilty = initialData!.stockAvailability;
+        assemblyCharges = initialData!.productAttributes.length != 0
+            ? 'Assembly Charges ' +
+                initialData!.productAttributes[0].values[0].priceAdjustment +
+                ' includes'
+            : '';
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: new AppBar(
-          actions: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: InkWell(
-                radius: 48,
-                child: Consumer<cartCounter>(
-                  builder: (context, value, child) {
-                    return Badge(
-                      badgeColor: Colors.white,
-                      badgeContent: new Text(value.badgeNumber.toString()),
-                      child: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                ),
-                onTap: () => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => CartScreen2(),
-                  ),
-                ),
-              ),
-            )
-          ],
-          toolbarHeight: 18.w,
-          backgroundColor: ConstantsVar.appColor,
-          centerTitle: true,
-          title: InkWell(
-            onTap: () => Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute(builder: (context) => MyHomePage()),
-                (route) => false),
-            child: Image.asset(
-              'MyAssets/logo.png',
-              width: 15.w,
-              height: 15.w,
-            ),
-          ),
+    if (initialData == null) {
+      return SafeArea(
+        child: Scaffold(
+          body: Container(
+              child: Center(child: SpinKitRipple(color: Colors.red, size: 90))),
         ),
-        body: FutureBuilder<dynamic>(
-            future: ApiCalls.getProductData('$productID'),
-            builder: (context, AsyncSnapshot<dynamic> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Container(
-                    child: Center(
-                      child: SpinKitRipple(
-                        color: Colors.red,
-                        size: 90,
+      );
+    } else {
+      return SafeArea(
+        top: true,
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: new AppBar(
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 10),
+                  child: InkWell(
+                    radius: 48,
+                    child: Consumer<cartCounter>(
+                      builder: (context, value, child) {
+                        return Badge(
+                          badgeColor: Colors.white,
+                          badgeContent: new Text(value.badgeNumber.toString()),
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => CartScreen2(),
                       ),
                     ),
-                  );
-                default:
-                  if (snapshot.hasError) {
-                    return SafeArea(
-                      top: true,
-                      child: Scaffold(
-                        body: Container(
-                          child: Center(
-                            child: Text(
-                              snapshot.error.toString(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    Map<String, dynamic> items = snapshot.data;
-                    imageList.clear();
-
-                    for (int i = 0;
-                        i <= items['PictureModels'].length - 1;
-                        i++) {
-                      image1 = items['PictureModels'][i]['ImageUrl'];
-                      image2 = items['PictureModels'][i]['FullSizeImageUrl'];
-                      imageList.add(image1);
-                      largeImage.add(image2);
-                    }
-
-                    image2 = items['PictureModels'][0]['FullSizeImageUrl'];
-
-                    id = items['id'];
-
-                    name = items['Name'];
-                    description = items['ShortDescription'];
-                    price = items['ProductPrice']['Price'];
-                    priceValue = items['ProductPrice']['PriceValue'];
-                    sku = items['Sku'];
-                    stockAvailabilty = items['StockAvailability'];
-                    assemblyCharges = items['ProductAttributes'].length != 0
-                        ? 'Assembly Charges ' +
-                            items['ProductAttributes'][0]['Values'][0]
-                                ['PriceAdjustment'] +
-                            ' includes'
-                        : '';
-
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          // flex: 9,
-                          child: customList(
-                            context: context,
-                            name: name,
-                            price: price,
-                            descritption: description,
-                            priceValue: '$priceValue',
-                            sku: sku,
-                            stockAvaialbility: stockAvailabilty,
-                            imageList: imageList,
-                            largeImage: largeImage,
-                            assemblyCharges: assemblyCharges,
-                            items: items,
-                          ),
-                        ),
-                        Container(
-                          width: 100.w,
-                          child: AddCartBtn(
-                            productId: id,
-                            isTrue: false,
-                            guestCustomerId: guestCustomerID,
-                            checkIcon: stockAvailabilty
-                                    .toString()
-                                    .contains('Out of stock')
-                                ? Icon(HeartIcon.cross)
-                                : Icon(Icons.check),
-                            text: stockAvailabilty
-                                    .toString()
-                                    .contains('Out of stock')
-                                ? 'out of stock'.toUpperCase()
-                                : 'add to cart'.toUpperCase(),
-                            color: stockAvailabilty
-                                    .toString()
-                                    .contains('Out of stock')
-                                ? Colors.grey
-                                : ConstantsVar.appColor,
-                          ),
-                        )
-                      ],
-                    );
-                  }
-              }
-            }),
-      ),
-    );
+                  ),
+                )
+              ],
+              toolbarHeight: 18.w,
+              backgroundColor: ConstantsVar.appColor,
+              centerTitle: true,
+              title: InkWell(
+                onTap: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => MyHomePage()),
+                    (route) => false),
+                child: Image.asset(
+                  'MyAssets/logo.png',
+                  width: 15.w,
+                  height: 15.w,
+                ),
+              ),
+            ),
+            body: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  // flex: 9,
+                  child: customList(
+                    context: context,
+                    name: name,
+                    price: price,
+                    descritption: description,
+                    priceValue: '$priceValue',
+                    sku: sku,
+                    stockAvaialbility: stockAvailabilty,
+                    imageList: imageList,
+                    largeImage: largeImage,
+                    assemblyCharges: assemblyCharges,
+                    initialData: initialData,
+                  ),
+                ),
+                Container(
+                  width: 100.w,
+                  child: AddCartBtn(
+                    productId: id,
+                    isTrue: false,
+                    guestCustomerId: guestCustomerID,
+                    checkIcon:
+                        stockAvailabilty.toString().contains('Out of stock')
+                            ? Icon(HeartIcon.cross)
+                            : Icon(Icons.check),
+                    text: stockAvailabilty.toString().contains('Out of stock')
+                        ? 'out of stock'.toUpperCase()
+                        : 'add to cart'.toUpperCase(),
+                    color: stockAvailabilty.toString().contains('Out of stock')
+                        ? Colors.grey
+                        : ConstantsVar.appColor,
+                  ),
+                )
+              ],
+            )),
+      );
+    }
   }
 
   ListView customList(
@@ -234,7 +210,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       required List<String> imageList,
       required List<String> largeImage,
       required String assemblyCharges,
-      required dynamic items}) {
+      required dynamic initialData}) {
     return ListView(
       children: [
         Padding(
@@ -299,7 +275,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 6, bottom: 6),
+                  padding: EdgeInsets.only(top: 6, bottom: 4),
                   child: RichText(
                     text: TextSpan(
                       text: 'Availablity: '.toUpperCase(),
@@ -329,23 +305,17 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                       : false,
                   child: Padding(
                     padding: EdgeInsets.only(top: 4, bottom: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          assemblyCharges,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 4.w,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                            letterSpacing: 1,
-                            wordSpacing: 2,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
+                    child: Text(
+                      assemblyCharges,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 4.w,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                        letterSpacing: 1,
+                        wordSpacing: 2,
+                      ),
+                      textAlign: TextAlign.start,
                     ),
                   ),
                 ),

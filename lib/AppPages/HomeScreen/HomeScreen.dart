@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
@@ -33,7 +34,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-getCartBagdge(0);
+    Timer.periodic(Duration(seconds: 1), (timer) => getCartBagdge(0));
+    //
+    // Stream.periodic(Duration(seconds: 5)).asyncMap((event) => getCartBagdge(0)
+    // );
   }
 
   Future getCartBagdge(int val) async {
@@ -53,7 +57,7 @@ getCartBagdge(0);
         builder: (context, ori, deviceType) => MaterialApp(
           title: 'THE One',
           theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.red,
               appBarTheme: AppBarTheme(
                 backgroundColor: ConstantsVar.appColor,
               )),
@@ -62,18 +66,15 @@ getCartBagdge(0);
       ),
     );
   }
-
-  }
+}
 
 class MyHomePage extends StatefulWidget {
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage>
     with AutomaticKeepAliveClientMixin {
-
   List<GridViewModel> mList = [];
   final counter = Counter();
   List<GridPojo> mList1 = [];
@@ -153,13 +154,21 @@ class _MyHomePageState extends State<MyHomePage>
             color: Colors.black,
             height: 50,
             child: RollingNavBar.iconData(
+
+              activeIconColors: [
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+              ],
               activeIndex: activeIndex,
               badges: [
                 null,
                 null,
                 null,
                 Consumer<cartCounter>(builder: (context, value, child) {
-                  return Text(value.badgeNumber.toString());
+                  return Text(value.badgeNumber.toString(),style: TextStyle(fontSize:8),);
                 }),
                 null
               ],
@@ -171,11 +180,11 @@ class _MyHomePageState extends State<MyHomePage>
                 Icons.menu,
               ],
               indicatorColors: <Color>[
-                Colors.red,
-                Colors.red,
-                Colors.red,
-                Colors.red,
-                Colors.red,
+                ConstantsVar.appColor,
+                ConstantsVar.appColor,
+                ConstantsVar.appColor,
+                ConstantsVar.appColor,
+                ConstantsVar.appColor,
               ],
               iconText: <Widget>[
                 Text('Home',
@@ -204,9 +213,10 @@ class _MyHomePageState extends State<MyHomePage>
   Future initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
+
   Future getCartBagdge(int val) async {
     ApiCalls.readCounter(
-        customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+            customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
       setState(() {
         context.read<cartCounter>().changeCounter(int.parse(value));

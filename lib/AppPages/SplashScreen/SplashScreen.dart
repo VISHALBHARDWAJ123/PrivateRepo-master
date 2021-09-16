@@ -156,13 +156,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future getCartBagdge() async {
     int val = 0;
-    ApiCalls.readCounter(
-            customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
-        .then((value) {
-      setState(() {
-        val = int.parse(value);
-        context.read<cartCounter>().changeCounter(val);
-      });
-    });
+    Future.delayed(
+        Duration(seconds: 3),
+        () => ApiCalls.readCounter(
+                    customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+                .then((value) {
+              if (mounted)
+                setState(() {
+                  val = int.parse(value);
+                  context.read<cartCounter>().changeCounter(val);
+                });
+            }));
   }
 }

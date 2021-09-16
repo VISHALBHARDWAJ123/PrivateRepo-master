@@ -13,6 +13,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
+import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
@@ -95,9 +96,11 @@ class ApiCalls {
       var response = await http.post(uri, body: body);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
+        LoginResponse myResponse = LoginResponse.fromJson(responseData);
+
         print(responseData);
 
-        if (responseData
+        if (myResponse
                 .toString()
                 .contains('The credentials provided are incorrect') ||
             responseData.toString().contains('No customer account found')) {
@@ -122,10 +125,11 @@ class ApiCalls {
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG,
           );
-          var userName = responseData['data']['Value']['UserName'];
-          var email = responseData['data']['Value']['Email'];
-          var userId = '${responseData['data']['Value']['Id']}';
-          var gUId = '${responseData['data']['Value']['CustomerGuid']}';
+          var userName = myResponse.data.userName.toString();
+          var email = myResponse.data.email.toString();
+          var userId = myResponse.data.id.toString();
+          var gUId = myResponse.data.guid.toString();
+          var phnNumber = myResponse.data.phone;
           print('$userName $userId $email $gUId');
 
           ConstantsVar.prefs.setString('userName', '$userName');
@@ -133,6 +137,7 @@ class ApiCalls {
           ConstantsVar.prefs.setString('email', '$email');
           ConstantsVar.prefs.setString('guestCustomerID', userId);
           ConstantsVar.prefs.setString('guestGUID', gUId);
+          ConstantsVar.prefs.setString('phone', phnNumber==null?'':phnNumber);
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
           ConstantsVar.prefs.commit();
@@ -214,7 +219,7 @@ class ApiCalls {
   // }
 
   static Future getCategory(BuildContext context) async {
-    final uri = Uri.parse('https://www.theone.com/apis/GetCategoryPage');
+    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetCategoryPage');
     try {
       var response = await http.get(uri);
       dynamic result = jsonDecode(response.body);
@@ -782,11 +787,10 @@ class ApiCalls {
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
     final uri = Uri.parse(
-        'https://www.theone.com/apis/CartCount?cutomerGuid=$customerGuid');
+        BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {
       var response = await http.get(uri);
       dynamic result = jsonDecode(response.body);
-      print(response.body);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {
         return result['ResponseData'];

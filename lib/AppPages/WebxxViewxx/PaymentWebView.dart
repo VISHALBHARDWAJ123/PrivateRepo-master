@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -56,13 +57,17 @@ class _PaymentPageState extends State<PaymentPage> {
           onWillPop: _willPopUp,
           child: Scaffold(
             appBar: new AppBar(
+              backgroundColor: ConstantsVar.appColor,
               toolbarHeight: 18.w,
               centerTitle: true,
               title: GestureDetector(
-                onTap: () => Navigator.pushAndRemoveUntil(context,
-                    CupertinoPageRoute(builder: (context) {
-                  return MyApp();
-                }), (route) => false),
+                onTap: () {
+                  context.loaderOverlay.hide();
+                  Navigator.pushAndRemoveUntil(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return MyApp();
+                  }), (route) => false);
+                },
                 child: Image.asset(
                   'MyAssets/logo.png',
                   width: 15.w,
@@ -131,6 +136,8 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Future<bool> _willPopUp() async {
+    context.loaderOverlay.hide();
+
     Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute(builder: (context) => MyHomePage()),
