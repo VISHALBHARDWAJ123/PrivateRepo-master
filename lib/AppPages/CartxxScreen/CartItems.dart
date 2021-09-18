@@ -12,8 +12,11 @@ import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:provider/provider.dart';
 
 class CartItem extends StatefulWidget {
+  String unitPrice;
+
   CartItem(
       {Key? key,
+      required this.unitPrice,
       required this.quantity2,
       required this.id,
       required this.itemID,
@@ -52,10 +55,11 @@ class _CartItemState extends State<CartItem> {
                     NewProductDetails(productId: widget.productId.toString())));
       },
       child: Container(
+        height: 140,
         child: Stack(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+              margin: EdgeInsets.only(left: 10, right: 10, top: 20),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(16))),
@@ -72,10 +76,12 @@ class _CartItemState extends State<CartItem> {
                       )),
                   Expanded(
                     child: Container(
+                      height: 1116,
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.only(right: 8, top: 4),
@@ -93,6 +99,12 @@ class _CartItemState extends State<CartItem> {
                             "SKU : ${widget.sku}",
                             style: CustomTextStyle.textFormFieldRegular
                                 .copyWith(color: Colors.grey, fontSize: 15),
+                          ),
+                          Utils.getSizedBox(null, 6),
+                          Text(
+                            widget.unitPrice,
+                            overflow: TextOverflow.ellipsis,
+
                           ),
                           Container(
                             child: Row(

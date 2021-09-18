@@ -798,7 +798,7 @@ class ApiCalls {
         return 0;
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+     print(e.toString());
     }
   }
 }

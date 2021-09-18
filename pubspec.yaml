@@ -79,6 +79,7 @@ dependencies:
   flutter_overlay: ^1.0.0
   progress_loading_button: '^1.0.0'
   get_it: ^7.2.0
+  async: ^2.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

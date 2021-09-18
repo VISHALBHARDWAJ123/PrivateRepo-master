@@ -436,6 +436,7 @@ class _CartScreen2State extends State<CartScreen2>
                                   id: guestCustomerID,
                                   productId: cartItems[index].productId,
                                   quantity2: cartItems[index].quantity,
+                                  unitPrice: cartItems[index].unitPrice,
                                 );
                               }),
                           Container(

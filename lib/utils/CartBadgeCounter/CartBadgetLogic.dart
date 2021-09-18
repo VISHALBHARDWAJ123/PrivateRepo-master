@@ -13,25 +13,8 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
 
   int get badgeNumber => _bagdgeNumber;
 
-  Customerorders? respone;
 
-  Customerorders? get resp => respone;
 
-  Future getOrder(String apiToken, String customerId) async {
-    final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetCustomerOrderList?apiToken=$apiToken&customerid=$customerId');
-    var response = await get(uri);
-    try {
-      var result = jsonDecode(response.body);
-      respone = Customerorders.fromJson(result);
-      notifyListeners();
-      // print(myOrders);
-
-    } on Exception catch (e) {
-      print(e.toString);
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
 
   void changeCounter(int cartCounter) {
     _bagdgeNumber = 0;

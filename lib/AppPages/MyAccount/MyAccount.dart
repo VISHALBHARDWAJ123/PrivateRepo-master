@@ -3,9 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+import 'package:untitled2/AppPages/ChangePassword/ChangePassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 
 class MyAccount extends StatelessWidget {
@@ -63,8 +68,101 @@ class MyAccount extends StatelessWidget {
                           milliseconds: 70,
                         ),
                         child: InkWell(
-                          onTap: () =>
-                              Fluttertoast.showToast(msg:'In Progress'),
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
+
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/imagebackground.png',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'You are not logged in with THE One Account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Fluttertoast.showToast(msg: 'In Progress');
+                            }
+                          },
                           // Navigator.push(
                           //     context,
                           //     CupertinoPageRoute(
@@ -111,14 +209,105 @@ class MyAccount extends StatelessWidget {
                           milliseconds: 70,
                         ),
                         child: InkWell(
-                          onTap: () =>
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
 
-                              Fluttertoast.showToast(msg:'In Progress')
-                              ,
-                              // Navigator.push(
-                              // context,
-                              // CupertinoPageRoute(
-                              //     builder: (context) => MyOrders())),
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/imagebackground.png',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'You are not logged in with THE One Account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => MyOrders(),
+                                  ));
+                            }
+                          },
                           child: Card(
                             color: Colors.white,
                             child: Padding(
@@ -161,12 +350,107 @@ class MyAccount extends StatelessWidget {
                           milliseconds: 70,
                         ),
                         child: InkWell(
-                          onTap: () =>
-                              Fluttertoast.showToast(msg:'In Progress'),
-                          // Navigator.push(
-                          //     context,
-                          //     CupertinoPageRoute(
-                          //         builder: (context) => null)),
+                          // Fluttertoast.showToast(msg:'In Progress'),
+
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
+
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/imagebackground.png',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          'You are not logged in with THE One Account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => Demo3Page(),
+                                  ));
+                            }
+                          },
                           child: Card(
                             color: Colors.white,
                             child: Padding(
