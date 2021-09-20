@@ -30,6 +30,7 @@ Future<void> main() async {
         ],
         child: Phoenix(
           child: MaterialApp(
+
             debugShowCheckedModeBanner: false,
             routes: {
               '/LoginScreen': (context) => LoginScreen(),

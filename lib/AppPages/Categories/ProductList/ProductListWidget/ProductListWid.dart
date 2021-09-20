@@ -160,6 +160,9 @@ class _prodListWidgetState extends State<prodListWidget> {
                         String name = widget.products[index].stockQuantity;
                         return InkWell(
                           onTap: () {
+
+                            print(  widget.products[index].id.toString());
+
                             //
                             SchedulerBinding.instance!
                                 .addPostFrameCallback((timeStamp) {

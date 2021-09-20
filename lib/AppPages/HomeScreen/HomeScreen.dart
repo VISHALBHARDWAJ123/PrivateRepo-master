@@ -44,7 +44,9 @@ class _MyAppState extends State<MyApp> {
     ApiCalls.readCounter(
             customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
+      if(mounted){
         context.read<cartCounter>().changeCounter(int.parse(value));
+      }
 
     });
   }

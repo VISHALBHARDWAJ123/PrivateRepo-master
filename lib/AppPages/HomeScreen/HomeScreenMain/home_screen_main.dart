@@ -167,14 +167,15 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(vertical: 7.0),
-                          color: Colors.black,
-                          height:52.w,
+                          color: Colors.white,
+                          height: 52.w,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
                                 child: ListView.builder(
+                                  clipBehavior:Clip.antiAliasWithSaveLayer,
                                     // padding: EdgeInsets.symmetric(vertical:6),
                                     scrollDirection: Axis.horizontal,
                                     itemCount: productList.length,
@@ -235,21 +236,21 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         }));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         // height: Adaptive.w(50),
-        // color: Colors.white60,
+        color: Colors.white,
         width: Adaptive.w(37),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: Container(
                 color: Colors.white,
                 width: 36.w,
-                padding: EdgeInsets.all(3.w),
+                padding: EdgeInsets.all(2.w),
                 height: 36.w,
                 // width: Adaptive.w(32),
                 // height: Adaptive.w(40),
@@ -259,20 +260,15 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                 ),
               ),
             ),
-            addVerticalSpace(6),
             Container(
               width: 36.w,
               child: Center(
                 child: Text(
-                  list.price.splitBefore('incl') +
-                      '   ' +
-                      '\n' +
-                      'i' +
-                      list.price.splitAfter('i'),
+                  list.price.splitBefore('incl'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     wordSpacing: 4,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 4.1.w,
                     fontWeight: FontWeight.bold,
                   ),
@@ -428,7 +424,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   Widget categoryRightView(
       String name, String imageUrl, final categoryId, final type) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical:4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -445,7 +441,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                           builder: (context) =>
                               SubCatNew(catId: '$categoryId', title: name)));
                 } else {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
                     return ProductList(
                       categoryId: '$categoryId',
                       title: name,
@@ -479,7 +476,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                           builder: (context) =>
                               SubCatNew(catId: '$categoryId', title: name)));
                 } else {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
                     return ProductList(
                       categoryId: '$categoryId',
                       title: name,
@@ -493,8 +491,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                 child: Container(
                     width: Adaptive.w(45),
                     height: Adaptive.w(45),
-                    child:
-                        CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
+                    child: CachedNetworkImage(
+                        imageUrl: imageUrl, fit: BoxFit.fill)),
               ),
             ),
           ],

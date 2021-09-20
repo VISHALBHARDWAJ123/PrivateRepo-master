@@ -9,6 +9,7 @@ import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/ChangePassword/ChangePassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
+import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
@@ -160,7 +161,10 @@ class MyAccount extends StatelessWidget {
                                 },
                               );
                             } else {
-                              Fluttertoast.showToast(msg: 'In Progress');
+
+                              Navigator.push(context,CupertinoPageRoute(builder: (context) =>MyAddresses()));
+
+                              // Fluttertoast.showToast(msg: 'In Progress');
                             }
                           },
                           // Navigator.push(

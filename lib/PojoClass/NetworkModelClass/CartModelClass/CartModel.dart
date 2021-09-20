@@ -616,7 +616,7 @@ class OrderTotalsModel {
 
   factory OrderTotalsModel.fromJson(Map<String, dynamic> json) =>
       OrderTotalsModel(
-        id: json["\u0024id"],
+        id: json["id"],
         isEditable: json["IsEditable"],
         subTotal: json["SubTotal"],
         subTotalDiscount: json["SubTotalDiscount"],
@@ -635,7 +635,7 @@ class OrderTotalsModel {
         redeemedRewardPoints: json["RedeemedRewardPoints"],
         redeemedRewardPointsAmount: json["RedeemedRewardPointsAmount"],
         willEarnRewardPoints: json["WillEarnRewardPoints"],
-        orderTotal: json["OrderTotal"],
+        orderTotal: json["OrderTotal"]==null?'During Checkout': json["OrderTotal"],
         customProperties: Custom.fromJson(json["CustomProperties"]),
       );
 
@@ -658,7 +658,7 @@ class OrderTotalsModel {
         "RedeemedRewardPoints": redeemedRewardPoints,
         "RedeemedRewardPointsAmount": redeemedRewardPointsAmount,
         "WillEarnRewardPoints": willEarnRewardPoints,
-        "OrderTotal": orderTotal,
+        "OrderTotal": orderTotal==null?"During Checkout": orderTotal,
         "CustomProperties": customProperties.toJson(),
       };
 }

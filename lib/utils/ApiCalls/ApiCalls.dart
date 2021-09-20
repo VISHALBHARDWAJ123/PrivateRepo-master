@@ -14,6 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
+import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
@@ -96,11 +97,12 @@ class ApiCalls {
       var response = await http.post(uri, body: body);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        LoginResponse myResponse = LoginResponse.fromJson(responseData);
-
         print(responseData);
 
-        if (myResponse
+
+
+
+        if (responseData
                 .toString()
                 .contains('The credentials provided are incorrect') ||
             responseData.toString().contains('No customer account found')) {
@@ -125,6 +127,7 @@ class ApiCalls {
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG,
           );
+          LoginResponse myResponse = LoginResponse.fromJson(responseData);
           var userName = myResponse.data.userName.toString();
           var email = myResponse.data.email.toString();
           var userId = myResponse.data.id.toString();
@@ -137,7 +140,8 @@ class ApiCalls {
           ConstantsVar.prefs.setString('email', '$email');
           ConstantsVar.prefs.setString('guestCustomerID', userId);
           ConstantsVar.prefs.setString('guestGUID', gUId);
-          ConstantsVar.prefs.setString('phone', phnNumber==null?'':phnNumber);
+          ConstantsVar.prefs
+              .setString('phone', phnNumber == null ? '' : phnNumber);
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
           ConstantsVar.prefs.commit();
@@ -734,8 +738,12 @@ class ApiCalls {
     }
   }
 
-  static Future addBillingORShippingAddress(BuildContext context,
-      String apiToken, String customerId, String snippingModel) async {
+  static Future addBillingORShippingAddress(
+      BuildContext context,
+      String uriName,
+      String apiToken,
+      String customerId,
+      String snippingModel) async {
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
@@ -748,13 +756,39 @@ class ApiCalls {
     try {
       var response = await http.post(uri, body: body);
       print(jsonDecode(response.body));
-      Navigator.push(
-          context,
-          CupertinoPageRoute(
-              builder: (context) => ShippingAddress(
-                  // tokken: apiToken,
-                  // customerId: customerId,
-                  )));
+      if (uriName == 'MyAccount') {
+        //It means adding address is from my account screen
+        Navigator.pop(context);
+      } else {
+        // Add adding from billing screen
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => ShippingAddress(
+                    // tokken: apiToken,
+                    // customerId: customerId,
+                    )));
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  static Future editAndSaveAddress(BuildContext context, String apiToken,
+      String customerId, String addressId, String data,VoidCallback callback) async {
+    final body = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID2: customerId,
+      ApiParams.PARAM_ADDRESS_ID: addressId,
+      ApiParams.PARAM_DATA: data
+    };
+
+    final uri =
+        Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
+    print(uri);
+    try {
+      var response = await http.post(uri, body: body);
+      print(jsonDecode(response.body));
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -789,7 +823,7 @@ class ApiCalls {
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri,headers: {HttpHeaders.cookieHeader: customerGuid});
       dynamic result = jsonDecode(response.body);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {
@@ -798,7 +832,7 @@ class ApiCalls {
         return 0;
       }
     } on Exception catch (e) {
-     print(e.toString());
+      print(e.toString());
     }
   }
 }

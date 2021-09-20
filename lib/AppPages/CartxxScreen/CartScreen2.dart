@@ -118,7 +118,7 @@ class _CartScreen2State extends State<CartScreen2>
         subTotal = model.orderTotalsModel.subTotal;
         shipping = model.orderTotalsModel.shipping;
         taxPrice = model.orderTotalsModel.tax;
-
+        totalAmount = model.orderTotalsModel.orderTotal;
         discountPrice = model.orderTotalsModel.orderTotalDiscount;
 
         print('Refresh Trigger');
@@ -139,56 +139,7 @@ class _CartScreen2State extends State<CartScreen2>
         }
 
         /* if no shipping on the product but have discount and total amount both*/
-        if (shipping == null &&
-            discountPrice != null &&
-            totalAmount != null &&
-            totalAmount != '') {
-          var dis = discountPrice == null ||
-                  discountPrice == 'No Discount Available'
-              ? 0
-              : double.parse(discountPrice.replaceAll(RegExp('[^0-9]'), ''));
-          var total;
 
-          dis == 0 ? total = 'During Checkout' : '';
-          setState(() {
-            print(dis);
-            totalAmount = total;
-          });
-        } else if (shipping != null) {
-          if (discountPrice == null &&
-              totalAmount == null &&
-              totalAmount == '') {
-            var sTotal =
-                double.parse(subTotal.replaceAll(RegExp('[^0-9]'), ''));
-
-            var tax = int.parse(taxPrice.replaceAll(RegExp('[^0-9]'), ''));
-
-            var shipCost = int.parse(shipping.replaceAll(RegExp('[^0-9]'), ''));
-            var total = sTotal + tax + shipCost;
-            setState(() {
-              totalAmount = 'AED $total incl VAT';
-            });
-          } else if (totalAmount == null && totalAmount == '') {
-            var sTotal = int.parse(subTotal.replaceAll(RegExp('[^0-9]'), ''));
-
-            var tax = int.parse(taxPrice.replaceAll(RegExp('[^0-9]'), ''));
-
-            var shipCost = int.parse(shipping.replaceAll(RegExp('[^0-9]'), ''));
-
-            var discountCost = doubleRegex
-                .allMatches(discountPrice)
-                .map((e) => e.group(1)) as double;
-            var total = (sTotal + shipCost + tax) - discountCost;
-
-            setState(() {
-              totalAmount = 'AED $total incl VAT';
-            });
-          } else {
-            setState(() {
-              totalAmount = model.orderTotalsModel.orderTotal;
-            });
-          }
-        }
       });
     });
   }

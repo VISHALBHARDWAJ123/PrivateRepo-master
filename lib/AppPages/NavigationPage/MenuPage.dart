@@ -123,110 +123,132 @@ class _MenuPageState extends State<MenuPage> {
                             -1,
                             0,
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  'Welcome',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 8.5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Visibility(
-                                    visible: userName == null ? false : true,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: ConstantsVar.appColor,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Visibility(
-                                    visible: userName == null ? false : true,
-                                    child: Text(
-                                      userName == null ? '' : userName,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Visibility(
-                                visible: email == null ? false : true,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(
-                                        Icons.email,
-                                        color: ConstantsVar.appColor,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        email == null ? '' : email,
+                          child: Container(
+                            width: 100.w,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                                  child: Container(
+                                    width: 100.w,
+                                    child: Center(
+                                      child: Text(
+                                        'Welcome',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 5.w,
+                                          fontSize: 8.5.w,
                                           fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 100.w,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 100.w,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Visibility(
+                                              visible: userName == null ? false : true,
+                                              child: Icon(
+                                                Icons.person,
+                                                color: ConstantsVar.appColor,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Visibility(
+                                              visible: userName == null ? false : true,
+                                              child: Text(
+                                                userName == null ? '' : userName,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: email == null ? false : true,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Container(
+                                            width: 100.w,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  color: ConstantsVar.appColor,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  email == null ? '' : email,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: phnNumber == null ? false : true,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Container(
+                                            width: 100.w,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Icon(Icons.phone,
+                                                    color: ConstantsVar.appColor),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  phnNumber == null ? '' : phnNumber,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: phnNumber == null ? false : true,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.phone,
-                                          color: ConstantsVar.appColor),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        phnNumber == null ? '' : phnNumber,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

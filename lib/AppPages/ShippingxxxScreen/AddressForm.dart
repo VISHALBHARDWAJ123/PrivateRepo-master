@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -8,18 +7,40 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
-import 'BillingxxScreen/BillingScreen.dart';
-import 'BillingxxScreen/ShippingAddress.dart';
-
 class AddressScreen extends StatefulWidget {
-  AddressScreen({Key? key, required this.uri, required this.isShippingAddress})
+  AddressScreen(
+      {Key? key,
+      required this.uri,
+      required this.isShippingAddress,
+      required this.isEditAddress,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.address1,
+      required this.countryName,
+      required this.city,
+      required this.phoneNumber,
+      required this.id, required this.myCallBack})
       : super(key: key);
   String uri;
   bool isShippingAddress;
+  bool isEditAddress;
+  VoidCallback myCallBack;
+  //data of address
+  String firstName;
+  String lastName;
+  String email;
+  String address1;
+  String countryName;
+  String city;
+  String phoneNumber;
+  int id;
 
   @override
   _AddressScreenState createState() => _AddressScreenState();
@@ -27,14 +48,11 @@ class AddressScreen extends StatefulWidget {
 
 class _AddressScreenState extends State<AddressScreen>
     with InputValidationMixin {
-  var eController = TextEditingController();
+  var emailController = TextEditingController();
   var apiToken;
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  late TextEditingController textController3;
-  late TextEditingController textController4;
-  late TextEditingController textController5;
-  late TextEditingController textController6;
+  var firstNameController = TextEditingController(); //for first name
+  var numberController = TextEditingController();
+  var cityController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool checkBoxVal = false;
@@ -46,17 +64,35 @@ class _AddressScreenState extends State<AddressScreen>
 
   var controllerAddress = TextEditingController();
   var guestId;
+  var buttonText = 'ADD ADDRESS';
 
   @override
   void initState() {
     super.initState();
     getGuestId();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
-    textController3 = TextEditingController();
-    textController4 = TextEditingController();
-    textController5 = TextEditingController();
-    textController6 = TextEditingController();
+    firstNameController = TextEditingController();
+    textControllerLast = TextEditingController();
+    numberController = TextEditingController();
+    countryController = TextEditingController();
+    controllerAddress = TextEditingController();
+    cityController = TextEditingController();
+    emailController = TextEditingController();
+
+    //changes for add new address and edit address both 19 sept
+    if (widget.isEditAddress == true) {
+      setState(() {
+        firstNameController.text = widget.firstName;
+        textControllerLast.text = widget.lastName;
+        emailController.text = widget.email;
+        numberController.text = widget.phoneNumber;
+        countryController.text = widget.countryName;
+        controllerAddress.text = widget.address1;
+        cityController.text = widget.city;
+        buttonText = 'SAVE';
+        String addressId = widget.id.toString();
+        print('addressid>> $addressId');
+      });
+    }
   }
 
   @override
@@ -133,7 +169,7 @@ class _AddressScreenState extends State<AddressScreen>
                           child: TextFormField(
                             textInputAction: TextInputAction.next,
                             onChanged: (_) => setState(() {}),
-                            controller: textController1,
+                            controller: firstNameController,
                             obscureText: false,
                             decoration: editBoxDecoration(
                                 'FIRST NAME'.toUpperCase(),
@@ -148,7 +184,7 @@ class _AddressScreenState extends State<AddressScreen>
                             ),
                             maxLines: 1,
                             validator: (val) {
-                              if (isFirstName(textController1.text))
+                              if (isFirstName(firstNameController.text))
                                 return null;
                               else
                                 return 'Please Enter Your First Name';
@@ -213,13 +249,13 @@ class _AddressScreenState extends State<AddressScreen>
                               textInputAction: TextInputAction.next,
                               maxLength: 9,
                               onChanged: (_) => setState(() {}),
-                              controller: textController2,
+                              controller: numberController,
                               obscureText: false,
                               decoration: editBoxDecoration(
                                   'number'.toUpperCase(),
                                   Icon(Icons.phone,
                                       color: AppColor.PrimaryAccentColor),
-                                  '+971'),
+                                  BuildConfig.countryCode),
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 18.dp,
@@ -255,7 +291,7 @@ class _AddressScreenState extends State<AddressScreen>
                             child: TextFormField(
                               textInputAction: TextInputAction.next,
                               keyboardType: TextInputType.emailAddress,
-                              controller: eController,
+                              controller: emailController,
                               validator: (val) {
                                 if (isEmailValid(val!))
                                   return null;
@@ -294,10 +330,8 @@ class _AddressScreenState extends State<AddressScreen>
                               validator: (val) {
                                 if (isAddress(val!)) {
                                   return null;
-
                                 }
                                 return 'Please Provide Your Address';
-
                               },
                               cursorColor: Colors.black,
                               style:
@@ -329,7 +363,7 @@ class _AddressScreenState extends State<AddressScreen>
                           child: TextFormField(
                             textInputAction: TextInputAction.next,
                             onChanged: (_) => setState(() {}),
-                            controller: textController6,
+                            controller: cityController,
                             obscureText: false,
                             decoration: InputDecoration(
                               prefixIcon: Icon(
@@ -390,56 +424,76 @@ class _AddressScreenState extends State<AddressScreen>
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
-                          Map<String, dynamic> body = {
-                            'FirstName': '${textController1.text}',
-                            'LastName': textControllerLast.text,
-                            'Email': eController.text,
-                            'Company': '',
-                            'CountryId': '79',
-                            'StateProvinceId': '',
-                            'City': '${textController6.text}',
-                            'Address1': controllerAddress.text,
-                            'Address2': '',
-                            'ZipPostalCode': '',
-                            'PhoneNumber': '+971${textController2.text}',
-                            'FaxNumber': '',
-                            'Country': 'UAE',
-                          };
-                          ConstantsVar.prefs
-                              .setString('addressJsonString', jsonEncode(body));
-                          ApiCalls.addBillingORShippingAddress(context,
-                              '${apiToken}', guestId, jsonEncode(body));
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: 'Please Provide correct details');
-                        }
-                      },
-                      child: Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                          color: ConstantsVar.appColor,
-                        ),
-                        child: Align(
-                          alignment: Alignment(0, 0),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Text(
-                              'ADD ADDRESS',
-                              style: TextStyle(
-                                fontFamily: 'Work Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.dp,
-                                color: Colors.white,
+                        onTap: () {
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState!.save();
+                            Map<String, dynamic> body = {
+                              'FirstName': '${firstNameController.text}',
+                              'LastName': textControllerLast.text,
+                              'Email': emailController.text,
+                              'Company': '',
+                              'CountryId': '79',
+                              'StateProvinceId': '',
+                              'City': '${cityController.text}',
+                              'Address1': controllerAddress.text,
+                              'Address2': '',
+                              'ZipPostalCode': '',
+                              'PhoneNumber': '${numberController.text}',
+                              'FaxNumber': '',
+                              'Country': 'UAE',
+                            };
+                            if (widget.isEditAddress == false) {
+                              //add new address
+                              ConstantsVar.prefs.setString(
+                                  'addressJsonString', jsonEncode(body));
+                              ApiCalls.addBillingORShippingAddress(
+                                  context,
+                                  widget.uri.toString(),
+                                  '${apiToken}',
+                                  guestId,
+                                  jsonEncode(body));
+                            } else {
+                              //call api to save address
+                              Fluttertoast.showToast(msg: 'Save Address');
+                              ApiCalls.editAndSaveAddress(
+                                  context,
+                                  '${apiToken}',
+                                  guestId,
+                                  widget.id.toString(),
+                                  jsonEncode(body),widget.myCallBack).then((value) =>
+                                  Navigator.pushReplacement(context,CupertinoPageRoute(builder: (context)=>MyAddresses())).then((value) => setState((){})));
+                            }
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Please Provide correct details');
+                          }
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              decoration: BoxDecoration(
+                                color: ConstantsVar.appColor,
+                              ),
+                              child: Align(
+                                alignment: Alignment(0, 0),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  child: Text(
+                                    buttonText,
+                                    style: TextStyle(
+                                      fontFamily: 'Work Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.dp,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
+                          ],
+                        ))
                   ],
                 )
               ],
@@ -471,5 +525,6 @@ class _AddressScreenState extends State<AddressScreen>
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     guestId = ConstantsVar.prefs.getString('guestCustomerID');
     apiToken = ConstantsVar.prefs.getString('apiTokken');
+    print('guest $guestId apiToken $apiToken');
   }
 }

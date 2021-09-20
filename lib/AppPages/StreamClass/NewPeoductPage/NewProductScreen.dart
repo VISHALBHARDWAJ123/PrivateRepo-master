@@ -88,7 +88,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             double.parse(initialData!.productPrice.priceValue.toString());
         sku = initialData!.sku;
         stockAvailabilty = initialData!.stockAvailability;
-        assemblyCharges = initialData!.productAttributes.length != 0
+        assemblyCharges = initialData!.productAttributes.length != 0 ||
+                initialData!.productAttributes.isNotEmpty
             ? 'Assembly Charges ' +
                 initialData!.productAttributes[0].values[0].priceAdjustment +
                 ' includes'
