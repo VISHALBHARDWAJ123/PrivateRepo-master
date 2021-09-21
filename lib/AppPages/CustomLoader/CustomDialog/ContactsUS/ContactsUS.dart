@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:loader_overlay/loader_overlay.dart';
+
 // import 'package:custom_dialog_flutter_demo/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
@@ -33,7 +35,7 @@ class ContactUS extends StatefulWidget {
   _ContactUSState createState() => _ContactUSState();
 }
 
-class _ContactUSState extends State<ContactUS> {
+class _ContactUSState extends State<ContactUS> with InputValidationMixin {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController emailBody = TextEditingController();
@@ -42,6 +44,8 @@ class _ContactUSState extends State<ContactUS> {
   var apiToken;
 
   bool selected = true;
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -86,8 +90,8 @@ class _ContactUSState extends State<ContactUS> {
             ),
           ),
         ),
-        body: Container(
-          height: 100.h,
+        body: Form(
+          key: _formKey,
           child: contentBox(context),
         ),
       ),
@@ -140,6 +144,12 @@ class _ContactUSState extends State<ContactUS> {
                       ),
                     ),
                     subtitle: TextFormField(
+                      validator: (firstName) {
+                        if (isFirstName(firstName!))
+                          return null;
+                        else
+                          return 'Enter your Name.';
+                      },
                       maxLines: 1,
                       controller: name,
                       style: TextStyle(
@@ -158,6 +168,12 @@ class _ContactUSState extends State<ContactUS> {
                       ),
                     ),
                     subtitle: TextFormField(
+                      validator: (email) {
+                        if (isEmailValid(email!))
+                          return null;
+                        else
+                          return 'Enter a valid email address';
+                      },
                       maxLines: 1,
                       // maxLength: 20,
                       controller: email,
@@ -192,7 +208,10 @@ class _ContactUSState extends State<ContactUS> {
           ),
           InkWell(
               onTap: () async {
-                sendEnquiry().then((value) => Navigator.pop(context));
+                if(_formKey.currentState!.validate()){
+                  _formKey.currentState!.save();
+                  sendEnquiry().then((value) => Navigator.pop(context));
+                }else{}
               },
               child: Container(
                 color: ConstantsVar.appColor,
@@ -253,7 +272,11 @@ class _ContactUSState extends State<ContactUS> {
       showDialog(
           builder: (context) {
             return CustomDialogBox(
-                descriptions: jsonDecode(response.body), text: 'You will hear from us soon.', img: '', isOkay: false,);
+              descriptions: jsonDecode(response.body),
+              text: 'You will hear from us soon.',
+              img: '',
+              isOkay: false,
+            );
           },
           context: context);
       context.loaderOverlay.hide();

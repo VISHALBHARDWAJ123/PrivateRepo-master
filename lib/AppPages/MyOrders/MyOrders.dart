@@ -133,7 +133,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                       '${orders['customerorders']['Orders'][index]['CreatedOn']}';
                                   var resultDate = orderDate
                                       .toString()
-                                      .replaceAll('T', '  ');
+                                      .replaceAll('T', '  ').toString().splitBefore('.');
                                   if (orders['customerorders']['Orders'][index]
                                           ['OrderStatus']
                                       .toString()
@@ -169,7 +169,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                             children: <Widget>[
                                               Center(
                                                 child: Text(
-                                                  '\nORDER NUMBER: \n ' +
+                                                  '\nORDER NUMBER\n ' +
                                                       orders['customerorders']
                                                                       ['Orders']
                                                                   [index][
@@ -177,6 +177,8 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                           .toString()
                                                           .toUpperCase(),
                                                   // maxLines: 1,
+                                                  textAlign: TextAlign.center,
+                                                  textDirection: TextDirection.ltr,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   softWrap: true,
@@ -213,7 +215,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                               'Order Status: ',
                                                           style: TextStyle(
                                                             color: Colors.black,
-                                                            fontSize: 4.w,
+                                                            fontSize: 5.w,
                                                             // fontWeight:
                                                             //     FontWeight.bold,
                                                           ),
@@ -230,7 +232,9 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                                   .toUpperCase(),
                                                               style: TextStyle(
                                                                 color: _color,
-                                                                fontSize: 4.w,
+                                                                fontSize: 5.w,
+                                                                fontWeight: FontWeight.bold,
+
                                                                 // fontWeight:
                                                                 //     FontWeight
                                                                 //         .bold,
@@ -246,7 +250,8 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                       'Order Date: ' +
                                                           resultDate,
                                                       style: TextStyle(
-                                                        fontSize: 4.w,
+                                                        fontSize: 5.w,
+
                                                         // fontWeight:
                                                         //     FontWeight.bold,
                                                       ),
@@ -263,7 +268,8 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
-                                                          fontSize: 4.w,
+                                                          fontSize: 5.w,
+
                                                           // fontWeight:
                                                           //     FontWeight.bold,
                                                         ),
@@ -293,31 +299,54 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                       ),
                                                     ),
                                                     onTap: () {
-                                                      Navigator.push(
+                                                      getOderDetails(
+                                                              orderid: orders['customerorders']
+                                                                              [
+                                                                              'Orders']
+                                                                          [
+                                                                          index]
+                                                                      ['Id']
+                                                                  .toString(),
+                                                              apiToekbn:
+                                                                  apiToken,
+                                                              customerId:
+                                                                  customerId)
+                                                          .then(
+                                                        (value) =>
+                                                            Navigator.push(
                                                           context,
                                                           CupertinoPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      OrderDetails(
-                                                                        orderNumber:
-                                                                            '\nORDER  #' +
-                                                                                orders['customerorders']['Orders'][index]['CustomOrderNumber'].toString(),
-                                                                        orderProgress:
-                                                                            orders['customerorders']['Orders'][index]['OrderStatus'],
-                                                                        orderTotal:
-                                                                            'Order Total: ' +
-                                                                                orders['customerorders']['Orders'][index]['OrderTotal'],
-                                                                        customerId:
-                                                                            customerId,
-                                                                        apiToken:
-                                                                            apiToken,
-                                                                        orderid:
-                                                                            orders['customerorders']['Orders'][index]['Id'].toString(),
-                                                                        orderDate:
-                                                                            resultDate,
-                                                                        color:
-                                                                            _color,
-                                                                      )));
+                                                            builder: (context) =>
+                                                                OrderDetails(
+                                                              orderNumber: '\nORDER  #' +
+                                                                  orders['customerorders']['Orders']
+                                                                              [
+                                                                              index]
+                                                                          [
+                                                                          'CustomOrderNumber']
+                                                                      .toString(),
+                                                              orderProgress: orders[
+                                                                          'customerorders']
+                                                                      [
+                                                                      'Orders'][index]
+                                                                  [
+                                                                  'OrderStatus'],
+                                                              orderTotal: 'Order Total: ' +
+                                                                  orders['customerorders']
+                                                                              [
+                                                                              'Orders']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'OrderTotal'],
+                                                              orderDate:
+                                                                 'Order Date: ' + resultDate,
+                                                              color: _color,
+                                                              resultas: value,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
                                                     },
                                                   ),
                                                 ),
@@ -341,6 +370,35 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
             ),
           ),
         ));
+  }
+
+  Future getOderDetails({
+    required String orderid,
+    required String apiToekbn,
+    required String customerId,
+  }) async {
+    print('Order Id =====>>>>>>> ' + orderid);
+    context.loaderOverlay.show(
+        widget: SpinKitRipple(
+      color: Colors.red,
+      size: 90,
+    ));
+    final uri = Uri.parse(BuildConfig.base_url +
+        "apis/GetCustomerOrderDetail?apiToken=${apiToken}&customerId=${customerId}&orderid=${orderid}");
+
+    var response = await get(uri);
+
+    try {
+      var result = jsonDecode(response.body);
+      print(result);
+
+      context.loaderOverlay.hide();
+      return result;
+    } on Exception catch (e) {
+      print(e.toString());
+
+      context.loaderOverlay.hide();
+    }
   }
 
   Future getInit() async {

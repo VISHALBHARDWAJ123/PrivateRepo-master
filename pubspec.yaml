@@ -79,7 +79,8 @@ dependencies:
   flutter_overlay: ^1.0.0
   progress_loading_button: '^1.0.0'
   get_it: ^7.2.0
-  async: ^2.8.1
+#  async: ^2.8.1
+  persistent_bottom_nav_bar: ^4.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -106,6 +107,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - MyAssets/asset1.jpg
+    - MyAssets/catback.png
     - MyAssets/asset2.jpg
     - MyAssets/asset3.jpg
     - MyAssets/asset4.jpg

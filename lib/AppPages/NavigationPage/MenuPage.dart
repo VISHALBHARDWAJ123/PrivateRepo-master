@@ -17,7 +17,7 @@ import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/AppPages/Registration/register_page.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
-import 'package:untitled2/utils/utils/colors.dart';
+// import 'package:untitled2/utils/utils/colors.dart';
 
 enum AniProps { color }
 
@@ -80,6 +80,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       // resizeToAvoidBottomInset: false,
       appBar: new AppBar(
         backgroundColor: ConstantsVar.appColor,
@@ -108,6 +109,7 @@ class _MenuPageState extends State<MenuPage> {
         children: [
           Positioned.fill(
             child: Container(
+              color: Colors.white,
               width: 100.w,
               height: 100.h,
               child: ListView(
@@ -124,6 +126,7 @@ class _MenuPageState extends State<MenuPage> {
                             0,
                           ),
                           child: Container(
+                            color:Colors.white,
                             width: 100.w,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +175,7 @@ class _MenuPageState extends State<MenuPage> {
                                               child: Text(
                                                 userName == null ? '' : userName,
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Colors.grey.shade700,
                                                   fontSize: 5.w,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -181,66 +184,64 @@ class _MenuPageState extends State<MenuPage> {
                                           ],
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
                                       Visibility(
                                         visible: email == null ? false : true,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.symmetric(vertical: 8.0),
-                                          child: Container(
-                                            width: 100.w,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Icon(
-                                                  Icons.email,
-                                                  color: ConstantsVar.appColor,
+                                        child: Container(
+                                          width: 100.w,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Icon(
+                                                Icons.email,
+                                                color: ConstantsVar.appColor,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                email == null ? '' : email,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  email == null ? '' : email,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 5.w,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
                                       Visibility(
                                         visible: phnNumber == null ? false : true,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.symmetric(vertical: 8.0),
-                                          child: Container(
-                                            width: 100.w,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Icon(Icons.phone,
-                                                    color: ConstantsVar.appColor),
-                                                SizedBox(
-                                                  width: 10,
+                                        child: Container(
+                                          width: 100.w,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(Icons.phone,
+                                                  color: ConstantsVar.appColor),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                phnNumber == null ? '' : phnNumber,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                Text(
-                                                  phnNumber == null ? '' : phnNumber,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 5.w,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),

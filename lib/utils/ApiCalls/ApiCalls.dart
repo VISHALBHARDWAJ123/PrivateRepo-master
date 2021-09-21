@@ -25,16 +25,22 @@ import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ApiCalls {
+  static var customerGuid = ConstantsVar.prefs.getString('guestGUID');
+  static final String cookie = '.Nop.Customer=' + customerGuid!;
+  static final header = {'Cookie': cookie};
+
   static Future getCategoryById(
       String id, BuildContext context, int pageIndex) async {
     print('Testing Api');
+
     final baseUrl = Uri.parse(BuildConfig.base_url +
         'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
 
     print(baseUrl);
+
     try {
       ConstantsVar.isVisible = true;
-      var response = await http.get(baseUrl);
+      var response = await http.get(baseUrl, headers: header);
 
       print(jsonDecode(response.body)['ResponseData']);
       return jsonDecode(response.body);
@@ -49,7 +55,7 @@ class ApiCalls {
 
     final uri = Uri.parse(BuildConfig.base_url + 'token/GetToken?');
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, );
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var apiTokken = responseData['tokenId'];
@@ -94,13 +100,14 @@ class ApiCalls {
       'Guid': guestUId
     };
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(
+        uri,
+        body: body,
+        headers: header,
+      );
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         print(responseData);
-
-
-
 
         if (responseData
                 .toString()
@@ -183,7 +190,7 @@ class ApiCalls {
         'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
 
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       print('${jsonDecode(response.body)}');
       context.loaderOverlay.hide();
     } on Exception catch (e) {
@@ -194,38 +201,10 @@ class ApiCalls {
     }
   }
 
-  // static Future homeScreenProduct(BuildContext context) async {
-  //   final uri = Uri.parse(BuildConfig.base_url +
-  //       'apis/GetHomeScreenProducts?apiToken=${ConstantsVar.apiTokken}');
-  //   try {
-  //     var response = await http
-  //         .get(uri, headers: {HttpHeaders.cookieHeader: guestCustomerId!});
-  //     switch (response.statusCode) {
-  //       case 200:
-  //         var result = jsonDecode(response.body);
-  //         List<dynamic> products = result;
-  //
-  //         Map<String, dynamic> map = Map<String, dynamic>.from(products[0]);
-  //         print(map);
-  //         return result;
-  //       case 400:
-  //         ConstantsVar.showSnackbar(context, 'Bad request', 5);
-  //         break;
-  //       case 401:
-  //         ConstantsVar.showSnackbar(context, 'Unauthorized access', 5);
-  //         break;
-  //       default:
-  //         ConstantsVar.showSnackbar(context, 'Something went wrong', 5);
-  //     }
-  //   } on Exception catch (e) {
-  //     ConstantsVar.showSnackbar(context, e.toString(), 5);
-  //   }
-  // }
-
   static Future getCategory(BuildContext context) async {
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetCategoryPage');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       dynamic result = jsonDecode(response.body);
       print(result);
       return result;
@@ -239,7 +218,7 @@ class ApiCalls {
         'apis/GetTopLevelCategories'
             '?apiToken=${ConstantsVar.apiTokken}');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       switch (response.statusCode) {
         case 200:
           var result = jsonDecode(response.body);
@@ -260,7 +239,7 @@ class ApiCalls {
     final url = BuildConfig.base_url + 'apis/GetProductModelById?id=$productId';
     print(url);
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url), headers: header);
 
       print(jsonDecode(response.body));
       return jsonDecode(response.body);
@@ -274,7 +253,7 @@ class ApiCalls {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1');
     try {
-      dynamic response = await http.post(uri);
+      dynamic response = await http.post(uri, headers: header);
 
       var result1 = jsonDecode(response.body);
       print(result1);
@@ -320,7 +299,7 @@ class ApiCalls {
         'customer/Cart?apiToken=${ConstantsVar.apiTokken}&CustomerId=$customerId');
     print(uri);
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
 
       var result = jsonDecode(response.body);
       ConstantsVar.isCart = false;
@@ -357,7 +336,7 @@ class ApiCalls {
         BuildConfig.remove_cart_item_url, queryParameters);
     print('remove_cart_url>>>> $uri');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         ctx.loaderOverlay.hide();
@@ -395,7 +374,7 @@ class ApiCalls {
     };
 
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         print('coupon result>>>> $result');
@@ -440,7 +419,7 @@ class ApiCalls {
     };
 
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         print('coupon result>>>> $result');
@@ -472,7 +451,7 @@ class ApiCalls {
     };
 
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         print('gift card result>>>> $result');
@@ -507,7 +486,7 @@ class ApiCalls {
     };
 
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         print('remove gift card result>>>> $result');
@@ -543,7 +522,7 @@ class ApiCalls {
 
     print('address url>>> $uri');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         // var result = jsonDecode(response.body);
         Map<String, dynamic> result = json.decode(response.body);
@@ -578,8 +557,7 @@ class ApiCalls {
 
     print('select address url>>> $uri');
     try {
-      var response =
-          await http.get(uri, headers: {HttpHeaders.cookieHeader: customerId});
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         Map<String, dynamic> result = json.decode(response.body);
         print('selectbillingaddress>>> $result');
@@ -608,7 +586,7 @@ class ApiCalls {
 
     print('shipping>>> $uri');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         Map<String, dynamic> result = json.decode(response.body);
         print('shippingaddress>>> $result');
@@ -639,7 +617,7 @@ class ApiCalls {
 
     print('selectshipping>>> $uri');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         Map<String, dynamic> result = json.decode(response.body);
         print('selectshippingaddress>>> $result');
@@ -668,7 +646,7 @@ class ApiCalls {
 
     print('Order Summary>>> $uri');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         Map<String, dynamic> result = json.decode(response.body);
         print('Order Summary result>>> $result');
@@ -698,7 +676,7 @@ class ApiCalls {
     // String success = 'false';
 
     try {
-      var response = await http.post(uri);
+      var response = await http.post(uri, headers: header);
       var result = jsonDecode(response.body);
       print('update cart result>>>> $result');
       ctx.loaderOverlay.hide();
@@ -754,7 +732,7 @@ class ApiCalls {
         Uri.parse(BuildConfig.base_url + 'apis/AddSelectNewBillingAddress?');
     print(uri);
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       print(jsonDecode(response.body));
       if (uriName == 'MyAccount') {
         //It means adding address is from my account screen
@@ -774,8 +752,13 @@ class ApiCalls {
     }
   }
 
-  static Future editAndSaveAddress(BuildContext context, String apiToken,
-      String customerId, String addressId, String data,VoidCallback callback) async {
+  static Future editAndSaveAddress(
+      BuildContext context,
+      String apiToken,
+      String customerId,
+      String addressId,
+      String data,
+      VoidCallback callback) async {
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID2: customerId,
@@ -783,11 +766,12 @@ class ApiCalls {
       ApiParams.PARAM_DATA: data
     };
 
-    final uri =
-        Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
+    final uri = Uri.parse(
+      BuildConfig.base_url + BuildConfig.edit_address + "?",
+    );
     print(uri);
     try {
-      var response = await http.post(uri, body: body);
+      var response = await http.post(uri, body: body, headers: header);
       print(jsonDecode(response.body));
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
@@ -809,7 +793,11 @@ class ApiCalls {
       'ShippingAddressModel': snippingModel,
     };
     try {
-      var resp = await http.post(uri, body: body);
+      var resp = await http.post(
+        uri,
+        body: body,
+        headers: header,
+      );
       print(jsonDecode(resp.body));
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
@@ -820,10 +808,13 @@ class ApiCalls {
 
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
+    final String cookie = '.Nop.Customer=' + customerGuid;
+
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {
-      var response = await http.get(uri,headers: {HttpHeaders.cookieHeader: customerGuid});
+      print(cookie);
+      var response = await http.get(uri,headers: header);
       dynamic result = jsonDecode(response.body);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {

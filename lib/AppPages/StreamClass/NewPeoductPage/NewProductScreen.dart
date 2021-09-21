@@ -2,7 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_overlay/flutter_overlay.dart';
+// import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
-import 'package:loader_overlay/loader_overlay.dart';
+// import 'package:loader_overlay/loader_overlay.dart';
 
 import 'ProductResponse.dart';
 
@@ -53,6 +53,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   FocusNode yourfoucs = FocusNode();
   ProductResponse? initialData;
 
+  var _isVisibility;
+
   @override
   void dispose() {
     super.dispose();
@@ -70,17 +72,18 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       setState(() {
         initialData = myResponse;
 
+        // List<Value> value=[] ;
         for (int i = 0; i <= initialData!.pictureModels.length - 1; i++) {
           image1 = initialData!.pictureModels[i].imageUrl;
           image2 = initialData!.pictureModels[i].fullSizeImageUrl;
           imageList.add(image1);
           largeImage.add(image2);
+          // setState((){value.addAll(initialData!.productAttributes[i].values);});
         }
 
         // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
 
         id = initialData!.id;
-
         name = initialData!.name;
         description = initialData!.shortDescription;
         price = initialData!.productPrice.price;
@@ -88,12 +91,25 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             double.parse(initialData!.productPrice.priceValue.toString());
         sku = initialData!.sku;
         stockAvailabilty = initialData!.stockAvailability;
-        assemblyCharges = initialData!.productAttributes.length != 0 ||
-                initialData!.productAttributes.isNotEmpty
-            ? 'Assembly Charges ' +
-                initialData!.productAttributes[0].values[0].priceAdjustment +
-                ' includes'
-            : '';
+
+        if (initialData!.productAttributes!.length != 0) {
+          if (initialData!
+                  .productAttributes![0].values[0].priceAdjustmentValue !=
+              0.0) {
+            setState(() {
+              _isVisibility = true;
+              assemblyCharges = 'Assembly Charges ' +
+                  initialData!.productAttributes![0].values[0].priceAdjustment +
+                  ' includes';
+            });
+          }
+        } else {
+          setState(() {
+
+            _isVisibility = true;
+            assemblyCharges = '';
+          });
+        }
       });
     });
   }
@@ -111,6 +127,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       return SafeArea(
         top: true,
         child: Scaffold(
+          backgroundColor: Colors.white,
             resizeToAvoidBottomInset: false,
             appBar: new AppBar(
               actions: [
@@ -190,7 +207,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         ? 'out of stock'.toUpperCase()
                         : 'add to cart'.toUpperCase(),
                     color: stockAvailabilty.toString().contains('Out of stock')
-                        ? Colors.grey
+                        ? Colors.grey.shade700
                         : ConstantsVar.appColor,
                   ),
                 )
@@ -219,7 +236,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
           child: Container(child: SliderImages(imageList, largeImage, context)),
         ),
         Container(
-          height: 38.h,
+          height: 36.h,
           width: MediaQuery.of(context).size.width,
           color: Color.fromARGB(255, 234, 235, 235),
           child: Padding(
@@ -227,7 +244,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
                   name,
@@ -243,10 +260,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                 Padding(
                   padding: EdgeInsets.only(
                     top: 3.w,
-                    bottom: 3.w,
+                    bottom: 2.w,
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -254,8 +271,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 5.w,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                          color: Colors.grey.shade700,
                         ),
                         textAlign: TextAlign.start,
                       ),
@@ -265,9 +281,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                           'SKU: $sku',
                           maxLines: 1,
                           style: TextStyle(
-                            fontSize: 6.3.w,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
+                            fontSize: 5.w,
+                            color: Colors.grey.shade700,
                           ),
                           textAlign: TextAlign.start,
                         ),
@@ -275,71 +290,52 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 6, bottom: 4),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Availablity: '.toUpperCase(),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 5.w,
-                          fontWeight: FontWeight.w400),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: stockAvaialbility,
-                            style: TextStyle(
-                              fontSize: 5.w,
-                              color: stockAvailabilty.contains('In')
-                                  ? Colors.green
-                                  : Colors.red,
-                            ))
-                      ],
-                    ),
+                RichText(
+                  text: TextSpan(
+                    text: 'Availablity: '.toUpperCase(),
+                    style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 5.w,
+                        fontWeight: FontWeight.w400),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: stockAvaialbility,
+                          style: TextStyle(
+                            fontSize: 5.w,
+                            color: stockAvailabilty.contains('In')
+                                ? Colors.green
+                                : Colors.red,
+                          ))
+                    ],
                   ),
                 ),
                 Visibility(
                   maintainSize: false,
-                  visible: assemblyCharges.length != 0 ||
-                          assemblyCharges.isNotEmpty ||
-                          assemblyCharges != null
-                      ? true
-                      : false,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 4, bottom: 4),
-                    child: Text(
-                      assemblyCharges,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 4.w,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                        letterSpacing: 1,
-                        wordSpacing: 2,
-                      ),
-                      textAlign: TextAlign.start,
+                  visible: assemblyCharges == null?false: true,
+
+                  child: Text(
+                    assemblyCharges == null ? '': assemblyCharges,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 5.w,
+                      color: Colors.grey.shade700,
+                      letterSpacing: 1,
+                      wordSpacing: 2,
                     ),
+                    textAlign: TextAlign.start,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 1.w, bottom: 1.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        price,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 7.w,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          letterSpacing: 1,
-                          wordSpacing: 2,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                Text(
+                  price,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 7.w,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 1,
+                    wordSpacing: 2,
                   ),
+                  textAlign: TextAlign.start,
                 ),
               ],
             ),
@@ -371,7 +367,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   style: TextStyle(
                     fontSize: 6.w,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade400,
+                    color: Colors.grey.shade700,
                   ),
                 ),
               ),

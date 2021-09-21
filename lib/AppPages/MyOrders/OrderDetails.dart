@@ -1,16 +1,13 @@
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
-import 'package:untitled2/AppPages/MyOrders/Response/OrderDetailsResponse.dart';
+
+// import 'package:untitled2/AppPages/MyOrders/Response/OrderDetailsResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
-import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
@@ -21,19 +18,13 @@ class OrderDetails extends StatefulWidget {
     required this.orderDate,
     required this.orderProgress,
     required this.orderTotal,
-    required this.apiToken,
-    required this.orderid,
-    required this.customerId,
     required this.color,
+    required this.resultas,
   }) : super(key: key);
-  final String orderNumber,
-      orderDate,
-      orderProgress,
-      orderTotal,
-      apiToken,
-      orderid,
-      customerId;
+  final String orderNumber, orderDate, orderProgress, orderTotal;
+
   Color color;
+  final dynamic resultas;
 
   @override
   _OrderDetailsState createState() => _OrderDetailsState();
@@ -52,7 +43,8 @@ class _OrderDetailsState extends State<OrderDetails>
   var phoneNumber = '';
   var city = '';
   var countryName = '';
-  var resultas = {};
+
+  // dynamic resultas = {};
   bool isPickUpStore = false;
   var sFirstName = '';
 
@@ -147,7 +139,6 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                         Utils.getSizedBox(null, 3),
-
                         Flexible(
                           child: Text(
                             'Sub Total: ' + price,
@@ -157,7 +148,6 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                         Utils.getSizedBox(null, 3),
-
                         Flexible(
                           child: Container(
                             child: Row(
@@ -190,57 +180,53 @@ class _OrderDetailsState extends State<OrderDetails>
 
   @override
   void initState() {
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
-    print(widget.customerId);
-    getOderDetails().then((value) => setState(() {
-          resultas = value;
-          firstName = resultas['orderdetail']['orderDetailsModel']
-              ['BillingAddress']['FirstName'];
-          lastName = resultas['orderdetail']['orderDetailsModel']
-              ['BillingAddress']['LastName'];
-          address1 = resultas['orderdetail']['orderDetailsModel']
-              ['BillingAddress']['Address1'];
-          phoneNumber = resultas['orderdetail']['orderDetailsModel']
-              ['BillingAddress']['PhoneNumber'];
-          countryName = resultas['orderdetail']['orderDetailsModel']
-              ['BillingAddress']['CountryName'];
-          email = resultas['orderdetail']['orderDetailsModel']['BillingAddress']
-              ['Email'];
-          city = resultas['orderdetail']['orderDetailsModel']['BillingAddress']
-              ['City'];
-          isPickUpStore =
-              resultas['orderdetail']['orderDetailsModel']['PickUpInStore'];
-          shippingMethod =
-              resultas['orderdetail']['orderDetailsModel']['ShippingMethod'];
-          shipping =
-              resultas['orderdetail']['orderDetailsModel']['OrderShipping'];
-          taxPrice = resultas['orderdetail']['orderDetailsModel']['Tax'];
-          totalPrice =
-              resultas['orderdetail']['orderDetailsModel']['OrderTotal'];
-          subTotal =
-              resultas['orderdetail']['orderDetailsModel']['OrderSubtotal'];
-          if (isPickUpStore == true) {
-          } else {
-            sFirstName = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['FirstName'];
-            sLastName = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['LastName'];
-            sAddress1 = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['Address1'];
-            sPhone = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['PhoneNumber'];
-            sCountryName = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['CountryName'];
-            sEmail = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['Email'];
-            sCity = resultas['orderdetail']['orderDetailsModel']
-                ['ShippingAddress']['City'];
-          }
-        }));
+    WidgetsBinding.instance!.addObserver(this);
+    setState(() {
+      if (mounted) {
+        firstName = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['FirstName'];
+        lastName = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['LastName'];
+        address1 = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['Address1'];
+        phoneNumber = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['PhoneNumber'];
+        countryName = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['CountryName'];
+        email = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['Email'];
+        city = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['BillingAddress']['City'];
+        isPickUpStore = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['PickUpInStore'];
+        shippingMethod = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['ShippingMethod'];
+        shipping = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['OrderShipping'];
+        taxPrice = widget.resultas!['orderdetail']['orderDetailsModel']['Tax'];
+        totalPrice =
+            widget.resultas!['orderdetail']['orderDetailsModel']['OrderTotal'];
+        subTotal = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['OrderSubtotal'];
+        if (isPickUpStore == true) {
+        } else {
+          sFirstName = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['FirstName'];
+          sLastName = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['LastName'];
+          sAddress1 = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['Address1'];
+          sPhone = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['PhoneNumber'];
+          sCountryName = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['CountryName'];
+          sEmail = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['Email'];
+          sCity = widget.resultas!['orderdetail']['orderDetailsModel']
+              ['ShippingAddress']['City'];
+        }
+      }
+    });
     super.initState();
   }
 
@@ -266,157 +252,38 @@ class _OrderDetailsState extends State<OrderDetails>
           ),
         ),
         body: Container(
-            width: 100.w,
-            height: 100.h,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  color: Colors.white60,
-                  width: 100.w,
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(4.5.w),
-                      child: Text(
-                        'My Order Details'.toUpperCase(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 6.5.w,
-                        ),
+          width: 100.w,
+          height: 100.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                color: Colors.white60,
+                width: 100.w,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(4.5.w),
+                    child: Text(
+                      'My Order Details'.toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 6.5.w,
                       ),
                     ),
                   ),
                 ),
-                Expanded(
+              ),
+              Expanded(
+                child: Visibility(
+                  visible: widget
+                              .resultas!['orderdetail']['orderDetailsModel']
+                                  ['Items']
+                              .length ==
+                          0
+                      ? false
+                      : true,
                   child: ListView(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(8.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFEEEEEE),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                'Price Details',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 4.5.w,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Sub-Total:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    subTotal,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Shipping:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    shipping == null
-                                        ? 'No Shipping Available for now '
-                                        : shipping,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(left: 4.0, right: 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Tax 5%:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    taxPrice,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(left: 4.0, right: 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Order Total:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    totalPrice,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
                       Container(
                         width: 100.w,
                         child: Padding(
@@ -440,8 +307,8 @@ class _OrderDetailsState extends State<OrderDetails>
                                       horizontal: 3.0, vertical: 20),
                                   child: Container(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    height: 30.w,
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                    height: 25.w,
                                     width: 100.w,
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -450,10 +317,10 @@ class _OrderDetailsState extends State<OrderDetails>
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Container(
                                           child: RichText(
@@ -461,37 +328,28 @@ class _OrderDetailsState extends State<OrderDetails>
                                                 text: 'Order Status: ',
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 4.w,
+                                                    fontSize: 5.w,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                                 children: <TextSpan>[
                                                   TextSpan(
                                                       text:
-                                                          widget.orderProgress,
+                                                      widget.orderProgress,
                                                       style: TextStyle(
                                                           color: widget.color,
-                                                          fontSize: 4.w,
+                                                          fontSize: 5.w,
                                                           fontWeight:
-                                                              FontWeight.bold))
+                                                          FontWeight.bold))
                                                 ]),
                                           ),
                                         ),
                                         Utils.getSizedBox(null, 3),
                                         Container(
-                                            child: Text(
-                                          widget.orderDate,
-                                          style: TextStyle(
-                                            fontSize: 4.w,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )),
-                                        Utils.getSizedBox(null, 3),
-                                        Container(
+                                          width: 100.w,
                                           child: Text(
-                                            widget.orderTotal,
-                                            overflow: TextOverflow.ellipsis,
+                                            widget.orderDate,
                                             style: TextStyle(
-                                              fontSize: 4.w,
+                                              fontSize: 5.w,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -506,60 +364,194 @@ class _OrderDetailsState extends State<OrderDetails>
                         ),
                       ),
                       Container(
-                        color: Colors.white60,
-                        width: 100.w,
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(3.5.w),
-                            child: Text(
-                              'PRODUCT(S)'.toUpperCase(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 5.5.w,
+                        padding: EdgeInsets.all(8.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFEEEEEE),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'Price Details',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 5.w,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Sub-Total:',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 5.w,
+                                    ),
+                                  ),
+                                  Text(
+                                    subTotal,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Shipping:',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 5.w,
+                                    ),
+                                  ),
+                                  Text(
+                                    shipping == null
+                                        ? 'No Shipping Available for now '
+                                        : shipping,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 5.w,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Tax 5%:',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 5.w,
+                                    ),
+                                  ),
+                                  Text(
+                                    taxPrice,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Order Total:',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 5.w,
+                                    ),
+                                  ),
+                                  Text(
+                                    totalPrice,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Card(
+                        child: Container(
+                          color: Colors.white60,
+                          width: 100.w,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(3.5.w),
+                              child: Text(
+                                'PRODUCT(S)'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 5.5.w,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
+                      Container(
+                        color: Colors.white60,
                         child: ListView(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: List.generate(
-                              resultas['orderdetail']['orderDetailsModel']
-                              ['Items']
-                                  .length ==
-                                  0
+                              widget
+                                          .resultas!['orderdetail']
+                                              ['orderDetailsModel']['Items']
+                                          .length ==
+                                      0
                                   ? 0
-                                  : resultas['orderdetail']['orderDetailsModel']
-                              ['Items']
-                                  .length, (index) {
-                            var title = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]
-                            ['ProductName'];
-                            String productId = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]
-                            ['ProductId']
+                                  : widget
+                                      .resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items']
+                                      .length, (index) {
+                            var title = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                ['ProductName'];
+                            String productId = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                    ['ProductId']
                                 .toString();
 
-                            String sku = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]['Sku'];
-                            String unitPrice = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]
-                            ['UnitPrice'];
-                            String price = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]
-                            ['SubTotal'];
-                            String quantity = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]
-                            ['Quantity']
+                            String sku = widget.resultas!['orderdetail']
+                                ['orderDetailsModel']['Items'][index]['Sku'];
+                            String unitPrice = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                ['UnitPrice'];
+                            String price = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                ['SubTotal'];
+                            String quantity = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                    ['Quantity']
                                 .toString();
-                            String id = resultas['orderdetail']
-                            ['orderDetailsModel']['Items'][index]['Id']
+                            String id = widget.resultas!['orderdetail']
+                                    ['orderDetailsModel']['Items'][index]
+                                    ['ProductId']
                                 .toString();
 
-                            String imageUrl =
-                            resultas['orderdetail']['PictureList'][id];
+                            String imageUrl = widget.resultas!['orderdetail']
+                                ['PictureList'][id];
+                            print(imageUrl);
                             return orderItem(
                                 productId: productId,
                                 title: title,
@@ -572,18 +564,21 @@ class _OrderDetailsState extends State<OrderDetails>
                         ),
                       ),
                       SizedBox(
-                        height: 15,),
-                      Container(
-                        color: Colors.white60,
-                        width: 100.w,
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(3.5.w),
-                            child: Text(
-                              'Billing address'.toUpperCase(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 5.5.w,
+                        height: 15,
+                      ),
+                      Card(
+                        child: Container(
+                          color: Colors.white60,
+                          width: 100.w,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(3.5.w),
+                              child: Text(
+                                'Billing address'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 5.5.w,
+                                ),
                               ),
                             ),
                           ),
@@ -626,12 +621,19 @@ class _OrderDetailsState extends State<OrderDetails>
                                             softWrap: true,
                                             style: CustomTextStyle
                                                 .textFormFieldBold
-                                                .copyWith(fontSize: 16),
+                                                .copyWith(
+                                              fontSize: 4.w,
+                                            ),
                                           ),
                                         ),
                                         Utils.getSizedBox(null, 6),
                                         Container(
-                                            child: Text('Email - ' + email)),
+                                            child: Text(
+                                          'Email - ' + email,
+                                          style: TextStyle(
+                                            fontSize: 4.w,
+                                          ),
+                                        )),
                                         Container(
                                           child: Row(
                                             mainAxisAlignment:
@@ -642,8 +644,9 @@ class _OrderDetailsState extends State<OrderDetails>
                                                   'Address -' + address1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style:
-                                                      TextStyle(fontSize: 15),
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -651,13 +654,27 @@ class _OrderDetailsState extends State<OrderDetails>
                                         ),
                                         Container(
                                             child: Text(
-                                                'Phone -' + ' ' + phoneNumber)),
+                                          'Phone -' + ' ' + phoneNumber,
+                                          style: TextStyle(
+                                            fontSize: 4.w,
+                                          ),
+                                        )),
                                         Container(
-                                            child: Text('Country -' +
-                                                ' ' +
-                                                countryName)),
+                                          child: Text(
+                                            'Country -' + ' ' + countryName,
+                                            style: TextStyle(
+                                              fontSize: 4.w,
+                                            ),
+                                          ),
+                                        ),
                                         Container(
-                                            child: Text('City -' + ' ' + city)),
+                                          child: Text(
+                                            'City -' + ' ' + city,
+                                            style: TextStyle(
+                                              fontSize: 4.w,
+                                            ),
+                                          ),
+                                        ),
                                         addVerticalSpace(12),
                                       ],
                                     ),
@@ -668,8 +685,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                       ),
-                      Visibility(
-                        visible: !isPickUpStore,
+                      Card(
                         child: Container(
                           color: Colors.white60,
                           width: 100.w,
@@ -699,7 +715,7 @@ class _OrderDetailsState extends State<OrderDetails>
                             ),
                             color: Colors.white,
                             child: Container(
-                              height: 25.h,
+                              height: 24.h,
                               margin: EdgeInsets.only(
                                 left: 10,
                                 right: 10,
@@ -726,12 +742,17 @@ class _OrderDetailsState extends State<OrderDetails>
                                               softWrap: true,
                                               style: CustomTextStyle
                                                   .textFormFieldBold
-                                                  .copyWith(fontSize: 16),
+                                                  .copyWith(fontSize: 4.w),
                                             ),
                                           ),
                                           Utils.getSizedBox(null, 6),
                                           Container(
-                                              child: Text('Email - ' + sEmail)),
+                                              child: Text(
+                                            'Email - ' + sEmail,
+                                            style: TextStyle(
+                                              fontSize: 4.w,
+                                            ),
+                                          )),
                                           Container(
                                             child: Row(
                                               mainAxisAlignment:
@@ -743,23 +764,35 @@ class _OrderDetailsState extends State<OrderDetails>
                                                     'Address -' + sAddress1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style:
-                                                        TextStyle(fontSize: 15),
+                                                    style: TextStyle(
+                                                        fontSize: 4.w),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Container(
+                                            child: Text(
+                                              'Phone -' + ' ' + sPhone,
+                                              style: TextStyle(
+                                                fontSize: 4.w,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
                                               child: Text(
-                                                  'Phone -' + ' ' + sPhone)),
+                                            'Country -' + ' ' + sCountryName,
+                                            style: TextStyle(
+                                              fontSize: 4.w,
+                                            ),
+                                          )),
                                           Container(
-                                              child: Text('Country -' +
-                                                  ' ' +
-                                                  sCountryName)),
-                                          Container(
-                                              child:
-                                                  Text('City -' + ' ' + sCity)),
+                                              child: Text(
+                                            'City -' + ' ' + sCity,
+                                            style: TextStyle(
+                                              fontSize: 4.w,
+                                            ),
+                                          )),
                                           addVerticalSpace(12),
                                         ],
                                       ),
@@ -776,49 +809,48 @@ class _OrderDetailsState extends State<OrderDetails>
                           color: Colors.white60,
                           width: 100.w,
                           child: Padding(
-                            padding: EdgeInsets.all(2.5.w),
+                            padding: EdgeInsets.all(2.4.w),
                             child: Center(
                               child: Text(
-                                'Shipping Method: '.toUpperCase() +
+                                'Shipping Method\n'.toUpperCase() +
                                     shippingMethod,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 4.w,
+                                  fontSize: 5.w,
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-
-
-
                     ],
                   ),
                 ),
-              ],
-            )),
+              ),
+              Visibility(
+                visible: widget
+                            .resultas!['orderdetail']['orderDetailsModel']
+                                ['Items']
+                            .length ==
+                        0
+                    ? true
+                    : false,
+                child: Container(
+                  width: 100.w,
+                  height: 100.h,
+                  child: Center(
+                    child: SpinKitRipple(
+                      color: Colors.red,
+                      size: 90,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
-  }
-
-  Future getOderDetails() async {
-    print('Order Id =====>>>>>>> ' + widget.orderid);
-    final uri = Uri.parse(BuildConfig.base_url +
-        "apis/GetCustomerOrderDetail?apiToken=${widget.apiToken}&customerId=${widget.customerId}&orderid=${widget.orderid}");
-
-    var response = await http.get(uri);
-
-    try {
-      var result = jsonDecode(response.body);
-      print(result);
-
-      context.loaderOverlay.hide();
-      return result;
-    } on Exception catch (e) {
-      print(e.toString());
-
-      context.loaderOverlay.hide();
-    }
   }
 }

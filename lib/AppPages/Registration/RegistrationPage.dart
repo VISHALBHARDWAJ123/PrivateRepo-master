@@ -20,6 +20,14 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 class RegstrationPage extends StatefulWidget {
+
+  @override
+  _RegstrationPageState createState() => _RegstrationPageState();
+}
+
+class _RegstrationPageState extends State<RegstrationPage>
+    with AutomaticKeepAliveClientMixin, InputValidationMixin {
+
   TextEditingController fController = TextEditingController();
   TextEditingController lController = TextEditingController();
   TextEditingController eController = TextEditingController();
@@ -44,16 +52,10 @@ class RegstrationPage extends StatefulWidget {
   var mErrorMsg = '';
   var pErrorMsg = '';
   var cpErrorMsg = '';
-  final GlobalKey<FormState> formGlobalKey = GlobalKey<FormState>();
 
-  @override
-  _RegstrationPageState createState() => _RegstrationPageState();
-}
 
-class _RegstrationPageState extends State<RegstrationPage>
-    with AutomaticKeepAliveClientMixin, InputValidationMixin {
   var reason;
-
+  GlobalKey<FormState> formGlobalKey = GlobalKey<FormState>();
   void showErrorDialog() {
     showDialog(
         context: context,
@@ -111,8 +113,8 @@ class _RegstrationPageState extends State<RegstrationPage>
       print(result);
       String status = result['status'];
       if (status.contains('Sucess')) {
-        ApiCalls.login(context, widget.eController.text.toString(),
-                widget.cpController.text.toString())
+        ApiCalls.login(context, eController.text.toString(),
+                cpController.text.toString())
             .then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();
@@ -174,7 +176,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                           child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Form(
-                          key: widget.formGlobalKey,
+                          key: formGlobalKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -187,7 +189,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   child: TextFormField(
                                     maxLength: 100,
                                     textInputAction: TextInputAction.next,
-                                    controller: widget.fController,
+                                    controller: fController,
                                     validator: (firstName) {
                                       if (isFirstName(firstName!))
                                         return null;
@@ -221,8 +223,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                       else
                                         return 'Enter your Last Name';
                                     },
-                                    textInputAction: TextInputAction.next,
-                                    controller: widget.lController,
+                                    // textInputAction: TextInputAction.next,
+                                    controller: lController,
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     cursorColor: Colors.black,
@@ -253,7 +255,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     },
                                     textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.emailAddress,
-                                    controller: widget.eController,
+                                    controller: eController,
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     cursorColor: Colors.black,
@@ -286,7 +288,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         maxLength: BuildConfig.phnVal,
                                         textInputAction: TextInputAction.next,
                                         validator: (mobInput) {
-                                          mobInput = widget.mController.text;
+                                          mobInput = mController.text;
                                           mobInput.length >
                                                       BuildConfig.phnVal ||
                                                   mobInput.length <
@@ -296,7 +298,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                               : 'Please Enter 10 Digit Number';
                                         },
                                         keyboardType: TextInputType.phone,
-                                        controller: widget.mController,
+                                        controller: mController,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         cursorColor: Colors.black,
@@ -329,7 +331,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                       },
                                       textInputAction: TextInputAction.done,
                                       maxLines: 3,
-                                      controller: widget.addressController,
+                                      controller: addressController,
                                       cursorColor: Colors.black,
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 14),
@@ -362,7 +364,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     },
                                     textInputAction: TextInputAction.next,
                                     obscureText: passError,
-                                    controller: widget.pController,
+                                    controller: pController,
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     cursorColor: Colors.black,
@@ -422,8 +424,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         enableInteractiveSelection: false,
                                         validator: (password) {
                                           if (isPasswordMatch(
-                                            widget.pController.text.toString(),
-                                            widget.cpController.text.toString(),
+                                            pController.text.toString(),
+                                            cpController.text.toString(),
                                           ))
                                             return null;
                                           else
@@ -431,7 +433,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         },
                                         textInputAction: TextInputAction.done,
                                         obscureText: cpError,
-                                        controller: widget.cpController,
+                                        controller: cpController,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         cursorColor: Colors.black,
@@ -523,30 +525,30 @@ class _RegstrationPageState extends State<RegstrationPage>
                         Expanded(
                           child: RaisedButton(
                               onPressed: () {
-                                if (widget.formGlobalKey.currentState!
+                                if (formGlobalKey.currentState!
                                     .validate()) {
                                   // use the information provided
-                                  widget.formGlobalKey.currentState!.save();
+                                  formGlobalKey.currentState!.save();
 
                                   String phnNumbe =
-                                      widget.mController.text.toString();
+                                      mController.text.toString();
                                   var phnNumber;
                                   setState(() {
                                     phnNumber = phnNumbe;
                                   });
                                   Map<String, dynamic> regBody = {
-                                    'Email': widget.eController.text,
+                                    'Email': eController.text,
                                     'Username': '',
-                                    'Password': widget.pController.text,
-                                    'ConfirmPassword': widget.cpController.text,
+                                    'Password': pController.text,
+                                    'ConfirmPassword': cpController.text,
                                     'Gender': "M",
-                                    'FirstName': widget.fController.text,
-                                    'LastName': widget.lController.text,
+                                    'FirstName': fController.text,
+                                    'LastName': lController.text,
                                     'DayofBirthDay': 10,
                                     'DayofBirthMonth': 12,
                                     'DayofBirthYear': 2000,
                                     'StreetAddress':
-                                        widget.addressController.text,
+                                        addressController.text,
                                     'StreetAddress2': 'xzx',
                                     'City': 'xz',
                                     'CountryId': '79',
@@ -557,7 +559,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         BuildConfig.uaeCountryCode + phnNumber,
                                     'Newsletter': false,
                                   };
-                                  print(widget.pController.text);
+                                  print(pController.text);
                                   String jsonString = jsonEncode(regBody);
                                   ConstantsVar.prefs
                                       .setString('regBody', jsonString)
@@ -569,10 +571,9 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                   mainBtnTitle: 'Verify otp'
                                                       .toUpperCase(),
                                                   phoneNumber: phnNumbe,
-                                                  email: widget.eController.text
+                                                  email: eController.text
                                                       .toString(),
-                                                  password: widget
-                                                      .cpController.text))));
+                                                  password:cpController.text))));
                                 }
                               },
                               color: ConstantsVar.appColor,

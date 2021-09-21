@@ -15,6 +15,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
@@ -484,7 +485,7 @@ class _SearchPageState extends State<SearchPage> {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetSearchProducts?searchkeyword=$productName&pagesize=8&pageindex=$pageNumber');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri,headers: ApiCalls.header);
       var jsonMap = jsonDecode(response.body);
       print(jsonMap);
       if (jsonMap['products'] == null) {
@@ -541,7 +542,7 @@ class _SearchPageState extends State<SearchPage> {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetSearchProducts?searchkeyword=$prodName&pagesize=20&pageindex=$pageIndex');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri,headers: ApiCalls.header);
       var result = jsonDecode(response.body);
       print(result);
       SearchResponse mySearchResponse = SearchResponse.fromJson(result);

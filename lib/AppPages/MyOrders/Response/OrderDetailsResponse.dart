@@ -5,6 +5,10 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+MyOrderDetailsResponse myOrderDetailsResponseFromJson(String str) => MyOrderDetailsResponse.fromJson(json.decode(str));
+
+String myOrderDetailsResponseToJson(MyOrderDetailsResponse data) => json.encode(data.toJson());
+
 class MyOrderDetailsResponse {
   MyOrderDetailsResponse({
     required this.orderdetail,
@@ -13,10 +17,6 @@ class MyOrderDetailsResponse {
 
   Orderdetail orderdetail;
   dynamic error;
-
-  factory MyOrderDetailsResponse.fromRawJson(String str) => MyOrderDetailsResponse.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory MyOrderDetailsResponse.fromJson(Map<String, dynamic> json) => MyOrderDetailsResponse(
     orderdetail: Orderdetail.fromJson(json["orderdetail"]),
@@ -31,6 +31,26 @@ class MyOrderDetailsResponse {
 
 class Orderdetail {
   Orderdetail({
+    required this.orderDetailsModel,
+    required this.pictureList,
+  });
+
+  OrderDetailsModel orderDetailsModel;
+  PictureList pictureList;
+
+  factory Orderdetail.fromJson(Map<String, dynamic> json) => Orderdetail(
+    orderDetailsModel: OrderDetailsModel.fromJson(json["orderDetailsModel"]),
+    pictureList: PictureList.fromJson(json["PictureList"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "orderDetailsModel": orderDetailsModel.toJson(),
+    "PictureList": pictureList.toJson(),
+  };
+}
+
+class OrderDetailsModel {
+  OrderDetailsModel({
     required this.printMode,
     required this.pdfInvoiceDisabled,
     required this.customOrderNumber,
@@ -77,7 +97,7 @@ class Orderdetail {
   bool printMode;
   bool pdfInvoiceDisabled;
   String customOrderNumber;
-  String createdOn;
+  DateTime createdOn;
   String orderStatus;
   bool isReOrderAllowed;
   bool isReturnRequestAllowed;
@@ -93,7 +113,7 @@ class Orderdetail {
   String paymentMethod;
   String paymentMethodStatus;
   bool canRePostProcessPayment;
-  Custom? customValues;
+  Custom customValues;
   String orderSubtotal;
   dynamic orderSubTotalDiscount;
   String orderShipping;
@@ -116,15 +136,11 @@ class Orderdetail {
   int id;
   Custom customProperties;
 
-  factory Orderdetail.fromRawJson(String str) => Orderdetail.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Orderdetail.fromJson(Map<String, dynamic> json) => Orderdetail(
+  factory OrderDetailsModel.fromJson(Map<String, dynamic> json) => OrderDetailsModel(
     printMode: json["PrintMode"],
     pdfInvoiceDisabled: json["PdfInvoiceDisabled"],
     customOrderNumber: json["CustomOrderNumber"],
-    createdOn: json["CreatedOn"],
+    createdOn: DateTime.parse(json["CreatedOn"]),
     orderStatus: json["OrderStatus"],
     isReOrderAllowed: json["IsReOrderAllowed"],
     isReturnRequestAllowed: json["IsReturnRequestAllowed"],
@@ -168,7 +184,7 @@ class Orderdetail {
     "PrintMode": printMode,
     "PdfInvoiceDisabled": pdfInvoiceDisabled,
     "CustomOrderNumber": customOrderNumber,
-    "CreatedOn": createdOn,
+    "CreatedOn": createdOn.toIso8601String(),
     "OrderStatus": orderStatus,
     "IsReOrderAllowed": isReOrderAllowed,
     "IsReturnRequestAllowed": isReturnRequestAllowed,
@@ -184,7 +200,7 @@ class Orderdetail {
     "PaymentMethod": paymentMethod,
     "PaymentMethodStatus": paymentMethodStatus,
     "CanRePostProcessPayment": canRePostProcessPayment,
-    "CustomValues": customValues!.toJson(),
+    "CustomValues": customValues.toJson(),
     "OrderSubtotal": orderSubtotal,
     "OrderSubTotalDiscount": orderSubTotalDiscount,
     "OrderShipping": orderShipping,
@@ -286,26 +302,22 @@ class Address {
   int id;
   Custom customProperties;
 
-  factory Address.fromRawJson(String str) => Address.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-    firstName:  json["FirstName"],
-    lastName: json["LastName"],
+    firstName: json["FirstName"] == null ? null : json["FirstName"],
+    lastName: json["LastName"] == null ? null : json["LastName"],
     email: json["Email"] == null ? null : json["Email"],
     companyEnabled: json["CompanyEnabled"],
     companyRequired: json["CompanyRequired"],
     company: json["Company"],
     countryEnabled: json["CountryEnabled"],
-    countryId:  json["CountryId"],
-    countryName:  json["CountryName"],
+    countryId: json["CountryId"] == null ? null : json["CountryId"],
+    countryName: json["CountryName"] == null ? null : json["CountryName"],
     stateProvinceEnabled: json["StateProvinceEnabled"],
     stateProvinceId: json["StateProvinceId"],
     stateProvinceName: json["StateProvinceName"],
     cityEnabled: json["CityEnabled"],
     cityRequired: json["CityRequired"],
-    city: json["City"],
+    city: json["City"] == null ? null : json["City"],
     streetAddressEnabled: json["StreetAddressEnabled"],
     streetAddressRequired: json["StreetAddressRequired"],
     address1: json["Address1"] == null ? null : json["Address1"],
@@ -317,7 +329,7 @@ class Address {
     zipPostalCode: json["ZipPostalCode"],
     phoneEnabled: json["PhoneEnabled"],
     phoneRequired: json["PhoneRequired"],
-    phoneNumber:  json["PhoneNumber"],
+    phoneNumber: json["PhoneNumber"] == null ? null : json["PhoneNumber"],
     faxEnabled: json["FaxEnabled"],
     faxRequired: json["FaxRequired"],
     faxNumber: json["FaxNumber"],
@@ -330,15 +342,15 @@ class Address {
   );
 
   Map<String, dynamic> toJson() => {
-    "FirstName":  firstName,
-    "LastName":  lastName,
-    "Email":  email,
+    "FirstName": firstName == null ? null : firstName,
+    "LastName": lastName == null ? null : lastName,
+    "Email": email == null ? null : email,
     "CompanyEnabled": companyEnabled,
     "CompanyRequired": companyRequired,
     "Company": company,
     "CountryEnabled": countryEnabled,
-    "CountryId":  countryId,
-    "CountryName":  countryName,
+    "CountryId": countryId == null ? null : countryId,
+    "CountryName": countryName == null ? null : countryName,
     "StateProvinceEnabled": stateProvinceEnabled,
     "StateProvinceId": stateProvinceId,
     "StateProvinceName": stateProvinceName,
@@ -347,7 +359,7 @@ class Address {
     "City": city == null ? null : city,
     "StreetAddressEnabled": streetAddressEnabled,
     "StreetAddressRequired": streetAddressRequired,
-    "Address1":  address1,
+    "Address1": address1 == null ? null : address1,
     "StreetAddress2Enabled": streetAddress2Enabled,
     "StreetAddress2Required": streetAddress2Required,
     "Address2": address2,
@@ -356,7 +368,7 @@ class Address {
     "ZipPostalCode": zipPostalCode,
     "PhoneEnabled": phoneEnabled,
     "PhoneRequired": phoneRequired,
-    "PhoneNumber":  phoneNumber,
+    "PhoneNumber": phoneNumber == null ? null : phoneNumber,
     "FaxEnabled": faxEnabled,
     "FaxRequired": faxRequired,
     "FaxNumber": faxNumber,
@@ -371,10 +383,6 @@ class Address {
 
 class Custom {
   Custom();
-
-  factory Custom.fromRawJson(String str) => Custom.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Custom.fromJson(Map<String, dynamic> json) => Custom(
   );
@@ -415,10 +423,6 @@ class Item {
   int licenseId;
   int id;
   Custom customProperties;
-
-  factory Item.fromRawJson(String str) => Item.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Item.fromJson(Map<String, dynamic> json) => Item(
     orderItemGuid: json["OrderItemGuid"],
@@ -466,10 +470,6 @@ class TaxRate {
   String value;
   Custom customProperties;
 
-  factory TaxRate.fromRawJson(String str) => TaxRate.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory TaxRate.fromJson(Map<String, dynamic> json) => TaxRate(
     rate: json["Rate"],
     value: json["Value"],
@@ -480,5 +480,21 @@ class TaxRate {
     "Rate": rate,
     "Value": value,
     "CustomProperties": customProperties.toJson(),
+  };
+}
+
+class PictureList {
+  PictureList({
+    required this.the35661,
+  });
+
+  String the35661;
+
+  factory PictureList.fromJson(Map<String, dynamic> json) => PictureList(
+    the35661: json["35661"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "35661": the35661,
   };
 }

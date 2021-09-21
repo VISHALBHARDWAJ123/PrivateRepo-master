@@ -42,7 +42,7 @@ class ProductResponse {
     bool compareProductsEnabled;
     ProductPrice productPrice;
     List<ProductTag> productTags;
-    List<ProductAttribute> productAttributes;
+    List<ProductAttribute>? productAttributes;
     List<ProductSpecification> productSpecifications;
     ProductReviewOverview productReviewOverview;
     List<dynamic> associatedProducts;
@@ -81,7 +81,7 @@ class ProductResponse {
         "CompareProductsEnabled": compareProductsEnabled,
         "ProductPrice": productPrice.toJson(),
         "ProductTags": List<dynamic>.from(productTags.map((x) => x.toJson())),
-        "ProductAttributes": List<dynamic>.from(productAttributes.map((x) => x.toJson())),
+        "ProductAttributes": List<dynamic>.from(productAttributes!.map((x) => x.toJson())),
         "ProductSpecifications": List<dynamic>.from(productSpecifications.map((x) => x.toJson())),
         "ProductReviewOverview": productReviewOverview.toJson(),
         "AssociatedProducts": List<dynamic>.from(associatedProducts.map((x) => x)),
