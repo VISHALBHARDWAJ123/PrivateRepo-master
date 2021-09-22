@@ -83,7 +83,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                   child: Container(
                     height: 30.h,
                     child: Image.asset(
-                      "MyAssets/imagebackground.png",
+                      "MyAssets/banner.jpg",
                       fit: BoxFit.fitWidth,
                       alignment: Alignment.topCenter,
                     ),
@@ -269,7 +269,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     wordSpacing: 4,
-                    color: Colors.black,
+                    color: Colors.grey,
                     fontSize: 4.1.w,
                     fontWeight: FontWeight.bold,
                   ),
@@ -437,7 +437,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Text('Shop Now',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center),
                               ),
                             ],
@@ -504,7 +504,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                         color: Colors.black,
                         // height: 12.h,
                         child: Padding(
-                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 5.w),
+                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 8.w),
                           child: Column(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -526,7 +526,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Text('Shop Now',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center),
                               ),
                             ],
@@ -537,9 +537,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
-                          width: 5.w,
-                          height: 5.w,
-                          child: Image.asset('MyAssets/icon1.png')),
+                          width: 10.w,
+                          height: 10.w,
+                          child: Image.asset('MyAssets/icon1.png',fit: BoxFit.fill,)),
                     )
                   ],
                 ),

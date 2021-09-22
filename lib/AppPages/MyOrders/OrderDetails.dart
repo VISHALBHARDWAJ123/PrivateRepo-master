@@ -1,15 +1,24 @@
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 
 // import 'package:untitled2/AppPages/MyOrders/Response/OrderDetailsResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
+import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
+
+import 'Response/ReorderResponse.dart';
 
 class OrderDetails extends StatefulWidget {
   OrderDetails({
@@ -20,8 +29,17 @@ class OrderDetails extends StatefulWidget {
     required this.orderTotal,
     required this.color,
     required this.resultas,
+    required this.apiToken,
+    required this.customerId,
+    required this.orderId,
   }) : super(key: key);
-  final String orderNumber, orderDate, orderProgress, orderTotal;
+  final String orderNumber,
+      orderDate,
+      orderProgress,
+      orderTotal,
+      apiToken,
+      customerId,
+      orderId;
 
   Color color;
   final dynamic resultas;
@@ -32,6 +50,7 @@ class OrderDetails extends StatefulWidget {
 
 class _OrderDetailsState extends State<OrderDetails>
     with WidgetsBindingObserver {
+  List<ReorderResponse> _reOrderResponse = [];
   String firstName = '';
 
   String email = '';
@@ -181,6 +200,15 @@ class _OrderDetailsState extends State<OrderDetails>
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
+
+    if (widget.orderProgress.contains('Pending')) {
+      setState(() => widget.color = Colors.amberAccent);
+    } else if (widget.orderProgress.contains('Cancelled')) {
+      setState(() => widget.color = Colors.red);
+    } else {
+      setState(() => widget.color = Colors.green);
+    }
+
     setState(() {
       if (mounted) {
         firstName = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -235,6 +263,7 @@ class _OrderDetailsState extends State<OrderDetails>
     return SafeArea(
       child: Scaffold(
         appBar: new AppBar(
+          backgroundColor: ConstantsVar.appColor,
           centerTitle: true,
           toolbarHeight: 18.w,
           title: InkWell(
@@ -307,7 +336,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                       horizontal: 3.0, vertical: 20),
                                   child: Container(
                                     padding:
-                                    EdgeInsets.symmetric(horizontal: 10),
+                                        EdgeInsets.symmetric(horizontal: 10),
                                     height: 25.w,
                                     width: 100.w,
                                     decoration: BoxDecoration(
@@ -317,10 +346,10 @@ class _OrderDetailsState extends State<OrderDetails>
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Container(
                                           child: RichText(
@@ -330,16 +359,16 @@ class _OrderDetailsState extends State<OrderDetails>
                                                     color: Colors.black,
                                                     fontSize: 5.w,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                                 children: <TextSpan>[
                                                   TextSpan(
-                                                      text:
-                                                      widget.orderProgress,
+                                                      text: widget.orderProgress
+                                                          .toUpperCase(),
                                                       style: TextStyle(
                                                           color: widget.color,
                                                           fontSize: 5.w,
                                                           fontWeight:
-                                                          FontWeight.bold))
+                                                              FontWeight.bold))
                                                 ]),
                                           ),
                                         ),
@@ -363,6 +392,33 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                       ),
+                      // IgnorePointer(
+                      //   ignoring: true,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(8.0),
+                      //     child: Center(
+                      //       child: AppButton(
+                      //         color: ConstantsVar.appColor,
+                      //         child: Container(
+                      //           width: 100.w,
+                      //           height: 2.7.h,
+                      //           child: Center(
+                      //             child: Text(
+                      //               'RE-Order'.toUpperCase(),
+                      //               style: TextStyle(
+                      //                 color: Colors.white,
+                      //                 fontSize: 4.4.w,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         onTap: () async {
+                      //           reorder();
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         padding: EdgeInsets.all(8.0),
                         width: double.infinity,
@@ -489,7 +545,6 @@ class _OrderDetailsState extends State<OrderDetails>
                           ],
                         ),
                       ),
-
                       Card(
                         child: Container(
                           color: Colors.white60,
@@ -685,18 +740,21 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                       ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(3.5.w),
-                              child: Text(
-                                'Shipping address'.toUpperCase(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 5.5.w,
+                      Visibility(
+                        visible: !isPickUpStore,
+                        child: Card(
+                          child: Container(
+                            color: Colors.white60,
+                            width: 100.w,
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(3.5.w),
+                                child: Text(
+                                  'Shipping address'.toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 5.5.w,
+                                  ),
                                 ),
                               ),
                             ),
@@ -808,16 +866,31 @@ class _OrderDetailsState extends State<OrderDetails>
                         child: Container(
                           color: Colors.white60,
                           width: 100.w,
+                          child: Center(
+                            child: Text(
+                              'Shipping Method\n'.toUpperCase(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 5.5.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          color: Colors.white60,
+                          width: 100.w,
                           child: Padding(
-                            padding: EdgeInsets.all(2.4.w),
+                            padding: EdgeInsets.all(3.5.w),
                             child: Center(
                               child: Text(
-                                'Shipping Method\n'.toUpperCase() +
-                                    shippingMethod,
+                                shippingMethod,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 5.w,
+                                  fontSize: 4.w,
                                 ),
                               ),
                             ),
@@ -828,29 +901,40 @@ class _OrderDetailsState extends State<OrderDetails>
                   ),
                 ),
               ),
-              Visibility(
-                visible: widget
-                            .resultas!['orderdetail']['orderDetailsModel']
-                                ['Items']
-                            .length ==
-                        0
-                    ? true
-                    : false,
-                child: Container(
-                  width: 100.w,
-                  height: 100.h,
-                  child: Center(
-                    child: SpinKitRipple(
-                      color: Colors.red,
-                      size: 90,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future reorder() async {
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/CustomerReOrder?OrderId=${widget.orderId}&CustomerId=${widget.customerId}&apiToken=${widget.apiToken}');
+    var response = await get(uri, headers: ApiCalls.header);
+    try {
+      List<ReorderResponse> result = jsonDecode(response.body) ;
+      // ReorderResponse resp = ReorderResponse.fromJson(result);
+      _reOrderResponse = result ;
+      for (int i = 0; i < _reOrderResponse.length; i++) {
+        if (_reOrderResponse[i].status.contains('Failed')) {
+          Fluttertoast.showToast(
+              msg:
+                  'This product is Out of Stock.\n${_reOrderResponse[i].responseData}');
+        } else {
+          Fluttertoast.showToast(msg: 'All Products are added to cart.');
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => CartScreen2(),
+            ),
+          );
+        }
+      }
+
+      print(response.body);
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -228,7 +228,9 @@ class _OTP_ScreenState extends State<OTP_Screen> {
                                   otpString = string;
                                 });
                                 print(otpString);
-                                if (otpController.text.length == 0) {
+                                if (otpController.text.length == 0 ||
+                                    otpController.text.length < 6 ||
+                                    otpController.text.length > 6) {
                                   Fluttertoast.showToast(
                                       msg: 'Please provide OTP',
                                       toastLength: Toast.LENGTH_LONG,

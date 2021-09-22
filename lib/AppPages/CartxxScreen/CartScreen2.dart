@@ -20,7 +20,7 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import 'CartItems.dart';
-import 'NOxxLoginxxScreen/NoxxLoginxxScreen.dart';
+// import 'NOxxLoginxxScreen/NoxxLoginxxScreen.dart';
 
 class CartScreen2 extends StatefulWidget {
   @override
@@ -159,9 +159,7 @@ class _CartScreen2State extends State<CartScreen2>
   @override
   Widget build(BuildContext context) {
     if (connectionStatus = true) {
-      if (guestCustomerID == null || guestCustomerID == '') {
-        return CartLoginNotice();
-      } else if (cartItems.isNotEmpty) {
+       if (cartItems.isNotEmpty) {
         return SafeArea(
           top: true,
           bottom: true,
@@ -462,9 +460,11 @@ class _CartScreen2State extends State<CartScreen2>
                                                                     discountCoupon,
                                                                     _refreshController)
                                                                 .then((value) =>
-                                                                    setState(() =>
-                                                                        discountController.text =
-                                                                            ''));
+                                                                   value.toString().contains('true')? setState(() {
+                                                                     discountController
+                                                                         .text =
+                                                                     '';
+                                                                    }): null);
                                                           } else {
                                                             Fluttertoast.showToast(
                                                                 msg:

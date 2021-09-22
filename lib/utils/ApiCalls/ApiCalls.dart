@@ -27,7 +27,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ApiCalls {
   static var customerGuid = ConstantsVar.prefs.getString('guestGUID');
   static final String cookie = '.Nop.Customer=' + customerGuid!;
-  static final header = {'Cookie': cookie};
+  static final header = {'Cookie': cookie.trim()};
 
   static Future getCategoryById(
       String id, BuildContext context, int pageIndex) async {
@@ -221,7 +221,7 @@ class ApiCalls {
         'apis/GetTopLevelCategories'
             '?apiToken=${ConstantsVar.apiTokken}');
     try {
-      var response = await http.get(uri, headers: header);
+      var response = await http.get(uri,);
       switch (response.statusCode) {
         case 200:
           var result = jsonDecode(response.body);
@@ -419,7 +419,7 @@ class ApiCalls {
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
-      ApiParams.PARAM_DISCOUNT_COUPON: jsonEncode(coupon),
+      ApiParams.PARAM_DISCOUNT_COUPON: coupon,
     };
     print(body);
     try {
@@ -437,6 +437,8 @@ class ApiCalls {
           print(couponStats);
         } else {
           ConstantsVar.prefs.setString('discount', '');
+          refresh.requestRefresh(needMove: true);
+
         }
         success = 'true';
         Fluttertoast.showToast(msg: data);
@@ -817,8 +819,7 @@ class ApiCalls {
 
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
-    final String cookie = '.Nop.Customer=' + customerGuid;
-
+print(header);
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {

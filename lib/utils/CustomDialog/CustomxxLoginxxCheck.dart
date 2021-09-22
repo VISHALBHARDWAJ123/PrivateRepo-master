@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
+import 'package:untitled2/Constants/ConstantVariables.dart';
 
 class loginCheck extends StatefulWidget {
   @override

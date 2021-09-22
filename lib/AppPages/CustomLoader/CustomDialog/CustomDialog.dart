@@ -4,11 +4,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/OtP/OTPScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/Constants/ConstantVariables.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String descriptions, text;

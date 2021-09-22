@@ -5,13 +5,14 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/ChangePassword/ChangePassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 
 class MyAccount extends StatelessWidget {
@@ -89,7 +90,7 @@ class MyAccount extends StatelessWidget {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
-                                              'MyAssets/imagebackground.png',
+                                              'MyAssets/banner.jpg',
                                             ))),
                                     height: 40.h,
                                     child: Column(
@@ -233,7 +234,7 @@ class MyAccount extends StatelessWidget {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
-                                              'MyAssets/imagebackground.png',
+                                              'MyAssets/banner.jpg',
                                             ))),
                                     height: 40.h,
                                     child: Column(
@@ -376,7 +377,7 @@ class MyAccount extends StatelessWidget {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
-                                              'MyAssets/imagebackground.png',
+                                              'MyAssets/banner.jpg',
                                             ))),
                                     height: 40.h,
                                     child: Column(
