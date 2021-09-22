@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_add_to_cart_button/flutter_add_to_cart_button.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';

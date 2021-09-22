@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:untitled2/PojoClass/GridViewModel.dart';
@@ -37,9 +37,11 @@ class ConstantsVar {
     _scaffold.showSnackBar(_snackbarContent);
   }
 
+
+
   static late int productID;
 
-  static var apiTokken = prefs.get('apiTokken');
+  static String? apiTokken = prefs.getString('apiTokken');
 
   static const Color appColor = Color.fromARGB(255, 164, 0, 0);
 
@@ -170,10 +172,8 @@ class ConstantsVar {
   }
 
 
-  //This is for Cart badge
+
+//This is for Cart badge
 // static int? badgeNumber = prefs.getInt('badgeNumber');
-
-
-
 
 }

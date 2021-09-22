@@ -236,7 +236,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
           child: Container(child: SliderImages(imageList, largeImage, context)),
         ),
         Container(
-          height: 36.h,
+          height: 40.h,
           width: MediaQuery.of(context).size.width,
           color: Color.fromARGB(255, 234, 235, 235),
           child: Padding(

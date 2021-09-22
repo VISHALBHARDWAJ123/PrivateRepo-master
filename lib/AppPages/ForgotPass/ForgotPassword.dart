@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
 
-// import 'package:untitled2/utils/ApiCalls/ApiCall.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CustomDialog/CustomxxLoginxxCheck.dart';
 
@@ -102,13 +100,15 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                     suffixText: '*',
                                     counterText: '',
                                     border: OutlineInputBorder(gapPadding: 2),
-                                    errorText: emailController.text.length == 0
-                                        ? 'Please Enter Your Email'
-                                        : null,
+                                    errorText:
+                                        emailController.text.length == 0
+                                            ? 'Please Enter Your Email'
+                                            : null,
                                     focusColor: Colors.black,
                                     hintText: "E-Mail Address",
                                     hintStyle: TextStyle(color: Colors.black),
-                                    errorStyle: TextStyle(color: Colors.black)),
+                                    errorStyle:
+                                        TextStyle(color: Colors.black)),
                               ),
                             ),
                           ),
@@ -169,7 +169,8 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                 shape: RoundedRectangleBorder(),
                                 child: SizedBox(
                                   height: 60,
-                                  width: MediaQuery.of(context).size.width / 2,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2,
                                   child: Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: Center(

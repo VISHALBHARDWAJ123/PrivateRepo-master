@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +10,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/BillingScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/NetworkModelClass/CartModelClass/CartModel.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
@@ -26,7 +28,7 @@ class CartScreen2 extends StatefulWidget {
 }
 
 class _CartScreen2State extends State<CartScreen2>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, InputValidationMixin {
   bool isCartAvail = true;
   var customerId;
   var guestCustomerID;
@@ -38,6 +40,7 @@ class _CartScreen2State extends State<CartScreen2>
   var taxPrice = '';
   var totalAmount = '';
   var discountPrice = '';
+  String discountCoupon = '';
   bool showDiscount = false;
   bool showLoading = false, applyCouponCode = true, removeCouponCode = false;
   bool applyGiftCard = true, removeGiftCard = false;
@@ -51,6 +54,8 @@ class _CartScreen2State extends State<CartScreen2>
   final doubleRegex = RegExp(r'^\[A-Z+\0-9+\a-z+\A-Z]$', multiLine: true);
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  final GlobalKey<FormState> discountKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> giftCouponKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,9 +63,17 @@ class _CartScreen2State extends State<CartScreen2>
 
     getCustomerIdxx();
 
-    getCustomerId();
+    getCustomerId().then((value) => setState(() => customerId = value));
     setState(() {
       guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
+      ConstantsVar.prefs.getString('discount') == null
+          ? discountCoupon = ''
+          : discountCoupon = ConstantsVar.prefs.getString('discount')!;
+      if (discountCoupon == null || discountCoupon == '') {
+        discountController.text = '';
+      } else {
+        discountController.text = discountCoupon;
+      }
       print('$guestCustomerID');
 
       if (loadCartFirst == false) {
@@ -139,7 +152,6 @@ class _CartScreen2State extends State<CartScreen2>
         }
 
         /* if no shipping on the product but have discount and total amount both*/
-
       });
     });
   }
@@ -426,15 +438,49 @@ class _CartScreen2State extends State<CartScreen2>
                                           Flexible(
                                             flex: 4,
                                             child: Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6)),
                                               child: new TextField(
+                                                  autofocus: false,
                                                   controller:
                                                       discountController,
                                                   decoration: InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: Colors
-                                                                      .black)),
+                                                      suffixIcon: InkWell(
+                                                        onTap: () {
+                                                          if (discountController
+                                                                  .text
+                                                                  .trim() !=
+                                                              '') {
+                                                            ApiCalls.removeCoupon(
+                                                                    context,
+                                                                    ConstantsVar
+                                                                        .apiTokken!,
+                                                                    guestCustomerID,
+                                                                    discountCoupon,
+                                                                    _refreshController)
+                                                                .then((value) =>
+                                                                    setState(() =>
+                                                                        discountController.text =
+                                                                            ''));
+                                                          } else {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    'No Discount Coupon Applied');
+                                                          }
+                                                        },
+                                                        child: Icon(
+                                                            HeartIcon.cross),
+                                                      ),
+                                                      focusedBorder:
+                                                          InputBorder.none,
+                                                      // enabledBorder:
+                                                      //     OutlineInputBorder(
+                                                      //         borderSide: BorderSide(
+                                                      //             color: Colors
+                                                      //                 .black)),
                                                       border: OutlineInputBorder(
                                                           borderSide:
                                                               BorderSide(
@@ -598,13 +644,6 @@ class _CartScreen2State extends State<CartScreen2>
                                   //           ),
                                   //           onPressed: () async {
                                   //             print('remove button clicked');
-                                  //             ApiCalls.removeCoupon(
-                                  //                     ConstantsVar.apiTokken
-                                  //                         .toString(),
-                                  //                     ConstantsVar.customerID,
-                                  //                     discountController.text
-                                  //                         .toString(),
-                                  //                     _refreshController)
                                   //                 .then((value) {
                                   //               if (value == 'true') {
                                   //                 applyCouponCode = true;
@@ -659,21 +698,47 @@ class _CartScreen2State extends State<CartScreen2>
                                           Flexible(
                                             flex: 4,
                                             child: Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6)),
                                               // height: 5.h,
                                               child: new TextField(
+                                                  autofocus: false,
                                                   controller:
                                                       giftCardController,
                                                   decoration: InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: Colors
-                                                                      .black)),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .black)),
+                                                      suffixIcon: InkWell(
+                                                        onTap: () {
+                                                          // if (discountController
+                                                          //     .text
+                                                          //     .trim() !=
+                                                          //     '') {
+                                                          //   ApiCalls.removeCoupon(
+                                                          //       context,
+                                                          //       ConstantsVar
+                                                          //           .apiTokken!,
+                                                          //       guestCustomerID,
+                                                          //       discountController
+                                                          //           .text
+                                                          //           .trim(),
+                                                          //       _refreshController)
+                                                          //       .then((value) =>
+                                                          //       setState(() =>
+                                                          //       discountController.text =
+                                                          //       ''));
+                                                          // } else {
+                                                          //   Fluttertoast.showToast(
+                                                          //       msg:
+                                                          //       'No Discount Coupon Applied');
+                                                          // }
+                                                        },
+                                                        child: Icon(
+                                                            HeartIcon.cross),
+                                                      ),
+                                                      focusedBorder:
+                                                          InputBorder.none,
                                                       contentPadding:
                                                           EdgeInsets.all(
                                                               12.0))),

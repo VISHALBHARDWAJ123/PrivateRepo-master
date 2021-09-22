@@ -55,7 +55,10 @@ class ApiCalls {
 
     final uri = Uri.parse(BuildConfig.base_url + 'token/GetToken?');
     try {
-      var response = await http.post(uri, body: body, );
+      var response = await http.post(
+        uri,
+        body: body,
+      );
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var apiTokken = responseData['tokenId'];
@@ -364,6 +367,7 @@ class ApiCalls {
   /// Apply coupon code on the cart //
   static Future<String> applyCoupon(String apiToken, String customerId,
       String coupon, RefreshController refresh) async {
+    ConstantsVar.prefs.setString('discount', coupon);
     String success = '';
     final uri = Uri.parse(BuildConfig.base_url + BuildConfig.apply_coupon_url);
 
@@ -415,9 +419,9 @@ class ApiCalls {
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
-      ApiParams.PARAM_DISCOUNT_COUPON: coupon,
+      ApiParams.PARAM_DISCOUNT_COUPON: jsonEncode(coupon),
     };
-
+    print(body);
     try {
       var response = await http.post(uri, body: body, headers: header);
       if (response.statusCode == 200) {
@@ -425,10 +429,15 @@ class ApiCalls {
         print('coupon result>>>> $result');
 
         Map<String, dynamic> map = json.decode(response.body);
-
+        String couponStats = map['status'];
         String data = map["Message"];
         print(data);
 
+        if (couponStats.contains('Failed')) {
+          print(couponStats);
+        } else {
+          ConstantsVar.prefs.setString('discount', '');
+        }
         success = 'true';
         Fluttertoast.showToast(msg: data);
       }
@@ -813,8 +822,8 @@ class ApiCalls {
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {
-      print(cookie);
-      var response = await http.get(uri,headers: header);
+      // print(cookie);
+      var response = await http.get(uri, headers: header);
       dynamic result = jsonDecode(response.body);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {

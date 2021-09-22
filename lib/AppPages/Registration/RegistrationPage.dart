@@ -630,6 +630,10 @@ class _RegstrationPageState extends State<RegstrationPage>
 }
 
 mixin InputValidationMixin {
+  bool isDiscountCoupont(String coupon, String)=> coupon.trim() !=''||coupon.trim().length !=0;
+  bool isGiftCoupont(String coupon, String)=> coupon.trim() !=''||coupon.trim().length !=0;
+
+
   bool isPasswordValid(String password) =>
       password.length < 6 || password.length == 0;
 

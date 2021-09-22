@@ -451,7 +451,7 @@ class MyAccount extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => Demo3Page(),
+                                    builder: (context) => ChangePassword(),
                                   ));
                             }
                           },

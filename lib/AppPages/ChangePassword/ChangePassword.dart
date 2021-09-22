@@ -4,23 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
+import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
-import 'package:untitled2/AppPages/Registration/register_page.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
-class Demo3Page extends StatefulWidget {
+class ChangePassword extends StatefulWidget {
   @override
-  State<Demo3Page> createState() => _Demo3PageState();
+  State<ChangePassword> createState() => _ChangePasswordState();
 }
 
-class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
+class _ChangePasswordState extends State<ChangePassword> with InputValidationMixin {
   FocusNode myFocusNode = new FocusNode();
 
   GlobalKey<FormState> myGlobalKey = new GlobalKey<FormState>();
@@ -57,196 +58,63 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Scaffold(
-        // backgroundColor: Page.background,
-        appBar: AppBar(
-          backgroundColor: ConstantsVar.appColor,
-        ),
+    return WillPopScope(
+      onWillPop: ()=>ConstantsVar.hideOverlay(context),
+      child: SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+          // backgroundColor: Page.background,
+          appBar: AppBar(
+            backgroundColor: ConstantsVar.appColor,
+          ),
 
-        body: GestureDetector(
-          // close keyboard on outside input tap
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
+          body: GestureDetector(
+            // close keyboard on outside input tap
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
 
-          child: Builder(
-            builder: (context) => Form(
-              key: myGlobalKey,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.all(10),
-                      children: <Widget>[
-                        // header text
-                        Container(
-                          child: Center(
-                            child: Text(
-                              'Reset Password'.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 6.5.w,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        //Old password input
-                        Padding(
-                          padding: EdgeInsets.only(top: 48.0),
-                          child: Card(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: TextFormField(
-                                enableInteractiveSelection: false,
-                                validator: (password) {
-                                  if (oldPassword(password!))
-                                    return null;
-                                  else
-                                    return 'Please enter your password';
-                                },
-                                textInputAction: TextInputAction.next,
-                                obscureText: oldpassError,
-                                controller: oldpController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                cursorColor: Colors.black,
+            child: Builder(
+              builder: (context) => Form(
+                key: myGlobalKey,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.all(10),
+                        children: <Widget>[
+                          // header text
+                          Container(
+                            child: Center(
+                              child: Text(
+                                'Reset Password'.toUpperCase(),
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                                decoration: InputDecoration(
-                                    suffix: ClipOval(
-                                      child: RoundCheckBox(
-                                        uncheckedColor: Colors.white,
-                                        checkedColor: Colors.white,
-                                        size: 20,
-                                        onTap: (selected) {
-                                          setState(() {
-                                            print('Tera kaam  bngya');
-                                            oldpassError
-                                                ? oldpassError = selected!
-                                                : oldpassError = selected!;
-                                          });
-                                        },
-                                        isChecked: oldpassError,
-                                        checkedWidget: Center(
-                                          child: Icon(
-                                            Icons.remove_red_eye_outlined,
-                                            size: 16,
-                                          ),
-                                        ),
-                                        uncheckedWidget: Center(
-                                          child: Icon(
-                                            Icons.remove_red_eye,
-                                            color: ConstantsVar.appColor,
-                                            size: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.password_rounded,
-                                      color: ConstantsVar.appColor,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        fontSize: 5.w, color: Colors.grey),
-                                    labelText: 'Old Password',
-                                    border: InputBorder.none),
+                                  fontSize: 6.5.w,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        //New password input
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: Card(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: TextFormField(
-                                enableInteractiveSelection: false,
-                                validator: (password) {
-                                  if (isPasswordValid(password!))
-                                    return 'Minimum 6 Characters. ';
-                                  else
-                                    return null;
-                                },
-                                textInputAction: TextInputAction.next,
-                                obscureText: passError,
-                                controller: pController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                cursorColor: Colors.black,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                                decoration: InputDecoration(
-                                    suffix: ClipOval(
-                                      child: RoundCheckBox(
-                                        uncheckedColor: Colors.white,
-                                        checkedColor: Colors.white,
-                                        size: 20,
-                                        onTap: (selected) {
-                                          setState(() {
-                                            print('Tera kaam  bngya');
-                                            passError
-                                                ? passError = selected!
-                                                : passError = selected!;
-                                          });
-                                        },
-                                        isChecked: passError,
-                                        checkedWidget: Center(
-                                          child: Icon(
-                                            Icons.remove_red_eye_outlined,
-                                            size: 16,
-                                          ),
-                                        ),
-                                        uncheckedWidget: Center(
-                                          child: Icon(
-                                            Icons.remove_red_eye,
-                                            color: ConstantsVar.appColor,
-                                            size: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.password_rounded,
-                                      color: ConstantsVar.appColor,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        fontSize: 5.w, color: Colors.grey),
-                                    labelText: 'New Password',
-                                    border: InputBorder.none),
-                              ),
-                            ),
-                          ),
-                        ),
-                        //Confirm password input
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: Card(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: TextFormField(
+                          //Old password input
+                          Padding(
+                            padding: EdgeInsets.only(top: 48.0),
+                            child: Card(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
                                   enableInteractiveSelection: false,
                                   validator: (password) {
-                                    if (isPasswordMatch(
-                                      pController.text.toString(),
-                                      cpController.text.toString(),
-                                    ))
+                                    if (oldPassword(password!))
                                       return null;
                                     else
-                                      return 'Password Mismatch!';
+                                      return 'Please enter your password';
                                   },
-                                  textInputAction: TextInputAction.done,
-                                  obscureText: cpError,
-                                  controller: cpController,
+                                  textInputAction: TextInputAction.next,
+                                  obscureText: oldpassError,
+                                  controller: oldpController,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   cursorColor: Colors.black,
@@ -255,18 +123,18 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
                                   decoration: InputDecoration(
                                       suffix: ClipOval(
                                         child: RoundCheckBox(
-                                          checkedColor: Colors.white,
                                           uncheckedColor: Colors.white,
+                                          checkedColor: Colors.white,
                                           size: 20,
                                           onTap: (selected) {
                                             setState(() {
                                               print('Tera kaam  bngya');
-                                              cpError
-                                                  ? cpError = selected!
-                                                  : cpError = selected!;
+                                              oldpassError
+                                                  ? oldpassError = selected!
+                                                  : oldpassError = selected!;
                                             });
                                           },
-                                          isChecked: cpError,
+                                          isChecked: oldpassError,
                                           checkedWidget: Center(
                                             child: Icon(
                                               Icons.remove_red_eye_outlined,
@@ -288,50 +156,186 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
                                       ),
                                       labelStyle: TextStyle(
                                           fontSize: 5.w, color: Colors.grey),
-                                      labelText: 'Confirm Password',
-                                      border: InputBorder.none)),
+                                      labelText: 'Old Password',
+                                      border: InputBorder.none),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
 
-                        // submit button
-
-                        // sign up button
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AppButton(
-                      color: ConstantsVar.appColor,
-                      child: Container(
-                        width: 100.w,
-                        child: Center(
-                          child: Text(
-                            'Reset Password'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 5.4.w,
-                              color: Colors.white,
+                          //New password input
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: Card(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
+                                  enableInteractiveSelection: false,
+                                  validator: (password) {
+                                    if (isPasswordValid(password!))
+                                      return 'Minimum 6 Characters. ';
+                                    else
+                                      return null;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                  obscureText: passError,
+                                  controller: pController,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  cursorColor: Colors.black,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                  decoration: InputDecoration(
+                                      suffix: ClipOval(
+                                        child: RoundCheckBox(
+                                          uncheckedColor: Colors.white,
+                                          checkedColor: Colors.white,
+                                          size: 20,
+                                          onTap: (selected) {
+                                            setState(() {
+                                              print('Tera kaam  bngya');
+                                              passError
+                                                  ? passError = selected!
+                                                  : passError = selected!;
+                                            });
+                                          },
+                                          isChecked: passError,
+                                          checkedWidget: Center(
+                                            child: Icon(
+                                              Icons.remove_red_eye_outlined,
+                                              size: 16,
+                                            ),
+                                          ),
+                                          uncheckedWidget: Center(
+                                            child: Icon(
+                                              Icons.remove_red_eye,
+                                              color: ConstantsVar.appColor,
+                                              size: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.password_rounded,
+                                        color: ConstantsVar.appColor,
+                                      ),
+                                      labelStyle: TextStyle(
+                                          fontSize: 5.w, color: Colors.grey),
+                                      labelText: 'New Password',
+                                      border: InputBorder.none),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          //Confirm password input
+
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: Card(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
+                                    enableInteractiveSelection: false,
+                                    validator: (password) {
+                                      if (isPasswordMatch(
+                                        pController.text.toString(),
+                                        cpController.text.toString(),
+                                      ))
+                                        return null;
+                                      else
+                                        return 'Password Mismatch!';
+                                    },
+                                    textInputAction: TextInputAction.done,
+                                    obscureText: cpError,
+                                    controller: cpController,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    cursorColor: Colors.black,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                    decoration: InputDecoration(
+                                        suffix: ClipOval(
+                                          child: RoundCheckBox(
+                                            checkedColor: Colors.white,
+                                            uncheckedColor: Colors.white,
+                                            size: 20,
+                                            onTap: (selected) {
+                                              setState(() {
+                                                print('Tera kaam  bngya');
+                                                cpError
+                                                    ? cpError = selected!
+                                                    : cpError = selected!;
+                                              });
+                                            },
+                                            isChecked: cpError,
+                                            checkedWidget: Center(
+                                              child: Icon(
+                                                Icons.remove_red_eye_outlined,
+                                                size: 16,
+                                              ),
+                                            ),
+                                            uncheckedWidget: Center(
+                                              child: Icon(
+                                                Icons.remove_red_eye,
+                                                color: ConstantsVar.appColor,
+                                                size: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        prefixIcon: Icon(
+                                          Icons.password_rounded,
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                        labelStyle: TextStyle(
+                                            fontSize: 5.w, color: Colors.grey),
+                                        labelText: 'Confirm Password',
+                                        border: InputBorder.none)),
+                              ),
+                            ),
+                          ),
+
+                          // submit button
+
+                          // sign up button
+                        ],
                       ),
-                      text: '',
-
-                      // add your on tap handler here
-                      onTap: () async {
-                        if (myGlobalKey.currentState!.validate()) {
-                          myGlobalKey.currentState!.save();
-                          changePassword();
-                        } else {
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Please enter correct password.')));
-                        }
-                      },
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: AppButton(
+                        color: ConstantsVar.appColor,
+                        child: Container(
+                          width: 100.w,
+                          child: Center(
+                            child: Text(
+                              'Reset Password'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 5.4.w,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        text: '',
+
+                        // add your on tap handler here
+                        onTap: () async {
+                          if (myGlobalKey.currentState!.validate()) {
+                            myGlobalKey.currentState!.save();
+                            changePassword();
+                          } else {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('Please enter correct password.')));
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -341,6 +345,8 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
   }
 
   Future<void> changePassword() async {
+    context.loaderOverlay
+        .show(widget: SpinKitRipple(color: Colors.red, size: 90));
     // var client = Client();
     final dynamic body = {
       'apiToken': _apiToken,
@@ -370,6 +376,7 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
       });
 
       if (status.toString().contains('Failed')) {
+        context.loaderOverlay.hide();
         showModalBottomSheet<void>(
           // context and builder are
           // required properties in this widget
@@ -427,6 +434,7 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
           },
         );
       } else {
+        context.loaderOverlay.hide();
         showModalBottomSheet<void>(
           // context and builder are
           // required properties in this widget
@@ -481,6 +489,7 @@ class _Demo3PageState extends State<Demo3Page> with InputValidationMixin {
       print(result);
     } on Exception catch (e) {
       print(e.toString());
+      context.loaderOverlay.hide();
     }
   }
 

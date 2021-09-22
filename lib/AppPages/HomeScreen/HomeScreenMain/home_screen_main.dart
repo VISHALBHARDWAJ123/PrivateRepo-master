@@ -15,6 +15,7 @@ import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
@@ -292,8 +293,10 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
     print('home_url $url');
 
-    final response = await http.get(Uri.parse(url),
-        headers: {HttpHeaders.cookieHeader: guestCustomerId});
+    final response = await http.get(
+      Uri.parse(url),
+      headers: ApiCalls.header,
+    );
 
     if (response.statusCode == 200) {
       mounted
@@ -346,150 +349,228 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   Widget categroryLeftView(
       String name, String imageUrl, final categoryId, final type) {
-    return Container(
-      width: 100.w,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+
+      // padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: 100.w,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
               child: Container(
                   width: Adaptive.w(45),
                   height: Adaptive.w(45),
                   child:
                       CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
             ),
-          ),
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
               child: Container(
-                width: Adaptive.w(45),
-                height: Adaptive.w(45), color: AppColor.greyColor,
-                // height: 12.h,
-                child: Center(
-                  child: Text(name.toUpperCase(),
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center),
+                width: Adaptive.w(48),
+                height: Adaptive.w(45),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Container(
+                        width: Adaptive.w(48),
+                        height: Adaptive.w(45),
+                        color: Colors.black,
+                        // height: 12.h,
+                        child: Padding(
+                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 5.w),
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                name.toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                  width: 15.w,
+                                  child: Divider(height: 2, color: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text('Shop Now',
+                                    style: TextStyle(color: Colors.white),
+                                    textAlign: TextAlign.center),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          width: 5.w,
+                          height: 5.w,
+                          child: Image.asset('MyAssets/icon.png')),
+                    )
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget categoryRightView(
       String name, String imageUrl, final categoryId, final type) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                print('$categoryId');
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Stack(
-              children: [
-                Card(
-                  shadowColor: Colors.grey,
-                  child: Container(
-                    // width: 45.w,
-                    color: AppColor.greyColor,
-                    width: Adaptive.w(45),
-                    height: Adaptive.w(45),
-                    child: Center(
-                      child: Text(name.toUpperCase(),
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        width: 100.w,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
+              child: Container(
+                width: Adaptive.w(48),
+                height: Adaptive.w(45),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 11.0),
+                      child: Container(
+                        width: Adaptive.w(48),
+                        height: Adaptive.w(45),
+                        color: Colors.black,
+                        // height: 12.h,
+                        child: Padding(
+                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 5.w),
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                name.toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                  width: 15.w,
+                                  child: Divider(height: 2, color: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text('Shop Now',
+                                    style: TextStyle(color: Colors.white),
+                                    textAlign: TextAlign.center),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                          width: 5.w,
+                          height: 5.w,
+                          child: Image.asset('MyAssets/icon1.png')),
+                    )
+                  ],
                 ),
-
-                // Text('Hello')
-              ],
+              ),
             ),
-          ),
-          InkWell(
-            onTap: () {
-              if (type == true) {
-                print('$categoryId');
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SubCatNew(catId: '$categoryId', title: name)));
-              } else {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return ProductList(
-                    categoryId: '$categoryId',
-                    title: name,
-                  );
-                }));
-              }
-            },
-            child: Card(
-              shadowColor: Colors.grey,
+            InkWell(
+              onTap: () {
+                if (type == true) {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) =>
+                              SubCatNew(catId: '$categoryId', title: name)));
+                } else {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return ProductList(
+                      categoryId: '$categoryId',
+                      title: name,
+                    );
+                  }));
+                }
+              },
               child: Container(
                   width: Adaptive.w(45),
                   height: Adaptive.w(45),
                   child:
                       CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -55,7 +55,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     getUserCreds().then((value) => setState(() {
           name.text = _userName;
           email.text = _email;
-          emailBody.text = 'Name: ' +
+          String body = 'Name: ' +
               widget.name +
               '\n' '\n' +
               'SKU: ' +
@@ -65,6 +65,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
               widget.desc +
               '\n' +
               '\n';
+          emailBody.text = body;
         }));
   }
 

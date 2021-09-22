@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:delayed_display/delayed_display.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';

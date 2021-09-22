@@ -108,6 +108,8 @@ flutter:
   assets:
     - MyAssets/asset1.jpg
     - MyAssets/catback.png
+    - MyAssets/icon.png
+    - MyAssets/icon1.png
     - MyAssets/asset2.jpg
     - MyAssets/asset3.jpg
     - MyAssets/asset4.jpg

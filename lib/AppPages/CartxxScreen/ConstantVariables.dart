@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:untitled2/PojoClass/GridViewModel.dart';
+
 // import 'package:untitled2/models/OrderSummaryResponse.dart';
 import 'package:untitled2/utils/ApiCalls/ModelClass.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
@@ -11,8 +13,14 @@ import 'package:untitled2/utils/HeartIcon.dart';
 class ConstantsVar {
   static String baseUri = 'https://www.theone.com/apis/';
 
-  static double width = MediaQueryData.fromWindow(window).size.width;
-  static double height = MediaQueryData.fromWindow(window).size.height;
+  static double width = MediaQueryData
+      .fromWindow(window)
+      .size
+      .width;
+  static double height = MediaQueryData
+      .fromWindow(window)
+      .size
+      .height;
   static String customerID = '';
 
   static late SharedPreferences prefs;
@@ -127,7 +135,7 @@ class ConstantsVar {
       'MyAssets/livinghall.jpg', 'LIVING HALL FURNITURE', '1500 left');
 
   static ModelClass model3 =
-      ModelClass('MyAssets/bedroom.jpg', 'BEDROOM FURNITURE', '1500 left');
+  ModelClass('MyAssets/bedroom.jpg', 'BEDROOM FURNITURE', '1500 left');
 
   static ModelClass model2 = ModelClass(
       'MyAssets/dininghall.jpg', 'DINING HALL FURNITURE', '1500 left');
@@ -139,7 +147,7 @@ class ConstantsVar {
   static GridViewModel myModel1 = GridViewModel(
       'MyAssets/asset2.jpg', '10-40% off', 'Watches', 'Smart DZ Watch');
   static GridViewModel myModel2 =
-      GridViewModel('MyAssets/asset3.jpg', '10-40% off', 'Shoes', 'Puma FLIA');
+  GridViewModel('MyAssets/asset3.jpg', '10-40% off', 'Shoes', 'Puma FLIA');
 
   static List<GridViewModel> mList1 = [myModel, myModel1, myModel2];
 
@@ -148,8 +156,8 @@ class ConstantsVar {
   static const String email_Pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-  static Future checkValidation(
-      String email, String pass, BuildContext context) async {
+  static Future checkValidation(String email, String pass,
+      BuildContext context) async {
     if (RegExp(pass_Pattern).hasMatch(pass) &&
         RegExp(email_Pattern).hasMatch(email)) {
       showSnackbar(context, 'Pattern Matches', 4);
@@ -164,4 +172,10 @@ class ConstantsVar {
   static String stripHtmlIfNeeded(String text) {
     return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
   }
+
+  static Future<bool> hideOverlay(BuildContext context) async {
+    context.loaderOverlay.show();
+    return true;
+  }
+
 }
