@@ -4,6 +4,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/AddressForm.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
@@ -24,6 +25,7 @@ class MyAddressItem extends StatefulWidget {
       required this.stateProvinceEnabled,
       required this.cityEnabled,
       required this.cityRequired,
+      required this.company,
       required this.city,
       required this.streetAddressEnabled,
       required this.streetAddressRequired,
@@ -55,6 +57,7 @@ class MyAddressItem extends StatefulWidget {
   bool stateProvinceEnabled;
   bool cityEnabled;
   bool cityRequired;
+  String company;
   String city;
   bool streetAddressEnabled;
   bool streetAddressRequired;
@@ -72,7 +75,7 @@ class MyAddressItem extends StatefulWidget {
   dynamic faxNumber;
   int id;
   String guestId;
-  ValueChanged<String> callback;
+  VoidCallback callback;
 
   // var
   @override
@@ -139,7 +142,7 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                 onTap: () async {
                                   print('edit clicked');
                                   //open popup
-                                  Navigator.push(context,
+                                  Navigator.pushReplacement(context,
                                       CupertinoPageRoute(builder: (context) {
                                     return AddressScreen(
                                       uri: 'EditAddress',
@@ -152,7 +155,9 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                       countryName: widget.countryName,
                                       city: widget.city,
                                       phoneNumber: widget.phoneNumber,
-                                      id: widget.id, myCallBack: () {  },
+                                      id: widget.id,
+                                      company: widget.company,
+                                      faxNumber: widget.faxNumber,
                                     );
                                   }));
                                 },
@@ -166,6 +171,14 @@ class _MyAddressItemState extends State<MyAddressItem> {
                               GestureDetector(
                                 onTap: () async {
                                   print('delete clicked');
+                                  ApiCalls.deleteAddress(
+                                          context,
+                                          ConstantsVar.apiTokken.toString(),
+                                          ConstantsVar.customerID,
+                                          widget.id.toString())
+                                      .then((value) {
+                                    widget.callback();
+                                  });
                                 },
                                 child: Icon(
                                   Icons.delete,

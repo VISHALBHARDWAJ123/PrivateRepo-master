@@ -11,6 +11,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 
 // import 'package:untitled2/AppPages/MyOrders/Response/OrderDetailsResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -58,7 +59,7 @@ class _OrderDetailsState extends State<OrderDetails>
   String lastName = '';
 
   String address1 = '';
-
+  bool isRetryPayment = false;
   var phoneNumber = '';
   var city = '';
   var countryName = '';
@@ -236,6 +237,7 @@ class _OrderDetailsState extends State<OrderDetails>
             widget.resultas!['orderdetail']['orderDetailsModel']['OrderTotal'];
         subTotal = widget.resultas!['orderdetail']['orderDetailsModel']
             ['OrderSubtotal'];
+        isRetryPayment = widget.resultas!['orderdetail']['RetryButton'];
         if (isPickUpStore == true) {
         } else {
           sFirstName = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -392,33 +394,34 @@ class _OrderDetailsState extends State<OrderDetails>
                           ),
                         ),
                       ),
-                      // IgnorePointer(
-                      //   ignoring: true,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(8.0),
-                      //     child: Center(
-                      //       child: AppButton(
-                      //         color: ConstantsVar.appColor,
-                      //         child: Container(
-                      //           width: 100.w,
-                      //           height: 2.7.h,
-                      //           child: Center(
-                      //             child: Text(
-                      //               'RE-Order'.toUpperCase(),
-                      //               style: TextStyle(
-                      //                 color: Colors.white,
-                      //                 fontSize: 4.4.w,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         onTap: () async {
-                      //           reorder();
-                      //         },
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: AppButton(
+                            color: ConstantsVar.appColor,
+                            child: Container(
+                              width: 100.w,
+                              height: 2.7.h,
+                              child: Center(
+                                child: Text(
+                                  widget.orderProgress.contains('Pending')
+                                      ? 'Retry Payment'.toUpperCase()
+                                      : 're-order'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 4.4.w,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              widget.orderProgress.contains('Pending')
+                                  ? repayment()
+                                  : reorder();
+                            },
+                          ),
+                        ),
+                      ),
                       Container(
                         padding: EdgeInsets.all(8.0),
                         width: double.infinity,
@@ -913,28 +916,40 @@ class _OrderDetailsState extends State<OrderDetails>
         'apis/CustomerReOrder?OrderId=${widget.orderId}&CustomerId=${widget.customerId}&apiToken=${widget.apiToken}');
     var response = await get(uri, headers: ApiCalls.header);
     try {
-      List<ReorderResponse> result = jsonDecode(response.body) ;
+      List<dynamic> result = jsonDecode(response.body);
       // ReorderResponse resp = ReorderResponse.fromJson(result);
-      _reOrderResponse = result ;
+      _reOrderResponse =
+          result.map((r) => ReorderResponse.fromJson(r)).toList();
       for (int i = 0; i < _reOrderResponse.length; i++) {
         if (_reOrderResponse[i].status.contains('Failed')) {
           Fluttertoast.showToast(
               msg:
                   'This product is Out of Stock.\n${_reOrderResponse[i].responseData}');
-        } else {
-          Fluttertoast.showToast(msg: 'All Products are added to cart.');
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => CartScreen2(),
-            ),
-          );
         }
-      }
 
+      }
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => CartScreen2(),
+        ),
+      );
       print(response.body);
     } on Exception catch (e) {
       print(e.toString());
     }
+  }
+
+  repayment() {
+    final String paymentUrl = BuildConfig.base_url +
+        'apis/RePayment?OrderId=${widget.orderId}&CustomerId=${widget.customerId}&apiToken=${widget.apiToken}';
+    Navigator.pushReplacement(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => PaymentPage(
+          paymentUrl: paymentUrl,
+        ),
+      ),
+    );
   }
 }

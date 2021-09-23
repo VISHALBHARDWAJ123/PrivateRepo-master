@@ -124,7 +124,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                         child: Expanded(
                           child: ListView(
                             children: List.generate(
-                              orders['customerorders']['Orders']!.length,
+                              orders['customerorders']!['Orders']!.length,
                               (index) {
                                 if (orders['customerorders']['Orders'].length <
                                     0) {

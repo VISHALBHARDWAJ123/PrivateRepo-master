@@ -292,7 +292,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: 'Availablity: '.toUpperCase(),
+                    text: 'Availability: '.toUpperCase(),
                     style: TextStyle(
                         color: Colors.grey.shade700,
                         fontSize: 5.w,

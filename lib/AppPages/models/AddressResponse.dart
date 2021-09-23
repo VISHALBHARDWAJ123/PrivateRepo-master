@@ -65,6 +65,7 @@ class ExistingAddresses {
   String email;
   bool companyEnabled;
   bool companyRequired;
+  String companyName;
   bool countryEnabled;
   int countryId;
   String countryName;
@@ -94,6 +95,7 @@ class ExistingAddresses {
       required this.email,
       required this.companyEnabled,
       required this.companyRequired,
+      required this.companyName,
       required this.countryEnabled,
       required this.countryId,
       required this.countryName,
@@ -145,7 +147,7 @@ class ExistingAddresses {
           faxEnabled: json["FaxEnabled"],
           faxRequired: json["FaxRequired"],
           faxNumber: json["FaxNumber"],
-          id: json["Id"]);
+          id: json["Id"], companyName:json["Company"]);
 
   Map<String, dynamic> toJson() => {
         // final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -11,6 +11,7 @@ import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/OtP/NewxxOTPxxScreen.dart';
 import 'package:untitled2/AppPages/OtP/OTPScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
@@ -20,14 +21,12 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 class RegstrationPage extends StatefulWidget {
-
   @override
   _RegstrationPageState createState() => _RegstrationPageState();
 }
 
 class _RegstrationPageState extends State<RegstrationPage>
     with AutomaticKeepAliveClientMixin, InputValidationMixin {
-
   TextEditingController fController = TextEditingController();
   TextEditingController lController = TextEditingController();
   TextEditingController eController = TextEditingController();
@@ -53,9 +52,9 @@ class _RegstrationPageState extends State<RegstrationPage>
   var pErrorMsg = '';
   var cpErrorMsg = '';
 
-
   var reason;
   GlobalKey<FormState> formGlobalKey = GlobalKey<FormState>();
+
   void showErrorDialog() {
     showDialog(
         context: context,
@@ -525,13 +524,11 @@ class _RegstrationPageState extends State<RegstrationPage>
                         Expanded(
                           child: RaisedButton(
                               onPressed: () {
-                                if (formGlobalKey.currentState!
-                                    .validate()) {
+                                if (formGlobalKey.currentState!.validate()) {
                                   // use the information provided
                                   formGlobalKey.currentState!.save();
 
-                                  String phnNumbe =
-                                      mController.text.toString();
+                                  String phnNumbe = mController.text.toString();
                                   var phnNumber;
                                   setState(() {
                                     phnNumber = phnNumbe;
@@ -547,8 +544,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     'DayofBirthDay': 10,
                                     'DayofBirthMonth': 12,
                                     'DayofBirthYear': 2000,
-                                    'StreetAddress':
-                                        addressController.text,
+                                    'StreetAddress': addressController.text,
                                     'StreetAddress2': 'xzx',
                                     'City': 'xz',
                                     'CountryId': '79',
@@ -563,17 +559,28 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   String jsonString = jsonEncode(regBody);
                                   ConstantsVar.prefs
                                       .setString('regBody', jsonString)
-                                      .then((val) => Navigator.push(
+                                      .then(
+                                        (val) => Navigator.push(
                                           context,
                                           CupertinoPageRoute(
-                                              builder: (context) => OTP_Screen(
-                                                  title: 'OTP SCREEN',
-                                                  mainBtnTitle: 'Verify otp'
-                                                      .toUpperCase(),
-                                                  phoneNumber: phnNumbe,
-                                                  email: eController.text
-                                                      .toString(),
-                                                  password:cpController.text))));
+                                            builder: (context) =>
+                                                VerificationScreen2(
+                                              phoneNumber: phnNumbe,
+                                              email: eController.text,
+                                              password: cpController.text,
+                                            )
+                                            // OTP_Screen(
+                                            // title: 'OTP SCREEN',
+                                            // mainBtnTitle:
+                                            //     'Verify otp'.toUpperCase(),
+                                            // phoneNumber: phnNumbe,
+                                            // email:
+                                            //     eController.text.toString(),
+                                            // password: cpController.text)
+                                            ,
+                                          ),
+                                        ),
+                                      );
                                 }
                               },
                               color: ConstantsVar.appColor,
@@ -630,9 +637,11 @@ class _RegstrationPageState extends State<RegstrationPage>
 }
 
 mixin InputValidationMixin {
-  bool isDiscountCoupont(String coupon, String)=> coupon.trim() !=''||coupon.trim().length !=0;
-  bool isGiftCoupont(String coupon, String)=> coupon.trim() !=''||coupon.trim().length !=0;
+  bool isDiscountCoupont(String coupon, String) =>
+      coupon.trim() != '' || coupon.trim().length != 0;
 
+  bool isGiftCoupont(String coupon, String) =>
+      coupon.trim() != '' || coupon.trim().length != 0;
 
   bool isPasswordValid(String password) =>
       password.length < 6 || password.length == 0;
@@ -654,8 +663,7 @@ mixin InputValidationMixin {
         r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return regex.hasMatch(email);
-
   }
- bool oldPassword(String pass)=> pass.trim().length != 0;
 
+  bool oldPassword(String pass) => pass.trim().length != 0;
 }

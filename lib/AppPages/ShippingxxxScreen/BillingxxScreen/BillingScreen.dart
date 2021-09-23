@@ -41,9 +41,9 @@ class _BillingDetailsState extends State<BillingDetails>
   void initState() {
     context.loaderOverlay.show(
         widget: SpinKitRipple(
-          color: Colors.red,
-          size: 90,
-        ));
+      color: Colors.red,
+      size: 90,
+    ));
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     getCustomerId().then((value) =>
@@ -59,7 +59,7 @@ class _BillingDetailsState extends State<BillingDetails>
 
             /*************************Get all order summary*********************/
             ApiCalls.showOrderSummary(
-                ConstantsVar.apiTokken.toString(), guestCustomerId)
+                    ConstantsVar.apiTokken.toString(), guestCustomerId)
                 .then((value) {
               print('ordersummary>>> $value');
               orderSummaryResponse = OrderSummaryResponse.fromJson(value);
@@ -91,7 +91,7 @@ class _BillingDetailsState extends State<BillingDetails>
     switch (state) {
       case AppLifecycleState.resumed:
         ApiCalls.allAddresses(
-            ConstantsVar.apiTokken.toString(), guestCustomerId, context)
+                ConstantsVar.apiTokken.toString(), guestCustomerId, context)
             .then((value) {
           print('Resumed>>>  $value');
           setState(() {
@@ -153,7 +153,7 @@ class _BillingDetailsState extends State<BillingDetails>
                       CupertinoPageRoute(
                         builder: (context) => MyHomePage(),
                       ),
-                          (route) => false);
+                      (route) => false);
                 },
                 child: Image.asset(
                   'MyAssets/logo.png',
@@ -213,57 +213,57 @@ class _BillingDetailsState extends State<BillingDetails>
                         scrollDirection: Axis.vertical,
                         children: List.generate(
                             existingAddress.length,
-                                (index) => AddressItem(
-                              buttonName: "Bill To This Address",
-                              firstName: existingAddress[index].firstName,
-                              lastName: existingAddress[index].lastName,
-                              email: existingAddress[index].email,
-                              companyEnabled:
-                              existingAddress[index].companyEnabled,
-                              companyRequired:
-                              existingAddress[index].companyRequired,
-                              countryEnabled:
-                              existingAddress[index].countryEnabled,
-                              countryId: existingAddress[index].countryId,
-                              countryName:
-                              existingAddress[index].countryName,
-                              stateProvinceEnabled: existingAddress[index]
-                                  .stateProvinceEnabled,
-                              cityEnabled:
-                              existingAddress[index].cityEnabled,
-                              cityRequired:
-                              existingAddress[index].cityRequired,
-                              city: existingAddress[index].city,
-                              streetAddressEnabled: existingAddress[index]
-                                  .streetAddressEnabled,
-                              streetAddressRequired: existingAddress[index]
-                                  .streetAddressRequired,
-                              address1: existingAddress[index].address1,
-                              streetAddress2Enabled: existingAddress[index]
-                                  .streetAddress2Enabled,
-                              streetAddress2Required: existingAddress[index]
-                                  .streetAddress2Required,
-                              zipPostalCodeEnabled: existingAddress[index]
-                                  .zipPostalCodeEnabled,
-                              zipPostalCodeRequired: existingAddress[index]
-                                  .zipPostalCodeRequired,
-                              zipPostalCode:
-                              existingAddress[index].zipPostalCode,
-                              phoneEnabled:
-                              existingAddress[index].phoneEnabled,
-                              phoneRequired:
-                              existingAddress[index].phoneRequired,
-                              phoneNumber:
-                              existingAddress[index].phoneNumber,
-                              faxEnabled: existingAddress[index].faxEnabled,
-                              faxRequired:
-                              existingAddress[index].faxRequired,
-                              faxNumber: existingAddress[index].faxNumber,
-                              id: existingAddress[index].id,
-                              callback: (String value) {},
-                              guestId: guestCustomerId,
-                              // isLoading: isLoading,
-                            )),
+                            (index) => AddressItem(
+                                  buttonName: "Bill To This Address",
+                                  firstName: existingAddress[index].firstName,
+                                  lastName: existingAddress[index].lastName,
+                                  email: existingAddress[index].email,
+                                  companyEnabled:
+                                      existingAddress[index].companyEnabled,
+                                  companyRequired:
+                                      existingAddress[index].companyRequired,
+                                  countryEnabled:
+                                      existingAddress[index].countryEnabled,
+                                  countryId: existingAddress[index].countryId,
+                                  countryName:
+                                      existingAddress[index].countryName,
+                                  stateProvinceEnabled: existingAddress[index]
+                                      .stateProvinceEnabled,
+                                  cityEnabled:
+                                      existingAddress[index].cityEnabled,
+                                  cityRequired:
+                                      existingAddress[index].cityRequired,
+                                  city: existingAddress[index].city,
+                                  streetAddressEnabled: existingAddress[index]
+                                      .streetAddressEnabled,
+                                  streetAddressRequired: existingAddress[index]
+                                      .streetAddressRequired,
+                                  address1: existingAddress[index].address1,
+                                  streetAddress2Enabled: existingAddress[index]
+                                      .streetAddress2Enabled,
+                                  streetAddress2Required: existingAddress[index]
+                                      .streetAddress2Required,
+                                  zipPostalCodeEnabled: existingAddress[index]
+                                      .zipPostalCodeEnabled,
+                                  zipPostalCodeRequired: existingAddress[index]
+                                      .zipPostalCodeRequired,
+                                  zipPostalCode:
+                                      existingAddress[index].zipPostalCode,
+                                  phoneEnabled:
+                                      existingAddress[index].phoneEnabled,
+                                  phoneRequired:
+                                      existingAddress[index].phoneRequired,
+                                  phoneNumber:
+                                      existingAddress[index].phoneNumber,
+                                  faxEnabled: existingAddress[index].faxEnabled,
+                                  faxRequired:
+                                      existingAddress[index].faxRequired,
+                                  faxNumber: existingAddress[index].faxNumber,
+                                  id: existingAddress[index].id,
+                                  callback: (String value) {},
+                                  guestId: guestCustomerId,
+                                  // isLoading: isLoading,
+                                )),
                       ),
                     ),
                     Padding(
@@ -272,7 +272,7 @@ class _BillingDetailsState extends State<BillingDetails>
                         bottom: 10,
                       ),
                       child: Container(
-                        // margin: EdgeInsets.only(left: 10.0),
+                          // margin: EdgeInsets.only(left: 10.0),
                           width: MediaQuery.of(context).size.width,
                           child: Center(
                             child: Text(
@@ -294,20 +294,22 @@ class _BillingDetailsState extends State<BillingDetails>
                           onPressed: () async {
                             Navigator.push(context,
                                 CupertinoPageRoute(builder: (context) {
-                                  return AddressScreen(
-                                    uri: 'AddSelectNewBillingAddress',
-                                    isShippingAddress: false,
-                                    isEditAddress: false,
-                                    firstName: '',
-                                    lastName: '',
-                                    email: '',
-                                    address1: '',
-                                    countryName: '',
-                                    city: '',
-                                    phoneNumber: '',
-                                    id: 0, myCallBack: () {  },
-                                  );
-                                }));
+                              return AddressScreen(
+                                uri: 'AddSelectNewBillingAddress',
+                                isShippingAddress: false,
+                                isEditAddress: false,
+                                firstName: '',
+                                lastName: '',
+                                email: '',
+                                address1: '',
+                                countryName: '',
+                                city: '',
+                                phoneNumber: '',
+                                id: 0,
+                                faxNumber: '',
+                                company: '',
+                              );
+                            }));
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 50.0),
@@ -375,7 +377,7 @@ class _BillingDetailsState extends State<BillingDetails>
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Sub-Total:',
@@ -400,7 +402,7 @@ class _BillingDetailsState extends State<BillingDetails>
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Shipping:',
@@ -413,8 +415,8 @@ class _BillingDetailsState extends State<BillingDetails>
                                     'shipping' == null
                                         ? 'No Shipping Available for now '
                                         : orderSummaryResponse!
-                                        .ordertotals.shipping
-                                        .toString(),
+                                            .ordertotals.shipping
+                                            .toString(),
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
                                         fontSize: 15,
@@ -431,12 +433,12 @@ class _BillingDetailsState extends State<BillingDetails>
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Visibility(
                                       visible: orderSummaryResponse!.ordertotals
-                                          .orderTotalDiscount ==
-                                          null
+                                                  .orderTotalDiscount ==
+                                              null
                                           ? false
                                           : true,
                                       child: Text(
@@ -449,8 +451,8 @@ class _BillingDetailsState extends State<BillingDetails>
                                     ),
                                     Visibility(
                                       visible: orderSummaryResponse!.ordertotals
-                                          .orderTotalDiscount ==
-                                          null
+                                                  .orderTotalDiscount ==
+                                              null
                                           ? false
                                           : true,
                                       child: Text(
@@ -469,11 +471,11 @@ class _BillingDetailsState extends State<BillingDetails>
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 4.0, right: 4.0),
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Tax 5%:',
@@ -499,7 +501,7 @@ class _BillingDetailsState extends State<BillingDetails>
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Total:',
@@ -534,7 +536,7 @@ class _BillingDetailsState extends State<BillingDetails>
                 visible: showLoading,
                 child: Positioned(
                   child:
-                  Align(alignment: Alignment.center, child: showloader()),
+                      Align(alignment: Alignment.center, child: showloader()),
                 ),
               ),
             ])),

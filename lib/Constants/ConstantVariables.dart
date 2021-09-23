@@ -45,7 +45,7 @@ class ConstantsVar {
 
   static const Color appColor = Color.fromARGB(255, 164, 0, 0);
 
-  static const String OtpCode = '1234';
+  // static const String OtpCode = '1234';
 
   static double textSize = width * .06;
   static double textFieldSize = width * .05;

@@ -27,4 +27,6 @@ class BuildConfig {
 
   static var uaeCountryCode = '+971';
   static const phnVal = 9;
+
+  static final String delete_address = 'customer/DeleteCustomerAddress';
 }

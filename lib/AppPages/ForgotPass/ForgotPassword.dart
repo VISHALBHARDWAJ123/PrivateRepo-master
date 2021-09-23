@@ -93,7 +93,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                   if (isEmailValid(val!)) {
                                     return null;
                                   }
-                                  return 'Plase Enter a valid email';
+                                  return 'Please Enter a valid email';
                                 },
                                 style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(

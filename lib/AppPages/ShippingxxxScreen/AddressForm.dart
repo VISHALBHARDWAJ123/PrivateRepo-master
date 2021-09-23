@@ -15,24 +15,26 @@ import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
 class AddressScreen extends StatefulWidget {
-  AddressScreen(
-      {Key? key,
-      required this.uri,
-      required this.isShippingAddress,
-      required this.isEditAddress,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.address1,
-      required this.countryName,
-      required this.city,
-      required this.phoneNumber,
-      required this.id, required this.myCallBack})
-      : super(key: key);
+  AddressScreen({
+    Key? key,
+    required this.uri,
+    required this.isShippingAddress,
+    required this.isEditAddress,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.address1,
+    required this.countryName,
+    required this.city,
+    required this.phoneNumber,
+    required this.id,
+    required this.company,
+    required this.faxNumber,
+  }) : super(key: key);
   String uri;
   bool isShippingAddress;
   bool isEditAddress;
-  VoidCallback myCallBack;
+
   //data of address
   String firstName;
   String lastName;
@@ -42,6 +44,8 @@ class AddressScreen extends StatefulWidget {
   String city;
   String phoneNumber;
   int id;
+  String company;
+  String faxNumber;
 
   @override
   _AddressScreenState createState() => _AddressScreenState();
@@ -60,12 +64,20 @@ class _AddressScreenState extends State<AddressScreen>
   FocusNode myFocusNode = new FocusNode();
 
   var countryController = TextEditingController();
+  var companyController = TextEditingController();
+  var faxController = TextEditingController();
+  var address2Controller = TextEditingController();
 
   var textControllerLast = TextEditingController();
 
   var controllerAddress = TextEditingController();
   var guestId;
   var buttonText = 'ADD ADDRESS';
+  bool countryVisible = false;
+  bool faxNumberVisible = false;
+  bool companyVisible = false;
+  bool address2Visible = false;
+  bool showTitle = true;
 
   @override
   void initState() {
@@ -89,7 +101,14 @@ class _AddressScreenState extends State<AddressScreen>
         countryController.text = widget.countryName;
         controllerAddress.text = widget.address1;
         cityController.text = widget.city;
+        companyController.text = widget.company;
+        faxController.text = widget.faxNumber;
         buttonText = 'SAVE';
+        countryVisible = true;
+        faxNumberVisible = true;
+        companyVisible = true;
+        address2Visible = true;
+        showTitle = false;
         String addressId = widget.id.toString();
         print('addressid>> $addressId');
       });
@@ -133,21 +152,24 @@ class _AddressScreenState extends State<AddressScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFEEEEEE),
-                  ),
-                  child: Align(
-                    alignment: Alignment(0.05, 0),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        'Billing ADDRESS'.toUpperCase(),
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 6.w,
-                          fontWeight: FontWeight.w800,
+                Visibility(
+                  visible: showTitle,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: Align(
+                      alignment: Alignment(0.05, 0),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          'Billing Address'.toUpperCase(),
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 6.w,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ),
@@ -181,7 +203,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 ''),
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18.dp,
+                              fontSize: 16.dp,
                             ),
                             maxLines: 1,
                             validator: (val) {
@@ -220,7 +242,7 @@ class _AddressScreenState extends State<AddressScreen>
                             ),
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18.dp,
+                              fontSize: 16.dp,
                             ),
                             maxLines: 1,
                             validator: (val) {
@@ -259,7 +281,7 @@ class _AddressScreenState extends State<AddressScreen>
                                   BuildConfig.countryCode),
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 18.dp,
+                                fontSize: 16.dp,
                               ),
                               keyboardType: TextInputType.number,
                               validator: (val) {
@@ -309,6 +331,38 @@ class _AddressScreenState extends State<AddressScreen>
                                     color: AppColor.PrimaryAccentColor,
                                   ),
                                   ''),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      /* Company */
+                      Visibility(
+                        visible: companyVisible,
+                        child: Card(
+                          margin: EdgeInsets.only(top: 10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
+                          elevation: 8.0,
+                          child: Container(
+                            padding: EdgeInsets.only(right: 12.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                controller: companyController,
+                                cursorColor: Colors.black,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                                decoration: editBoxDecoration(
+                                    'Company',
+                                    Icon(
+                                      Icons.home_outlined,
+                                      color: AppColor.PrimaryAccentColor,
+                                    ),
+                                    ''),
+                              ),
                             ),
                           ),
                         ),
@@ -380,7 +434,7 @@ class _AddressScreenState extends State<AddressScreen>
                             ),
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18.dp,
+                              fontSize: 14,
                             ),
                             maxLines: 1,
                             validator: (val) {
@@ -393,6 +447,86 @@ class _AddressScreenState extends State<AddressScreen>
                           ),
                         ),
                       ),
+
+                      /*Country */
+                      Visibility(
+                        visible: countryVisible,
+                        child: Card(
+                          margin: EdgeInsets.only(top: 10),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              textInputAction: TextInputAction.next,
+                              onChanged: (_) => setState(() {}),
+                              controller: countryController,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.location_city_outlined,
+                                  color: AppColor.PrimaryAccentColor,
+                                ),
+                                labelText: 'Country',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      /* Fax number */
+                      Visibility(
+                        visible: faxNumberVisible,
+                        child: Card(
+                          margin: EdgeInsets.only(top: 10),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              textInputAction: TextInputAction.next,
+                              onChanged: (_) => setState(() {}),
+                              controller: faxController,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.location_city_outlined,
+                                  color: AppColor.PrimaryAccentColor,
+                                ),
+                                labelText: 'Fax Number',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 18.dp,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -401,7 +535,7 @@ class _AddressScreenState extends State<AddressScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => {Navigator.pop(context)},
                       child: Container(
                         height: 40,
                         width: MediaQuery.of(context).size.width * 0.5,
@@ -432,7 +566,7 @@ class _AddressScreenState extends State<AddressScreen>
                               'FirstName': '${firstNameController.text}',
                               'LastName': textControllerLast.text,
                               'Email': emailController.text,
-                              'Company': '',
+                              'Company': '${companyController.text}',
                               'CountryId': '79',
                               'StateProvinceId': '',
                               'City': '${cityController.text}',
@@ -440,8 +574,8 @@ class _AddressScreenState extends State<AddressScreen>
                               'Address2': '',
                               'ZipPostalCode': '',
                               'PhoneNumber': '${numberController.text}',
-                              'FaxNumber': '',
-                              'Country': 'UAE',
+                              'FaxNumber': '${faxController.text}',
+                              'Country': '${countryController.text}',
                             };
                             if (widget.isEditAddress == false) {
                               //add new address
@@ -461,8 +595,8 @@ class _AddressScreenState extends State<AddressScreen>
                                   '${apiToken}',
                                   guestId,
                                   widget.id.toString(),
-                                  jsonEncode(body),widget.myCallBack).then((value) =>
-                                  Navigator.pushReplacement(context,CupertinoPageRoute(builder: (context)=>MyAddresses())).then((value) => setState((){})));
+                                  jsonEncode(body),
+                                  widget.isEditAddress);
                             }
                           } else {
                             Fluttertoast.showToast(

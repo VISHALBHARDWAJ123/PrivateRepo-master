@@ -221,7 +221,9 @@ class ApiCalls {
         'apis/GetTopLevelCategories'
             '?apiToken=${ConstantsVar.apiTokken}');
     try {
-      var response = await http.get(uri,);
+      var response = await http.get(
+        uri,
+      );
       switch (response.statusCode) {
         case 200:
           var result = jsonDecode(response.body);
@@ -438,7 +440,6 @@ class ApiCalls {
         } else {
           ConstantsVar.prefs.setString('discount', '');
           refresh.requestRefresh(needMove: true);
-
         }
         success = 'true';
         Fluttertoast.showToast(msg: data);
@@ -763,32 +764,6 @@ class ApiCalls {
     }
   }
 
-  static Future editAndSaveAddress(
-      BuildContext context,
-      String apiToken,
-      String customerId,
-      String addressId,
-      String data,
-      VoidCallback callback) async {
-    final body = {
-      ApiParams.PARAM_API_TOKEN: apiToken,
-      ApiParams.PARAM_CUSTOMER_ID2: customerId,
-      ApiParams.PARAM_ADDRESS_ID: addressId,
-      ApiParams.PARAM_DATA: data
-    };
-
-    final uri = Uri.parse(
-      BuildConfig.base_url + BuildConfig.edit_address + "?",
-    );
-    print(uri);
-    try {
-      var response = await http.post(uri, body: body, headers: header);
-      print(jsonDecode(response.body));
-    } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
   static Future addAndSelectShippingAddress(
       String apiToken, String customerId, String id2) async {
     final uri = Uri.parse(
@@ -819,7 +794,7 @@ class ApiCalls {
 
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
-print(header);
+    print(header);
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     try {
@@ -834,6 +809,62 @@ print(header);
       }
     } on Exception catch (e) {
       print(e.toString());
+    }
+  }
+
+  /* Edit and save address */
+  static Future editAndSaveAddress(
+      BuildContext context,
+      String apiToken,
+      String customerId,
+      String addressId,
+      String data,
+      bool isEditAddress) async {
+    final body = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID2: customerId,
+      ApiParams.PARAM_ADDRESS_ID: addressId,
+      ApiParams.PARAM_DATA: data
+    };
+
+    final uri =
+        Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
+    print(uri);
+    try {
+      var response = await http.post(uri, body: body, headers: header);
+      print(jsonDecode(response.body));
+      if (isEditAddress == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyAddresses(),
+          ),
+        );
+      } else {
+        Navigator.pop(context);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  /* Delete address from my account */
+  static Future deleteAddress(BuildContext context, String apiToken,
+      String customerId, String addressId) async {
+    final body = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID: customerId,
+      ApiParams.PARAM_ADDRESS_ID2: addressId,
+    };
+
+    final uri = Uri.parse(BuildConfig.base_url + BuildConfig.delete_address);
+    print(uri);
+    try {
+      var response = await http.post(uri, body: body, headers: header);
+      print(jsonDecode(response.body));
+      Fluttertoast.showToast(msg: 'Address deleted');
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
   }
 }
