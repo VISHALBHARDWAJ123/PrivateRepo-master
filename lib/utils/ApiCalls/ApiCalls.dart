@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show TargetPlatform;
+// import 'package:flutter/foundation.dart' show TargetPlatform;
 
 // import 'dart:io';
 import 'dart:io';
@@ -16,10 +16,10 @@ import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
-import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
+// import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
-import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
+// import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/ApiParams.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,6 +58,7 @@ class ApiCalls {
       var response = await http.post(
         uri,
         body: body,
+        // headers:header
       );
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -154,7 +155,6 @@ class ApiCalls {
               .setString('phone', phnNumber == null ? '' : phnNumber);
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
-          ConstantsVar.prefs.commit();
 
           context.loaderOverlay.hide();
           print('Success ');
@@ -200,7 +200,6 @@ class ApiCalls {
       boolean = false;
       ConstantsVar.showSnackbar(context, e.toString(), 5);
       return boolean;
-      context.loaderOverlay.hide();
     }
   }
 
@@ -797,10 +796,20 @@ class ApiCalls {
     print(header);
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
+    // var response = await http.get(uri, headers: header);
+
+
+    HttpClient myclient  = new HttpClient();
+    HttpClientRequest myRequest = await myclient.getUrl(uri);
+    myRequest.headers.set('Cookie', cookie);
+    HttpClientResponse myResponse = await myRequest.close();
+    String response = await myResponse.transform(utf8.decoder).join();
+
+
+
     try {
       // print(cookie);
-      var response = await http.get(uri, headers: header);
-      dynamic result = jsonDecode(response.body);
+      dynamic result = jsonDecode(response);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {
         return result['ResponseData'];
