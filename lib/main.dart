@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +15,21 @@ import 'AppPages/LoginScreen/LoginScreen.dart';
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
 
+Future<void> _messageHandler(RemoteMessage message) async {
+  print('background message ${message.notification!.body}');
+  print('background message message got ');
+}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   GestureBinding.instance!.resamplingEnabled = true;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
         .then((_) async {
       ConstantsVar.prefs = await SharedPreferences.getInstance();
-
+      FirebaseMessaging.instance;
+      FirebaseMessaging.onBackgroundMessage(_messageHandler);
       runApp(MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -62,3 +70,5 @@ Map<int, Color> color = {
   800: Color.fromRGBO(255, 255, 255, .9),
   900: Color.fromRGBO(136, 14, 79, 1),
 };
+
+

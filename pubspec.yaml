@@ -82,6 +82,11 @@ dependencies:
 #  async: ^2.8.1
   persistent_bottom_nav_bar: ^4.0.2
   flutter_otp_text_field: ^1.0.0
+  firebase_core: ^1.6.0
+  firebase_messaging: ^10.0.7
+  firebase_analytics: ^7.0.1
+
+  awesome_notifications: ^0.0.6+10
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -793,7 +793,7 @@ class ApiCalls {
 
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
-    print(header);
+    // print(header);
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     // var response = await http.get(uri, headers: header);
