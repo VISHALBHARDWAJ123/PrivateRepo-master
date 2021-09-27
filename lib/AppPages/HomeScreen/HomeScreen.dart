@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
@@ -30,10 +35,40 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // AwesomeNotifications().
+
+  Future<void> setFireStoreData(
+      RemoteMessage message, ) async {
+    AwesomeNotifications().createNotificationFromJsonData(message.data);
+    final refrence = FirebaseFirestore.instance.collection('UserNotifications');
+    String formattedDate =
+        DateFormat('kk:mm').format(message.sentTime!);
+    Map<String, dynamic> data = {
+      'Title': message.notification!.title,
+      'Desc': message.notification!.body,
+      'Time': formattedDate
+    };
+    refrence.add(data);
+  }
+
+  Future<void> _messageHandler(RemoteMessage message) async {
+    // var guestGuid = ConstantsVar.prefs.getString('sepGuid');
+
+    setFireStoreData(message, );
+    print('background message ${message.notification!.body}');
+    print('background message message got ');
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    Firebase.initializeApp().whenComplete(() {
+      FirebaseMessaging.instance;
+      FirebaseMessaging.onBackgroundMessage(_messageHandler);
+    });
+
+    // setFireStoreData();
     Timer.periodic(Duration(seconds: 1), (timer) => getCartBagdge(0));
     //
     // Stream.periodic(Duration(seconds: 5)).asyncMap((event) => getCartBagdge(0)
@@ -44,10 +79,9 @@ class _MyAppState extends State<MyApp> {
     ApiCalls.readCounter(
             customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
-      if(mounted){
+      if (mounted) {
         context.read<cartCounter>().changeCounter(int.parse(value));
       }
-
     });
   }
 
@@ -155,7 +189,6 @@ class _MyHomePageState extends State<MyHomePage>
             color: Colors.black,
             height: 50,
             child: RollingNavBar.iconData(
-
               activeIconColors: [
                 Colors.white,
                 Colors.white,
@@ -169,7 +202,10 @@ class _MyHomePageState extends State<MyHomePage>
                 null,
                 null,
                 Consumer<cartCounter>(builder: (context, value, child) {
-                  return Text(value.badgeNumber.toString(),style: TextStyle(fontSize:8),);
+                  return Text(
+                    value.badgeNumber.toString(),
+                    style: TextStyle(fontSize: 8),
+                  );
                 }),
                 null
               ],

@@ -160,7 +160,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                           // borderRadius:
                                           ),
                                       child: Container(
-                                        height: 35.h,
+                                        // height: 38.h,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 3.0, vertical: 2),
                                         child: Container(
@@ -194,6 +194,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                           fontSize: 5.5.w),
                                                 ),
                                               ),
+                                              SizedBox(height: 15,),
                                               Container(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 10),
@@ -285,6 +286,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                   ],
                                                 ),
                                               ),
+                                              SizedBox(height: 15,),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),

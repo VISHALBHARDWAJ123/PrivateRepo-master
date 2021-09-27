@@ -1,4 +1,5 @@
 //import 'dart:html';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 
@@ -18,6 +19,7 @@ import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 import '../LoginScreen/LoginScreen.dart';
+import 'package:notification_permissions/notification_permissions.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -28,6 +30,10 @@ class _SplashScreenState extends State<SplashScreen> {
   String name = "MyAssets/logo.png";
   var _guestCustomerID;
   var _guestGUID;
+  var permGranted = "granted";
+  var permDenied = "denied";
+  var permUnknown = "unknown";
+  var permProvisional = "provisional";
 
   Future initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
@@ -37,6 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    getCheckNotificationPermStatus();
     initilaize().then((value) {
       _guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
       print('init');
@@ -51,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
           _guestGUID = myResponse.cutomer.customerGuid;
           ConstantsVar.prefs.setString('guestCustomerID', '$_guestCustomerID');
           ConstantsVar.prefs.setString('guestGUID', _guestGUID);
+          ConstantsVar.prefs.setString('sepGuid', _guestGUID!);
           int val = 0;
           ApiCalls.readCounter(
                   customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
@@ -167,5 +176,35 @@ class _SplashScreenState extends State<SplashScreen> {
                   context.read<cartCounter>().changeCounter(val);
                 });
             }));
+  }
+
+  /// Checks the notification permission status
+  Future<String> getCheckNotificationPermStatus() async {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    return NotificationPermissions.getNotificationPermissionStatus()
+        .then((status) {
+      switch (status) {
+        case PermissionStatus.denied:
+          return permDenied;
+        case PermissionStatus.granted:
+          return permGranted;
+        case PermissionStatus.unknown:
+          requestPermission();
+          return permUnknown;
+        case PermissionStatus.provisional:
+          return permProvisional;
+        default:
+          return '';
+      }
+    });
+  }
+
+  requestPermission() async {
+    await NotificationPermissions.requestNotificationPermissions();
   }
 }

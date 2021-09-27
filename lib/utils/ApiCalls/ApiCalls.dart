@@ -92,6 +92,7 @@ class ApiCalls {
     ));
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
+    ConstantsVar.prefs.setString('sepGuid', guestUId!);
     ConstantsVar.isVisible = true;
     final uri = Uri.parse(BuildConfig.base_url + 'Customer/LogIn');
     print(uri);
