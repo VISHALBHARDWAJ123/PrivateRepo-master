@@ -87,7 +87,7 @@ dependencies:
 #  firebase_analytics: ^7.0.1
   notification_permissions: ^0.6.1
   awesome_notifications: ^0.0.6+10
-  flutter_local_notifications: ^8.2.0
+#  flutter_local_notifications: ^8.2.0
   cloud_firestore: ^2.5.3
 dev_dependencies:
   flutter_test:

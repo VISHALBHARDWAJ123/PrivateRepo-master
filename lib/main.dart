@@ -31,7 +31,7 @@ Future<void> setFireStoreData(
     'Desc': message.notification!.body,
     'Time': formattedDate
   };
-  refrence.add(data);
+  refrence.doc().set(data);
 }
 
 Future<void> _messageHandler(RemoteMessage message) async {
@@ -43,7 +43,7 @@ Future<void> _messageHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  AwesomeNotifications().initialize('MyAssets/logo.png', [
+  AwesomeNotifications().initialize('resource://drawable/playstore', [
     // Your notification channels go here
   ]);
   GestureBinding.instance!.resamplingEnabled = true;

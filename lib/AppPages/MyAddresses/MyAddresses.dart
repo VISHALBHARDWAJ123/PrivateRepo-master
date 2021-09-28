@@ -198,7 +198,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                     phoneNumber: '',
                                     id: 0,
                                     company: '',
-                                    faxNumber: '',
+                                    faxNumber: '', title: 'Add a new address',
                                   ));
 
                           Navigator.pushReplacement(context, route);

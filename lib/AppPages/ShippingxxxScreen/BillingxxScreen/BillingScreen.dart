@@ -307,7 +307,7 @@ class _BillingDetailsState extends State<BillingDetails>
                                 phoneNumber: '',
                                 id: 0,
                                 faxNumber: '',
-                                company: '',
+                                company: '', title: 'billing address',
                               );
                             }));
                           },

@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 
 class NotificationClass extends StatefulWidget {
@@ -15,8 +17,10 @@ class NotificationClass extends StatefulWidget {
 
 class _NotificationClassState extends State<NotificationClass> {
   List<NotificationClass> myNotifications = [];
-  final Stream<QuerySnapshot> _stream =
-      FirebaseFirestore.instance.collection('UserNotifications').snapshots();
+  final Stream<QuerySnapshot> _stream = FirebaseFirestore.instance
+      .collection('UserNotifications')
+      .orderBy('Time', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,10 @@ class _NotificationClassState extends State<NotificationClass> {
               toolbarHeight: 18.w,
               centerTitle: true,
               title: InkWell(
+                onTap: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => MyApp()),
+                    (route) => false),
                 child: Image.asset(
                   'MyAssets/logo.png',
                   width: 15.w,
@@ -70,27 +78,48 @@ class _NotificationClassState extends State<NotificationClass> {
   }
 
   Card buildListTile(DocumentSnapshot doc) => Card(
-        child: ListTile(
-          leading: CircleAvatar(
-            child: Image.asset('MyAssets/logo.png'),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Text(
-              doc['Title'],
-              style: TextStyle(
-                fontSize: 4.5.w,
-                fontWeight: FontWeight.w300,
+        child: Container(
+          height: 16.h,
+          child: Stack(
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  child: Image.asset('MyAssets/logo.png'),
+                ),
+                title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text(
+                    doc['Title'],
+                    style: TextStyle(
+                      fontSize: 4.5.w,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+                subtitle: Padding(
+                  child: Text(
+                    doc['Desc'],
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                ),
+                // trailing: ,
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  doc['Time'] == null ? '' : doc['Time'],
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
+                ),
+              )
+            ],
           ),
-          subtitle: Padding(
-            child: Text(
-              doc['Desc'],
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-          ),
-          trailing: Text(doc['Time'] == null ? '' : doc['Time']),
         ),
       );
 }

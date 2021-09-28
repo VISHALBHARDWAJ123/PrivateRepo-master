@@ -10,7 +10,7 @@ import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_sizer/flutter_sizer.dart';
 class CartItem extends StatefulWidget {
   String unitPrice;
 
@@ -55,7 +55,7 @@ class _CartItemState extends State<CartItem> {
                     NewProductDetails(productId: widget.productId.toString())));
       },
       child: Container(
-        height: 140,
+        height: 26.h,
         child: Stack(
           children: <Widget>[
             Container(

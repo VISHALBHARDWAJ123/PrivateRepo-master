@@ -157,7 +157,7 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                       phoneNumber: widget.phoneNumber,
                                       id: widget.id,
                                       company: widget.company,
-                                      faxNumber: widget.faxNumber,
+                                      faxNumber: widget.faxNumber, title: 'Edit Address',
                                     );
                                   }));
                                 },

@@ -185,6 +185,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: TextFormField(
                                     maxLength: 100,
                                     textInputAction: TextInputAction.next,
@@ -214,6 +215,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: TextFormField(
                                     maxLength: 100,
                                     validator: (lastName) {
@@ -245,6 +247,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: TextFormField(
                                     validator: (email) {
                                       if (isEmailValid(email!))
@@ -282,6 +285,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                             BorderRadius.circular(12.0)),
                                     elevation: 8.0,
                                     child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
                                       width: 88.w,
                                       child: TextFormField(
                                         maxLength: BuildConfig.phnVal,
@@ -322,6 +326,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: TextFormField(
                                       validator: (val) {
                                         isAddress(val!.trim())
@@ -353,6 +358,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: TextFormField(
                                     enableInteractiveSelection: false,
                                     validator: (password) {
@@ -416,6 +422,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),

@@ -159,7 +159,7 @@ class _CartScreen2State extends State<CartScreen2>
   @override
   Widget build(BuildContext context) {
     if (connectionStatus = true) {
-       if (cartItems.isNotEmpty) {
+      if (cartItems.isNotEmpty) {
         return SafeArea(
           top: true,
           bottom: true,
@@ -449,9 +449,15 @@ class _CartScreen2State extends State<CartScreen2>
                                                       suffixIcon: InkWell(
                                                         onTap: () {
                                                           if (discountController
-                                                                  .text
-                                                                  .trim() !=
-                                                              '') {
+                                                                      .text
+                                                                      .trim() !=
+                                                                  '' &&
+                                                              discountController
+                                                                      .text
+                                                                      .toString()
+                                                                      .trim()
+                                                                      .length >=
+                                                                  4) {
                                                             ApiCalls.removeCoupon(
                                                                     context,
                                                                     ConstantsVar
@@ -459,12 +465,16 @@ class _CartScreen2State extends State<CartScreen2>
                                                                     guestCustomerID,
                                                                     discountCoupon,
                                                                     _refreshController)
-                                                                .then((value) =>
-                                                                   value.toString().contains('true')? setState(() {
-                                                                     discountController
-                                                                         .text =
-                                                                     '';
-                                                                    }): null);
+                                                                .then((value) => value
+                                                                        .toString()
+                                                                        .contains(
+                                                                            'true')
+                                                                    ? setState(
+                                                                        () {
+                                                                        discountController.text =
+                                                                            '';
+                                                                      })
+                                                                    : null);
                                                           } else {
                                                             Fluttertoast.showToast(
                                                                 msg:
@@ -500,10 +510,15 @@ class _CartScreen2State extends State<CartScreen2>
                                             ),
                                             onPressed: () async {
                                               if (discountController.text
-                                                      .toString()
-                                                      .trim()
-                                                      .length ==
-                                                  0) {
+                                                          .toString()
+                                                          .trim()
+                                                          .length ==
+                                                      0 ||
+                                                  discountController.text
+                                                          .toString()
+                                                          .trim()
+                                                          .length <=
+                                                      4) {
                                                 Fluttertoast.showToast(
                                                     msg: 'Enter coupon code');
                                               } else {
@@ -711,28 +726,32 @@ class _CartScreen2State extends State<CartScreen2>
                                                   decoration: InputDecoration(
                                                       suffixIcon: InkWell(
                                                         onTap: () {
-                                                          // if (discountController
-                                                          //     .text
-                                                          //     .trim() !=
-                                                          //     '') {
-                                                          //   ApiCalls.removeCoupon(
-                                                          //       context,
-                                                          //       ConstantsVar
-                                                          //           .apiTokken!,
-                                                          //       guestCustomerID,
-                                                          //       discountController
-                                                          //           .text
-                                                          //           .trim(),
-                                                          //       _refreshController)
-                                                          //       .then((value) =>
-                                                          //       setState(() =>
-                                                          //       discountController.text =
-                                                          //       ''));
-                                                          // } else {
-                                                          //   Fluttertoast.showToast(
-                                                          //       msg:
-                                                          //       'No Discount Coupon Applied');
-                                                          // }
+                                                          if (giftCardController
+                                                                      .text
+                                                                      .trim() !=
+                                                                  '' &&
+                                                              giftCardController
+                                                                      .text
+                                                                      .trim()
+                                                                      .length >=
+                                                                  4) {
+                                                            ApiCalls.removeGiftCoupon(
+                                                                    ConstantsVar
+                                                                        .apiTokken!,
+                                                                    guestCustomerID,
+                                                                    giftCardController
+                                                                        .text
+                                                                        .trim(),
+                                                                    _refreshController)
+                                                                .then((value) =>
+                                                                    setState(() =>
+                                                                        giftCardController.text =
+                                                                            ''));
+                                                          } else {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    'No Gift Coupon Applied');
+                                                          }
                                                         },
                                                         child: Icon(
                                                             HeartIcon.cross),

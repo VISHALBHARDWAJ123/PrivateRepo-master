@@ -746,7 +746,7 @@ class ApiCalls {
     try {
       var response = await http.post(uri, body: body, headers: header);
       print(jsonDecode(response.body));
-      if (uriName == 'MyAccount') {
+      if (uriName == 'MyAccountAddAddress') {
         //It means adding address is from my account screen
         Navigator.pop(context);
       } else {

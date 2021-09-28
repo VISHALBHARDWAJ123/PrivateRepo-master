@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
@@ -105,7 +106,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                         'shipping ADDRESS'.toUpperCase(),
                         style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 4.w,
+                          fontSize: 6.5.w,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -360,9 +361,10 @@ class _ShippingDetailsState extends State<ShippingDetails>
                     InkWell(
                       onTap: () => Navigator.pop(context),
                       child: Container(
+                        height: 8.h,
                         width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
-                          color: Color(0xFFEEEEEE),
+                          color: Color(0xFFDD1818),
                         ),
                         child: Align(
                           alignment: Alignment(0, 0),
@@ -371,6 +373,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                             child: Text(
                               'CANCEL',
                               style: TextStyle(
+                                color:Colors.white,
                                   fontFamily: 'Work Sans',
                                   fontSize: 18.dp,
                                   fontWeight: FontWeight.bold),
@@ -433,6 +436,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                         }
                       },
                       child: Container(
+                        height: 8.h,
                         width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: Color(0xFFDD1818),

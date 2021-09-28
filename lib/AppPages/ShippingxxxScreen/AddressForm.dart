@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
@@ -17,6 +18,7 @@ import 'package:untitled2/utils/utils/colors.dart';
 class AddressScreen extends StatefulWidget {
   AddressScreen({
     Key? key,
+    required this.title,
     required this.uri,
     required this.isShippingAddress,
     required this.isEditAddress,
@@ -46,6 +48,7 @@ class AddressScreen extends StatefulWidget {
   int id;
   String company;
   String faxNumber;
+  String title;
 
   @override
   _AddressScreenState createState() => _AddressScreenState();
@@ -164,7 +167,7 @@ class _AddressScreenState extends State<AddressScreen>
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: Text(
-                          'Billing Address'.toUpperCase(),
+                          widget.title.toUpperCase(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 6.w,
@@ -537,7 +540,7 @@ class _AddressScreenState extends State<AddressScreen>
                     InkWell(
                       onTap: () => {Navigator.pop(context)},
                       child: Container(
-                        height: 40,
+                        height: 8.h,
                         width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: ConstantsVar.appColor,
@@ -606,7 +609,7 @@ class _AddressScreenState extends State<AddressScreen>
                         child: Row(
                           children: <Widget>[
                             Container(
-                              height: 40,
+                              height: 8.h,
                               width: MediaQuery.of(context).size.width * 0.5,
                               decoration: BoxDecoration(
                                 color: ConstantsVar.appColor,

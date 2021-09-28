@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     AwesomeNotifications().createNotificationFromJsonData(message.data);
     final refrence = FirebaseFirestore.instance.collection('UserNotifications');
     String formattedDate =
-        DateFormat('kk:mm').format(message.sentTime!);
+        DateFormat('yyyy-MM-dd – kk:mm').format(message.sentTime!);
     Map<String, dynamic> data = {
       'Title': message.notification!.title,
       'Desc': message.notification!.body,
