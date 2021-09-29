@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddressItem.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/AddressForm.dart';
 import 'package:untitled2/AppPages/models/AddressResponse.dart';
 import 'package:untitled2/AppPages/models/OrderSummaryResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 class MyAddresses extends StatefulWidget {
@@ -30,6 +34,10 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   var guestCustomerId;
   var apiToken;
   late AppLifecycleState applifecycleState;
+
+  bool _willGo = true;
+
+  RefreshController _refreshController = RefreshController();
 
   @override
   void initState() {
@@ -125,180 +133,389 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
     });
   }
 
-  // FutureOr refreshPage(dynamic value) {
-  //   print('refresd');
-  //   setState(() {
-  //     ApiCalls.allAddresses(
-  //             ConstantsVar.apiTokken.toString(), guestCustomerId, context)
-  //         .then((value) {
-  //       print('refresh>>>  $value');
-  //       setState(() {
-  //         addressResponse = AddressResponse.fromJson(value);
-  //         existingAddress = addressResponse.billingaddresses.existingAddresses;
-  //         print('refreshaddress>>> $addressResponse');
-  //         showAddresses = true;
-  //       });
-  //     });
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 18.w,
-            backgroundColor: ConstantsVar.appColor,
-            title: InkWell(
-              onTap: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => MyHomePage(),
-                    ),
-                    (route) => false);
-              },
-              child: Image.asset(
-                'MyAssets/logo.png',
-                width: 15.w,
-                height: 15.w,
+    return WillPopScope(
+      onWillPop: _willGoBack,
+      child: SafeArea(
+        top: true,
+        child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 18.w,
+              backgroundColor: ConstantsVar.appColor,
+              title: InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => MyHomePage(),
+                      ),
+                      (route) => false);
+                },
+                child: Image.asset(
+                  'MyAssets/logo.png',
+                  width: 15.w,
+                  height: 15.w,
+                ),
               ),
+              centerTitle: true,
             ),
-            centerTitle: true,
-          ),
-          body: Stack(children: [
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Visibility(
-                      visible: existingAddress.isEmpty ? false : true,
-                      child: addVerticalSpace(12.0)),
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: TextStyle(
-                              fontSize: 26.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                        onPressed: () async {
-                          Route route = CupertinoPageRoute(
-                              builder: (context) => AddressScreen(
-                                    uri: 'MyAccountAddAddress',
-                                    isShippingAddress: false,
-                                    isEditAddress: false,
-                                    firstName: '',
-                                    lastName: '',
-                                    email: '',
-                                    address1: '',
-                                    countryName: '',
-                                    city: '',
-                                    phoneNumber: '',
-                                    id: 0,
-                                    company: '',
-                                    faxNumber: '', title: 'Add a new address',
-                                  ));
+            body: Stack(children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Visibility(
+                        visible: existingAddress.isEmpty ? false : true,
+                        child: addVerticalSpace(12.0)),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: TextStyle(
+                                fontSize: 26.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          onPressed: () async {
+                            Route route = CupertinoPageRoute(
+                                builder: (context) => AddressScreen(
+                                      uri: 'MyAccountAddAddress',
+                                      isShippingAddress: false,
+                                      isEditAddress: false,
+                                      firstName: '',
+                                      lastName: '',
+                                      email: '',
+                                      address1: '',
+                                      countryName: '',
+                                      city: '',
+                                      phoneNumber: '',
+                                      id: 0,
+                                      company: '',
+                                      faxNumber: '',
+                                      title: 'Add a new address',
+                                    ));
 
-                          Navigator.pushReplacement(context, route);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 50.0),
+                            Navigator.pushReplacement(context, route);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 50.0),
+                            child: Container(
+                              height: 5.h,
+                              decoration: BoxDecoration(
+                                  color: ConstantsVar.appColor,
+                                  borderRadius: BorderRadius.circular(6.0)),
+                              child: Center(
+                                child: Text(
+                                  'Add New Address',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 4.w),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
+
+                    /************** Show Address List ******************/
+                    Visibility(
+                      visible: existingAddress.isEmpty ? false : true,
+                      child: Container(
+                        height: 85.h,
+                        child: SmartRefresher(
+                          onRefresh: _onLoading,
+                          header: ClassicHeader(),
+                          controller: _refreshController,
+                          child: ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            children: List.generate(
+                                existingAddress.length,
+                                (index) => Container(
+                                      margin: EdgeInsets.only(
+                                          left: 10.0,
+                                          right: 10.0,
+                                          top: 6.0,
+                                          bottom: 6.0),
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        color: Colors.white,
+                                        child: Container(
+                                          height: 25.h,
+                                          margin: EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                            bottom: 3.2,
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  // padding: const EdgeInsets.all(4.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 8,
+                                                                    top: 4),
+                                                            child: Text(
+                                                              existingAddress[
+                                                                          index]
+                                                                      .firstName +
+                                                                  ' ' +
+                                                                  existingAddress[
+                                                                          index]
+                                                                      .lastName,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              softWrap: true,
+                                                              style: CustomTextStyle
+                                                                  .textFormFieldBold
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          16),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                              child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: <Widget>[
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  print(
+                                                                      'edit clicked');
+                                                                  //open popup
+                                                                  Navigator.pushReplacement(
+                                                                      context,
+                                                                      CupertinoPageRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                    return AddressScreen(
+                                                                      uri:
+                                                                          'EditAddress',
+                                                                      isShippingAddress:
+                                                                          false,
+                                                                      isEditAddress:
+                                                                          true,
+                                                                      firstName:
+                                                                          existingAddress[index]
+                                                                              .firstName,
+                                                                      lastName:
+                                                                          existingAddress[index]
+                                                                              .lastName,
+                                                                      email: existingAddress[
+                                                                              index]
+                                                                          .email,
+                                                                      address1:
+                                                                          existingAddress[index]
+                                                                              .address1,
+                                                                      countryName:
+                                                                          existingAddress[index]
+                                                                              .countryName,
+                                                                      city: existingAddress[
+                                                                              index]
+                                                                          .city,
+                                                                      phoneNumber:
+                                                                          existingAddress[index]
+                                                                              .phoneNumber,
+                                                                      id: existingAddress[
+                                                                              index]
+                                                                          .id,
+                                                                      company: existingAddress[index].companyName ==
+                                                                              null
+                                                                          ? ''
+                                                                          : existingAddress[index]
+                                                                              .companyName,
+                                                                      faxNumber: existingAddress[index].faxNumber ==
+                                                                              null
+                                                                          ? ''
+                                                                          : existingAddress[index]
+                                                                              .faxNumber,
+                                                                      title:
+                                                                          'Edit Address',
+                                                                    );
+                                                                  }));
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.edit,
+                                                                  color: AppColor
+                                                                      .PrimaryAccentColor,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ),
+                                                              addHorizontalSpace(
+                                                                  10),
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  setState(() =>
+                                                                      _willGo =
+                                                                          false);
+                                                                  print(
+                                                                      'delete clicked');
+                                                                  ApiCalls.deleteAddress(
+                                                                          context,
+                                                                          ConstantsVar
+                                                                              .apiTokken
+                                                                              .toString(),
+                                                                          ConstantsVar
+                                                                              .customerID,
+                                                                          existingAddress[index]
+                                                                              .id
+                                                                              .toString())
+                                                                      .then(
+                                                                          (value) {
+                                                                    _refreshController
+                                                                        .requestRefresh();
+
+                                                                    setState(() =>
+                                                                        _willGo =
+                                                                            true);
+                                                                  });
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: AppColor
+                                                                      .PrimaryAccentColor,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )),
+                                                        ],
+                                                      ),
+                                                      Utils.getSizedBox(
+                                                          null, 6),
+                                                      Container(
+                                                          child: Text('Email - ' +
+                                                              existingAddress[
+                                                                      index]
+                                                                  .email)),
+                                                      Container(
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Flexible(
+                                                              child: Text(
+                                                                'Address -' +
+                                                                    existingAddress[
+                                                                            index]
+                                                                        .address1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          child: Text('Phone -' +
+                                                              ' ' +
+                                                              existingAddress[
+                                                                      index]
+                                                                  .phoneNumber)),
+                                                      Container(
+                                                          child: Text('Country -' +
+                                                              ' ' +
+                                                              existingAddress[
+                                                                      index]
+                                                                  .countryName)),
+                                                      addVerticalSpace(12),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !showLoading,
+                      child: Visibility(
+                        visible: existingAddress.isEmpty ? true : false,
+                        child: Align(
+                          alignment: Alignment.center,
                           child: Container(
-                            height: 5.h,
-                            decoration: BoxDecoration(
-                                color: ConstantsVar.appColor,
-                                borderRadius: BorderRadius.circular(6.0)),
-                            child: Center(
-                              child: Text(
-                                'Add New Address',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 4.w),
+                            child: Text(
+                              'No Address found',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
                             ),
                           ),
                         ),
-                      )),
-
-                  /************** Show Address List ******************/
-                  Visibility(
-                    visible: existingAddress.isEmpty ? false : true,
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: List.generate(
-                          existingAddress.length,
-                          (index) => MyAddressItem(
-                                // buttonName: "Bill To This Address",
-                                firstName: existingAddress[index].firstName,
-                                lastName: existingAddress[index].lastName,
-                                email: existingAddress[index].email,
-                                companyEnabled:
-                                    existingAddress[index].companyEnabled,
-                                companyRequired:
-                                    existingAddress[index].companyRequired,
-                                countryEnabled:
-                                    existingAddress[index].countryEnabled,
-                                countryId: existingAddress[index].countryId,
-                                countryName: existingAddress[index].countryName,
-                                stateProvinceEnabled:
-                                    existingAddress[index].stateProvinceEnabled,
-                                cityEnabled: existingAddress[index].cityEnabled,
-                                cityRequired:
-                                    existingAddress[index].cityRequired,
-                                company: existingAddress[index].companyName,
-                                city: existingAddress[index].city,
-                                streetAddressEnabled:
-                                    existingAddress[index].streetAddressEnabled,
-                                streetAddressRequired: existingAddress[index]
-                                    .streetAddressRequired,
-                                address1: existingAddress[index].address1,
-                                streetAddress2Enabled: existingAddress[index]
-                                    .streetAddress2Enabled,
-                                streetAddress2Required: existingAddress[index]
-                                    .streetAddress2Required,
-                                zipPostalCodeEnabled:
-                                    existingAddress[index].zipPostalCodeEnabled,
-                                zipPostalCodeRequired: existingAddress[index]
-                                    .zipPostalCodeRequired,
-                                zipPostalCode:
-                                    existingAddress[index].zipPostalCode,
-                                phoneEnabled:
-                                    existingAddress[index].phoneEnabled,
-                                phoneRequired:
-                                    existingAddress[index].phoneRequired,
-                                phoneNumber: existingAddress[index].phoneNumber,
-                                faxEnabled: existingAddress[index].faxEnabled,
-                                faxRequired: existingAddress[index].faxRequired,
-                                faxNumber: existingAddress[index].faxNumber,
-                                id: existingAddress[index].id,
-                                callback: () {
-                                  //call api for all addresses
-                                  callApiAllAddresses();
-                                },
-                                guestId: guestCustomerId,
-                                // isLoading: isLoading,
-                              )),
-                    ),
-                  ),
-                ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            // Container(child: isLoading ? Loader() : Container()),
-            Visibility(
-              visible: showLoading,
-              child: Positioned(
-                child: Align(alignment: Alignment.center, child: showloader()),
+              // Container(child: isLoading ? Loader() : Container()),
+              Visibility(
+                visible: showLoading,
+                child: Positioned(
+                  child:
+                      Align(alignment: Alignment.center, child: showloader()),
+                ),
               ),
-            ),
-          ])),
+            ])),
+      ),
     );
   }
 
   Future getCustomerId() async {
     guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
     return guestCustomerId;
+  }
+
+  Future<bool> _willGoBack() async {
+    return _willGo;
+  }
+
+  void _onLoading() async {
+    ApiCalls.allAddresses(
+            ConstantsVar.apiTokken.toString(), guestCustomerId, context)
+        .then((value) {
+      setState(() {
+        addressResponse = AddressResponse.fromJson(value);
+        existingAddress = addressResponse.billingaddresses.existingAddresses;
+        print('address>>> $addressResponse');
+        showAddresses = true;
+      });
+      _refreshController.refreshCompleted();
+    });
   }
 }

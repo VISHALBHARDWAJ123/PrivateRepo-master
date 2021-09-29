@@ -67,13 +67,8 @@ class _MyAppState extends State<MyApp> {
       FirebaseMessaging.instance;
       FirebaseMessaging.onBackgroundMessage(_messageHandler);
     });
-
-    // setFireStoreData();
-    Timer.periodic(Duration(seconds: 1), (timer) => getCartBagdge(0));
-    //
-    // Stream.periodic(Duration(seconds: 5)).asyncMap((event) => getCartBagdge(0)
-    // );
-  }
+    getCartBagdge(0);
+    }
 
   Future getCartBagdge(int val) async {
     ApiCalls.readCounter(

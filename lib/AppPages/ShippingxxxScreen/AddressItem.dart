@@ -260,7 +260,7 @@ class _AddressItemState extends State<AddressItem> {
                               String paymentUrl = BuildConfig.base_url +
                                   'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
 
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => ShippingMethod(

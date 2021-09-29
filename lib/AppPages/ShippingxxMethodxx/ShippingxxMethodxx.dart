@@ -9,10 +9,12 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/SelectxxShippingxxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/ShippingxxMethodxxResponse.dart';
+import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -43,144 +45,151 @@ class _ShippingMethodState extends State<ShippingMethod> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        appBar: new AppBar(
-            toolbarHeight: Adaptive.w(18),
-            centerTitle: true,
-            title: InkWell(
-              onTap: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(builder: (context) => MyHomePage()),
-                  (route) => false,
-                );
-              },
-              radius: 60.0,
-              child: Image.asset(
-                'MyAssets/logo.png',
-                width: Adaptive.w(15),
-                height: Adaptive.w(15),
-              ),
-            )),
-        body: CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Container(
-                        width: double.infinity,
-                        height: 60,
-                        color: Colors.white60,
-                        child: Center(
-                          child: Text(
-                            'Select Shipping Method'.toUpperCase(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: Adaptive.w(5)),
+    return WillPopScope(
+      onWillPop: _willGoBack,
+      child: SafeArea(
+        top: true,
+        child: Scaffold(
+          appBar: new AppBar(
+              toolbarHeight: Adaptive.w(18),
+              centerTitle: true,
+              title: InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => MyHomePage()),
+                    (route) => false,
+                  );
+                },
+                radius: 60.0,
+                child: Image.asset(
+                  'MyAssets/logo.png',
+                  width: Adaptive.w(15),
+                  height: Adaptive.w(15),
+                ),
+              )),
+          body: CustomScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Container(
+                          width: double.infinity,
+                          height: 60,
+                          color: Colors.white60,
+                          child: Center(
+                            child: Text(
+                              'Select Shipping Method'.toUpperCase(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: Adaptive.w(5)),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  ListView.builder(
-                    padding: EdgeInsets.all(10),
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: shippingMethods.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Container(
-                          child: CheckboxListTile(
-                            value: isSelected,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                if (isSelected) {
-                                  selectedVal = '';
-                                  isSelected = value!;
-                                  print('${selectedVal}');
+                    ListView.builder(
+                      padding: EdgeInsets.all(10),
+                      physics: ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: shippingMethods.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          child: Container(
+                            child: CheckboxListTile(
+                              value: isSelected,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  if (isSelected) {
+                                    selectedVal = '';
+                                    isSelected = value!;
+                                    print('${selectedVal}');
 
-                                  print('${isSelected}');
-                                } else {
-                                  isSelected = value!;
-                                  selectedVal = shippingMethods[index].name +
-                                      '___' +
-                                      shippingMethods[index]
-                                          .shippingRateComputationMethodSystemName;
-                                  print('${isSelected}');
-                                  print('${selectedVal}');
-                                }
-                              });
-                            },
-                            tileColor: Colors.white24,
-                            controlAffinity: ListTileControlAffinity.leading,
-                            title: Center(
-                              child: Text(
-                                shippingMethods[index].name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 6.w),
+                                    print('${isSelected}');
+                                  } else {
+                                    isSelected = value!;
+                                    selectedVal = shippingMethods[index].name +
+                                        '___' +
+                                        shippingMethods[index]
+                                            .shippingRateComputationMethodSystemName;
+                                    print('${isSelected}');
+                                    print('${selectedVal}');
+                                  }
+                                });
+                              },
+                              tileColor: Colors.white24,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Center(
+                                child: Text(
+                                  shippingMethods[index].name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 5.w),
+                                ),
                               ),
-                            ),
-                            subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(
+                              subtitle: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Text(
                                   removeAllHtmlTags(
                                       shippingMethods[index].description),
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(fontSize: 4.w)),
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 3.w,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
-                  onTap: () async {
-                    context.loaderOverlay.show(
-                        widget: SpinKitRipple(
-                      color: Colors.red,
-                      size: 90,
-                    ));
-                    if (isSelected == false) {
-                      Fluttertoast.showToast(
-                          msg: 'Please select a Shipping Method first');
-                      context.loaderOverlay.hide();
-                    } else {
-                      selectShippingMethod();
-                    }
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    color: ConstantsVar.appColor,
-                    child: Center(
-                      child: Text(
-                        'Confirm'.toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.bold),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    onTap: () async {
+                      context.loaderOverlay.show(
+                          widget: SpinKitRipple(
+                        color: Colors.red,
+                        size: 90,
+                      ));
+                      if (isSelected == false) {
+                        Fluttertoast.showToast(
+                            msg: 'Please select a Shipping Method first');
+                        context.loaderOverlay.hide();
+                      } else {
+                        selectShippingMethod();
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      color: ConstantsVar.appColor,
+                      child: Center(
+                        child: Text(
+                          'Confirm'.toUpperCase(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -251,5 +260,15 @@ class _ShippingMethodState extends State<ShippingMethod> {
     RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
     return htmlText.replaceAll(exp, '');
+  }
+
+  Future<bool> _willGoBack() async {
+    Navigator.pushReplacement(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => ShippingAddress(),
+      ),
+    );
+    return true;
   }
 }

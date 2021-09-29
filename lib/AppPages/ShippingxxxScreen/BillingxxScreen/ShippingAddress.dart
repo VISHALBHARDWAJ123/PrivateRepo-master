@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -98,7 +97,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
               getPickupPoints(addressString);
               paymentUrl = BuildConfig.base_url +
-                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${id}&PaymentMethod=Payments.CyberSource';
+                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=$id&PaymentMethod=Payments.CyberSource';
               /*************************Get all order summary*********************/
               ApiCalls.showOrderSummary(ConstantsVar.apiTokken.toString(), id)
                   .then(
@@ -460,7 +459,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               color: Colors.black),
                         ),
                         onPressed: () async {
-                          Navigator.push(context,
+                          Navigator.pushReplacement(context,
                               CupertinoPageRoute(builder: (context) {
                             return ShippingDetails(
                               customerId: ID,
@@ -469,7 +468,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                           }));
                         },
                         child: Container(
-                          height: 5.h,
+                          height: 6.h,
                           decoration: BoxDecoration(
                               color: ConstantsVar.appColor,
                               borderRadius: BorderRadius.circular(6.0)),

@@ -16,9 +16,11 @@ import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
+
 // import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+
 // import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/ApiParams.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
@@ -748,7 +750,8 @@ class ApiCalls {
       print(jsonDecode(response.body));
       if (uriName == 'MyAccountAddAddress') {
         //It means adding address is from my account screen
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (context) => MyAddresses()));
       } else {
         // Add adding from billing screen
         Navigator.push(
@@ -790,8 +793,6 @@ class ApiCalls {
     }
   }
 
-// static addandselectShippingAddress(String s, id, String id2) {}
-
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
     // print(header);
@@ -799,14 +800,11 @@ class ApiCalls {
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     // var response = await http.get(uri, headers: header);
 
-
-    HttpClient myclient  = new HttpClient();
+    HttpClient myclient = new HttpClient();
     HttpClientRequest myRequest = await myclient.getUrl(uri);
     myRequest.headers.set('Cookie', cookie);
     HttpClientResponse myResponse = await myRequest.close();
     String response = await myResponse.transform(utf8.decoder).join();
-
-
 
     try {
       // print(cookie);
@@ -830,6 +828,12 @@ class ApiCalls {
       String addressId,
       String data,
       bool isEditAddress) async {
+    context.loaderOverlay.show(
+      widget: SpinKitRipple(
+        color: Colors.red,
+        size: 90,
+      ),
+    );
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID2: customerId,
@@ -841,6 +845,7 @@ class ApiCalls {
         Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
     print(uri);
     try {
+      context.loaderOverlay.hide();
       var response = await http.post(uri, body: body, headers: header);
       print(jsonDecode(response.body));
       if (isEditAddress == true) {
@@ -855,6 +860,8 @@ class ApiCalls {
       }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+      context.loaderOverlay.hide();
+
     }
   }
 
@@ -866,14 +873,23 @@ class ApiCalls {
       ApiParams.PARAM_CUSTOMER_ID: customerId,
       ApiParams.PARAM_ADDRESS_ID2: addressId,
     };
-
+    context.loaderOverlay.show(
+      widget: SpinKitRipple(
+        color: Colors.red,
+        size: 90,
+      ),
+    );
     final uri = Uri.parse(BuildConfig.base_url + BuildConfig.delete_address);
     print(uri);
     try {
       var response = await http.post(uri, body: body, headers: header);
+      context.loaderOverlay.hide();
+
       print(jsonDecode(response.body));
       Fluttertoast.showToast(msg: 'Address deleted');
     } on Exception catch (e) {
+      context.loaderOverlay.hide();
+
       Fluttertoast.showToast(msg: e.toString());
     }
   }

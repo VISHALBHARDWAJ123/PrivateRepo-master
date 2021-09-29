@@ -3,17 +3,23 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
+
+import 'BillingxxScreen/BillingScreen.dart';
 
 class AddressScreen extends StatefulWidget {
   AddressScreen({
@@ -533,38 +539,52 @@ class _AddressScreenState extends State<AddressScreen>
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () => {Navigator.pop(context)},
-                      child: Container(
-                        height: 8.h,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                          color: ConstantsVar.appColor,
-                        ),
-                        child: Align(
-                          alignment: Alignment(0, 0),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppButton(
+                        width: 50.w,
+                        color: ConstantsVar.appColor,
+                        child: Container(
+                          child: Center(
                             child: Text(
                               'CANCEL',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Work Sans',
-                                  fontSize: 18.dp,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
+                        onTap: () {
+                          widget.isEditAddress == false
+                              ? Navigator.pushReplacement(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => BillingDetails(),
+                                  ),
+                                )
+                              : Navigator.pushReplacement(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => MyAddresses(),
+                                  ),
+                                );
+                        },
                       ),
-                    ),
-                    InkWell(
+                      AppButton(
+                        width: 50.w,
+                        color: ConstantsVar.appColor,
                         onTap: () {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
+                            context.loaderOverlay.show(
+                                widget: SpinKitRipple(
+                              color: Colors.red,
+                              size: 90,
+                            ));
                             Map<String, dynamic> body = {
                               'FirstName': '${firstNameController.text}',
                               'LastName': textControllerLast.text,
@@ -585,11 +605,14 @@ class _AddressScreenState extends State<AddressScreen>
                               ConstantsVar.prefs.setString(
                                   'addressJsonString', jsonEncode(body));
                               ApiCalls.addBillingORShippingAddress(
-                                  context,
-                                  widget.uri.toString(),
-                                  '${apiToken}',
-                                  guestId,
-                                  jsonEncode(body));
+                                      context,
+                                      widget.uri.toString(),
+                                      '${apiToken}',
+                                      guestId,
+                                      jsonEncode(body))
+                                  .then(
+                                (value) => context.loaderOverlay.hide(),
+                              );
                             } else {
                               //call api to save address
                               Fluttertoast.showToast(msg: 'Save Address');
@@ -599,40 +622,82 @@ class _AddressScreenState extends State<AddressScreen>
                                   guestId,
                                   widget.id.toString(),
                                   jsonEncode(body),
-                                  widget.isEditAddress);
+                                  widget.isEditAddress)
+                                ..then(
+                                  (value) => context.loaderOverlay.hide(),
+                                );
                             }
                           } else {
+                            context.loaderOverlay.hide();
                             Fluttertoast.showToast(
                                 msg: 'Please Provide correct details');
                           }
                         },
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              decoration: BoxDecoration(
-                                color: ConstantsVar.appColor,
-                              ),
-                              child: Align(
-                                alignment: Alignment(0, 0),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  child: Text(
-                                    buttonText,
-                                    style: TextStyle(
-                                      fontFamily: 'Work Sans',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.dp,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                        child: Center(
+                          child: Text(
+                            'ADD ADDRESS',
+                            style: TextStyle(
+                              color: Colors.white,
                             ),
-                          ],
-                        ))
-                  ],
+                          ),
+                        ),
+                      ),
+                      // InkWell(
+                      //   onTap: () =>,
+                      //   child: Container(
+                      //     height: 6.h,
+                      //     width: MediaQuery.of(context).size.width * 0.5,
+                      //     decoration: BoxDecoration(
+                      //       color: ConstantsVar.appColor,
+                      //     ),
+                      //     child: Align(
+                      //       alignment: Alignment(0, 0),
+                      //       child: Padding(
+                      //         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      //         child: Text(
+                      //           'CANCEL',
+                      //           style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontFamily: 'Work Sans',
+                      //               fontSize: 18.dp,
+                      //               fontWeight: FontWeight.bold),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // InkWell(
+                      //     onTap: () {
+                      //
+                      //     },
+                      //     child: Row(
+                      //       children: <Widget>[
+                      //         Container(
+                      //           height: 6.h,
+                      //           width: MediaQuery.of(context).size.width * 0.5,
+                      //           decoration: BoxDecoration(
+                      //             color: ConstantsVar.appColor,
+                      //           ),
+                      //           child: Align(
+                      //             alignment: Alignment(0, 0),
+                      //             child: Padding(
+                      //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      //               child: Text(
+                      //                 buttonText,
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'Work Sans',
+                      //                   fontWeight: FontWeight.bold,
+                      //                   fontSize: 18.dp,
+                      //                   color: Colors.white,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ))
+                    ],
+                  ),
                 )
               ],
             ),

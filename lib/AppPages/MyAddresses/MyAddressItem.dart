@@ -9,41 +9,43 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 class MyAddressItem extends StatefulWidget {
-  MyAddressItem(
-      {Key? key,
-      // required this.isLoading,
-      required this.guestId,
-      // required this.buttonName,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.companyEnabled,
-      required this.companyRequired,
-      required this.countryEnabled,
-      required this.countryId,
-      required this.countryName,
-      required this.stateProvinceEnabled,
-      required this.cityEnabled,
-      required this.cityRequired,
-      required this.company,
-      required this.city,
-      required this.streetAddressEnabled,
-      required this.streetAddressRequired,
-      required this.address1,
-      required this.streetAddress2Enabled,
-      required this.streetAddress2Required,
-      required this.zipPostalCodeEnabled,
-      required this.zipPostalCodeRequired,
-      required this.zipPostalCode,
-      required this.phoneEnabled,
-      required this.phoneRequired,
-      required this.phoneNumber,
-      required this.faxEnabled,
-      required this.faxRequired,
-      required this.faxNumber,
-      required this.id,
-      required this.callback})
-      : super(key: key);
+  MyAddressItem({
+    Key? key,
+    // required this.isLoading,
+    required this.guestId,
+    required this.boolVal,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.companyEnabled,
+    required this.companyRequired,
+    required this.countryEnabled,
+    required this.countryId,
+    required this.countryName,
+    required this.stateProvinceEnabled,
+    required this.cityEnabled,
+    required this.cityRequired,
+    required this.company,
+    required this.city,
+    required this.streetAddressEnabled,
+    required this.streetAddressRequired,
+    required this.address1,
+    required this.streetAddress2Enabled,
+    required this.streetAddress2Required,
+    required this.zipPostalCodeEnabled,
+    required this.zipPostalCodeRequired,
+    required this.zipPostalCode,
+    required this.phoneEnabled,
+    required this.phoneRequired,
+    required this.phoneNumber,
+    required this.faxEnabled,
+    required this.faxRequired,
+    required this.faxNumber,
+    required this.id,
+    required this.callback,
+    required this.myState,
+  }) : super(key: key);
+  bool boolVal;
 
   // String buttonName;
   String firstName;
@@ -75,7 +77,7 @@ class MyAddressItem extends StatefulWidget {
   dynamic faxNumber;
   int id;
   String guestId;
-  VoidCallback callback;
+  VoidCallback callback, myState;
 
   // var
   @override
@@ -157,7 +159,8 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                       phoneNumber: widget.phoneNumber,
                                       id: widget.id,
                                       company: widget.company,
-                                      faxNumber: widget.faxNumber, title: 'Edit Address',
+                                      faxNumber: widget.faxNumber,
+                                      title: 'Edit Address',
                                     );
                                   }));
                                 },
@@ -178,6 +181,7 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                           widget.id.toString())
                                       .then((value) {
                                     widget.callback();
+                                    widget.myState();
                                   });
                                 },
                                 child: Icon(

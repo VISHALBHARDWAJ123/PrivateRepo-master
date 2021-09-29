@@ -314,7 +314,7 @@ class _BillingDetailsState extends State<BillingDetails>
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 50.0),
                             child: Container(
-                              height: 5.h,
+                              height: 6.h,
                               decoration: BoxDecoration(
                                   color: ConstantsVar.appColor,
                                   borderRadius: BorderRadius.circular(6.0)),

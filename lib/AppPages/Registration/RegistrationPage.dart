@@ -185,7 +185,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                     maxLength: 100,
                                     textInputAction: TextInputAction.next,
@@ -215,7 +216,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                     maxLength: 100,
                                     validator: (lastName) {
@@ -247,7 +249,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                     validator: (email) {
                                       if (isEmailValid(email!))
@@ -274,51 +277,39 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 ),
                               ),
                               addVerticalSpace(14),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0)),
-                                    elevation: 8.0,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
-                                      width: 88.w,
-                                      child: TextFormField(
-                                        maxLength: BuildConfig.phnVal,
-                                        textInputAction: TextInputAction.next,
-                                        validator: (mobInput) {
-                                          mobInput = mController.text;
-                                          mobInput.length >
-                                                      BuildConfig.phnVal ||
-                                                  mobInput.length <
-                                                      BuildConfig.phnVal ||
-                                                  mobInput.length == 0
-                                              ? null
-                                              : 'Please Enter 10 Digit Number';
-                                        },
-                                        keyboardType: TextInputType.phone,
-                                        controller: mController,
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        cursorColor: Colors.black,
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                        decoration: editBoxDecoration(
-                                            'Mobile',
-                                            Icon(
-                                              Icons.phone_android_outlined,
-                                              color:
-                                                  AppColor.PrimaryAccentColor,
-                                            ),
-                                            '+971'),
-                                      ),
-                                    ),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0)),
+                                elevation: 8.0,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
+                                  width: 88.w,
+                                  child: TextFormField(
+                                    maxLength: BuildConfig.phnVal,
+                                    textInputAction: TextInputAction.next,
+                                    validator: (mobInput) {
+                                      if (isPhoneNumber(mobInput!))
+                                        return 'Please Enter ${BuildConfig.phnVal} Digit Number';
+                                      else
+                                        return null;
+                                    },
+                                    keyboardType: TextInputType.phone,
+                                    controller: mController,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    cursorColor: Colors.black,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                    decoration: editBoxDecoration(
+                                        'Mobile',
+                                        Icon(
+                                          Icons.phone_android_outlined,
+                                          color: AppColor.PrimaryAccentColor,
+                                        ),
+                                        '+971'),
                                   ),
-                                ],
+                                ),
                               ),
                               addVerticalSpace(14),
                               Card(
@@ -326,12 +317,13 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                       validator: (val) {
-                                        isAddress(val!.trim())
-                                            ? null
-                                            : 'Enter your address';
+                                        if(isAddress(val!.trim()))
+                                            return 'Enter your address';
+                                        else return null;
                                       },
                                       textInputAction: TextInputAction.done,
                                       maxLines: 3,
@@ -358,7 +350,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                     enableInteractiveSelection: false,
                                     validator: (password) {
@@ -422,7 +415,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                     borderRadius: BorderRadius.circular(12.0)),
                                 elevation: 8.0,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
@@ -663,7 +657,7 @@ mixin InputValidationMixin {
   bool isPhoneNumber(String phnNumber) =>
       phnNumber.trim().length != BuildConfig.phnVal;
 
-  bool isAddress(String addressString) => addressString.trim().length != 5;
+  bool isAddress(String addressString) => addressString.trim().length >= 5;
 
   bool isEmailValid(String email) {
     String pattern =
