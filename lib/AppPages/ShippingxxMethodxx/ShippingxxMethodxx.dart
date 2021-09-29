@@ -126,7 +126,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Center(
                                 child: Text(
-                                  shippingMethods[index].name,
+                                  shippingMethods[index].name+'('+shippingMethods[index].fee+')',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 5.w),

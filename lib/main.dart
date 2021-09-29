@@ -22,7 +22,6 @@ Future<void> setFireStoreData(
   RemoteMessage message,
 ) async {
   Firebase.initializeApp();
-  AwesomeNotifications().createNotificationFromJsonData(message.data);
   String formattedDate =
       DateFormat('yyyy-MM-dd – kk:mm').format(message.sentTime!);
   final refrence = FirebaseFirestore.instance.collection('UserNotifications');
@@ -45,7 +44,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   AwesomeNotifications().initialize('resource://drawable/playstore', [
     // Your notification channels go here
-  ]);
+  ],);
   GestureBinding.instance!.resamplingEnabled = true;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {

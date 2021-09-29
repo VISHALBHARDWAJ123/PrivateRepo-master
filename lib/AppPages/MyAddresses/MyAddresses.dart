@@ -192,7 +192,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                       id: 0,
                                       company: '',
                                       faxNumber: '',
-                                      title: 'Add a new address',
+                                      title: 'Add a new address', btnTitle: 'Add new address',
                                     ));
 
                             Navigator.pushReplacement(context, route);
@@ -354,7 +354,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                                           : existingAddress[index]
                                                                               .faxNumber,
                                                                       title:
-                                                                          'Edit Address',
+                                                                          'Edit Address', btnTitle: 'Save Address',
                                                                     );
                                                                   }));
                                                                 },

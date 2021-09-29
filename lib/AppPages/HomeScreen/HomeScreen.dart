@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> setFireStoreData(
       RemoteMessage message, ) async {
-    AwesomeNotifications().createNotificationFromJsonData(message.data);
+    // AwesomeNotifications().createNotificationFromJsonData(message.data);
     final refrence = FirebaseFirestore.instance.collection('UserNotifications');
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(message.sentTime!);

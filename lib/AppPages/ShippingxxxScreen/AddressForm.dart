@@ -24,6 +24,7 @@ import 'BillingxxScreen/BillingScreen.dart';
 class AddressScreen extends StatefulWidget {
   AddressScreen({
     Key? key,
+    required this.btnTitle,
     required this.title,
     required this.uri,
     required this.isShippingAddress,
@@ -40,6 +41,7 @@ class AddressScreen extends StatefulWidget {
     required this.faxNumber,
   }) : super(key: key);
   String uri;
+  String btnTitle;
   bool isShippingAddress;
   bool isEditAddress;
 
@@ -602,17 +604,30 @@ class _AddressScreenState extends State<AddressScreen>
                             };
                             if (widget.isEditAddress == false) {
                               //add new address
+
                               ConstantsVar.prefs.setString(
                                   'addressJsonString', jsonEncode(body));
-                              ApiCalls.addBillingORShippingAddress(
-                                      context,
-                                      widget.uri.toString(),
-                                      '${apiToken}',
-                                      guestId,
-                                      jsonEncode(body))
-                                  .then(
-                                (value) => context.loaderOverlay.hide(),
-                              );
+                              if (widget.uri.contains('MyAccountAddAddress')) {
+                                ApiCalls.addNewAddress(
+                                        context,
+                                        widget.uri.toString(),
+                                        '${apiToken}',
+                                        guestId,
+                                        jsonEncode(body))
+                                    .then(
+                                  (value) => context.loaderOverlay.hide(),
+                                );
+                              } else {
+                                ApiCalls.addBillingORShippingAddress(
+                                        context,
+                                        widget.uri.toString(),
+                                        '${apiToken}',
+                                        guestId,
+                                        jsonEncode(body))
+                                    .then(
+                                  (value) => context.loaderOverlay.hide(),
+                                );
+                              }
                             } else {
                               //call api to save address
                               Fluttertoast.showToast(msg: 'Save Address');
@@ -635,67 +650,14 @@ class _AddressScreenState extends State<AddressScreen>
                         },
                         child: Center(
                           child: Text(
-                            'ADD ADDRESS',
+                            widget.btnTitle.toUpperCase(),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                      // InkWell(
-                      //   onTap: () =>,
-                      //   child: Container(
-                      //     height: 6.h,
-                      //     width: MediaQuery.of(context).size.width * 0.5,
-                      //     decoration: BoxDecoration(
-                      //       color: ConstantsVar.appColor,
-                      //     ),
-                      //     child: Align(
-                      //       alignment: Alignment(0, 0),
-                      //       child: Padding(
-                      //         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      //         child: Text(
-                      //           'CANCEL',
-                      //           style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontFamily: 'Work Sans',
-                      //               fontSize: 18.dp,
-                      //               fontWeight: FontWeight.bold),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // InkWell(
-                      //     onTap: () {
-                      //
-                      //     },
-                      //     child: Row(
-                      //       children: <Widget>[
-                      //         Container(
-                      //           height: 6.h,
-                      //           width: MediaQuery.of(context).size.width * 0.5,
-                      //           decoration: BoxDecoration(
-                      //             color: ConstantsVar.appColor,
-                      //           ),
-                      //           child: Align(
-                      //             alignment: Alignment(0, 0),
-                      //             child: Padding(
-                      //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      //               child: Text(
-                      //                 buttonText,
-                      //                 style: TextStyle(
-                      //                   fontFamily: 'Work Sans',
-                      //                   fontWeight: FontWeight.bold,
-                      //                   fontSize: 18.dp,
-                      //                   color: Colors.white,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ))
+
                     ],
                   ),
                 )

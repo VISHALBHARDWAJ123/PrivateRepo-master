@@ -730,6 +730,30 @@ class ApiCalls {
     }
   }
 
+  static Future addNewAddress(BuildContext context, String uriName,
+      String apiToken, String customerId, String snippingModel) async {
+    final body = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID: customerId,
+      'data': snippingModel,
+    };
+
+    final uri =
+        Uri.parse(BuildConfig.base_url + 'customer/AddCustomerAddress?');
+    print(uri);
+    try {
+      var response = await http.post(uri, body: body, headers: header);
+      print(jsonDecode(response.body));
+
+        //It means adding address is from my account screen
+        Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (context) => MyAddresses()));
+
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
   static Future addBillingORShippingAddress(
       BuildContext context,
       String uriName,
@@ -861,7 +885,6 @@ class ApiCalls {
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       context.loaderOverlay.hide();
-
     }
   }
 

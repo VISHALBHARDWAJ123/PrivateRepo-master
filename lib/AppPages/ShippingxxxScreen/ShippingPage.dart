@@ -372,7 +372,6 @@ class _ShippingDetailsState extends State<ShippingDetails>
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Work Sans',
-                              fontSize: 18.dp,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -437,7 +436,6 @@ class _ShippingDetailsState extends State<ShippingDetails>
                             style: TextStyle(
                               fontFamily: 'Work Sans',
                               fontWeight: FontWeight.bold,
-                              fontSize: 18.dp,
                               color: Colors.white,
                             ),
                           ),
