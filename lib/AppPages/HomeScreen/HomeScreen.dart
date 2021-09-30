@@ -134,15 +134,7 @@ class _MyHomePageState extends State<MyHomePage>
         ),
   ];
 
-  // DateTime currentBackPressTime = DateTime.now();
 
-  // int activeIndex = 0;
-
-  // void backToHomePage() {
-  //   setState(() {
-  //     activeIndex = ConstantsVar.selectedIndex;
-  //   });
-  // }
 
   @override
   void initState() {

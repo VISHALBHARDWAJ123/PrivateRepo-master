@@ -2,11 +2,13 @@ import 'package:badges/badges.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
+import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -39,6 +41,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   var description;
   var price;
   double? priceValue;
+  var discountedPrice;
+  var isDiscountAvail;
   var sku;
   var stockAvailabilty;
   var image1;
@@ -82,7 +86,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         }
 
         // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
-
+        discountedPrice = initialData!.productPrice.priceWithDiscount;
+        discountedPrice != null
+            ? isDiscountAvail = true
+            : isDiscountAvail = false;
         id = initialData!.id;
         name = initialData!.name;
         description = initialData!.shortDescription;
@@ -98,14 +105,14 @@ class _NewProductDetailsState extends State<NewProductDetails> {
               0.0) {
             setState(() {
               _isVisibility = true;
-              assemblyCharges = 'Assembly Charges ' +
+              assemblyCharges = 'Assembly Charge ' +
+                  '[' +
                   initialData!.productAttributes![0].values[0].priceAdjustment +
-                  ' includes';
+                  ']';
             });
           }
         } else {
           setState(() {
-
             _isVisibility = true;
             assemblyCharges = '';
           });
@@ -127,9 +134,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       return SafeArea(
         top: true,
         child: Scaffold(
-          backgroundColor: Colors.white,
+            backgroundColor: Colors.white,
             resizeToAvoidBottomInset: false,
             appBar: new AppBar(
+              // backgroundColor: ConstantsVar.appColor,
               actions: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -191,6 +199,9 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     largeImage: largeImage,
                     assemblyCharges: assemblyCharges,
                     initialData: initialData,
+                    isDiscountAvail: isDiscountAvail,
+                    discountedPrice:
+                        discountedPrice != null ? discountedPrice : '',
                   ),
                 ),
                 Container(
@@ -220,6 +231,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   ListView customList(
       {required BuildContext context,
       required String name,
+      required bool isDiscountAvail,
+      required String discountedPrice,
       required String descritption,
       required String sku,
       required String stockAvaialbility,
@@ -236,7 +249,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
           child: Container(child: SliderImages(imageList, largeImage, context)),
         ),
         Container(
-          height: 40.h,
+          height: 42.h,
           width: MediaQuery.of(context).size.width,
           color: Color.fromARGB(255, 234, 235, 235),
           child: Padding(
@@ -244,11 +257,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   name,
-                  maxLines: 1,
                   style: TextStyle(
                     wordSpacing: 1,
                     letterSpacing: 1,
@@ -257,85 +269,94 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   ),
                   textAlign: TextAlign.start,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 3.w,
-                    bottom: 2.w,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        descritption,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      descritption,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 5.w,
+                        color: Colors.grey.shade700,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    Text(
+                      'SKU: $sku',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 5.w,
+                        color: Colors.grey.shade700,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: 'Availability: ',
+                        style: TextStyle(
+                            color: Colors.grey.shade700,
+                            fontSize: 5.w,
+                            fontWeight: FontWeight.w400),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: stockAvaialbility,
+                              style: TextStyle(
+                                  fontSize: 5.w,
+                                  color: stockAvailabilty.contains('In')
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontWeight: FontWeight.w400))
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: assemblyCharges == null ? false : true,
+                      child: Text(
+                        assemblyCharges == null ? '' : assemblyCharges,
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 5.w,
                           color: Colors.grey.shade700,
+                          letterSpacing: 1,
+                          wordSpacing: 2,
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 6.0),
-                        child: Text(
-                          'SKU: $sku',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 5.w,
-                            color: Colors.grey.shade700,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: 'Availability: '.toUpperCase(),
-                    style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 5.w,
-                        fontWeight: FontWeight.w400),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: stockAvaialbility,
-                          style: TextStyle(
-                            fontSize: 5.w,
-                            color: stockAvailabilty.contains('In')
-                                ? Colors.green
-                                : Colors.red,
-                          ))
-                    ],
-                  ),
-                ),
-                Visibility(
-                  maintainSize: false,
-                  visible: assemblyCharges == null?false: true,
-
-                  child: Text(
-                    assemblyCharges == null ? '': assemblyCharges,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 5.w,
-                      color: Colors.grey.shade700,
-                      letterSpacing: 1,
-                      wordSpacing: 2,
                     ),
-                    textAlign: TextAlign.start,
-                  ),
+                  ],
                 ),
-                Text(
-                  price,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 7.w,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade700,
-                    letterSpacing: 1,
-                    wordSpacing: 2,
-                  ),
-                  textAlign: TextAlign.start,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Visibility(
+                      visible: isDiscountAvail,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 3.0),
+                        child: discountWidget(
+                            actualPrice: price, fontSize: 3.6.w, width: 50.w, isSpace: !isDiscountAvail),
+                      ),
+                    ),
+                    Text(
+                      discountedPrice == '' ? price : discountedPrice,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 7.w,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 1,
+                        wordSpacing: 2,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
                 ),
               ],
             ),

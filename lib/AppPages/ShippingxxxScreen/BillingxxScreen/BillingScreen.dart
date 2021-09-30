@@ -47,7 +47,7 @@ class _BillingDetailsState extends State<BillingDetails>
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     getCustomerId().then((value) =>
-        ApiCalls.allAddresses(ConstantsVar.apiTokken.toString(), value, context)
+        ApiCalls.getBillingAddress(ConstantsVar.apiTokken.toString(), value, context)
             .then((value) {
           print(value);
           setState(() {

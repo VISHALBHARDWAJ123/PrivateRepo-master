@@ -137,6 +137,7 @@ class _AddressScreenState extends State<AddressScreen>
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: new AppBar(
+              backgroundColor: ConstantsVar.appColor,
               toolbarHeight: 18.w,
               centerTitle: true,
               title: InkWell(
@@ -561,19 +562,30 @@ class _AddressScreenState extends State<AddressScreen>
                           ),
                         ),
                         onTap: () {
-                          widget.isEditAddress == false
-                              ? Navigator.pushReplacement(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => BillingDetails(),
-                                  ),
-                                )
-                              : Navigator.pushReplacement(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => MyAddresses(),
-                                  ),
-                                );
+                          if (widget.isEditAddress == false) {
+                            if (widget.uri.contains('MyAccountAddAddress')) {
+                              Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => MyAddresses(),
+                                ),
+                              );
+                            } else {
+                              Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => BillingDetails(),
+                                ),
+                              );
+                            }
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => MyAddresses(),
+                              ),
+                            );
+                          }
                         },
                       ),
                       AppButton(
@@ -657,7 +669,6 @@ class _AddressScreenState extends State<AddressScreen>
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 )

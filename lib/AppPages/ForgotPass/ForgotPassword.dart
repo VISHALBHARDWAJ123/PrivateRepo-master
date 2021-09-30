@@ -30,6 +30,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
       top: true,
       child: Scaffold(
         appBar: new AppBar(
+          backgroundColor: ConstantsVar.appColor,
           centerTitle: true,
           toolbarHeight: 18.w,
           title: Image.asset(

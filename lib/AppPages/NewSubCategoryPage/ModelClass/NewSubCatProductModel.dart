@@ -38,6 +38,8 @@ class ProductListModel {
 
 class ResponseDatum {
   ResponseDatum({
+    required this.priceValue,
+    required this.discountPrice,
     required this.id,
     required this.name,
     required this.stockQuantity,
@@ -52,6 +54,8 @@ class ResponseDatum {
   String stockQuantity;
   String productPicture;
   String price;
+  String discountPrice;
+  double priceValue;
   bool isDisable;
   bool isAvailable;
 
@@ -63,6 +67,8 @@ class ResponseDatum {
     price: json["Price"],
     isDisable: json["IsDisable"],
     isAvailable: json["IsAvailable"],
+    discountPrice: json["DiscountedPrice"],
+    priceValue: json["PriceValue"],
   );
 
   Map<String, dynamic> toJson() => {

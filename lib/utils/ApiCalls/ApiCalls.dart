@@ -531,8 +531,8 @@ class ApiCalls {
       ApiParams.PARAM_CUSTOMER_ID: customerId,
     };
 
-    final uri = Uri.https(BuildConfig.base_url_for_apis,
-        BuildConfig.all_address_url, queryParameters);
+    final uri = Uri.parse(BuildConfig.base_url+
+       'apis/GetCustomerAddressList?apiToken=$apiToken&customerid=$customerId' );
 
     print('address url>>> $uri');
     try {
@@ -778,7 +778,7 @@ class ApiCalls {
             context, CupertinoPageRoute(builder: (context) => MyAddresses()));
       } else {
         // Add adding from billing screen
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             CupertinoPageRoute(
                 builder: (context) => ShippingAddress(
@@ -916,4 +916,36 @@ class ApiCalls {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
+  static Future getBillingAddress(String apiToken, String customerId, BuildContext ctx) async {
+    final queryParameters = {
+      ApiParams.PARAM_API_TOKEN: apiToken,
+      ApiParams.PARAM_CUSTOMER_ID: customerId,
+    };
+
+    final uri = Uri.https(BuildConfig.base_url_for_apis,
+        BuildConfig.billing_address, queryParameters);
+
+    print('address url>>> $uri');
+    try {
+      var response = await http.get(uri, headers: header);
+      if (response.statusCode == 200) {
+        // var result = jsonDecode(response.body);
+        Map<String, dynamic> result = json.decode(response.body);
+        // apiresult = true;
+        print('addresses>>> $result');
+        return result;
+      } else {
+        // apiresult = false;
+        Fluttertoast.showToast(
+          msg: 'Something went wrong',
+        );
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(
+        msg: e.toString(),
+      );
+      ctx.loaderOverlay.hide();
+    }
+  }
+
 }

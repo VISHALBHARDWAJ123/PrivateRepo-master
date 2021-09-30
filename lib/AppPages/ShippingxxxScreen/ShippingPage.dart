@@ -67,6 +67,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Scaffold(
         appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
             toolbarHeight: 18.w,
             centerTitle: true,
             title: GestureDetector(

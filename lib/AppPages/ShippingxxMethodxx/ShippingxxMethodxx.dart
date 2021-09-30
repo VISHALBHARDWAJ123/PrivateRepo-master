@@ -37,20 +37,28 @@ class _ShippingMethodState extends State<ShippingMethod> {
   bool isSelected = false;
   var selectedVal = '';
 
+  var _willGo = true;
+
   @override
   void initState() {
+    setState(() => _willGo = false);
     super.initState();
-    getInitSharedPrefs().then((value) => getShippingMethods(widget.customerId));
+    getInitSharedPrefs().then(
+      (value) => getShippingMethods(widget.customerId).then(
+        (value) => setState(() => _willGo = true),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _willGoBack,
+      onWillPop: _willGo ? null : () async => false,
       child: SafeArea(
         top: true,
         child: Scaffold(
           appBar: new AppBar(
+              backgroundColor: ConstantsVar.appColor,
               toolbarHeight: Adaptive.w(18),
               centerTitle: true,
               title: InkWell(
@@ -126,7 +134,10 @@ class _ShippingMethodState extends State<ShippingMethod> {
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Center(
                                 child: Text(
-                                  shippingMethods[index].name+'('+shippingMethods[index].fee+')',
+                                  shippingMethods[index].name +
+                                      '(' +
+                                      shippingMethods[index].fee +
+                                      ')',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 5.w),

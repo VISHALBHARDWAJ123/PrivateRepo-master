@@ -109,7 +109,7 @@ class _OrderDetailsState extends State<OrderDetails>
       child: Stack(
         children: <Widget>[
           Container(
-            height: 16.5.h,
+            height: 20.h,
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(.1),
@@ -127,7 +127,7 @@ class _OrderDetailsState extends State<OrderDetails>
                     )),
                 Expanded(
                   child: Container(
-                    height: 14.h,
+                    height: 19.h,
                     padding: EdgeInsets.all(4),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,

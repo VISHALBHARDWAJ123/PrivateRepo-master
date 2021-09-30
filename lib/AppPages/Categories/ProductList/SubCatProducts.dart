@@ -171,6 +171,7 @@ class _ProductListState extends State<ProductList> {
                 ),
               ),
               body: prodListWidget(
+
                 products: products,
                 title: widget.title,
                 // result: result,

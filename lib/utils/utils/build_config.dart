@@ -9,7 +9,8 @@ class BuildConfig {
   static final String remove_coupon_url = 'apis/RemoveCoupon';
   static final String gift_card_url = 'apis/ApplyGiftCard';
   static final String remove_gift_card_url = 'apis/RemoveGiftCard';
-  static final String all_address_url = 'apis/GetBillingAddresses';
+  static final String all_address_url = 'apis/GetCustomerAddressList';
+  static final String billing_address = 'apis/GetBillingAddresses';
   static final String select_billing_address = 'apis/SelectBillingAddress';
   static final String get_shipping_address_url = 'apis/GetShippingAddresses';
   static final String select_shipping_address_url =

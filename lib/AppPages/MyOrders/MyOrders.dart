@@ -78,6 +78,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
         bottom: true,
         child: Scaffold(
           appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
             toolbarHeight: 18.w,
             centerTitle: true,
             title: InkWell(
@@ -194,7 +195,9 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                           fontSize: 5.5.w),
                                                 ),
                                               ),
-                                              SizedBox(height: 15,),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
                                               Container(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 10),
@@ -286,7 +289,9 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(height: 15,),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),

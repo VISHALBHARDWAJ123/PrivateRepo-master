@@ -101,6 +101,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+          backgroundColor: ConstantsVar.appColor,
+
           toolbarHeight: 18.w,
           centerTitle: true,
           title: Image.asset(

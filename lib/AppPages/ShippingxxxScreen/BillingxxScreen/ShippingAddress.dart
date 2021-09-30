@@ -46,9 +46,12 @@ class _ShippingAddressState extends State<ShippingAddress> {
   bool isSelected = false;
   var selectedVal = '';
 
+  var _willGo = true;
+
   /// this func is used to close dropDown (if open) when you tap or pandown anywhere in the screen
 
   Future<void> getPickupPoints(String? addressString) async {
+    setState(()=>_willGo = false);
     final pickUri = Uri.parse(BuildConfig.base_url +
         'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
     try {
@@ -59,7 +62,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       print(json.decode(pickPointResponse.body));
       setState(() {
         myPickPoint.addAll(myPickResponse.responseData);
-
+        setState(()=>_willGo = true);
         for (var i = 0; i < myPickPoint.length; i++) {
           print(myPickPoint[i].name);
           _list.add(myPickPoint[i].name);
@@ -74,6 +77,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
   @override
   void initState() {
     super.initState();
+    setState(()=>_willGo = false);
     // _list = ["Abc", "DEF", "GHI", "JKL", "MNO", "PQR"];
     context.loaderOverlay.show(
       widget: SpinKitRipple(
@@ -139,7 +143,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       );
     } else {
       return WillPopScope(
-        onWillPop: hideCxt,
+        onWillPop: _willGo?null:() async => false,
         child: SafeArea(
           top: true,
           child: Scaffold(
@@ -964,7 +968,6 @@ class _ShippingAddressState extends State<ShippingAddress> {
   }
 
   Future<bool> hideCxt() async {
-    context.loaderOverlay.hide();
     return true;
   }
 

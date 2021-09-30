@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -24,6 +25,7 @@ class _PaymentPageState extends State<PaymentPage> {
       Completer<WebViewController>();
   var progressCount;
   bool isLoading = true;
+  bool _willGo = true;
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _PaymentPageState extends State<PaymentPage> {
       child: SafeArea(
         top: true,
         child: WillPopScope(
-          onWillPop: _willPopUp,
+          onWillPop: _willGo ? null : () async => false,
           child: Scaffold(
             appBar: new AppBar(
               backgroundColor: ConstantsVar.appColor,
@@ -105,6 +107,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   },
                   onPageStarted: (String url) {
                     setState(() {
+                      _willGo = false;
                       isLoading = true;
                     });
                     context.loaderOverlay.show(
@@ -116,6 +119,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     print('Page finished loading: $url');
                     setState(() {
                       context.loaderOverlay.hide();
+                      _willGo = true;
                       isLoading = false;
                     });
                   },

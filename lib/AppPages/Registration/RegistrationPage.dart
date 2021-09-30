@@ -140,6 +140,7 @@ class _RegstrationPageState extends State<RegstrationPage>
       top: true,
       child: Scaffold(
         appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
             toolbarHeight: 18.w,
             centerTitle: true,
             title: InkWell(
@@ -321,9 +322,10 @@ class _RegstrationPageState extends State<RegstrationPage>
                                       horizontal: 10, vertical: 3),
                                   child: TextFormField(
                                       validator: (val) {
-                                        if(isAddress(val!.trim()))
-                                            return 'Enter your address';
-                                        else return null;
+                                        if (isAddress(val!.trim()))
+                                          return 'Enter your address';
+                                        else
+                                          return null;
                                       },
                                       textInputAction: TextInputAction.done,
                                       maxLines: 3,

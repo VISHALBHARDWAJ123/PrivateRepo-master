@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
-
+// main.dart
+import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'AppPages/LoginScreen/LoginScreen.dart';
 
 import 'AppPages/SplashScreen/SplashScreen.dart';
@@ -42,9 +43,7 @@ Future<void> _messageHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  AwesomeNotifications().initialize('resource://drawable/playstore', [
-    // Your notification channels go here
-  ],);
+
   GestureBinding.instance!.resamplingEnabled = true;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
@@ -65,6 +64,7 @@ Future<void> main() async {
         ],
         child: Phoenix(
           child: MaterialApp(
+
             debugShowCheckedModeBanner: false,
             routes: {
               '/LoginScreen': (context) => LoginScreen(),
@@ -73,6 +73,12 @@ Future<void> main() async {
             title: 'The One',
             home: SplashScreen(),
             theme: ThemeData(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoWillPopScopePageTransionsBuilder(),
+                  },
+                ),
                 fontFamily: 'Arial',
                 primarySwatch: MaterialColor(0xFF800E4F, color),
                 primaryColor: ConstantsVar.appColor),

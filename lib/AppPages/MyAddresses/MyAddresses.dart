@@ -16,6 +16,8 @@ import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
+import 'AddressResponse.dart';
+
 class MyAddresses extends StatefulWidget {
   MyAddresses({Key? key}) : super(key: key);
 
@@ -27,8 +29,8 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   var eController = TextEditingController();
   bool showLoading = false;
   bool showAddresses = false;
-  late AddressResponse addressResponse;
-  late List<ExistingAddresses> existingAddress = [];
+  late AllAddressesResponse addressResponse;
+  late List<Addressess> existingAddress = [];
   OrderSummaryResponse? orderSummaryResponse;
   bool showCartSummary = false;
   var guestCustomerId;
@@ -53,12 +55,12 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
     WidgetsBinding.instance!.addObserver(this);
     getCustomerId().then((value) =>
         ApiCalls.allAddresses(ConstantsVar.apiTokken.toString(), value, context)
-            .then((value) {
-          print(value);
+            .then((values) {
+          print(values);
           setState(() {
-            addressResponse = AddressResponse.fromJson(value);
+            addressResponse = AllAddressesResponse.fromJson(values);
             existingAddress =
-                addressResponse.billingaddresses.existingAddresses;
+                addressResponse.customeraddresslist.addresses;
             print('address>>> $addressResponse');
             showAddresses = true;
             showLoading = false;
@@ -78,8 +80,8 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
         .then((value) {
       print('Resumed>>>  $value');
       setState(() {
-        addressResponse = AddressResponse.fromJson(value);
-        existingAddress = addressResponse.billingaddresses.existingAddresses;
+        addressResponse = AllAddressesResponse.fromJson(value);
+        existingAddress = addressResponse.customeraddresslist.addresses;
         print('address>>> $addressResponse');
         showAddresses = true;
       });
@@ -98,9 +100,9 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
             .then((value) {
           print('Resumed>>>  $value');
           setState(() {
-            addressResponse = AddressResponse.fromJson(value);
+            addressResponse = AllAddressesResponse.fromJson(value);
             existingAddress =
-                addressResponse.billingaddresses.existingAddresses;
+                addressResponse.customeraddresslist.addresses;
             print('address>>> $addressResponse');
             showAddresses = true;
           });
@@ -136,7 +138,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _willGoBack,
+      onWillPop:  _willGo?null:() async => false,
       child: SafeArea(
         top: true,
         child: Scaffold(
@@ -192,7 +194,8 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                       id: 0,
                                       company: '',
                                       faxNumber: '',
-                                      title: 'Add a new address', btnTitle: 'Add new address',
+                                      title: 'Add a new address',
+                                      btnTitle: 'Add new address',
                                     ));
 
                             Navigator.pushReplacement(context, route);
@@ -343,18 +346,20 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                                       id: existingAddress[
                                                                               index]
                                                                           .id,
-                                                                      company: existingAddress[index].companyName ==
+                                                                      company: existingAddress[index].company ==
                                                                               null
                                                                           ? ''
                                                                           : existingAddress[index]
-                                                                              .companyName,
+                                                                              .company,
                                                                       faxNumber: existingAddress[index].faxNumber ==
                                                                               null
                                                                           ? ''
                                                                           : existingAddress[index]
                                                                               .faxNumber,
                                                                       title:
-                                                                          'Edit Address', btnTitle: 'Save Address',
+                                                                          'Edit Address',
+                                                                      btnTitle:
+                                                                          'Save Address',
                                                                     );
                                                                   }));
                                                                 },
@@ -510,8 +515,8 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
             ConstantsVar.apiTokken.toString(), guestCustomerId, context)
         .then((value) {
       setState(() {
-        addressResponse = AddressResponse.fromJson(value);
-        existingAddress = addressResponse.billingaddresses.existingAddresses;
+        addressResponse = AllAddressesResponse.fromJson(value);
+        existingAddress = addressResponse.customeraddresslist.addresses;
         print('address>>> $addressResponse');
         showAddresses = true;
       });

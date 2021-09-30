@@ -166,6 +166,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       bottom: true,
       child: Scaffold(
         appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
             toolbarHeight: 18.w,
             centerTitle: true,
             title: Image.asset(
@@ -239,7 +240,6 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
               ),
               Spacer(flex: 3),
               Spacer(flex: 2),
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -321,7 +321,6 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),

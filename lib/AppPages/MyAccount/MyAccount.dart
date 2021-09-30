@@ -5,6 +5,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/ChangePassword/ChangePassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -25,6 +26,7 @@ class MyAccount extends StatelessWidget {
       bottom: true,
       child: Scaffold(
         appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
             centerTitle: true,
             toolbarHeight: 18.w,
             title: InkWell(
@@ -162,8 +164,10 @@ class MyAccount extends StatelessWidget {
                                 },
                               );
                             } else {
-
-                              Navigator.push(context,CupertinoPageRoute(builder: (context) =>MyAddresses()));
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => MyAddresses()));
 
                               // Fluttertoast.showToast(msg: 'In Progress');
                             }
