@@ -65,6 +65,7 @@ class _PaymentPageState extends State<PaymentPage> {
               centerTitle: true,
               title: GestureDetector(
                 onTap: () {
+
                   context.loaderOverlay.hide();
                   Navigator.pushAndRemoveUntil(context,
                       CupertinoPageRoute(builder: (context) {

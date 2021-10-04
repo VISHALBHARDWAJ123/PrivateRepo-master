@@ -412,8 +412,10 @@ class _BillingDetailsState extends State<BillingDetails>
                                     ),
                                   ),
                                   Text(
-                                    'shipping' == null
-                                        ? 'No Shipping Available for now '
+                                    orderSummaryResponse!
+                                        .ordertotals.shipping
+                                         == null
+                                        ? 'During Checkout '
                                         : orderSummaryResponse!
                                             .ordertotals.shipping
                                             .toString(),
@@ -511,6 +513,9 @@ class _BillingDetailsState extends State<BillingDetails>
                                       ),
                                     ),
                                     Text(
+                                      orderSummaryResponse!
+                                          .ordertotals.orderTotal
+                                           == null ?'During Checkout':
                                       orderSummaryResponse!
                                           .ordertotals.orderTotal
                                           .toString(),

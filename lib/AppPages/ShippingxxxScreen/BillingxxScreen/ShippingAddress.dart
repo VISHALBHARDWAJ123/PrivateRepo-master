@@ -51,7 +51,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
   /// this func is used to close dropDown (if open) when you tap or pandown anywhere in the screen
 
   Future<void> getPickupPoints(String? addressString) async {
-    setState(()=>_willGo = false);
+    setState(() => _willGo = false);
     final pickUri = Uri.parse(BuildConfig.base_url +
         'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
     try {
@@ -62,7 +62,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       print(json.decode(pickPointResponse.body));
       setState(() {
         myPickPoint.addAll(myPickResponse.responseData);
-        setState(()=>_willGo = true);
+        setState(() => _willGo = true);
         for (var i = 0; i < myPickPoint.length; i++) {
           print(myPickPoint[i].name);
           _list.add(myPickPoint[i].name);
@@ -77,7 +77,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
   @override
   void initState() {
     super.initState();
-    setState(()=>_willGo = false);
+    setState(() => _willGo = false);
     // _list = ["Abc", "DEF", "GHI", "JKL", "MNO", "PQR"];
     context.loaderOverlay.show(
       widget: SpinKitRipple(
@@ -143,7 +143,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       );
     } else {
       return WillPopScope(
-        onWillPop: _willGo?null:() async => false,
+        onWillPop: _willGo ? null : () async => false,
         child: SafeArea(
           top: true,
           child: Scaffold(
@@ -284,28 +284,32 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         content: RichText(
-
                                           textAlign: TextAlign.center,
                                           text: TextSpan(
                                             text: 'You have selected:\n',
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 3.5.w,fontWeight: FontWeight.bold),
+                                                fontSize: 3.5.w,
+                                                fontWeight: FontWeight.bold),
                                             children: <TextSpan>[
                                               TextSpan(
-                                                  text: '${myPickPoint[index].name}',
+                                                  text:
+                                                      '${myPickPoint[index].name}',
                                                   style: TextStyle(
-                                                      fontSize: 3.w,fontWeight: FontWeight.bold))
+                                                      fontSize: 3.w,
+                                                      fontWeight:
+                                                          FontWeight.bold))
                                             ],
                                           ),
                                         ),
                                         title: Text(
                                           'This will lead you to payment page.',
-
-                                          textAlign:TextAlign.center,
-
+                                          textAlign: TextAlign.center,
                                           softWrap: true,
-                                          style: TextStyle(fontSize: 5.w,fontWeight: FontWeight.bold,),
+                                          style: TextStyle(
+                                            fontSize: 5.w,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                         actions: [
                                           TextButton(
@@ -313,14 +317,16 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                                 Navigator.pop(context),
                                             child: Text(
                                               'Cancel'.toUpperCase(),
-                                              style: TextStyle(color: Colors.red),
+                                              style:
+                                                  TextStyle(color: Colors.red),
                                             ),
                                           ),
                                           TextButton(
                                             onPressed: () => Navigator.push(
                                               context,
                                               CupertinoPageRoute(
-                                                builder: (context) => PaymentPage(
+                                                builder: (context) =>
+                                                    PaymentPage(
                                                   paymentUrl: paymentUrl,
                                                   // customerId: ID,
                                                 ),
@@ -328,8 +334,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                             ),
                                             child: Text(
                                               'Confirm'.toUpperCase(),
-                                              style:
-                                                  TextStyle(color: Colors.green),
+                                              style: TextStyle(
+                                                  color: Colors.green),
                                             ),
                                           )
                                         ],
@@ -395,24 +401,26 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                 stateProvinceEnabled:
                                     existingAddress[index].stateProvinceEnabled,
                                 cityEnabled: existingAddress[index].cityEnabled,
-                                cityRequired: existingAddress[index].cityRequired,
+                                cityRequired:
+                                    existingAddress[index].cityRequired,
                                 city: existingAddress[index].city,
                                 streetAddressEnabled:
                                     existingAddress[index].streetAddressEnabled,
-                                streetAddressRequired:
-                                    existingAddress[index].streetAddressRequired,
+                                streetAddressRequired: existingAddress[index]
+                                    .streetAddressRequired,
                                 address1: existingAddress[index].address1,
-                                streetAddress2Enabled:
-                                    existingAddress[index].streetAddress2Enabled,
-                                streetAddress2Required:
-                                    existingAddress[index].streetAddress2Required,
+                                streetAddress2Enabled: existingAddress[index]
+                                    .streetAddress2Enabled,
+                                streetAddress2Required: existingAddress[index]
+                                    .streetAddress2Required,
                                 zipPostalCodeEnabled:
                                     existingAddress[index].zipPostalCodeEnabled,
-                                zipPostalCodeRequired:
-                                    existingAddress[index].zipPostalCodeRequired,
+                                zipPostalCodeRequired: existingAddress[index]
+                                    .zipPostalCodeRequired,
                                 zipPostalCode:
                                     existingAddress[index].zipPostalCode,
-                                phoneEnabled: existingAddress[index].phoneEnabled,
+                                phoneEnabled:
+                                    existingAddress[index].phoneEnabled,
                                 phoneRequired:
                                     existingAddress[index].phoneRequired,
                                 phoneNumber: existingAddress[index].phoneNumber,
@@ -587,8 +595,9 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                 ),
                               ),
                               Text(
-                                'shipping' == null
-                                    ? 'No Shipping Available for now '
+                                orderSummaryResponse!.ordertotals.shipping ==
+                                        null
+                                    ? 'During Checkout'
                                     : orderSummaryResponse!.ordertotals.shipping
                                         .toString(),
                                 style: TextStyle(
@@ -681,8 +690,12 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                   ),
                                 ),
                                 Text(
-                                  orderSummaryResponse!.ordertotals.orderTotal
-                                      .toString(),
+                                  orderSummaryResponse!
+                                              .ordertotals.orderTotal ==
+                                          null
+                                      ? 'During Checkout'
+                                      : orderSummaryResponse!
+                                          .ordertotals.orderTotal,
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 15,
@@ -943,7 +956,9 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  orderSummaryResponse.ordertotals.orderTotal,
+                  orderSummaryResponse.ordertotals.orderTotal == null
+                      ? 'During Checkout'
+                      : orderSummaryResponse.ordertotals.orderTotal,
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,

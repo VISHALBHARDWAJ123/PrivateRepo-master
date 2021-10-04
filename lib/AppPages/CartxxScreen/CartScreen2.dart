@@ -41,6 +41,7 @@ class _CartScreen2State extends State<CartScreen2>
   var totalAmount = '';
   var discountPrice = '';
   String discountCoupon = '';
+  String giftCoupon = '';
   bool showDiscount = false;
   bool showLoading = false, applyCouponCode = true, removeCouponCode = false;
   bool applyGiftCard = true, removeGiftCard = false;
@@ -66,14 +67,7 @@ class _CartScreen2State extends State<CartScreen2>
     getCustomerId().then((value) => setState(() => customerId = value));
     setState(() {
       guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
-      ConstantsVar.prefs.getString('discount') == null
-          ? discountCoupon = ''
-          : discountCoupon = ConstantsVar.prefs.getString('discount')!;
-      if (discountCoupon == null || discountCoupon == '') {
-        discountController.text = '';
-      } else {
-        discountController.text = discountCoupon;
-      }
+
       print('$guestCustomerID');
 
       if (loadCartFirst == false) {
@@ -95,7 +89,7 @@ class _CartScreen2State extends State<CartScreen2>
         removeCouponCode = false;
       });
     } else {
-      removeCouponCode = true;
+      setState(() => removeCouponCode = true);
     }
 
     ConstantsVar.subscription = ConstantsVar.connectivity.onConnectivityChanged
@@ -133,7 +127,34 @@ class _CartScreen2State extends State<CartScreen2>
         taxPrice = model.orderTotalsModel.tax;
         totalAmount = model.orderTotalsModel.orderTotal;
         discountPrice = model.orderTotalsModel.orderTotalDiscount;
+        if(model.listCart.discountBox.appliedDiscountsWithCodes.length ==0){
+          discountCoupon = '';
+        }else{
+          discountCoupon = model.listCart.discountBox.appliedDiscountsWithCodes[0]
+          ['CouponCode'] ==
+              null
+              ? ''
+              : model.listCart.discountBox.appliedDiscountsWithCodes[0]
+          ['CouponCode'];
+          discountController.text = discountCoupon;
 
+        }
+
+     if(model.orderTotalsModel.giftCards.length!=0) {
+          giftCoupon = model.orderTotalsModel.giftCards[0]['CouponCode'] == null
+              ? ''
+              : model.orderTotalsModel.giftCards[0]['CouponCode'];
+          giftCardController.text = giftCoupon;
+          if (giftCardController.text.trim() == null) {
+            removeGiftCard = false;
+          } else {
+            removeGiftCard = true;
+          }
+        }else{
+       giftCoupon = '';
+       removeGiftCard = false;
+
+     }
         print('Refresh Trigger');
         setState(() {
           _refreshController.refreshCompleted();

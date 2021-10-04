@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -61,6 +61,17 @@ class _ShippingMethodState extends State<ShippingMethod> {
               backgroundColor: ConstantsVar.appColor,
               toolbarHeight: Adaptive.w(18),
               centerTitle: true,
+              leading: InkWell(
+                onTap: () => Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => ShippingAddress(),
+                  ),
+                ),
+                child: Platform.isAndroid
+                    ? Icon(Icons.arrow_back)
+                    : Icon(Icons.arrow_back_ios),
+              ),
               title: InkWell(
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
