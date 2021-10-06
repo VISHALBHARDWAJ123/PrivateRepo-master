@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:async';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -20,11 +21,15 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import 'CartItems.dart';
-// import 'NOxxLoginxxScreen/NoxxLoginxxScreen.dart';
 
 class CartScreen2 extends StatefulWidget {
+  final bool isOtherScren;
+  final String otherScreenName;
+
   @override
   _CartScreen2State createState() => _CartScreen2State();
+
+  CartScreen2({required this.isOtherScren, required this.otherScreenName});
 }
 
 class _CartScreen2State extends State<CartScreen2>
@@ -127,20 +132,19 @@ class _CartScreen2State extends State<CartScreen2>
         taxPrice = model.orderTotalsModel.tax;
         totalAmount = model.orderTotalsModel.orderTotal;
         discountPrice = model.orderTotalsModel.orderTotalDiscount;
-        if(model.listCart.discountBox.appliedDiscountsWithCodes.length ==0){
+        if (model.listCart.discountBox.appliedDiscountsWithCodes.length == 0) {
           discountCoupon = '';
-        }else{
-          discountCoupon = model.listCart.discountBox.appliedDiscountsWithCodes[0]
-          ['CouponCode'] ==
-              null
+        } else {
+          discountCoupon = model.listCart.discountBox
+                      .appliedDiscountsWithCodes[0]['CouponCode'] ==
+                  null
               ? ''
               : model.listCart.discountBox.appliedDiscountsWithCodes[0]
-          ['CouponCode'];
+                  ['CouponCode'];
           discountController.text = discountCoupon;
-
         }
 
-     if(model.orderTotalsModel.giftCards.length!=0) {
+        if (model.orderTotalsModel.giftCards.length != 0) {
           giftCoupon = model.orderTotalsModel.giftCards[0]['CouponCode'] == null
               ? ''
               : model.orderTotalsModel.giftCards[0]['CouponCode'];
@@ -150,11 +154,10 @@ class _CartScreen2State extends State<CartScreen2>
           } else {
             removeGiftCard = true;
           }
-        }else{
-       giftCoupon = '';
-       removeGiftCard = false;
-
-     }
+        } else {
+          giftCoupon = '';
+          removeGiftCard = false;
+        }
         print('Refresh Trigger');
         setState(() {
           _refreshController.refreshCompleted();
@@ -186,6 +189,7 @@ class _CartScreen2State extends State<CartScreen2>
           bottom: true,
           child: Scaffold(
             appBar: new AppBar(
+              leading: widget.isOtherScren == true ? setBackIcon() : null,
               backgroundColor: ConstantsVar.appColor,
               toolbarHeight: 18.w,
               centerTitle: true,
@@ -193,7 +197,10 @@ class _CartScreen2State extends State<CartScreen2>
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      CupertinoPageRoute(builder: (context) => MyHomePage()),
+                      CupertinoPageRoute(
+                          builder: (context) => MyHomePage(
+                                pageIndex: 0,
+                              )),
                     );
                   },
                   child: Image.asset('MyAssets/logo.png',
@@ -1779,7 +1786,10 @@ class _CartScreen2State extends State<CartScreen2>
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      CupertinoPageRoute(builder: (context) => MyHomePage()),
+                      CupertinoPageRoute(
+                          builder: (context) => MyHomePage(
+                                pageIndex: 0,
+                              )),
                       (route) => false);
                 },
                 child: Image.asset(
@@ -1822,13 +1832,31 @@ class _CartScreen2State extends State<CartScreen2>
 
   Widget bottomButtons(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         print(customerId);
 
         if (guestCustomerID != '${customerId}') {
           print('Merging process ');
-          Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => LoginScreen()));
+          // setState((){
+          //   cartItems.clear();
+          //   visibility = false;
+          //   indVisibility = true;
+          // });
+          var result = await Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => LoginScreen(
+                        screenKey: widget.isOtherScren == true
+                            ? widget.otherScreenName
+                            : 'Cart Screen',
+                      )));
+          if (result == true) {
+            setState(() {
+              guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
+              _refreshController.requestRefresh();
+              // showAndUpdateUi();
+            });
+          }
         } else {
           Navigator.push(context, CupertinoPageRoute(builder: (context) {
             return BillingDetails();
@@ -1860,5 +1888,45 @@ class _CartScreen2State extends State<CartScreen2>
 
   Future getCustomerIdxx() async {
     customerId = ConstantsVar.customerID;
+  }
+
+  Future refresh() async {
+    _refreshController.refreshCompleted();
+  }
+
+  Widget setBackIcon() {
+    if (Platform.isAndroid) {
+      return InkWell(
+          onTap: () {
+            if (widget.otherScreenName.contains('Cart Screen2')) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MyHomePage(pageIndex: 4),
+                  ),
+                  (route) => false);
+            } else {
+              Navigator.pop(context, true);
+            }
+          },
+          child: Icon(Icons.arrow_back));
+      // Android-specific code
+    } else {
+      return InkWell(
+        onTap: () {
+          if (widget.otherScreenName.contains('Cart Screen2')) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MyHomePage(pageIndex: 4),
+                ),
+                (route) => false);
+          } else {
+            Navigator.pop(context, true);
+          }
+        },
+        child: Icon(Icons.arrow_back),
+      ); // iOS-specific code
+    }
   }
 }

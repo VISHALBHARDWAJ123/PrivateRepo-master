@@ -150,7 +150,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                   Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => MyHomePage(),
+                        builder: (context) => MyHomePage(pageIndex: 0,),
                       ),
                       (route) => false);
                 },

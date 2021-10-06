@@ -76,7 +76,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    CupertinoPageRoute(builder: (context) => MyHomePage()),
+                    CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
                     (route) => false,
                   );
                 },
@@ -241,7 +241,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
     } on Exception catch (e) {
       context.loaderOverlay.hide();
 
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -272,7 +272,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
         context.loaderOverlay.hide();
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
 
       context.loaderOverlay.hide();
     }

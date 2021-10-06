@@ -13,13 +13,16 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
+import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 
 // import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/PojoClass/NetworkModelClass/CartModelClass/CartModel.dart';
 
 // import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/ApiParams.dart';
@@ -47,7 +50,7 @@ class ApiCalls {
       print(jsonDecode(response.body)['ResponseData']);
       return jsonDecode(response.body);
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }
@@ -74,9 +77,7 @@ class ApiCalls {
         Fluttertoast.showToast(msg: 'Something went wrong');
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -84,6 +85,7 @@ class ApiCalls {
     BuildContext context,
     String email,
     String password,
+    String screenName,
   ) async {
     print(password);
 
@@ -137,7 +139,7 @@ class ApiCalls {
           context.loaderOverlay.hide();
         } else {
           Fluttertoast.showToast(
-            msg: 'Successfully Login',
+            msg: 'Successfully Logged In',
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG,
           );
@@ -153,6 +155,7 @@ class ApiCalls {
           ConstantsVar.prefs.setString('userId', '$userId');
           ConstantsVar.prefs.setString('email', '$email');
           ConstantsVar.prefs.setString('guestCustomerID', userId);
+          ConstantsVar.prefs.setString('userId', userId);
           ConstantsVar.prefs.setString('guestGUID', gUId);
           ConstantsVar.prefs
               .setString('phone', phnNumber == null ? '' : phnNumber);
@@ -161,6 +164,54 @@ class ApiCalls {
 
           context.loaderOverlay.hide();
           print('Success ');
+
+          CartModel? myModel;
+
+          switch (screenName) {
+            case 'Cart Screen':
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => MyHomePage(
+                            pageIndex: 3,
+                          )),
+                  (route) => false);
+              break;
+
+            case 'Menu Page':
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MyHomePage(
+                      pageIndex: 4,
+                    ),
+                  ),
+                  (route) => false);
+              break;
+            case 'My Account':
+              Navigator.pushReplacement(context,
+                  CupertinoPageRoute(builder: (context) => MyAccount()));
+              break;
+            case 'Product Screen':
+              Navigator.pop(context, true);
+
+              break;
+            case 'Product List':
+              Navigator.pop(context, true);
+
+              break;
+            case 'Cart Screen2':
+              Navigator.pop(context, true);
+              break;
+            default:
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => MyHomePage(pageIndex: 0)),
+                  (route) => false);
+              break;
+          }
+
           return true;
         }
 
@@ -176,7 +227,7 @@ class ApiCalls {
 
     } on Exception catch (e) {
       context.loaderOverlay.hide();
-      ConstantsVar.showSnackbar(context, e.toString(), 5);
+      ConstantsVar.excecptionMessage(e);
       return false;
     }
   }
@@ -201,7 +252,7 @@ class ApiCalls {
       context.loaderOverlay.hide();
     } on Exception catch (e) {
       boolean = false;
-      ConstantsVar.showSnackbar(context, e.toString(), 5);
+      ConstantsVar.excecptionMessage(e);
       return boolean;
     }
   }
@@ -214,7 +265,7 @@ class ApiCalls {
       print(result);
       return result;
     } on Exception catch (e) {
-      ConstantsVar.showSnackbar(context, e.toString(), 5);
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -238,7 +289,7 @@ class ApiCalls {
         default:
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -251,7 +302,7 @@ class ApiCalls {
       print(jsonDecode(response.body));
       return jsonDecode(response.body);
     } on Exception catch (e) {
-      print(e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -296,7 +347,7 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -318,9 +369,8 @@ class ApiCalls {
       //   );
       // }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
+
       ConstantsVar.isCart = true;
     }
   }
@@ -356,9 +406,7 @@ class ApiCalls {
       }
     } on Exception catch (e) {
       ctx.loaderOverlay.hide();
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -409,7 +457,7 @@ class ApiCalls {
         }
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
     return success;
   }
@@ -447,7 +495,7 @@ class ApiCalls {
         Fluttertoast.showToast(msg: data);
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
     return success;
   }
@@ -481,7 +529,7 @@ class ApiCalls {
         Fluttertoast.showToast(msg: map['Message']);
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
     return success;
   }
@@ -517,7 +565,7 @@ class ApiCalls {
         Fluttertoast.showToast(msg: map['Message']);
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
     return success;
   }
@@ -531,8 +579,8 @@ class ApiCalls {
       ApiParams.PARAM_CUSTOMER_ID: customerId,
     };
 
-    final uri = Uri.parse(BuildConfig.base_url+
-       'apis/GetCustomerAddressList?apiToken=$apiToken&customerid=$customerId' );
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetCustomerAddressList?apiToken=$apiToken&customerid=$customerId');
 
     print('address url>>> $uri');
     try {
@@ -550,9 +598,8 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
+
       ctx.loaderOverlay.hide();
     }
   }
@@ -582,9 +629,7 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -611,9 +656,7 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -642,9 +685,7 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -671,9 +712,7 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -697,7 +736,7 @@ class ApiCalls {
       // Fluttertoast.showToast(msg: result);
     } on Exception catch (e) {
       ctx.loaderOverlay.hide();
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -745,12 +784,11 @@ class ApiCalls {
       var response = await http.post(uri, body: body, headers: header);
       print(jsonDecode(response.body));
 
-        //It means adding address is from my account screen
-        Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (context) => MyAddresses()));
-
+      //It means adding address is from my account screen
+      Navigator.pushReplacement(
+          context, CupertinoPageRoute(builder: (context) => MyAddresses()));
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -787,7 +825,7 @@ class ApiCalls {
                     )));
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -813,7 +851,7 @@ class ApiCalls {
       );
       print(jsonDecode(resp.body));
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -840,7 +878,7 @@ class ApiCalls {
         return 0;
       }
     } on Exception catch (e) {
-      print(e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -883,7 +921,7 @@ class ApiCalls {
         Navigator.pop(context);
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }
@@ -913,10 +951,12 @@ class ApiCalls {
     } on Exception catch (e) {
       context.loaderOverlay.hide();
 
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
-  static Future getBillingAddress(String apiToken, String customerId, BuildContext ctx) async {
+
+  static Future getBillingAddress(
+      String apiToken, String customerId, BuildContext ctx) async {
     final queryParameters = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
@@ -941,11 +981,9 @@ class ApiCalls {
         );
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
+
       ctx.loaderOverlay.hide();
     }
   }
-
 }

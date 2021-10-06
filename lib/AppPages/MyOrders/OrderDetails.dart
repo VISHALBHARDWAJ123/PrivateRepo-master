@@ -926,17 +926,16 @@ class _OrderDetailsState extends State<OrderDetails>
               msg:
                   'This product is Out of Stock.\n${_reOrderResponse[i].responseData}');
         }
-
       }
       Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (context) => CartScreen2(),
+          builder: (context) => CartScreen2(otherScreenName: '', isOtherScren: false,),
         ),
       );
       print(response.body);
     } on Exception catch (e) {
-      print(e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 

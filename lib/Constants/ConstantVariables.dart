@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -7,8 +8,14 @@ import 'package:untitled2/utils/HeartIcon.dart';
 class ConstantsVar {
   static String baseUri = 'https://www.theone.com/apis/';
 
-  static double width = MediaQueryData.fromWindow(window).size.width;
-  static double height = MediaQueryData.fromWindow(window).size.height;
+  static double width = MediaQueryData
+      .fromWindow(window)
+      .size
+      .width;
+  static double height = MediaQueryData
+      .fromWindow(window)
+      .size
+      .height;
   static String customerID = prefs.getString('guestCustomerID')!;
   static bool isCart = true;
   static late SharedPreferences prefs;
@@ -33,8 +40,6 @@ class ConstantsVar {
     );
     _scaffold.showSnackBar(_snackbarContent);
   }
-
-
 
   static late int productID;
 
@@ -86,14 +91,13 @@ class ConstantsVar {
         label: ''),
   ];
 
-
   static const String pass_Pattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   static const String email_Pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-  static Future checkValidation(
-      String email, String pass, BuildContext context) async {
+  static Future checkValidation(String email, String pass,
+      BuildContext context) async {
     if (RegExp(pass_Pattern).hasMatch(pass) &&
         RegExp(email_Pattern).hasMatch(email)) {
       showSnackbar(context, 'Pattern Matches', 4);
@@ -102,7 +106,24 @@ class ConstantsVar {
       isVisible = false;
     }
   }
+
   static String stripHtmlIfNeeded(String text) {
     return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
+  }
+
+  static void excecptionMessage(Exception e) {
+    if (e is FormatException) {
+      Fluttertoast.showToast(msg: 'Url mismatch.');
+    } else if (e is SocketException) {
+      Fluttertoast.showToast(msg: 'Please check your internet.');
+    } else if (e is TimeoutException) {
+      Fluttertoast.showToast(msg: 'Timeout.');
+    } else if (e is NoSuchMethodError) {
+      Fluttertoast.showToast(msg: 'Data does\'nt exist.');
+    } else if (e is DeferredLoadException) {
+      Fluttertoast.showToast(msg: 'Failed to load library.');
+    } else if (e is IntegerDivisionByZeroException) {
+      Fluttertoast.showToast(msg: 'Number can\'t be divided by Zero.');
+    }
   }
 }

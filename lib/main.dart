@@ -66,10 +66,7 @@ Future<void> main() async {
           child: MaterialApp(
 
             debugShowCheckedModeBanner: false,
-            routes: {
-              '/LoginScreen': (context) => LoginScreen(),
-              '/CartScreen': (context) => CartScreen2(),
-            },
+
             title: 'The One',
             home: SplashScreen(),
             theme: ThemeData(

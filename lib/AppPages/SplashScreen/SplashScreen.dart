@@ -139,29 +139,29 @@ class _SplashScreenState extends State<SplashScreen> {
     return ConstantsVar.customerID;
   }
 
-  checkCreds() async {
-    ConstantsVar.prefs = await SharedPreferences.getInstance();
-    var email = ConstantsVar.prefs.getString('email');
-    var passWord = ConstantsVar.prefs.getString('passWord');
-    print('Email : $email\nPassword :$passWord ');
-    email == null && passWord == null
-        ? Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return LoginScreen();
-              },
-            ),
-          )
-        : Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return MyApp();
-              },
-            ),
-          );
-  }
+  // checkCreds() async {
+  //   ConstantsVar.prefs = await SharedPreferences.getInstance();
+  //   var email = ConstantsVar.prefs.getString('email');
+  //   var passWord = ConstantsVar.prefs.getString('passWord');
+  //   print('Email : $email\nPassword :$passWord ');
+  //   email == null && passWord == null
+  //       ? Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) {
+  //               return LoginScreen();
+  //             },
+  //           ),
+  //         )
+  //       : Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) {
+  //               return MyApp();
+  //             },
+  //           ),
+  //         );
+  // }
 
   Future getCartBagdge() async {
     int val = 0;

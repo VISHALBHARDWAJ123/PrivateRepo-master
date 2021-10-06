@@ -84,7 +84,7 @@ class _ProductListState extends State<ProductList> {
                   onTap: () => Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => CartScreen2(),
+                      builder: (context) => CartScreen2(otherScreenName: '', isOtherScren: true,),
                     ),
                   ),
                 ),
@@ -98,7 +98,7 @@ class _ProductListState extends State<ProductList> {
             title: InkWell(
               onTap: () => Navigator.pushAndRemoveUntil(
                   context,
-                  CupertinoPageRoute(builder: (context) => MyHomePage()),
+                  CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
                   (route) => false),
               child: Image.asset(
                 'MyAssets/logo.png',
@@ -147,7 +147,7 @@ class _ProductListState extends State<ProductList> {
                       onTap: () => Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => CartScreen2(),
+                          builder: (context) => CartScreen2(otherScreenName: 'Product List',isOtherScren: true,),
                         ),
                       ),
                     ),
@@ -161,7 +161,7 @@ class _ProductListState extends State<ProductList> {
                 title: InkWell(
                   onTap: () => Navigator.pushAndRemoveUntil(
                       context,
-                      CupertinoPageRoute(builder: (context) => MyHomePage()),
+                      CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
                       (route) => false),
                   child: Image.asset(
                     'MyAssets/logo.png',

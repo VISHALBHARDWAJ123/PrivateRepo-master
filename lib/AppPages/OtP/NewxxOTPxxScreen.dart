@@ -350,7 +350,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
         Fluttertoast.showToast(msg: 'You will receive an otp shortly');
         context.loaderOverlay.hide();
       } else {
-        Fluttertoast.showToast(msg: 'Something went wrong');
+        Fluttertoast.showToast(msg: 'Something went wrong!');
         context.loaderOverlay.hide();
       }
     } on Exception catch (e) {
@@ -366,7 +366,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
         context: context,
         builder: (context) {
           return CustomDialogBox1(
-            descriptions: 'Registration failed',
+            descriptions: 'Registration Failed!',
             text: 'Okay'.toUpperCase(),
             img: 'MyAssets/logo.png',
             reason: reason,
@@ -379,7 +379,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
         context: context,
         builder: (context) {
           return CustomDialogBox(
-            descriptions: 'Registration Successfully Complete',
+            descriptions: 'Registration Successful!',
             text: 'Okay',
             img: 'MyAssets/logo.png',
             isOkay: true,
@@ -439,7 +439,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       print(result);
       String status = result['status'];
       if (status.contains(statusSus)) {
-        ApiCalls.login(context, widget.email, widget.password).then((value) {
+        ApiCalls.login(context, widget.email, widget.password,'OTP Screen').then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();
         });

@@ -49,6 +49,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   var image2;
   var image3;
   var id;
+  String discountPercentage = '';
   List<String> imageList = [];
   List<String> largeImage = [];
   var connectionStatus;
@@ -98,7 +99,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             double.parse(initialData!.productPrice.priceValue.toString());
         sku = initialData!.sku;
         stockAvailabilty = initialData!.stockAvailability;
-
+        discountPercentage = initialData!.discountPercentage;
         if (initialData!.productAttributes!.length != 0) {
           if (initialData!
                   .productAttributes![0].values[0].priceAdjustmentValue !=
@@ -159,7 +160,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     onTap: () => Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => CartScreen2(),
+                        builder: (context) => CartScreen2(isOtherScren: true, otherScreenName: 'Product Screen',),
                       ),
                     ),
                   ),
@@ -171,7 +172,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
               title: InkWell(
                 onTap: () => Navigator.pushAndRemoveUntil(
                     context,
-                    CupertinoPageRoute(builder: (context) => MyHomePage()),
+                    CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
                     (route) => false),
                 child: Image.asset(
                   'MyAssets/logo.png',
@@ -201,7 +202,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     initialData: initialData,
                     isDiscountAvail: isDiscountAvail,
                     discountedPrice:
-                        discountedPrice != null ? discountedPrice : '',
+                        discountedPrice != null ? discountedPrice : '', disPercentage:discountPercentage ,
                   ),
                 ),
                 Container(
@@ -241,12 +242,12 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       required List<String> imageList,
       required List<String> largeImage,
       required String assemblyCharges,
-      required dynamic initialData}) {
+      required dynamic initialData,required String disPercentage}) {
     return ListView(
       children: [
         Padding(
           padding: const EdgeInsets.all(6.0),
-          child: Container(child: SliderImages(imageList, largeImage, context)),
+          child: Container(child: SliderImages(imageList, largeImage, context,discountPercentage)),
         ),
         Container(
           height: 42.h,

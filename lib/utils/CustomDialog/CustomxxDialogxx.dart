@@ -79,7 +79,7 @@ class LogoutOverlayState extends State<LogoutOverlay>
                                   onPressed: () {
                                     setState(() {
                                       Route route = MaterialPageRoute(
-                                          builder: (context) => LoginScreen());
+                                          builder: (context) => LoginScreen(screenKey: '',));
                                       Navigator.pushReplacement(context, route);
                                     });
                                   },

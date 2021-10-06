@@ -144,7 +144,7 @@ class _AddressScreenState extends State<AddressScreen>
                 onTap: () => Navigator.pushAndRemoveUntil(
                     context,
                     CupertinoPageRoute(
-                        builder: (BuildContext context) => MyHomePage()),
+                        builder: (BuildContext context) => MyHomePage(pageIndex: 0,)),
                     (route) => false),
                 child: Image.asset(
                   'MyAssets/logo.png',

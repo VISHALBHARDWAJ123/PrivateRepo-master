@@ -104,7 +104,7 @@ class _SearchPageState extends State<SearchPage> {
                 title: InkWell(
                   onTap: () => Navigator.pushAndRemoveUntil(context,
                       CupertinoPageRoute(builder: (context) {
-                    return MyHomePage();
+                    return MyHomePage(pageIndex: 0,);
                   }), (route) => false),
                   child: Image.asset(
                     'MyAssets/logo.png',
@@ -485,7 +485,7 @@ class _SearchPageState extends State<SearchPage> {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetSearchProducts?searchkeyword=$productName&pagesize=8&pageindex=$pageNumber');
     try {
-      var response = await http.get(uri,headers: ApiCalls.header);
+      var response = await http.get(uri, headers: ApiCalls.header);
       var jsonMap = jsonDecode(response.body);
       print(jsonMap);
       if (jsonMap['products'] == null) {
@@ -528,7 +528,7 @@ class _SearchPageState extends State<SearchPage> {
         }
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
     }
   }
 
@@ -542,7 +542,7 @@ class _SearchPageState extends State<SearchPage> {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetSearchProducts?searchkeyword=$prodName&pagesize=20&pageindex=$pageIndex');
     try {
-      var response = await http.get(uri,headers: ApiCalls.header);
+      var response = await http.get(uri, headers: ApiCalls.header);
       var result = jsonDecode(response.body);
       print(result);
       SearchResponse mySearchResponse = SearchResponse.fromJson(result);
@@ -561,7 +561,7 @@ class _SearchPageState extends State<SearchPage> {
         setState(() {});
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       _refreshController.loadFailed();
     }
   }

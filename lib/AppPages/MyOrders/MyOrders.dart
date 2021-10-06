@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:loader_overlay/loader_overlay.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
@@ -18,8 +21,8 @@ import 'package:untitled2/utils/utils/build_config.dart';
 import 'OrderDetails.dart';
 
 class MyOrders extends StatefulWidget {
-  const MyOrders({Key? key}) : super(key: key);
-
+  const MyOrders({Key? key, required this.isFromWeb}) : super(key: key);
+  final bool isFromWeb;
   @override
   _MyOrdersState createState() => _MyOrdersState();
 }
@@ -45,6 +48,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
       context.loaderOverlay.hide();
       return result;
     } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
       print(e.toString);
       // Fluttertoast.showToast(msg: e.toString());
@@ -78,6 +82,28 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
         bottom: true,
         child: Scaffold(
           appBar: new AppBar(
+            leading: Platform.isAndroid
+                ? InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => MyAccount(
+
+                          )),
+                          (route) => false);
+                },
+                child: Icon(Icons.arrow_back))
+                : InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => MyAccount(
+                          )),
+                          (route) => false);
+                },
+                child: Icon(Icons.arrow_back_ios)),
             backgroundColor: ConstantsVar.appColor,
             toolbarHeight: 18.w,
             centerTitle: true,

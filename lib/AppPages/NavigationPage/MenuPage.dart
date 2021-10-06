@@ -58,7 +58,7 @@ class _MenuPageState extends State<MenuPage> {
   var customerId;
   var userName, email, phnNumber;
 
-  bool isEmailVisible = true, isPhoneNumberVisible = true;
+  bool isEmailVisible = false, isPhoneNumberVisible = false, isUserNameVisible = false;
 
   // var gUId;
 
@@ -72,6 +72,10 @@ class _MenuPageState extends State<MenuPage> {
       email = ConstantsVar.prefs.getString('email');
       userName = ConstantsVar.prefs.getString('userName');
       phnNumber = ConstantsVar.prefs.getString('phone');
+   if(customerId.toString().trim() !=null && email.toString().trim() !=null && phnNumber.toString().trim() !=null)
+     isEmailVisible = true;
+      isUserNameVisible = true;
+      isPhoneNumberVisible = true;
     });
 
     super.initState();
@@ -94,7 +98,9 @@ class _MenuPageState extends State<MenuPage> {
           onTap: () => Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute(
-                builder: (context) => MyHomePage(),
+                builder: (context) => MyHomePage(
+                  pageIndex: 0,
+                ),
               ),
               (route) => false),
           child: Image.asset(
@@ -126,7 +132,7 @@ class _MenuPageState extends State<MenuPage> {
                             0,
                           ),
                           child: Container(
-                            color:Colors.white,
+                            color: Colors.white,
                             width: 100.w,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +140,7 @@ class _MenuPageState extends State<MenuPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                                  padding: EdgeInsets.symmetric(vertical: !isUserNameVisible?10:0),
                                   child: Container(
                                     width: 100.w,
                                     child: Center(
@@ -152,16 +158,20 @@ class _MenuPageState extends State<MenuPage> {
                                 Container(
                                   width: 100.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         width: 100.w,
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Visibility(
-                                              visible: userName == null ? false : true,
+                                              visible: userName == null
+                                                  ? false
+                                                  : true,
                                               child: Icon(
                                                 Icons.person,
                                                 color: ConstantsVar.appColor,
@@ -171,9 +181,13 @@ class _MenuPageState extends State<MenuPage> {
                                               width: 10,
                                             ),
                                             Visibility(
-                                              visible: userName == null ? false : true,
+                                              visible: userName == null
+                                                  ? false
+                                                  : true,
                                               child: Text(
-                                                userName == null ? '' : userName,
+                                                userName == null
+                                                    ? ''
+                                                    : userName,
                                                 style: TextStyle(
                                                   color: Colors.grey.shade700,
                                                   fontSize: 5.w,
@@ -220,7 +234,8 @@ class _MenuPageState extends State<MenuPage> {
                                         height: 20,
                                       ),
                                       Visibility(
-                                        visible: phnNumber == null ? false : true,
+                                        visible:
+                                            phnNumber == null ? false : true,
                                         child: Container(
                                           width: 100.w,
                                           child: Row(
@@ -234,7 +249,9 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 10,
                                               ),
                                               Text(
-                                                phnNumber == null ? '' : phnNumber,
+                                                phnNumber == null
+                                                    ? ''
+                                                    : phnNumber,
                                                 style: TextStyle(
                                                   color: Colors.grey.shade700,
                                                   fontSize: 5.w,
@@ -260,7 +277,7 @@ class _MenuPageState extends State<MenuPage> {
                       milliseconds: 70,
                     ),
                     child: InkWell(
-                      onTap: () => Navigator.push(
+                      onTap: () => Navigator.pushReplacement(
                           context,
                           CupertinoPageRoute(
                               builder: (context) => MyAccount())),
@@ -306,10 +323,26 @@ class _MenuPageState extends State<MenuPage> {
                       milliseconds: 70,
                     ),
                     child: InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => CartScreen2())),
+                      onTap: () async{
+                        final result = await Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => CartScreen2(
+                                      otherScreenName: 'Cart Screen2',
+                                      isOtherScren: true,
+                                    )));
+                        if (result == true) {
+                          setState(() {
+                            customerId = ConstantsVar.prefs.getString('userId');
+                            email = ConstantsVar.prefs.getString('email');
+                            userName = ConstantsVar.prefs.getString('userName');
+                            phnNumber = ConstantsVar.prefs.getString('phone');
+                            isPhoneNumberVisible = true;
+                            isUserNameVisible = true;
+                            isEmailVisible = true;
+                          });
+                        }
+                      },
                       child: Card(
                         color: Colors.white,
                         child: Padding(
@@ -405,7 +438,8 @@ class _MenuPageState extends State<MenuPage> {
                                 CupertinoPageRoute(
                                     builder: (context) => RegstrationPage()))
                             : Fluttertoast.showToast(
-                                msg: 'You Already Login with The One Account',
+                                msg:
+                                    'You are already logged in with THE One account',
                                 toastLength: Toast.LENGTH_LONG,
                               );
                       },
@@ -456,7 +490,9 @@ class _MenuPageState extends State<MenuPage> {
                           Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => LoginScreen()));
+                                  builder: (context) => LoginScreen(
+                                        screenKey: 'Menu Page',
+                                      )));
                         } else {
                           clearUserDetails()
                               .whenComplete(() => Phoenix.rebirth(context));

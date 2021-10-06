@@ -483,9 +483,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
       print('Response>>>>>>>' + response.body);
       return json.decode(response.body);
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
     }
   }
 

@@ -77,7 +77,7 @@ class loginCheckState extends State<loginCheck>
                           onPressed: () {
                             setState(() {
                               Route route = MaterialPageRoute(
-                                  builder: (context) => LoginScreen());
+                                  builder: (context) => LoginScreen(screenKey: '',));
                               Navigator.pop(context, route);
                             });
                           },

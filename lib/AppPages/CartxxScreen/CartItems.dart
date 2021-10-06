@@ -43,7 +43,8 @@ class CartItem extends StatefulWidget {
   _CartItemState createState() => _CartItemState();
 }
 
-class _CartItemState extends State<CartItem> {
+class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -55,7 +56,7 @@ class _CartItemState extends State<CartItem> {
                     NewProductDetails(productId: widget.productId.toString())));
       },
       child: Container(
-        height: 26.h,
+        height: 30.h,
         child: Stack(
           children: <Widget>[
             Container(

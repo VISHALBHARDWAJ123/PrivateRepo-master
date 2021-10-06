@@ -6,36 +6,72 @@ import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-Widget SliderImages(
-    List<String> images, List<String> largeImage, BuildContext context) {
-  return Center(
-    child: Container(
-      width: 70.w,
-      // padding: EdgeInsets.all(0),
-      height: 70.w,
-      child: Center(
-        child: CarouselSlider.builder(
-          enableAutoSlider: images.length > 1 ? true : false,
-          unlimitedMode: true,
-          slideBuilder: (index) {
-            return Container(
-              padding: EdgeInsets.all(4.w),
-              child: CachedNetworkImage(
-                fit: BoxFit.fill,
-                imageUrl: images[index],
-                placeholder: (context, reason) => Center(
-                  child: CircularProgressIndicator(),
-                ),
+Widget SliderImages(List<String> images, List<String> largeImage,
+    BuildContext context, String discountPercentage) {
+  return Container(
+    width: 85.w,
+    child: Stack(
+      children: [
+        Center(
+          child: Container(
+            width: 70.w,
+            // padding: EdgeInsets.all(0),
+            height: 70.w,
+            child: Center(
+              child: CarouselSlider.builder(
+                enableAutoSlider: images.length > 1 ? true : false,
+                unlimitedMode: true,
+                slideBuilder: (index) {
+                  return Container(
+                    padding: EdgeInsets.all(4.w),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: images[index],
+                      placeholder: (context, reason) => Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                },
+                slideTransform: DefaultTransform(),
+                slideIndicator: CircularSlideIndicator(
+                    alignment: Alignment.bottomCenter,
+                    currentIndicatorColor: Colors.black),
+                itemCount: images.length,
               ),
-            );
-          },
-          slideTransform: DefaultTransform(),
-          slideIndicator: CircularSlideIndicator(
-              alignment: Alignment.bottomCenter,
-              currentIndicatorColor: Colors.black),
-          itemCount: images.length,
+            ),
+          ),
         ),
-      ),
+        Visibility(
+          visible: discountPercentage.trim().length != 0 ? true : false,
+          child: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                width: 15.w,
+                height: 15.w,
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      'MyAssets/plaincircle.png',
+                      width: 15.w,
+                      height: 15.w,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        discountPercentage,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 4.8.w,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )),
+        )
+      ],
     ),
   );
 }

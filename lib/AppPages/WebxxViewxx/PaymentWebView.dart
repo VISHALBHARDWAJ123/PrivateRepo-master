@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -45,6 +46,20 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> _willGoBack() async {
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => MyOrders(
+                    isFromWeb: true,
+                  )),
+          (route) => false);
+setState((){
+  _willGo = true;
+});
+      return _willGo;
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -57,15 +72,37 @@ class _PaymentPageState extends State<PaymentPage> {
       child: SafeArea(
         top: true,
         child: WillPopScope(
-          onWillPop: _willGo ? null : () async => false,
+          onWillPop: _willGo ? _willGoBack : () async => false,
           child: Scaffold(
             appBar: new AppBar(
+              leading: Platform.isAndroid
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyOrders(
+                                      isFromWeb: true,
+                                    )),
+                            (route) => false);
+                      },
+                      child: Icon(Icons.arrow_back))
+                  : InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyOrders(
+                                      isFromWeb: true,
+                                    )),
+                            (route) => false);
+                      },
+                      child: Icon(Icons.arrow_back_ios)),
               backgroundColor: ConstantsVar.appColor,
               toolbarHeight: 18.w,
               centerTitle: true,
               title: GestureDetector(
                 onTap: () {
-
                   context.loaderOverlay.hide();
                   Navigator.pushAndRemoveUntil(context,
                       CupertinoPageRoute(builder: (context) {
@@ -146,7 +183,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
     Navigator.pushAndRemoveUntil(
         context,
-        CupertinoPageRoute(builder: (context) => MyHomePage()),
+        CupertinoPageRoute(
+            builder: (context) => MyHomePage(
+                  pageIndex: 0,
+                )),
         (route) => false);
     return true;
   }

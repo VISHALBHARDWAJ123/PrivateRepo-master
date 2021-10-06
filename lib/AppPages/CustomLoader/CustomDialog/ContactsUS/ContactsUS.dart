@@ -284,10 +284,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
       context.loaderOverlay.hide();
     } on Exception catch (e) {
       print(e.toString());
-      Fluttertoast.showToast(
-        msg: 'In Progress',
-        toastLength: Toast.LENGTH_LONG,
-      );
+   ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }

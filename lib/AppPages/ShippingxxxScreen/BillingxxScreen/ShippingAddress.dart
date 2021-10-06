@@ -69,8 +69,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
         }
       });
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
+      ConstantsVar.excecptionMessage(e);    }
   }
 
   /// this fu
@@ -154,7 +153,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                         context,
-                        CupertinoPageRoute(builder: (context) => MyHomePage()),
+                        CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
                         (route) => false);
                   },
                   child: Image.asset(

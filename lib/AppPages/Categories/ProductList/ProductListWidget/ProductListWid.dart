@@ -153,7 +153,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                     crossAxisSpacing: 4,
                     mainAxisSpacing: 4,
                     crossAxisCount: 2,
-                    childAspectRatio: 3 / 5.885,
+                    childAspectRatio: 3 / 6,
                     cacheExtent: 20,
                     children: List.generate(
                       widget.products.length,

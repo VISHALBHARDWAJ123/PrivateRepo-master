@@ -89,7 +89,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             CupertinoPageRoute(
-                                builder: (context) => MyHomePage()),
+                                builder: (context) => MyHomePage(pageIndex: 0,)),
                             (route) => false);
                       },
                       child: Container(

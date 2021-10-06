@@ -56,7 +56,7 @@ class _SubCatNewState extends State<SubCatNew> {
                           onTap: () => Navigator.pushAndRemoveUntil(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => MyHomePage()),
+                                  builder: (context) => MyHomePage(pageIndex: 0,)),
                               (route) => false),
                           child: Image.asset(
                             'MyAssets/logo.png',
@@ -98,7 +98,7 @@ class _SubCatNewState extends State<SubCatNew> {
                         onTap: () => Navigator.pushAndRemoveUntil(
                             context,
                             CupertinoPageRoute(
-                                builder: (context) => MyHomePage()),
+                                builder: (context) => MyHomePage(pageIndex: 0,)),
                             (route) => false),
                         child: Image.asset(
                           'MyAssets/logo.png',
@@ -251,9 +251,7 @@ class _SubCatNewState extends State<SubCatNew> {
       print(json.decode(response.body));
       return json.decode(response.body)['ResponseData'];
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+    ConstantsVar.excecptionMessage(e);
     }
   }
 }

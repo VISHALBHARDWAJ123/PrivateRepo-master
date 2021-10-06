@@ -38,7 +38,8 @@ class _MyAppState extends State<MyApp> {
   // AwesomeNotifications().
 
   Future<void> setFireStoreData(
-      RemoteMessage message, ) async {
+    RemoteMessage message,
+  ) async {
     // AwesomeNotifications().createNotificationFromJsonData(message.data);
     final refrence = FirebaseFirestore.instance.collection('UserNotifications');
     String formattedDate =
@@ -54,7 +55,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> _messageHandler(RemoteMessage message) async {
     // var guestGuid = ConstantsVar.prefs.getString('sepGuid');
 
-    setFireStoreData(message, );
+    setFireStoreData(
+      message,
+    );
     print('background message ${message.notification!.body}');
     print('background message message got ');
   }
@@ -68,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       FirebaseMessaging.onBackgroundMessage(_messageHandler);
     });
     getCartBagdge(0);
-    }
+  }
 
   Future getCartBagdge(int val) async {
     ApiCalls.readCounter(
@@ -91,7 +94,9 @@ class _MyAppState extends State<MyApp> {
               appBarTheme: AppBarTheme(
                 backgroundColor: ConstantsVar.appColor,
               )),
-          home: MyHomePage(),
+          home: MyHomePage(
+            pageIndex: 0,
+          ),
         ),
       ),
     );
@@ -99,6 +104,10 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage({required this.pageIndex});
+
+  int pageIndex;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -114,27 +123,25 @@ class _MyHomePageState extends State<MyHomePage>
 
   ListQueue<int> _navQueue = new ListQueue();
 
-  List<Widget> viewsList = [
-    Container(
-      child: HomeScreenMain(
-          // key: PageStorageKey('HomeScreenMain'),
-          ),
-    ),
-    HomeCategory(
-        // key: PageStorageKey('HomeCategory'),
-        ),
-    SearchPage(
-        // key: PageStorageKey('SearchPage'),
-        ),
-    CartScreen2(
-        // key: PageStorageKey('CartScreen2'),
-        ),
-    MenuPage(
-        // key: PageStorageKey('MenuPage'),
-        ),
-  ];
-
-
+  // List<Widget> viewsList = [
+  //   Container(
+  //     child: HomeScreenMain(
+  //         // key: PageStorageKey('HomeScreenMain'),
+  //         ),
+  //   ),
+  //   HomeCategory(
+  //       // key: PageStorageKey('HomeCategory'),
+  //       ),
+  //   SearchPage(
+  //       // key: PageStorageKey('SearchPage'),
+  //       ),
+  //   CartScreen2(
+  //       // key: PageStorageKey('CartScreen2'),
+  //       ),
+  //   MenuPage(
+  //       // key: PageStorageKey('MenuPage'),
+  //       ),
+  // ];
 
   @override
   void initState() {
@@ -142,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
     initSharedPrefs().then((value) => getCartBagdge(0));
 
+    setState(() => activeIndex = widget.pageIndex);
     // _controller = TabController(length: 4, vsync: this);
   }
 
@@ -261,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage>
       case 2:
         return SearchPage();
       case 3:
-        return CartScreen2();
+        return CartScreen2(isOtherScren: false, otherScreenName: '',);
       case 4:
         return MenuPage();
       default:

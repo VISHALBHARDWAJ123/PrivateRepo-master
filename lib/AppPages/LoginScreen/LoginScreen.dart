@@ -17,8 +17,12 @@ import 'package:untitled2/utils/utils/general_functions.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
+  final String screenKey;
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
+
+  LoginScreen({required this.screenKey});
 }
 
 class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
@@ -52,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
         .listen((ConnectivityResult result) {
       if (result == ConnectivityResult.mobile ||
           result == ConnectivityResult.wifi) {
-        ConstantsVar.showSnackbar(context, ' Internet connection found.', 5);
+
         setState(() {
           connectionStatus = true;
           btnColor = Colors.black;
@@ -282,7 +286,9 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                               _loginKey
                                                                   .currentState!
                                                                   .save();
-                                                              setState(()=>_willGo = false);
+                                                              setState(() =>
+                                                                  _willGo =
+                                                                      false);
                                                               ApiCalls.login(
                                                                 context,
                                                                 emailController
@@ -291,19 +297,19 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                                     .trim(),
                                                                 passController
                                                                     .text,
+                                                                widget
+                                                                    .screenKey,
                                                               ).then((val) {
-                                                                setState(()=>_willGo = false);
+                                                                setState(() =>
+                                                                    _willGo =
+                                                                        false);
                                                                 val == true
-                                                                    ? getCartBagdge(0).then((value) => Navigator.pushAndRemoveUntil(
-                                                                        context,
-                                                                        CupertinoPageRoute(
-                                                                            builder: (context) =>
-                                                                                MyApp()),
-                                                                        (route) =>
-                                                                            false))
+                                                                    ? getCartBagdge(0).then((value) => context
+                                                                        .read<
+                                                                            cartCounter>()
+                                                                        .changeCounter(
+                                                                            value))
                                                                     : null;
-
-
                                                               });
                                                             } else {
                                                               Fluttertoast

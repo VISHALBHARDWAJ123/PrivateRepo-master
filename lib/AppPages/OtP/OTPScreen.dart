@@ -88,9 +88,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
         context.loaderOverlay.hide();
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }
@@ -102,7 +100,6 @@ class _OTP_ScreenState extends State<OTP_Screen> {
     return Scaffold(
       appBar: new AppBar(
           backgroundColor: ConstantsVar.appColor,
-
           toolbarHeight: 18.w,
           centerTitle: true,
           title: Image.asset(
@@ -329,7 +326,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
         register();
       }
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }
@@ -357,7 +354,8 @@ class _OTP_ScreenState extends State<OTP_Screen> {
       print(result);
       String status = result['status'];
       if (status.contains(statusSus)) {
-        ApiCalls.login(context, widget.email, widget.password).then((value) {
+        ApiCalls.login(context, widget.email, widget.password, '')
+            .then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();
         });
@@ -370,7 +368,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
       }
     } on Exception catch (e) {
       context.loaderOverlay.hide();
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       print(e.toString());
     }
   }

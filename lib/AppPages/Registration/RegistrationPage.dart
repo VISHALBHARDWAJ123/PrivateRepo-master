@@ -113,7 +113,7 @@ class _RegstrationPageState extends State<RegstrationPage>
       String status = result['status'];
       if (status.contains('Sucess')) {
         ApiCalls.login(context, eController.text.toString(),
-                cpController.text.toString())
+                cpController.text.toString(),'')
             .then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();
@@ -127,7 +127,7 @@ class _RegstrationPageState extends State<RegstrationPage>
       }
     } on Exception catch (e) {
       context.loaderOverlay.hide();
-      Fluttertoast.showToast(msg: e.toString());
+      ConstantsVar.excecptionMessage(e);
       print(e.toString());
     }
   }
@@ -584,6 +584,9 @@ class _RegstrationPageState extends State<RegstrationPage>
                                           ),
                                         ),
                                       );
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please provide all details');
                                 }
                               },
                               color: ConstantsVar.appColor,
