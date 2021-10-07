@@ -9,21 +9,21 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 Widget SliderImages(List<String> images, List<String> largeImage,
     BuildContext context, String discountPercentage) {
   return Container(
+    height: 52.h,
     width: 85.w,
     child: Stack(
       children: [
         Center(
           child: Container(
-            width: 70.w,
             // padding: EdgeInsets.all(0),
-            height: 45.h,
             child: Center(
               child: CarouselSlider.builder(
                 enableAutoSlider: images.length > 1 ? true : false,
                 unlimitedMode: true,
+                viewportFraction: 1,
                 slideBuilder: (index) {
-                  return Container(
-                    padding: EdgeInsets.all(4.w),
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.w),
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
                       imageUrl: images[index],
@@ -35,6 +35,7 @@ Widget SliderImages(List<String> images, List<String> largeImage,
                 },
                 slideTransform: DefaultTransform(),
                 slideIndicator: CircularSlideIndicator(
+                    padding: EdgeInsets.only(top: 4.w),
                     alignment: Alignment.bottomCenter,
                     currentIndicatorColor: Colors.black),
                 itemCount: images.length,
