@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                           color: Colors.grey.shade200,
                           padding: EdgeInsets.all(2.h),
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'SHOP BY CATEGORY',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 6.w),
@@ -128,7 +129,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                 width: .3, color: Colors.white),
                                           )),
                                           child: Center(
-                                            child: Text(
+                                            child: AutoSizeText(
                                                 resultList[index]['name'],
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -265,7 +266,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                       .symmetric(
                                                                   horizontal:
                                                                       8.0),
-                                                              child: Text(
+                                                              child: AutoSizeText(
                                                                 name,
                                                                 maxLines: 2,
                                                                 textAlign:

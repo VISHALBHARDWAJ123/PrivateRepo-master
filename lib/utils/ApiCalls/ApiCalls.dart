@@ -18,11 +18,13 @@ import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
+import 'package:provider/provider.dart';
 
 // import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/NetworkModelClass/CartModelClass/CartModel.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 
 // import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/utils/ApiParams.dart';
@@ -165,7 +167,8 @@ class ApiCalls {
           context.loaderOverlay.hide();
           print('Success ');
 
-          CartModel? myModel;
+          readCounter(customerGuid: gUId).then(
+              (value) => context.read<cartCounter>().changeCounter(value));
 
           switch (screenName) {
             case 'Cart Screen':
@@ -857,6 +860,7 @@ class ApiCalls {
 
 // For BadgeCounter
   static Future readCounter({required String customerGuid}) async {
+    int count = 0;
     // print(header);
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
@@ -871,15 +875,21 @@ class ApiCalls {
     try {
       // print(cookie);
       dynamic result = jsonDecode(response);
+      print(result);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {
-        return result['ResponseData'];
+        count = int.parse(result['ResponseData']);
+
+        return count;
       } else {
-        return 0;
+        return count;
       }
     } on Exception catch (e) {
+      return count;
+
       ConstantsVar.excecptionMessage(e);
     }
+    return count;
   }
 
   /* Edit and save address */

@@ -111,11 +111,13 @@ class HomePageProductImage {
     required this.id,
     required this.name,
     required this.imageUrl,
+    required this.discountPercentage,
   });
 
   String price;
   int id;
   String name;
+  String discountPercentage;
   List<String> imageUrl;
 
   factory HomePageProductImage.fromJson(Map<String, dynamic> json) =>
@@ -124,6 +126,8 @@ class HomePageProductImage {
         id: json["Id"],
         name: json["Name"],
         imageUrl: List<String>.from(json["ImageUrl"].map((x) => x)),
+        discountPercentage:
+            json['DiscountPercent'] == null ? '' : json['DiscountPercent'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -131,5 +135,6 @@ class HomePageProductImage {
         "Id": id,
         "Name": name,
         "ImageUrl": List<dynamic>.from(imageUrl.map((x) => x)),
+        'DiscountPercent ': discountPercentage,
       };
 }

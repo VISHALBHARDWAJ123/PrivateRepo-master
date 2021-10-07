@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 import 'dart:async';
-import 'package:loader_overlay/loader_overlay.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +16,13 @@ import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/BillingScre
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/NetworkModelClass/CartModelClass/CartModel.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import 'CartItems.dart';
-
+import 'package:provider/provider.dart';
 class CartScreen2 extends StatefulWidget {
   final bool isOtherScren;
   final String otherScreenName;
@@ -35,6 +36,7 @@ class CartScreen2 extends StatefulWidget {
 class _CartScreen2State extends State<CartScreen2>
     with AutomaticKeepAliveClientMixin, InputValidationMixin {
   bool isCartAvail = true;
+  var gUId;
   var customerId;
   var guestCustomerID;
   var quantity;
@@ -68,6 +70,7 @@ class _CartScreen2State extends State<CartScreen2>
     super.initState();
 
     getCustomerIdxx();
+    ApiCalls.readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
 
     getCustomerId().then((value) => setState(() => customerId = value));
     setState(() {
@@ -115,6 +118,11 @@ class _CartScreen2State extends State<CartScreen2>
   }
 
   void showAndUpdateUi() async {
+    gUId = ConstantsVar.prefs.getString('guestGUID');
+
+    guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
+    getCustomerId();
+    ApiCalls.readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     setState(() {
       isCartAvail = true;
     });
@@ -228,7 +236,7 @@ class _CartScreen2State extends State<CartScreen2>
                             padding: EdgeInsets.all(20.0),
                             width: MediaQuery.of(context).size.width,
                             child: Center(
-                              child: Text(
+                              child: AutoSizeText(
                                 'My Cart'.toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 6.w, fontWeight: FontWeight.w900),
@@ -251,7 +259,7 @@ class _CartScreen2State extends State<CartScreen2>
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: Text(
+                                  child: AutoSizeText(
                                     'price details'.toUpperCase(),
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
@@ -267,14 +275,14 @@ class _CartScreen2State extends State<CartScreen2>
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'Sub-Total:',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 15,
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         subTotal,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
@@ -291,14 +299,14 @@ class _CartScreen2State extends State<CartScreen2>
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'Shipping:',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 15,
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         shipping == null
                                             ? 'No Shipping Available for now '
                                             : shipping,
@@ -320,14 +328,14 @@ class _CartScreen2State extends State<CartScreen2>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
+                                        AutoSizeText(
                                           'Discount:',
                                           style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 14,
                                           ),
                                         ),
-                                        Text(
+                                        AutoSizeText(
                                           discountPrice,
                                           style: TextStyle(
                                               fontFamily: 'Poppins',
@@ -346,14 +354,14 @@ class _CartScreen2State extends State<CartScreen2>
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      AutoSizeText(
                                         'Tax 5%:',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 14,
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         taxPrice,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
@@ -378,14 +386,14 @@ class _CartScreen2State extends State<CartScreen2>
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                AutoSizeText(
                                   'Total Amount ',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
+                                AutoSizeText(
                                   totalAmount,
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
@@ -443,7 +451,7 @@ class _CartScreen2State extends State<CartScreen2>
                                 children: <Widget>[
                                   Container(
                                     width: MediaQuery.of(context).size.width,
-                                    child: Text(
+                                    child: AutoSizeText(
                                       'Discount Code',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -577,7 +585,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 4.w,
                                                       horizontal: 1.w),
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     'Apply Coupon',
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -602,7 +610,7 @@ class _CartScreen2State extends State<CartScreen2>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          Text('Entered coupon code - ' +
+                                          AutoSizeText('Entered coupon code - ' +
                                               discountController.text
                                                   .toString()),
                                           addHorizontalSpace(20),
@@ -722,7 +730,7 @@ class _CartScreen2State extends State<CartScreen2>
                                         vertical: 8.0),
                                     child: Container(
                                       width: MediaQuery.of(context).size.width,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'Gift Cards',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
@@ -836,7 +844,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 4.w,
                                                       horizontal: 1.w),
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     'Add Gift Card',
                                                     style: TextStyle(
                                                         fontSize: 4.w,
@@ -873,7 +881,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                         BorderRadius.circular(
                                                             6.0)),
                                                 child: Center(
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     discountController.text
                                                             .toString() +
                                                         ' ' +
@@ -973,7 +981,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                       const EdgeInsets
                                                                               .all(
                                                                           4.0),
-                                                                  child: Text(
+                                                                  child: AutoSizeText(
                                                                     'price details'
                                                                         .toUpperCase(),
                                                                     style:
@@ -1000,7 +1008,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         'Sub-Total:',
                                                                         style:
                                                                             TextStyle(
@@ -1010,7 +1018,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                               15,
                                                                         ),
                                                                       ),
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         subTotal,
                                                                         style: TextStyle(
                                                                             fontFamily:
@@ -1036,7 +1044,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         'Shipping:',
                                                                         style:
                                                                             TextStyle(
@@ -1046,7 +1054,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                               15,
                                                                         ),
                                                                       ),
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         shipping ==
                                                                                 null
                                                                             ? 'No Shipping Available for now '
@@ -1080,7 +1088,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                           MainAxisAlignment
                                                                               .spaceBetween,
                                                                       children: [
-                                                                        Text(
+                                                                        AutoSizeText(
                                                                           'Discount:',
                                                                           style:
                                                                               TextStyle(
@@ -1090,7 +1098,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                                 14,
                                                                           ),
                                                                         ),
-                                                                        Text(
+                                                                        AutoSizeText(
                                                                           discountPrice,
                                                                           style: TextStyle(
                                                                               fontFamily: 'Poppins',
@@ -1115,7 +1123,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         'Tax 5%:',
                                                                         style:
                                                                             TextStyle(
@@ -1125,7 +1133,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                               14,
                                                                         ),
                                                                       ),
-                                                                      Text(
+                                                                      AutoSizeText(
                                                                         taxPrice,
                                                                         style: TextStyle(
                                                                             fontFamily:
@@ -1167,7 +1175,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Text(
+                                                                AutoSizeText(
                                                                   'Total Amount ',
                                                                   style: TextStyle(
                                                                       fontFamily:
@@ -1178,7 +1186,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                           FontWeight
                                                                               .bold),
                                                                 ),
-                                                                Text(
+                                                                AutoSizeText(
                                                                   totalAmount,
                                                                   style: TextStyle(
                                                                       fontFamily:
@@ -1400,7 +1408,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                             CrossAxisAlignment.center,
                                                                         children: <
                                                                             Widget>[
-                                                                          Text('Entered coupon code - ' +
+                                                                          AutoSizeText('Entered coupon code - ' +
                                                                               discountController.text.toString()),
                                                                           addHorizontalSpace(
                                                                               20),
@@ -1587,7 +1595,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                               child: Center(
                                                                                 child: Padding(
                                                                                   padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 1.w),
-                                                                                  child: Text(
+                                                                                  child: AutoSizeText(
                                                                                     'Add Gift Card',
                                                                                     style: TextStyle(fontSize: 4.w, color: Colors.white),
                                                                                   ),
@@ -1646,7 +1654,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                                               padding: EdgeInsets.only(left: 12.0, right: 12.0),
                                                                               decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(6.0)),
                                                                               child: Center(
-                                                                                child: Text(
+                                                                                child: AutoSizeText(
                                                                                   'Remove Gift',
                                                                                   style: TextStyle(fontSize: 4.w, color: Colors.white),
                                                                                 ),
@@ -1705,7 +1713,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                       BorderRadius.circular(
                                                           6.0)),
                                               child: Center(
-                                                child: Text(
+                                                child: AutoSizeText(
                                                   'Remove Gift',
                                                   style: TextStyle(
                                                       fontSize: 4.w,
@@ -1801,7 +1809,7 @@ class _CartScreen2State extends State<CartScreen2>
             ),
             body: Container(
               child: Center(
-                child: Text(
+                child: AutoSizeText(
                   'NO ITEMS IN CART.\n \n \n WHOEVER SAID THAT MONEY CANNOT BUY HAPPINESS, DID NOT KNOW WHERE TO DO SHOPPING.\n\n\n ENJOY SHOPPING ON THE One!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -1820,7 +1828,7 @@ class _CartScreen2State extends State<CartScreen2>
     } else {
       return Scaffold(
           body: Container(
-              child: Center(child: Text('No Internet Connetion Found'))));
+              child: Center(child: AutoSizeText('No Internet Connetion Found'))));
     }
   }
 
@@ -1835,7 +1843,7 @@ class _CartScreen2State extends State<CartScreen2>
       onTap: () async {
         print(customerId);
 
-        if (guestCustomerID != '${customerId}') {
+        if (guestCustomerID != '${customerId}'|| customerId == null) {
           print('Merging process ');
           // setState((){
           //   cartItems.clear();
@@ -1870,7 +1878,7 @@ class _CartScreen2State extends State<CartScreen2>
             borderRadius: BorderRadius.circular(2.0),
             color: ConstantsVar.appColor),
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             'checkout'.toUpperCase(),
             style: TextStyle(
               fontSize: 16,
@@ -1888,6 +1896,7 @@ class _CartScreen2State extends State<CartScreen2>
 
   Future getCustomerIdxx() async {
     customerId = ConstantsVar.customerID;
+    gUId = ConstantsVar.prefs.getString('guestGUID');
   }
 
   Future refresh() async {

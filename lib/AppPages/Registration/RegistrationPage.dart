@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -513,7 +514,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Center(
-                                    child: Text(
+                                    child: AutoSizeText(
                                       "CANCEL",
                                       style: TextStyle(
                                           color: Colors.white,
@@ -597,7 +598,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Center(
-                                    child: Text(
+                                    child: AutoSizeText(
                                       "REGISTER",
                                       style: TextStyle(
                                           color: Colors.white,

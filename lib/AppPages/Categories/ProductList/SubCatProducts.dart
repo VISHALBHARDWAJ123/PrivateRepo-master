@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
@@ -73,7 +74,7 @@ class _ProductListState extends State<ProductList> {
                         padding: EdgeInsets.all(5),
                         shape: BadgeShape.circle,
                         position: BadgePosition.topEnd(),
-                        badgeContent: new Text('${value.badgeNumber}'),
+                        badgeContent: new AutoSizeText('${value.badgeNumber}'),
                         child: Icon(
                           Icons.shopping_cart_outlined,
                           color: Colors.white,
@@ -136,7 +137,7 @@ class _ProductListState extends State<ProductList> {
                             padding: EdgeInsets.all(5),
                             shape: BadgeShape.circle,
                             position: BadgePosition.topEnd(),
-                            badgeContent: new Text('${value.badgeNumber}'),
+                            badgeContent: new AutoSizeText('${value.badgeNumber}'),
                             child: Icon(
                               Icons.shopping_cart_outlined,
                               color: Colors.white,
@@ -245,7 +246,7 @@ class _AddCartBtnState extends State<AddCartBtn> {
                 size: 18,
               )
             : Container(color: Colors.black),
-        text: Text(
+        text: AutoSizeText(
           widget.text,
           style: TextStyle(
             fontSize: 4.w,
@@ -273,7 +274,7 @@ class _AddCartBtnState extends State<AddCartBtn> {
                       customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
                   .then((value) {
                 setState(() {
-                  val = int.parse(value);
+                  val = value;
                 });
                 context.read<cartCounter>().changeCounter(val);
               });

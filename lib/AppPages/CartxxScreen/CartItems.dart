@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+
 class CartItem extends StatefulWidget {
   String unitPrice;
 
@@ -43,8 +45,7 @@ class CartItem extends StatefulWidget {
   _CartItemState createState() => _CartItemState();
 }
 
-class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
-
+class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -53,7 +54,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
             context,
             CupertinoPageRoute(
                 builder: (context) =>
-                    NewProductDetails(productId: widget.productId.toString())));
+                    NewProductDetails(productId: widget.productId.toString(), screenName: 'Cart Screen2',)));
       },
       child: Container(
         height: 30.h,
@@ -86,7 +87,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.only(right: 8, top: 4),
-                            child: Text(
+                            child: AutoSizeText(
                               widget.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -96,23 +97,22 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                             ),
                           ),
                           Utils.getSizedBox(null, 6),
-                          Text(
+                          AutoSizeText(
                             "SKU : ${widget.sku}",
                             style: CustomTextStyle.textFormFieldRegular
                                 .copyWith(color: Colors.grey, fontSize: 15),
                           ),
                           Utils.getSizedBox(null, 6),
-                          Text(
+                          AutoSizeText(
                             widget.unitPrice,
                             overflow: TextOverflow.ellipsis,
-
                           ),
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Flexible(
-                                  child: Text(
+                                  child: AutoSizeText(
                                     widget.price,
                                     overflow: TextOverflow.ellipsis,
                                     style: CustomTextStyle.textFormFieldBlack
@@ -154,7 +154,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                                                                 'guestGUID')!)
                                                     .then((value) {
                                                   setState(() {
-                                                    val = int.parse(value);
+                                                    val = value;
                                                   });
                                                   context
                                                       .read<cartCounter>()
@@ -186,7 +186,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                                                                 'guestGUID')!)
                                                     .then((value) {
                                                   setState(() {
-                                                    val = int.parse(value);
+                                                    val = value;
                                                   });
                                                   context
                                                       .read<cartCounter>()
@@ -219,7 +219,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                                         color: Colors.grey.shade200,
                                         padding: const EdgeInsets.only(
                                             bottom: 2, right: 12, left: 12),
-                                        child: Text(
+                                        child: AutoSizeText(
                                           "${widget.quantity2}",
                                           style: CustomTextStyle
                                               .textFormFieldSemiBold,
@@ -254,7 +254,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                                                                   'guestGUID')!)
                                                       .then((value) {
                                                     setState(() {
-                                                      val = int.parse(value);
+                                                      val = value;
                                                     });
                                                     context
                                                         .read<cartCounter>()
@@ -316,7 +316,7 @@ class _CartItemState extends State<CartItem>  with WidgetsBindingObserver{
                                 ConstantsVar.prefs.getString('guestGUID')!)
                         .then((value) {
                       setState(() {
-                        val = int.parse(value);
+                        val = value;
                       });
                       context.read<cartCounter>().changeCounter(val);
                       widget.reload();

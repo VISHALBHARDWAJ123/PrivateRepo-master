@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 // import 'package:custom_dialog_flutter_demo/constants.dart';
@@ -118,7 +119,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
               child: Container(
                 width: 100.w,
                 child: Center(
-                  child: Text(
+                  child: AutoSizeText(
                     'Contact Us'.toUpperCase(),
                     style: TextStyle(
                       fontSize: 6.w,
@@ -137,7 +138,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                 shrinkWrap: true,
                 children: [
                   ListTile(
-                    title: Text(
+                    title: AutoSizeText(
                       'YOUR NAME:',
                       style: TextStyle(
                         color: Colors.black,
@@ -161,7 +162,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                   ),
                   addVerticalSpace(10),
                   ListTile(
-                    title: Text(
+                    title: AutoSizeText(
                       'YOUR EMAIL:',
                       style: TextStyle(
                         color: Colors.black,
@@ -186,7 +187,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                   ),
                   addVerticalSpace(10),
                   ListTile(
-                    title: Text(
+                    title: AutoSizeText(
                       'ENQUIRY:',
                       style: TextStyle(
                         color: Colors.black,
@@ -220,7 +221,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                 height: 15.w,
                 width: 100.w,
                 child: Center(
-                  child: Text(
+                  child: AutoSizeText(
                     'SUBMIT',
                     style: TextStyle(
                       fontSize: 5.4.w,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -104,7 +105,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                       alignment: Alignment(0.05, 0),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
+                        child: AutoSizeText(
                           'shipping ADDRESS'.toUpperCase(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -368,7 +369,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => ShippingAddress())),
-                        child: Text(
+                        child: AutoSizeText(
                           'CANCEL',
                           style: TextStyle(
                               color: Colors.white,
@@ -432,7 +433,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                           }
                         },
                         child: Center(
-                          child: Text(
+                          child: AutoSizeText(
                             'CONTINUE',
                             style: TextStyle(
                               fontFamily: 'Work Sans',

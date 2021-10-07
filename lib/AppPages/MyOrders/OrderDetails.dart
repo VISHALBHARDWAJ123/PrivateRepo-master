@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,7 @@ class _OrderDetailsState extends State<OrderDetails>
             context,
             CupertinoPageRoute(
                 builder: (context) =>
-                    NewProductDetails(productId: productId.toString())));
+                    NewProductDetails(productId: productId.toString(), screenName: 'Order Details',)));
       },
       child: Stack(
         children: <Widget>[
@@ -136,7 +137,7 @@ class _OrderDetailsState extends State<OrderDetails>
                       children: <Widget>[
                         Container(
                           padding: EdgeInsets.only(right: 8, top: 4),
-                          child: Text(
+                          child: AutoSizeText(
                             'Name: ' + title,
                             softWrap: true,
                             style: CustomTextStyle.textFormFieldSemiBold
@@ -145,7 +146,7 @@ class _OrderDetailsState extends State<OrderDetails>
                         ),
                         Utils.getSizedBox(null, 4),
                         Flexible(
-                          child: Text(
+                          child: AutoSizeText(
                             "SKU : $sku",
                             style: CustomTextStyle.textFormFieldRegular
                                 .copyWith(color: Colors.grey, fontSize: 15),
@@ -153,14 +154,14 @@ class _OrderDetailsState extends State<OrderDetails>
                         ),
                         Utils.getSizedBox(null, 3),
                         Flexible(
-                          child: Text(
+                          child: AutoSizeText(
                             'Unit Price: ' + unitPrice,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Utils.getSizedBox(null, 3),
                         Flexible(
-                          child: Text(
+                          child: AutoSizeText(
                             'Sub Total: ' + price,
                             overflow: TextOverflow.ellipsis,
                             style: CustomTextStyle.textFormFieldBlack
@@ -173,7 +174,7 @@ class _OrderDetailsState extends State<OrderDetails>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(
+                                AutoSizeText(
                                   'Quantity: ' + quantity,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -294,7 +295,7 @@ class _OrderDetailsState extends State<OrderDetails>
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.all(4.5.w),
-                    child: Text(
+                    child: AutoSizeText(
                       'My Order Details'.toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -325,7 +326,7 @@ class _OrderDetailsState extends State<OrderDetails>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Center(
-                                  child: Text(
+                                  child: AutoSizeText(
                                     widget.orderNumber,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
@@ -377,7 +378,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                         Utils.getSizedBox(null, 3),
                                         Container(
                                           width: 100.w,
-                                          child: Text(
+                                          child: AutoSizeText(
                                             widget.orderDate,
                                             style: TextStyle(
                                               fontSize: 5.w,
@@ -403,7 +404,7 @@ class _OrderDetailsState extends State<OrderDetails>
                               width: 100.w,
                               height: 2.7.h,
                               child: Center(
-                                child: Text(
+                                child: AutoSizeText(
                                   widget.orderProgress.contains('Pending')
                                       ? 'Retry Payment'.toUpperCase()
                                       : 're-order'.toUpperCase(),
@@ -435,7 +436,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Text(
+                              child: AutoSizeText(
                                 'Price Details',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -451,14 +452,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Sub-Total:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 5.w,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     subTotal,
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -475,14 +476,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Shipping:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 5.w,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     shipping == null
                                         ? 'No Shipping Available for now '
                                         : shipping,
@@ -503,14 +504,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Tax 5%:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 5.w,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     taxPrice,
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -528,14 +529,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Order Total:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 5.w,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     totalPrice,
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -555,7 +556,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           child: Center(
                             child: Padding(
                               padding: EdgeInsets.all(3.5.w),
-                              child: Text(
+                              child: AutoSizeText(
                                 'PRODUCT(S)'.toUpperCase(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -631,7 +632,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           child: Center(
                             child: Padding(
                               padding: EdgeInsets.all(3.5.w),
-                              child: Text(
+                              child: AutoSizeText(
                                 'Billing address'.toUpperCase(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -672,7 +673,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                         Container(
                                           padding:
                                               EdgeInsets.only(right: 8, top: 4),
-                                          child: Text(
+                                          child: AutoSizeText(
                                             firstName + ' ' + lastName,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -686,7 +687,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                         ),
                                         Utils.getSizedBox(null, 6),
                                         Container(
-                                            child: Text(
+                                            child: AutoSizeText(
                                           'Email - ' + email,
                                           style: TextStyle(
                                             fontSize: 4.w,
@@ -698,7 +699,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Flexible(
-                                                child: Text(
+                                                child: AutoSizeText(
                                                   'Address -' + address1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -711,14 +712,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                           ),
                                         ),
                                         Container(
-                                            child: Text(
+                                            child: AutoSizeText(
                                           'Phone -' + ' ' + phoneNumber,
                                           style: TextStyle(
                                             fontSize: 4.w,
                                           ),
                                         )),
                                         Container(
-                                          child: Text(
+                                          child: AutoSizeText(
                                             'Country -' + ' ' + countryName,
                                             style: TextStyle(
                                               fontSize: 4.w,
@@ -726,7 +727,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                           ),
                                         ),
                                         Container(
-                                          child: Text(
+                                          child: AutoSizeText(
                                             'City -' + ' ' + city,
                                             style: TextStyle(
                                               fontSize: 4.w,
@@ -752,7 +753,7 @@ class _OrderDetailsState extends State<OrderDetails>
                             child: Center(
                               child: Padding(
                                 padding: EdgeInsets.all(3.5.w),
-                                child: Text(
+                                child: AutoSizeText(
                                   'Shipping address'.toUpperCase(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -796,7 +797,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                           Container(
                                             padding: EdgeInsets.only(
                                                 right: 8, top: 4),
-                                            child: Text(
+                                            child: AutoSizeText(
                                               sFirstName + ' ' + sLastName,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -808,7 +809,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                           ),
                                           Utils.getSizedBox(null, 6),
                                           Container(
-                                              child: Text(
+                                              child: AutoSizeText(
                                             'Email - ' + sEmail,
                                             style: TextStyle(
                                               fontSize: 4.w,
@@ -821,7 +822,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Flexible(
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     'Address -' + sAddress1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -833,7 +834,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                             ),
                                           ),
                                           Container(
-                                            child: Text(
+                                            child: AutoSizeText(
                                               'Phone -' + ' ' + sPhone,
                                               style: TextStyle(
                                                 fontSize: 4.w,
@@ -841,14 +842,14 @@ class _OrderDetailsState extends State<OrderDetails>
                                             ),
                                           ),
                                           Container(
-                                              child: Text(
+                                              child: AutoSizeText(
                                             'Country -' + ' ' + sCountryName,
                                             style: TextStyle(
                                               fontSize: 4.w,
                                             ),
                                           )),
                                           Container(
-                                              child: Text(
+                                              child: AutoSizeText(
                                             'City -' + ' ' + sCity,
                                             style: TextStyle(
                                               fontSize: 4.w,
@@ -870,7 +871,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           color: Colors.white60,
                           width: 100.w,
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Shipping Method\n'.toUpperCase(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -888,7 +889,7 @@ class _OrderDetailsState extends State<OrderDetails>
                           child: Padding(
                             padding: EdgeInsets.all(3.5.w),
                             child: Center(
-                              child: Text(
+                              child: AutoSizeText(
                                 shippingMethod,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

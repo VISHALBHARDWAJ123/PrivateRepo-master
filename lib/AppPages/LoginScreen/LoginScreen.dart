@@ -1,4 +1,5 @@
 // import 'package:connectivity/connectivity.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                         ),
                                       ),
                                     ),
-                                    Text(
+                                    AutoSizeText(
                                       "CUSTOMER LOGIN",
                                       style: TextStyle(
                                           color: Colors.black,
@@ -160,6 +161,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                           child: Container(
                                             height: 15.w,
                                             child: TextFormField(
+                                              keyboardType: TextInputType.emailAddress,
                                               validator: (val) {
                                                 if (isEmailValid(val!)) {
                                                   return null;
@@ -318,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                                           'Please Enter Correct Details');
                                                             }
                                                           },
-                                                          child: Text(
+                                                          child: AutoSizeText(
                                                             "LOGIN",
                                                             style: TextStyle(
                                                                 color: Colors
@@ -359,7 +361,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                                         (context) =>
                                                                             RegstrationPage()));
                                                           },
-                                                          child: Text(
+                                                          child: AutoSizeText(
                                                             "REGISTER",
                                                             style: TextStyle(
                                                                 color: Colors
@@ -385,7 +387,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                           builder: (context) =>
                                                               ForgotPassScreen()));
                                                 },
-                                                child: Text(
+                                                child: AutoSizeText(
                                                   'Forgot Password?',
                                                   style: TextStyle(
                                                       fontWeight:

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -184,7 +185,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
-                    child: Text(
+                    child: AutoSizeText(
                       "Verification Code".toUpperCase(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 6.5.w),
@@ -197,14 +198,14 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                 ),
-                child: Text(
+                child: AutoSizeText(
                   "We texted you a code",
                   style: theme.textTheme.headline6,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Please enter it below",
+                child: AutoSizeText("Please enter it below",
                     style: theme.textTheme.headline6),
               ),
               Spacer(flex: 2),
@@ -232,7 +233,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                   getOtp();
                 },
                 child: Center(
-                  child: Text(
+                  child: AutoSizeText(
                     "Didn't get code?",
                     style: theme.textTheme.subtitle1,
                   ),
@@ -261,7 +262,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
-                                  child: Text(
+                                  child: AutoSizeText(
                                     "CANCEL",
                                     style: TextStyle(
                                         color: Colors.white,
@@ -306,7 +307,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
-                                  child: Text(
+                                  child: AutoSizeText(
                                     "VERIFY OTP",
                                     style: TextStyle(
                                         color: Colors.white,

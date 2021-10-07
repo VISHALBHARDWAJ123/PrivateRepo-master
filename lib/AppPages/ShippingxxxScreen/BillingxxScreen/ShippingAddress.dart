@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -180,7 +181,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: Center(
-                    child: Text(
+                    child: AutoSizeText(
                   'Shipping Details'.toUpperCase(),
                   style: TextStyle(
                     fontSize: 6.w,
@@ -227,7 +228,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 3.w),
-                          child: Text(
+                          child: AutoSizeText(
                             'Click & Collect',
                             style: TextStyle(
                               fontSize: 5.7.w,
@@ -242,7 +243,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(
+                  child: AutoSizeText(
                     ConstantsVar.stringShipping,
                     textAlign: TextAlign.justify,
                     style: TextStyle(
@@ -264,7 +265,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: LoadingButton(
                               color: Colors.white,
-                              defaultWidget: Text(myPickPoint[index].name,
+                              defaultWidget: AutoSizeText(myPickPoint[index].name,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 4.6.w, color: Colors.black)),
@@ -301,7 +302,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                             ],
                                           ),
                                         ),
-                                        title: Text(
+                                        title: AutoSizeText(
                                           'This will lead you to payment page.',
                                           textAlign: TextAlign.center,
                                           softWrap: true,
@@ -314,7 +315,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: Text(
+                                            child: AutoSizeText(
                                               'Cancel'.toUpperCase(),
                                               style:
                                                   TextStyle(color: Colors.red),
@@ -331,7 +332,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                                 ),
                                               ),
                                             ),
-                                            child: Text(
+                                            child: AutoSizeText(
                                               'Confirm'.toUpperCase(),
                                               style: TextStyle(
                                                   color: Colors.green),
@@ -362,7 +363,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             margin: EdgeInsets.only(left: 10.0),
                             width: MediaQuery.of(context).size.width,
                             child: Center(
-                              child: Text(
+                              child: AutoSizeText(
                                 'Or Select a Shipping Address',
                                 style: TextStyle(
                                     fontSize: 6.w, fontWeight: FontWeight.bold),
@@ -447,7 +448,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         // margin: EdgeInsets.only(left: 10.0),
                         width: MediaQuery.of(context).size.width,
                         child: Center(
-                          child: Text(
+                          child: AutoSizeText(
                             'Or Add a New Shipping Address',
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -484,7 +485,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               color: ConstantsVar.appColor,
                               borderRadius: BorderRadius.circular(6.0)),
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Add New Address',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 4.w),
@@ -501,7 +502,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Order Summary',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 6.4.w),
@@ -562,14 +563,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 'Sub-Total:',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 15,
                                 ),
                               ),
-                              Text(
+                              AutoSizeText(
                                 orderSummaryResponse!.ordertotals.subTotal
                                     .toString(),
                                 style: TextStyle(
@@ -586,14 +587,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 'Shipping:',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 15,
                                 ),
                               ),
-                              Text(
+                              AutoSizeText(
                                 orderSummaryResponse!.ordertotals.shipping ==
                                         null
                                     ? 'During Checkout'
@@ -622,7 +623,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                           null
                                       ? false
                                       : true,
-                                  child: Text(
+                                  child: AutoSizeText(
                                     'Discount:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
@@ -636,7 +637,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                           null
                                       ? false
                                       : true,
-                                  child: Text(
+                                  child: AutoSizeText(
                                     orderSummaryResponse!
                                         .ordertotals.orderTotalDiscount
                                         .toString(),
@@ -656,14 +657,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 'Tax 5%:',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 14,
                                 ),
                               ),
-                              Text(
+                              AutoSizeText(
                                 orderSummaryResponse!.ordertotals.tax,
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
@@ -681,14 +682,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                AutoSizeText(
                                   'Total:',
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 14,
                                   ),
                                 ),
-                                Text(
+                                AutoSizeText(
                                   orderSummaryResponse!
                                               .ordertotals.orderTotal ==
                                           null
@@ -761,7 +762,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.only(right: 8, top: 4),
-                      child: Text(
+                      child: AutoSizeText(
                         item.picture.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -771,7 +772,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       ),
                     ),
                     Utils.getSizedBox(null, 6),
-                    Text(
+                    AutoSizeText(
                       "SKU : ${item.sku}",
                       style: CustomTextStyle.textFormFieldRegular
                           .copyWith(color: Colors.grey, fontSize: 15),
@@ -781,7 +782,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Flexible(
-                            child: Text(
+                            child: AutoSizeText(
                               item.unitPrice,
                               overflow: TextOverflow.ellipsis,
                               style: CustomTextStyle.textFormFieldBlack
@@ -798,7 +799,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                   color: Colors.grey.shade200,
                                   padding: const EdgeInsets.only(
                                       bottom: 2, right: 12, left: 12),
-                                  child: Text(
+                                  child: AutoSizeText(
                                     "${item.quantity}",
                                     style:
                                         CustomTextStyle.textFormFieldSemiBold,
@@ -848,7 +849,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Text(
+                  child: AutoSizeText(
                     'price details'.toUpperCase(),
                     style: TextStyle(
                       fontFamily: 'Poppins',
@@ -863,14 +864,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      AutoSizeText(
                         'Sub-Total:',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 15,
                         ),
                       ),
-                      Text(
+                      AutoSizeText(
                         orderSummaryResponse.ordertotals.subTotal,
                         style: TextStyle(
                             fontFamily: 'Poppins',
@@ -886,14 +887,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      AutoSizeText(
                         'Shipping:',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 15,
                         ),
                       ),
-                      Text(
+                      AutoSizeText(
                         orderSummaryResponse.ordertotals.shipping == null
                             ? 'No Shipping Available for now '
                             : orderSummaryResponse.ordertotals.shipping,
@@ -914,14 +915,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        AutoSizeText(
                           'Discount:',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
                           ),
                         ),
-                        Text(
+                        AutoSizeText(
                           orderSummaryResponse.ordertotals.subTotalDiscount,
                           style: TextStyle(
                               fontFamily: 'Poppins',
@@ -947,14 +948,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                AutoSizeText(
                   'Total Amount ',
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
+                AutoSizeText(
                   orderSummaryResponse.ordertotals.orderTotal == null
                       ? 'During Checkout'
                       : orderSummaryResponse.ordertotals.orderTotal,
@@ -969,7 +970,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
         ]),
       );
     } else {
-      return Container(child: Text('No result found'));
+      return Container(child: AutoSizeText('No result found'));
     }
   }
 

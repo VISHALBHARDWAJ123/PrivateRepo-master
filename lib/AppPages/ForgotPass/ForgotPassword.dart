@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -68,7 +69,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
+                          child: AutoSizeText(
                             'ENTER YOUR EMAIL',
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -138,7 +139,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                   child: Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: Center(
-                                      child: Text(
+                                      child: AutoSizeText(
                                         "CANCEL",
                                         style: TextStyle(
                                           fontSize: 18.0,
@@ -175,7 +176,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                   child: Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: Center(
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'CONFIRM',
                                         style: TextStyle(
                                             color: Colors.white,

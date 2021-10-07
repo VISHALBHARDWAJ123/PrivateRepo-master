@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +43,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   @override
   void initState() {
     super.initState();
+    // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
 
     getApiToken().then((value) => apiCallToHomeScreen(value));
   }
@@ -232,52 +234,88 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return new NewProductDetails(
             // customerId: ConstantsVar.customerID,
-            productId: list.id,
+            productId: list.id, screenName: 'Home Screen',
           );
         }));
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        // height: Adaptive.w(50),
-        color: Colors.white,
-        width: Adaptive.w(34),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Container(
-                color: Colors.white,
-                width: 33.w,
-                padding: EdgeInsets.all(1.w),
-                height: 33.w,
-                // width: Adaptive.w(32),
-                // height: Adaptive.w(40),
-                child: CachedNetworkImage(
-                  imageUrl: list.imageUrl[0],
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Container(
-              width: 36.w,
-              child: Center(
-                child: Text(
-                  list.price.splitBefore('incl'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    wordSpacing: 4,
-                    color: Colors.grey,
-                    fontSize: 4.1.w,
-                    fontWeight: FontWeight.bold,
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            // height: Adaptive.w(50),
+            color: Colors.white,
+            width: Adaptive.w(34),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Container(
+                    color: Colors.white,
+                    width: 33.w,
+                    padding: EdgeInsets.all(1.w),
+                    height: 33.w,
+                    // width: Adaptive.w(32),
+                    // height: Adaptive.w(40),
+                    child: CachedNetworkImage(
+                      imageUrl: list.imageUrl[0],
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
+                Container(
+                  width: 36.w,
+                  child: Center(
+                    child: AutoSizeText(
+                      list.price.splitBefore('incl'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        wordSpacing: 4,
+                        color: Colors.grey,
+                        fontSize: 4.1.w,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Visibility(
+            visible: list.discountPercentage.trim().length != 0 ? true : false,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 12.w,
+                    height: 12.w,
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'MyAssets/plaincircle.png',
+                          width: 15.w,
+                          height: 15.w,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            list.discountPercentage,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 4.2.w,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -415,11 +453,12 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                         color: Colors.black,
                         // height: 12.h,
                         child: Padding(
-                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 5.w),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.w, horizontal: 5.w),
                           child: Column(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 name.toUpperCase(),
                                 style: TextStyle(
                                   color: Colors.white,
@@ -431,12 +470,13 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Container(
                                   width: 15.w,
-                                  child: Divider(height: 2, color: Colors.white),
+                                  child:
+                                      Divider(height: 2, color: Colors.white),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text('Shop Now',
+                                child: AutoSizeText('Shop Now',
                                     style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center),
                               ),
@@ -504,11 +544,12 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                         color: Colors.black,
                         // height: 12.h,
                         child: Padding(
-                          padding:  EdgeInsets.symmetric(vertical:10.w,horizontal: 8.w),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.w, horizontal: 8.w),
                           child: Column(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 name.toUpperCase(),
                                 style: TextStyle(
                                   color: Colors.white,
@@ -520,12 +561,13 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Container(
                                   width: 15.w,
-                                  child: Divider(height: 2, color: Colors.white),
+                                  child:
+                                      Divider(height: 2, color: Colors.white),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text('Shop Now',
+                                child: AutoSizeText('Shop Now',
                                     style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center),
                               ),
@@ -539,7 +581,10 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                       child: Container(
                           width: 10.w,
                           height: 10.w,
-                          child: Image.asset('MyAssets/icon1.png',fit: BoxFit.fill,)),
+                          child: Image.asset(
+                            'MyAssets/icon1.png',
+                            fit: BoxFit.fill,
+                          )),
                     )
                   ],
                 ),

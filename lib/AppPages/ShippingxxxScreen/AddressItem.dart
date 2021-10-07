@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -127,7 +128,7 @@ class _AddressItemState extends State<AddressItem> {
                     children: <Widget>[
                       Container(
                         padding: EdgeInsets.only(right: 8, top: 4),
-                        child: Text(
+                        child: AutoSizeText(
                           widget.firstName + ' ' + widget.lastName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -137,13 +138,13 @@ class _AddressItemState extends State<AddressItem> {
                         ),
                       ),
                       Utils.getSizedBox(null, 6),
-                      Container(child: Text('Email - ' + widget.email)),
+                      Container(child: AutoSizeText('Email - ' + widget.email)),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Flexible(
-                              child: Text(
+                              child: AutoSizeText(
                                 'Address -' + widget.address1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 15),
@@ -153,9 +154,9 @@ class _AddressItemState extends State<AddressItem> {
                         ),
                       ),
                       Container(
-                          child: Text('Phone -' + ' ' + widget.phoneNumber)),
+                          child: AutoSizeText('Phone -' + ' ' + widget.phoneNumber)),
                       Container(
-                          child: Text('Country -' + ' ' + widget.countryName)),
+                          child: AutoSizeText('Country -' + ' ' + widget.countryName)),
                       addVerticalSpace(12),
                       GestureDetector(
                         onTap: () async {
@@ -277,7 +278,7 @@ class _AddressItemState extends State<AddressItem> {
                           height: 40,
                           width: MediaQuery.of(context).size.width,
                           child: Center(
-                              child: Text(
+                              child: AutoSizeText(
                             widget.buttonName,
                             style: TextStyle(
                                 fontSize: 4.w,

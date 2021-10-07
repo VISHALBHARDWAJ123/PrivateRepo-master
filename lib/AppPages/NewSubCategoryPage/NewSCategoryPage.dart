@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -76,7 +76,7 @@ class _SubCatNewState extends State<SubCatNew> {
                   child: Scaffold(
                     body: Container(
                       child: Center(
-                        child: Text(
+                        child: AutoSizeText(
                           snapshot.error.toString(),
                         ),
                       ),
@@ -116,7 +116,7 @@ class _SubCatNewState extends State<SubCatNew> {
                           color: Colors.grey.shade200,
                           padding: EdgeInsets.all(2.h),
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               widget.title,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 6.w),
@@ -211,7 +211,7 @@ class _SubCatNewState extends State<SubCatNew> {
                                                   padding: const EdgeInsets
                                                           .symmetric(
                                                       horizontal: 8.0),
-                                                  child: Text(
+                                                  child: AutoSizeText(
                                                     myList[index]['Name'],
                                                     maxLines: 2,
                                                     textAlign: TextAlign.start,

@@ -1,12 +1,12 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
@@ -23,8 +23,12 @@ import 'package:untitled2/utils/utils/colors.dart';
 import 'ProductResponse.dart';
 
 class NewProductDetails extends StatefulWidget {
-  NewProductDetails({Key? key, required this.productId}) : super(key: key);
+  NewProductDetails(
+      {Key? key, required this.productId, required this.screenName})
+      : super(key: key);
   final productId;
+
+  final String screenName;
 
   @override
   _NewProductDetailsState createState() => _NewProductDetailsState();
@@ -60,6 +64,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
 
   var _isVisibility;
 
+  var customerGuid;
+
   @override
   void dispose() {
     super.dispose();
@@ -68,10 +74,18 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   @override
   void initState() {
     super.initState();
+    getInstance();
     setState(() {
       productID = widget.productId;
       guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
+      customerGuid = ConstantsVar.prefs.getString('guestGUID');
     });
+
+    ApiCalls.readCounter(customerGuid: customerGuid)
+        .then((value) => setState(() {
+              context.read<cartCounter>().changeCounter(value);
+            }));
+
     ApiCalls.getProductData('$productID').then((value) {
       ProductResponse myResponse = ProductResponse.fromJson(value);
       setState(() {
@@ -148,8 +162,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     child: Consumer<cartCounter>(
                       builder: (context, value, child) {
                         return Badge(
+                          position: BadgePosition.topEnd(),
                           badgeColor: Colors.white,
-                          badgeContent: new Text(value.badgeNumber.toString()),
+                          badgeContent:
+                              new AutoSizeText(value.badgeNumber.toString()),
                           child: Icon(
                             Icons.shopping_cart_outlined,
                             color: Colors.white,
@@ -160,7 +176,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     onTap: () => Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => CartScreen2(isOtherScren: true, otherScreenName: 'Product Screen',),
+                        builder: (context) => CartScreen2(
+                          isOtherScren: true,
+                          otherScreenName: 'Product Screen',
+                        ),
                       ),
                     ),
                   ),
@@ -172,7 +191,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
               title: InkWell(
                 onTap: () => Navigator.pushAndRemoveUntil(
                     context,
-                    CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
+                    CupertinoPageRoute(
+                        builder: (context) => MyHomePage(
+                              pageIndex: 0,
+                            )),
                     (route) => false),
                 child: Image.asset(
                   'MyAssets/logo.png',
@@ -202,7 +224,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     initialData: initialData,
                     isDiscountAvail: isDiscountAvail,
                     discountedPrice:
-                        discountedPrice != null ? discountedPrice : '', disPercentage:discountPercentage ,
+                        discountedPrice != null ? discountedPrice : '',
+                    disPercentage: discountPercentage,
                   ),
                 ),
                 Container(
@@ -242,30 +265,34 @@ class _NewProductDetailsState extends State<NewProductDetails> {
       required List<String> imageList,
       required List<String> largeImage,
       required String assemblyCharges,
-      required dynamic initialData,required String disPercentage}) {
+      required dynamic initialData,
+      required String disPercentage}) {
     return ListView(
       children: [
         Padding(
           padding: const EdgeInsets.all(6.0),
-          child: Container(child: SliderImages(imageList, largeImage, context,discountPercentage)),
+          child: Container(
+              child: SliderImages(
+                  imageList, largeImage, context, discountPercentage)),
         ),
         Container(
-          height: 42.h,
+          height: 28.h,
           width: MediaQuery.of(context).size.width,
           color: Color.fromARGB(255, 234, 235, 235),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                AutoSizeText(
                   name,
+                  maxLines: 1,
                   style: TextStyle(
-                    wordSpacing: 1,
-                    letterSpacing: 1,
-                    fontSize: 7.w,
+                    wordSpacing: .5,
+                    letterSpacing: .4,
+                    fontSize: 6.7.w,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.start,
@@ -274,7 +301,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AutoSizeText(
                       descritption,
                       maxLines: 1,
                       style: TextStyle(
@@ -283,7 +310,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    Text(
+                    AutoSizeText(
                       'SKU: $sku',
                       maxLines: 1,
                       style: TextStyle(
@@ -319,7 +346,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                     ),
                     Visibility(
                       visible: assemblyCharges == null ? false : true,
-                      child: Text(
+                      child: AutoSizeText(
                         assemblyCharges == null ? '' : assemblyCharges,
                         maxLines: 1,
                         style: TextStyle(
@@ -342,10 +369,13 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 3.0),
                         child: discountWidget(
-                            actualPrice: price, fontSize: 3.6.w, width: 50.w, isSpace: !isDiscountAvail),
+                            actualPrice: price,
+                            fontSize: 3.6.w,
+                            width: 50.w,
+                            isSpace: !isDiscountAvail),
                       ),
                     ),
-                    Text(
+                    AutoSizeText(
                       discountedPrice == '' ? price : discountedPrice,
                       maxLines: 1,
                       style: TextStyle(
@@ -372,7 +402,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         ExpandablePanel(
           header: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: Text('OVERVIEW', style: TextStyle(fontSize: 4.w)),
+            child: AutoSizeText('OVERVIEW', style: TextStyle(fontSize: 4.w)),
           ),
           collapsed: Text(
             '',
@@ -384,7 +414,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                child: Text(
+                child: AutoSizeText(
                   name,
                   style: TextStyle(
                     fontSize: 6.w,
@@ -418,6 +448,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         ),
       ],
     );
+  }
+
+  void getInstance() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
 }
 

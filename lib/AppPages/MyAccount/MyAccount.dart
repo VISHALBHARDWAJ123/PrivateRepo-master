@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +104,7 @@ class _MyAccountState extends State<MyAccount> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Center(
-                        child: Text(
+                        child: AutoSizeText(
                           'my account'.toUpperCase(),
                           style: TextStyle(
                             color: Colors.black,
@@ -151,7 +152,7 @@ class _MyAccountState extends State<MyAccount> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
-                                          Text(
+                                          AutoSizeText(
                                             'You are not logged in with THE One account.',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -169,7 +170,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Login',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -193,7 +194,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Register',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -252,7 +253,7 @@ class _MyAccountState extends State<MyAccount> {
                                     ),
                                     Container(
                                       // color: Colors.white,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'my Addresses'.toUpperCase(),
                                         style: TextStyle(
                                           color: Colors.black,
@@ -301,7 +302,7 @@ class _MyAccountState extends State<MyAccount> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
-                                          Text(
+                                          AutoSizeText(
                                             'You are not logged in with THE One account.',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -319,7 +320,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Login',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -343,7 +344,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Register',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -397,7 +398,7 @@ class _MyAccountState extends State<MyAccount> {
                                     ),
                                     Container(
                                       // color: Colors.white,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'my orders'.toUpperCase(),
                                         style: TextStyle(
                                           color: Colors.black,
@@ -448,7 +449,7 @@ class _MyAccountState extends State<MyAccount> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
-                                          Text(
+                                          AutoSizeText(
                                             'You are not logged in with THE One account.',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -466,7 +467,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Login',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -490,7 +491,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 child: Container(
                                                   width: 30.w,
                                                   child: Center(
-                                                    child: Text(
+                                                    child: AutoSizeText(
                                                       'Register',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -544,7 +545,7 @@ class _MyAccountState extends State<MyAccount> {
                                     ),
                                     Container(
                                       // color: Colors.white,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'change password'.toUpperCase(),
                                         style: TextStyle(
                                           color: Colors.black,

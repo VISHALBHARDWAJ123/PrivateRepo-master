@@ -1,24 +1,23 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// import 'package:untitled2/AppPages/Cart%20Screen/CartScreen2.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/NotificationxxScreen/Notification_Screen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
-import 'package:untitled2/AppPages/Registration/register_page.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
-// import 'package:untitled2/utils/utils/colors.dart';
-
+import 'package:provider/provider.dart';
 enum AniProps { color }
 
 class MenuPage extends StatefulWidget {
@@ -58,7 +57,11 @@ class _MenuPageState extends State<MenuPage> {
   var customerId;
   var userName, email, phnNumber;
 
-  bool isEmailVisible = false, isPhoneNumberVisible = false, isUserNameVisible = false;
+  bool isEmailVisible = false,
+      isPhoneNumberVisible = false,
+      isUserNameVisible = false;
+
+  var customerGuid;
 
   // var gUId;
 
@@ -72,8 +75,16 @@ class _MenuPageState extends State<MenuPage> {
       email = ConstantsVar.prefs.getString('email');
       userName = ConstantsVar.prefs.getString('userName');
       phnNumber = ConstantsVar.prefs.getString('phone');
-   if(customerId.toString().trim() !=null && email.toString().trim() !=null && phnNumber.toString().trim() !=null)
-     isEmailVisible = true;
+      customerGuid = ConstantsVar.prefs.getString('guestGUID');
+
+      ApiCalls.readCounter(customerGuid: customerGuid).then((value) =>
+          setState(() {
+            context.read<cartCounter>().changeCounter(value);
+          }));
+
+      if (customerId.toString().trim() != null &&
+          email.toString().trim() != null &&
+          phnNumber.toString().trim() != null) isEmailVisible = true;
       isUserNameVisible = true;
       isPhoneNumberVisible = true;
     });
@@ -140,11 +151,12 @@ class _MenuPageState extends State<MenuPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: !isUserNameVisible?10:0),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: !isUserNameVisible ? 10 : 0),
                                   child: Container(
                                     width: 100.w,
                                     child: Center(
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'Welcome',
                                         style: TextStyle(
                                           color: Colors.black,
@@ -184,7 +196,7 @@ class _MenuPageState extends State<MenuPage> {
                                               visible: userName == null
                                                   ? false
                                                   : true,
-                                              child: Text(
+                                              child: AutoSizeText(
                                                 userName == null
                                                     ? ''
                                                     : userName,
@@ -218,7 +230,7 @@ class _MenuPageState extends State<MenuPage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              AutoSizeText(
                                                 email == null ? '' : email,
                                                 style: TextStyle(
                                                   color: Colors.grey.shade700,
@@ -248,7 +260,7 @@ class _MenuPageState extends State<MenuPage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              AutoSizeText(
                                                 phnNumber == null
                                                     ? ''
                                                     : phnNumber,
@@ -303,7 +315,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               Container(
                                 // color: Colors.white,
-                                child: Text(
+                                child: AutoSizeText(
                                   'My Account'.toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.black,
@@ -323,7 +335,7 @@ class _MenuPageState extends State<MenuPage> {
                       milliseconds: 70,
                     ),
                     child: InkWell(
-                      onTap: () async{
+                      onTap: () async {
                         final result = await Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -365,7 +377,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               Container(
                                 // color: Colors.white,
-                                child: Text(
+                                child: AutoSizeText(
                                   'My Cart'.toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.black,
@@ -411,7 +423,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               Container(
                                 // color: Colors.white,
-                                child: Text(
+                                child: AutoSizeText(
                                   'notifications'.toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.black,
@@ -465,7 +477,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               Container(
                                 // color: Colors.white,
-                                child: Text(
+                                child: AutoSizeText(
                                   'Register'.toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.black,
@@ -520,7 +532,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               Container(
                                 // color: Colors.white,
-                                child: Text(
+                                child: AutoSizeText(
                                   customerId == '' || customerId == null
                                       ? 'login'.toUpperCase()
                                       : 'logout'.toUpperCase(),

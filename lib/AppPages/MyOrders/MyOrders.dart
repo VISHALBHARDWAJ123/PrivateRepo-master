@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -136,7 +137,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                         child: Container(
                           width: 100.w,
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'MY ORDERS',
                               style: TextStyle(
                                 fontSize: 8.5.w,
@@ -156,7 +157,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                 if (orders['customerorders']['Orders'].length <
                                     0) {
                                   return Container(
-                                      child: Text('No Orders found.'));
+                                      child: AutoSizeText('No Orders found.'));
                                 } else {
                                   orderDate =
                                       '${orders['customerorders']['Orders'][index]['CreatedOn']}';
@@ -199,7 +200,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Center(
-                                                child: Text(
+                                                child: AutoSizeText(
                                                   '\nORDER NUMBER\n ' +
                                                       orders['customerorders']
                                                                       ['Orders']
@@ -283,7 +284,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                     ),
                                                     Utils.getSizedBox(null, 3),
                                                     Container(
-                                                        child: Text(
+                                                        child: AutoSizeText(
                                                       'Order Date: ' +
                                                           resultDate,
                                                       style: TextStyle(
@@ -295,7 +296,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                     )),
                                                     Utils.getSizedBox(null, 3),
                                                     Container(
-                                                      child: Text(
+                                                      child: AutoSizeText(
                                                         'Order Total: ' +
                                                             orders['customerorders']
                                                                         [
@@ -329,7 +330,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                       width: 100.w,
                                                       height: 2.7.h,
                                                       child: Center(
-                                                        child: Text(
+                                                        child: AutoSizeText(
                                                           'Details',
                                                           style: TextStyle(
                                                             color: Colors.white,

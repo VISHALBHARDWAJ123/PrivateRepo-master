@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,7 @@ class _BillingDetailsState extends State<BillingDetails>
                         child: Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 20),
-                            child: Text(
+                            child: AutoSizeText(
                               'Billing Details'.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 6.w, fontWeight: FontWeight.bold),
@@ -194,7 +195,7 @@ class _BillingDetailsState extends State<BillingDetails>
                             margin: EdgeInsets.only(left: 10.0),
                             width: MediaQuery.of(context).size.width,
                             child: Center(
-                              child: Text(
+                              child: AutoSizeText(
                                 'Select a Billing Address',
                                 style: TextStyle(
                                     fontSize: 6.4.w,
@@ -275,7 +276,7 @@ class _BillingDetailsState extends State<BillingDetails>
                           // margin: EdgeInsets.only(left: 10.0),
                           width: MediaQuery.of(context).size.width,
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Or Add a New Billing Address',
                               style: TextStyle(
                                   fontSize: 6.4.w, fontWeight: FontWeight.bold),
@@ -319,7 +320,7 @@ class _BillingDetailsState extends State<BillingDetails>
                                   color: ConstantsVar.appColor,
                                   borderRadius: BorderRadius.circular(6.0)),
                               child: Center(
-                                child: Text(
+                                child: AutoSizeText(
                                   'Add New Address',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 4.w),
@@ -338,7 +339,7 @@ class _BillingDetailsState extends State<BillingDetails>
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               child: Center(
-                                child: Text(
+                                child: AutoSizeText(
                                   'Order Summary',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -379,14 +380,14 @@ class _BillingDetailsState extends State<BillingDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Sub-Total:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 15,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     orderSummaryResponse!.ordertotals.subTotal
                                         .toString(),
                                     style: TextStyle(
@@ -404,14 +405,14 @@ class _BillingDetailsState extends State<BillingDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Shipping:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 15,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     orderSummaryResponse!
                                         .ordertotals.shipping
                                          == null
@@ -443,7 +444,7 @@ class _BillingDetailsState extends State<BillingDetails>
                                               null
                                           ? false
                                           : true,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         'Discount:',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
@@ -457,7 +458,7 @@ class _BillingDetailsState extends State<BillingDetails>
                                               null
                                           ? false
                                           : true,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         orderSummaryResponse!
                                             .ordertotals.orderTotalDiscount
                                             .toString(),
@@ -479,14 +480,14 @@ class _BillingDetailsState extends State<BillingDetails>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     'Tax 5%:',
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 14,
                                     ),
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     orderSummaryResponse!.ordertotals.tax,
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -505,14 +506,14 @@ class _BillingDetailsState extends State<BillingDetails>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
+                                    AutoSizeText(
                                       'Total:',
                                       style: TextStyle(
                                         fontFamily: 'Poppins',
                                         fontSize: 14,
                                       ),
                                     ),
-                                    Text(
+                                    AutoSizeText(
                                       orderSummaryResponse!
                                           .ordertotals.orderTotal
                                            == null ?'During Checkout':
@@ -583,7 +584,7 @@ Card cartItemView(Item item) {
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.only(right: 8, top: 4),
-                    child: Text(
+                    child: AutoSizeText(
                       item.picture.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -593,7 +594,7 @@ Card cartItemView(Item item) {
                     ),
                   ),
                   Utils.getSizedBox(null, 6),
-                  Text(
+                  AutoSizeText(
                     "SKU : ${item.sku}",
                     style: CustomTextStyle.textFormFieldRegular
                         .copyWith(color: Colors.grey, fontSize: 15),
@@ -603,7 +604,7 @@ Card cartItemView(Item item) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Flexible(
-                          child: Text(
+                          child: AutoSizeText(
                             item.unitPrice,
                             overflow: TextOverflow.ellipsis,
                             style: CustomTextStyle.textFormFieldBlack
@@ -620,7 +621,7 @@ Card cartItemView(Item item) {
                                 color: Colors.grey.shade200,
                                 padding: const EdgeInsets.only(
                                     bottom: 2, right: 12, left: 12),
-                                child: Text(
+                                child: AutoSizeText(
                                   "${item.quantity}",
                                   style: CustomTextStyle.textFormFieldSemiBold,
                                 ),

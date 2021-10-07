@@ -40,7 +40,7 @@ dependencies:
   simple_animations: ^3.1.1
   shared_preferences: ^2.0.6
   readmore: ^2.1.0
-  auto_size_text_pk: ^3.0.0
+  auto_size_text: ^3.0.0-nullsafety.0
   flutter_add_to_cart_button: ^1.0.0+1
   shimmer: ^2.0.0
   google_fonts: ^2.1.0

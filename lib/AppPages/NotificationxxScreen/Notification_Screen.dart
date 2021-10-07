@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -57,7 +58,7 @@ class _NotificationClassState extends State<NotificationClass> {
                   if (snapshot.data!.docs.length == 0 ||
                       snapshot.data!.docs == null) {
                     return Center(
-                      child: Text('No New Notifications'),
+                      child: AutoSizeText('No New Notifications'),
                     );
                   } else {
                     return Container(
@@ -88,7 +89,7 @@ class _NotificationClassState extends State<NotificationClass> {
                 ),
                 title: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
+                  child: AutoSizeText(
                     doc['Title'],
                     style: TextStyle(
                       fontSize: 4.5.w,
@@ -98,7 +99,7 @@ class _NotificationClassState extends State<NotificationClass> {
                   ),
                 ),
                 subtitle: Padding(
-                  child: Text(
+                  child: AutoSizeText(
                     doc['Desc'],
                     style: TextStyle(
                       color: Colors.black,
@@ -110,7 +111,7 @@ class _NotificationClassState extends State<NotificationClass> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: Text(
+                child: AutoSizeText(
                   doc['Time'] == null ? '' : doc['Time'],
                   style: TextStyle(
                     color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -7,10 +8,9 @@ Widget discountWidget(
     required double fontSize,
     required double width}) {
   return Container(
-    width: 50.w,
     child: Align(
       alignment: Alignment.centerLeft,
-      child: Text(
+      child: AutoSizeText(
         !isSpace?actualPrice:'',
         textAlign: TextAlign.center,
         style: TextStyle(

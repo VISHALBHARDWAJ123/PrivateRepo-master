@@ -16,7 +16,7 @@ Widget SliderImages(List<String> images, List<String> largeImage,
           child: Container(
             width: 70.w,
             // padding: EdgeInsets.all(0),
-            height: 70.w,
+            height: 45.h,
             child: Center(
               child: CarouselSlider.builder(
                 enableAutoSlider: images.length > 1 ? true : false,

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 // import 'package:custom_dialog_flutter_demo/constants.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -63,7 +64,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
+              AutoSizeText(
                 widget.descriptions,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
@@ -71,7 +72,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               SizedBox(
                 height: 6,
               ),
-              Text(
+              AutoSizeText(
                 widget.text,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
@@ -94,7 +95,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                       },
                       child: Container(
                         color: Colors.black,
-                        child: Text(
+                        child: AutoSizeText(
                           'OKAY',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
@@ -172,7 +173,7 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
+              AutoSizeText(
                 widget.reason.length == 0
                     ? widget.descriptions
                     : widget.descriptions +
@@ -195,7 +196,7 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
                       ConstantsVar.prefs.setString('regBody', '');
                       Navigator.of(context).pop();
                     },
-                    child: Text(
+                    child: AutoSizeText(
                       widget.text,
                       style: TextStyle(
                         fontSize: 18,

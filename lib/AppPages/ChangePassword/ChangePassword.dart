@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
@@ -86,7 +87,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                         // header text
                         Container(
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Reset Password'.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 6.5.w,
@@ -309,7 +310,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                       child: Container(
                         width: 100.w,
                         child: Center(
-                          child: Text(
+                          child: AutoSizeText(
                             'Reset Password'.toUpperCase(),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -327,7 +328,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                           myGlobalKey.currentState!.save();
                           changePassword();
                         } else {
-                          Scaffold.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Please enter correct password.')));
                         }
                       },

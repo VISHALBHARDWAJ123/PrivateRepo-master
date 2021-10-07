@@ -1,23 +1,21 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/SelectxxShippingxxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/ShippingxxMethodxxResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
-import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 class ShippingMethod extends StatefulWidget {
@@ -101,7 +99,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                           height: 60,
                           color: Colors.white60,
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'Select Shipping Method'.toUpperCase(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -127,24 +125,24 @@ class _ShippingMethodState extends State<ShippingMethod> {
                                   if (isSelected) {
                                     selectedVal = '';
                                     isSelected = value!;
-                                    print('${selectedVal}');
+                                    print('$selectedVal');
 
-                                    print('${isSelected}');
+                                    print("$isSelected");
                                   } else {
                                     isSelected = value!;
                                     selectedVal = shippingMethods[index].name +
                                         '___' +
                                         shippingMethods[index]
                                             .shippingRateComputationMethodSystemName;
-                                    print('${isSelected}');
-                                    print('${selectedVal}');
+                                    print('$isSelected');
+                                    print('$selectedVal');
                                   }
                                 });
                               },
                               tileColor: Colors.white24,
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Center(
-                                child: Text(
+                                child: AutoSizeText(
                                   shippingMethods[index].name +
                                       '(' +
                                       shippingMethods[index].fee +
@@ -157,7 +155,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                               subtitle: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Text(
+                                child: AutoSizeText(
                                   removeAllHtmlTags(
                                       shippingMethods[index].description),
                                   textAlign: TextAlign.start,
@@ -198,7 +196,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                       height: 50,
                       color: ConstantsVar.appColor,
                       child: Center(
-                        child: Text(
+                        child: AutoSizeText(
                           'Confirm'.toUpperCase(),
                           style: TextStyle(
                               color: Colors.white,

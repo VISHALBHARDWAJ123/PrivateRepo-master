@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -224,12 +225,12 @@ class _SearchPageState extends State<SearchPage> {
                                       } else if (mode == LoadStatus.loading) {
                                         body = CupertinoActivityIndicator();
                                       } else if (mode == LoadStatus.failed) {
-                                        body = Text("Load Failed!Click retry!");
+                                        body = AutoSizeText("Load Failed!Click retry!");
                                       } else if (mode ==
                                           LoadStatus.canLoading) {
-                                        body = Text("release to load more");
+                                        body = AutoSizeText("release to load more");
                                       } else {
-                                        body = Text("No more Data");
+                                        body = AutoSizeText("No more Data");
                                       }
                                       return Container(
                                         height: 55.0,
@@ -260,7 +261,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               searchedProducts[
                                                                       index]
                                                                   .id
-                                                                  .toString(),
+                                                                  .toString(), screenName: 'Search Screen',
                                                           // customerId:
                                                           //     ConstantsVar
                                                           //         .customerID,
@@ -315,7 +316,7 @@ class _SearchPageState extends State<SearchPage> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          Text(
+                                                          AutoSizeText(
                                                             searchedProducts[
                                                                     index]
                                                                 .name
@@ -338,7 +339,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               top: 2.w,
                                                               bottom: 2.w,
                                                             ),
-                                                            child: Text(
+                                                            child: AutoSizeText(
                                                               searchedProducts[
                                                                               index]
                                                                           .productPrice
@@ -367,7 +368,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               top: 2.w,
                                                               bottom: 2.w,
                                                             ),
-                                                            child: Text(
+                                                            child: AutoSizeText(
                                                               '${searchedProducts[index].stockAvailability}',
                                                               maxLines: 1,
                                                               style: TextStyle(
@@ -456,7 +457,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                           Visibility(
-                              visible: noMore, child: Text('No Products Found'))
+                              visible: noMore, child: AutoSizeText('No Products Found'))
                         ],
                       ),
                     ),

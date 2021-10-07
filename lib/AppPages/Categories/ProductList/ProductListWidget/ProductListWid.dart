@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class _prodListWidgetState extends State<prodListWidget> {
       children: [
         ListTile(
           title: Center(
-            child: Text(
+            child: AutoSizeText(
               widget.title.toUpperCase(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -132,11 +133,11 @@ class _prodListWidgetState extends State<prodListWidget> {
                       } else if (mode == LoadStatus.loading) {
                         body = CupertinoActivityIndicator();
                       } else if (mode == LoadStatus.failed) {
-                        body = Text("Load Failed!Click retry!");
+                        body = AutoSizeText("Load Failed!Click retry!");
                       } else if (mode == LoadStatus.canLoading) {
-                        body = Text("release to load more");
+                        body = AutoSizeText("release to load more");
                       } else {
-                        body = Text("No more Data");
+                        body = AutoSizeText("No more Data");
                       }
                       return Container(
                         height: 55.0,
@@ -173,6 +174,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                     return NewProductDetails(
                                       productId:
                                           widget.products[index].id.toString(),
+                                      screenName: 'Product List',
                                       // customerId: ConstantsVar.customerID,
                                     );
                                   },
@@ -180,141 +182,194 @@ class _prodListWidgetState extends State<prodListWidget> {
                               );
                             });
                           },
-                          child: Card(
-                            // elevation: 2,
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    color: Colors.white,
-                                    padding: EdgeInsets.all(4.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          widget.products[index].productPicture,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, reason) =>
-                                          new SpinKitRipple(
-                                        color: Colors.red,
-                                        size: 90,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 8.0),
-                                    width: MediaQuery.of(context).size.width,
-                                    // color: Color(0xFFe0e1e0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          widget.products[index].name,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              height: 1,
-                                              color: Colors.black,
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 2.w,
-                                                  left: 2,
-                                                ),
-                                                child: discountWidget(
-                                                  actualPrice: widget
-                                                      .products[index].price,
-                                                  fontSize: 2.4.w,
-                                                  width: 25.w,
-                                                  isSpace: widget
-                                                              .products[index]
-                                                              .discountPrice ==
-                                                          null
-                                                      ? true
-                                                      : false,
-                                                ),
-                                              ),
-                                              Text(
-                                                widget.products[index]
-                                                            .discountPrice ==
-                                                        null
-                                                    ? widget
-                                                        .products[index].price
-                                                    : widget.products[index]
-                                                        .discountPrice,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    height: 1,
-                                                    color: Colors.grey.shade600,
-                                                    fontSize: 4.w,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 4,
-                                                  bottom: 2,
-                                                ),
-                                                child: Text(
-                                                  widget.products[index]
-                                                      .stockQuantity,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      height: 1,
-                                                      color: name.contains('In')
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                      fontSize: 20.dp,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ),
-                                            ],
+                          child: Stack(
+                            children: [
+                              Card(
+                                // elevation: 2,
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        color: Colors.white,
+                                        padding: EdgeInsets.all(4.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: widget
+                                              .products[index].productPicture,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, reason) =>
+                                              new SpinKitRipple(
+                                            color: Colors.red,
+                                            size: 90,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 8.0),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        // color: Color(0xFFe0e1e0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            AutoSizeText(
+                                              widget.products[index].name,
+                                              maxLines :2,
+                                              style: TextStyle(
+                                                  height: 1,
+                                                  color: Colors.black,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 6.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                      top: 2.w,
+                                                      left: 2,
+                                                    ),
+                                                    child: discountWidget(
+                                                      actualPrice: widget
+                                                          .products[index]
+                                                          .price,
+                                                      fontSize: 2.4.w,
+                                                      width: 25.w,
+                                                      isSpace: widget
+                                                                  .products[
+                                                                      index]
+                                                                  .discountPrice ==
+                                                              null
+                                                          ? true
+                                                          : false,
+                                                    ),
+                                                  ),
+                                                  AutoSizeText(
+                                                    widget.products[index]
+                                                                .discountPrice ==
+                                                            null
+                                                        ? widget.products[index]
+                                                            .price
+                                                        : widget.products[index]
+                                                            .discountPrice,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        height: 1,
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontSize: 4.w,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                      top: 4,
+                                                      bottom: 2,
+                                                    ),
+                                                    child: AutoSizeText(
+                                                      widget.products[index]
+                                                          .stockQuantity,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          height: 1,
+                                                          color: name.contains(
+                                                                  'In')
+                                                              ? Colors.green
+                                                              : Colors.red,
+                                                          fontSize: 20.dp,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AddCartBtn(
+                                        productId: widget.products[index].id,
+                                        // width: 2.w,
+                                        isTrue: true,
+                                        guestCustomerId: widget.guestCustomerId,
+                                        checkIcon: widget
+                                                .products[index].stockQuantity
+                                                .contains('Out of stock')
+                                            ? Icon(HeartIcon.cross)
+                                            : Icon(Icons.check),
+                                        text: widget
+                                                .products[index].stockQuantity
+                                                .contains('Out of stock')
+                                            ? 'Out of Stock'.toUpperCase()
+                                            : 'ADD TO CArt'.toUpperCase(),
+                                        color: widget
+                                                .products[index].stockQuantity
+                                                .contains('Out of stock')
+                                            ? Colors.grey
+                                            : ConstantsVar.appColor,
+                                        // fontSize: 12,
+                                      )
+                                    ],
                                   ),
-                                  AddCartBtn(
-                                    productId: widget.products[index].id,
-                                    // width: 2.w,
-                                    isTrue: true,
-                                    guestCustomerId: widget.guestCustomerId,
-                                    checkIcon: widget
-                                            .products[index].stockQuantity
-                                            .contains('Out of stock')
-                                        ? Icon(HeartIcon.cross)
-                                        : Icon(Icons.check),
-                                    text: widget.products[index].stockQuantity
-                                            .contains('Out of stock')
-                                        ? 'Out of Stock'.toUpperCase()
-                                        : 'ADD TO CArt'.toUpperCase(),
-                                    color: widget.products[index].stockQuantity
-                                            .contains('Out of stock')
-                                        ? Colors.grey
-                                        : ConstantsVar.appColor,
-                                    // fontSize: 12,
-                                  )
-                                ],
+                                ),
                               ),
-                            ),
+                              Visibility(
+                                visible: widget
+                                            .products[index].discountPercentage
+                                            .trim()
+                                            .length !=
+                                        0
+                                    ? true
+                                    : false,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 14.w,
+                                        height: 14.w,
+                                        child: Stack(
+                                          children: [
+                                            Image.asset(
+                                              'MyAssets/plaincircle.png',
+                                              width: 15.w,
+                                              height: 15.w,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                widget.products[index]
+                                                    .discountPercentage,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 4.8.w,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              )
+                            ],
                           ),
                         );
                       },

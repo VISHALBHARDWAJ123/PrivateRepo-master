@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
             customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
       if (mounted) {
-        context.read<cartCounter>().changeCounter(int.parse(value));
+        context.read<cartCounter>().changeCounter(value);
       }
     });
   }
@@ -251,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage>
             customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
         .then((value) {
       setState(() {
-        context.read<cartCounter>().changeCounter(int.parse(value));
+        context.read<cartCounter>().changeCounter(value);
       });
     });
   }

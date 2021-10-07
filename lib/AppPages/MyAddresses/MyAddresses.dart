@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -208,7 +209,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                   color: ConstantsVar.appColor,
                                   borderRadius: BorderRadius.circular(6.0)),
                               child: Center(
-                                child: Text(
+                                child: AutoSizeText(
                                   'Add New Address',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 4.w),
@@ -278,7 +279,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                                 EdgeInsets.only(
                                                                     right: 8,
                                                                     top: 4),
-                                                            child: Text(
+                                                            child: AutoSizeText(
                                                               existingAddress[
                                                                           index]
                                                                       .firstName +
@@ -414,7 +415,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                       Utils.getSizedBox(
                                                           null, 6),
                                                       Container(
-                                                          child: Text('Email - ' +
+                                                          child: AutoSizeText('Email - ' +
                                                               existingAddress[
                                                                       index]
                                                                   .email)),
@@ -425,7 +426,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                                   .spaceBetween,
                                                           children: <Widget>[
                                                             Flexible(
-                                                              child: Text(
+                                                              child: AutoSizeText(
                                                                 'Address -' +
                                                                     existingAddress[
                                                                             index]
@@ -442,13 +443,13 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                                                         ),
                                                       ),
                                                       Container(
-                                                          child: Text('Phone -' +
+                                                          child: AutoSizeText('Phone -' +
                                                               ' ' +
                                                               existingAddress[
                                                                       index]
                                                                   .phoneNumber)),
                                                       Container(
-                                                          child: Text('Country -' +
+                                                          child: AutoSizeText('Country -' +
                                                               ' ' +
                                                               existingAddress[
                                                                       index]
@@ -474,7 +475,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                         child: Align(
                           alignment: Alignment.center,
                           child: Container(
-                            child: Text(
+                            child: AutoSizeText(
                               'No Address found',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,

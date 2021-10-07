@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
               .then((value) {
             setState(() {
-              val = int.parse(value);
+              val = value;
             });
             context.read<cartCounter>().changeCounter(val);
             Navigator.pushReplacement(

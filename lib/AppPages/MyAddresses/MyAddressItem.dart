@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -195,13 +196,13 @@ class _MyAddressItemState extends State<MyAddressItem> {
                         ],
                       ),
                       Utils.getSizedBox(null, 6),
-                      Container(child: Text('Email - ' + widget.email)),
+                      Container(child: AutoSizeText('Email - ' + widget.email)),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Flexible(
-                              child: Text(
+                              child: AutoSizeText(
                                 'Address -' + widget.address1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 15),
@@ -211,9 +212,9 @@ class _MyAddressItemState extends State<MyAddressItem> {
                         ),
                       ),
                       Container(
-                          child: Text('Phone -' + ' ' + widget.phoneNumber)),
+                          child: AutoSizeText('Phone -' + ' ' + widget.phoneNumber)),
                       Container(
-                          child: Text('Country -' + ' ' + widget.countryName)),
+                          child: AutoSizeText('Country -' + ' ' + widget.countryName)),
                       addVerticalSpace(12),
                     ],
                   ),

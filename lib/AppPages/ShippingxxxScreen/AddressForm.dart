@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -175,7 +176,7 @@ class _AddressScreenState extends State<AddressScreen>
                       alignment: Alignment(0.05, 0),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
+                        child: AutoSizeText(
                           widget.title.toUpperCase(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -553,7 +554,7 @@ class _AddressScreenState extends State<AddressScreen>
                         color: ConstantsVar.appColor,
                         child: Container(
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               'CANCEL',
                               style: TextStyle(
                                 color: Colors.white,
@@ -661,7 +662,7 @@ class _AddressScreenState extends State<AddressScreen>
                           }
                         },
                         child: Center(
-                          child: Text(
+                          child: AutoSizeText(
                             widget.btnTitle.toUpperCase(),
                             style: TextStyle(
                               color: Colors.white,
