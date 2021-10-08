@@ -82,6 +82,7 @@ class _OrderDetailsState extends State<OrderDetails>
 
   String sCountryName = '';
   String shippingMethod = '';
+  String shippingStatus = '';
 
   String subTotal = '';
 
@@ -104,8 +105,10 @@ class _OrderDetailsState extends State<OrderDetails>
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) =>
-                    NewProductDetails(productId: productId.toString(), screenName: 'Order Details',)));
+                builder: (context) => NewProductDetails(
+                      productId: productId.toString(),
+                      screenName: 'Order Details',
+                    )));
       },
       child: Stack(
         children: <Widget>[
@@ -231,6 +234,8 @@ class _OrderDetailsState extends State<OrderDetails>
             ['PickUpInStore'];
         shippingMethod = widget.resultas!['orderdetail']['orderDetailsModel']
             ['ShippingMethod'];
+        shippingStatus = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['ShippingStatus'];
         shipping = widget.resultas!['orderdetail']['orderDetailsModel']
             ['OrderShipping'];
         taxPrice = widget.resultas!['orderdetail']['orderDetailsModel']['Tax'];
@@ -871,12 +876,15 @@ class _OrderDetailsState extends State<OrderDetails>
                           color: Colors.white60,
                           width: 100.w,
                           child: Center(
-                            child: AutoSizeText(
-                              'Shipping Method\n'.toUpperCase(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 5.5.w,
+                            child: Padding(
+                              padding: EdgeInsets.all(3.8.w),
+                              child: AutoSizeText(
+                                'Shipping Method'.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 5.5.w,
+                                ),
                               ),
                             ),
                           ),
@@ -891,6 +899,44 @@ class _OrderDetailsState extends State<OrderDetails>
                             child: Center(
                               child: AutoSizeText(
                                 shippingMethod,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 4.w,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          color: Colors.white60,
+                          width: 100.w,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(3.8.w),
+                              child: AutoSizeText(
+                                'Shipping Status'.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 5.5.w,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          color: Colors.white60,
+                          width: 100.w,
+                          child: Padding(
+                            padding: EdgeInsets.all(3.5.w),
+                            child: Center(
+                              child: AutoSizeText(
+                                shippingStatus,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -931,7 +977,10 @@ class _OrderDetailsState extends State<OrderDetails>
       Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (context) => CartScreen2(otherScreenName: '', isOtherScren: false,),
+          builder: (context) => CartScreen2(
+            otherScreenName: '',
+            isOtherScren: false,
+          ),
         ),
       );
       print(response.body);

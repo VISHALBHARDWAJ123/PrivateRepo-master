@@ -643,7 +643,7 @@ class _AddressScreenState extends State<AddressScreen>
                               }
                             } else {
                               //call api to save address
-                              Fluttertoast.showToast(msg: 'Save Address');
+                              // Fluttertoast.showToast(msg: 'Save Address');
                               ApiCalls.editAndSaveAddress(
                                   context,
                                   '${apiToken}',

@@ -290,14 +290,14 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
               child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
-                    width: 12.w,
-                    height: 12.w,
+                    width: 10.w,
+                    height: 10.w,
                     child: Stack(
                       children: [
                         Image.asset(
                           'MyAssets/plaincircle.png',
-                          width: 15.w,
-                          height: 15.w,
+                          width: 10.w,
+                          height: 10.w,
                         ),
                         Align(
                           alignment: Alignment.center,
@@ -305,7 +305,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             list.discountPercentage,
                             style: TextStyle(
                               fontWeight: FontWeight.w800,
-                              fontSize: 4.2.w,
+                              fontSize: 3.w,
                               color: Colors.white,
                             ),
                           ),
