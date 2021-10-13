@@ -199,7 +199,10 @@ class _MyHomePageState extends State<MyHomePage>
                 Consumer<cartCounter>(builder: (context, value, child) {
                   return Text(
                     value.badgeNumber.toString(),
-                    style: TextStyle(fontSize: 8),
+                    style: TextStyle(
+                      fontSize: 8,
+                      color: Colors.white,
+                    ),
                   );
                 }),
                 null
@@ -269,7 +272,10 @@ class _MyHomePageState extends State<MyHomePage>
       case 2:
         return SearchPage();
       case 3:
-        return CartScreen2(isOtherScren: false, otherScreenName: '',);
+        return CartScreen2(
+          isOtherScren: false,
+          otherScreenName: '',
+        );
       case 4:
         return MenuPage();
       default:

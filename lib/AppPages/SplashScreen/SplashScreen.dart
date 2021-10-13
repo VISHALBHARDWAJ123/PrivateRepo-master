@@ -34,7 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
   var permDenied = "denied";
   var permUnknown = "unknown";
   var permProvisional = "provisional";
-
+  bool shouldScaleDown = true;// c
+  final width = 200.0;
+  final height = 300.0;
   Future initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
@@ -79,8 +81,10 @@ class _SplashScreenState extends State<SplashScreen> {
             );
       } else {
         // int val = 0;
-        getCartBagdge().then((value) => Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (context) => MyApp())));
+        getCartBagdge().then((value) => Future.delayed(
+            Duration(seconds: 3),
+            () => Navigator.pushReplacement(
+                context, CupertinoPageRoute(builder: (context) => MyApp()))));
       }
     });
 
@@ -106,11 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(0.5.h),
-                    alignment: Alignment.topCenter,
-                    child: Image.asset(name),
-                  ),
+                  Container(child: Image.asset(name)),
                   SpinKitCircle(
                     itemBuilder: (context, index) {
                       return DecoratedBox(
@@ -139,30 +139,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return ConstantsVar.customerID;
   }
 
-  // checkCreds() async {
-  //   ConstantsVar.prefs = await SharedPreferences.getInstance();
-  //   var email = ConstantsVar.prefs.getString('email');
-  //   var passWord = ConstantsVar.prefs.getString('passWord');
-  //   print('Email : $email\nPassword :$passWord ');
-  //   email == null && passWord == null
-  //       ? Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) {
-  //               return LoginScreen();
-  //             },
-  //           ),
-  //         )
-  //       : Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) {
-  //               return MyApp();
-  //             },
-  //           ),
-  //         );
-  // }
-
   Future getCartBagdge() async {
     int val = 0;
     Future.delayed(
@@ -172,7 +148,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 .then((value) {
               if (mounted)
                 setState(() {
-                  val = int.parse(value);
+                  val = value;
                   context.read<cartCounter>().changeCounter(val);
                 });
             }));

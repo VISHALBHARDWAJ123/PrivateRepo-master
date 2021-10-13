@@ -17,6 +17,7 @@ class HeartIcon {
   static const _kFontFamAddress = 'Address';
   static const _kFontFamOrder = 'Orders';
   static const _kFontFamChangePassword = 'ChangePassword';
+  static const _kFontFamSearch = 'SearchFilter';
 
   static const IconData password = IconData(0xe800, fontFamily: _kFontFamChangePassword, fontPackage: _kFontPkg);
   static const IconData order =
@@ -45,4 +46,6 @@ class HeartIcon {
 
   static const IconData cross =
       IconData(0xe870, fontFamily: _kFontFamRemove, fontPackage: _kFontPkg);
+
+  static const IconData searchFilter = IconData(0xf1de, fontFamily: _kFontFamSearch, );
 }

@@ -386,17 +386,20 @@ class _RegstrationPageState extends State<RegstrationPage>
                                               });
                                             },
                                             isChecked: passError,
+                                            borderColor: Colors.white,
                                             checkedWidget: Center(
                                               child: Icon(
-                                                Icons.remove_red_eye_outlined,
-                                                size: 16,
+                                                Icons.visibility,
+                                                size: 20,
+
                                               ),
                                             ),
                                             uncheckedWidget: Center(
                                               child: Icon(
-                                                Icons.remove_red_eye,
+                                                Icons.visibility_off,
                                                 color: ConstantsVar.appColor,
-                                                size: 16,
+                                                size: 20,
+
                                               ),
                                             ),
                                           ),
@@ -445,6 +448,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         decoration: InputDecoration(
                                             suffix: ClipOval(
                                               child: RoundCheckBox(
+                                                borderColor: Colors.white,
                                                 checkedColor: Colors.white,
                                                 uncheckedColor: Colors.white,
                                                 size: 20,
@@ -460,16 +464,16 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                 checkedWidget: Center(
                                                   child: Icon(
                                                     Icons
-                                                        .remove_red_eye_outlined,
-                                                    size: 16,
+                                                        .visibility,
+                                                    size: 20,
                                                   ),
                                                 ),
                                                 uncheckedWidget: Center(
                                                   child: Icon(
-                                                    Icons.remove_red_eye,
+                                                    Icons.visibility_off,
                                                     color:
                                                         ConstantsVar.appColor,
-                                                    size: 16,
+                                                    size: 20,
                                                   ),
                                                 ),
                                               ),

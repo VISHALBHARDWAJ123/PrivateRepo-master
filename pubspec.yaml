@@ -90,8 +90,16 @@ dependencies:
 #  flutter_local_notifications: ^8.2.0
   cloud_firestore: ^2.5.3
   cupertino_will_pop_scope: ^1.1.0
-
-
+  quds_ui_kit: ^0.0.7+5
+  modal_bottom_sheet: ^2.0.0
+  direct_select: ^2.0.0
+  search_choices: ^2.0.14
+  dropdown_plus: ^0.0.9
+  ej_selector: ^1.0.0
+  animated_text_kit: ^4.2.1
+#  contextmenu: ^2.0.1
+  matrix4_transform: ^2.0.1
+  flutter_native_splash: ^1.2.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -182,6 +190,9 @@ flutter:
     - family: Youtube
       fonts:
         - asset: MyAssets/fonts/Youtube.ttf
+    - family: SearchFilter
+      fonts:
+        - asset: MyAssets/icons/searchfilter.ttf
   #    - family: Monstserrat
   #      fonts:
   #        - asset: MyAssets/fonts/UserFont/MonstserratBold.ttf

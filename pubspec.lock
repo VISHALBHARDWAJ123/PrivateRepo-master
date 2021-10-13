@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
+  animated_text_kit:
+    dependency: "direct main"
+    description:
+      name: animated_text_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.1"
   archive:
     dependency: transitive
     description:
@@ -330,6 +337,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  direct_select:
+    dependency: "direct main"
+    description:
+      name: direct_select
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   double_back_to_close_app:
     dependency: "direct main"
     description:
@@ -337,6 +351,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  dropdown_plus:
+    dependency: "direct main"
+    description:
+      name: dropdown_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  ej_selector:
+    dependency: "direct main"
+    description:
+      name: ej_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   expandable:
     dependency: "direct main"
     description:
@@ -482,6 +510,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_native_splash:
+    dependency: "direct main"
+    description:
+      name: flutter_native_splash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.4"
   flutter_otp_text_field:
     dependency: "direct main"
     description:
@@ -695,6 +730,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  matrix4_transform:
+    dependency: "direct main"
+    description:
+      name: matrix4_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   meta:
     dependency: transitive
     description:
@@ -723,6 +765,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  modal_bottom_sheet:
+    dependency: "direct main"
+    description:
+      name: modal_bottom_sheet
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   nb_utils:
     dependency: "direct main"
     description:
@@ -912,6 +961,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  quds_ui_kit:
+    dependency: "direct main"
+    description:
+      name: quds_ui_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7+5"
   readmore:
     dependency: "direct main"
     description:
@@ -947,6 +1003,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.2"
+  search_choices:
+    dependency: "direct main"
+    description:
+      name: search_choices
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.14"
   select_dialog:
     dependency: "direct main"
     description:

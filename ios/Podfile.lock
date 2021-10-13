@@ -470,6 +470,8 @@ PODS:
     - Flutter
   - PromisesObjC (2.0.0)
   - Reachability (3.2)
+  - search_choices (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -493,6 +495,7 @@ DEPENDENCIES:
   - nb_utils (from `.symlinks/plugins/nb_utils/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - search_choices (from `.symlinks/plugins/search_choices/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -543,6 +546,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/notification_permissions/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  search_choices:
+    :path: ".symlinks/plugins/search_choices/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
@@ -580,6 +585,7 @@ SPEC CHECKSUMS:
   path_provider: d1e9807085df1f9cc9318206cd649dc0b76be3de
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  search_choices: b50731e8c425078048f681f39c34375c58d6ce8d
   shared_preferences: 5033afbb22d372e15aff8ff766df9021b845f273
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196

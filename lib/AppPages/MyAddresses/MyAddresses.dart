@@ -512,16 +512,18 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   }
 
   void _onLoading() async {
+    existingAddress.clear();
     ApiCalls.allAddresses(
             ConstantsVar.apiTokken.toString(), guestCustomerId, context)
         .then((value) {
       setState(() {
         addressResponse = AllAddressesResponse.fromJson(value);
-        existingAddress = addressResponse.customeraddresslist.addresses;
+        existingAddress.addAll( addressResponse.customeraddresslist.addresses);
         print('address>>> $addressResponse');
         showAddresses = true;
+        _refreshController.refreshCompleted();
+
       });
-      _refreshController.refreshCompleted();
     });
   }
 }
