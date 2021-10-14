@@ -100,6 +100,8 @@ dependencies:
 #  contextmenu: ^2.0.1
   matrix4_transform: ^2.0.1
   flutter_native_splash: ^1.2.4
+  another_xlider: ^1.0.0
+  flutter_multi_slider: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
