@@ -11,6 +11,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
@@ -37,7 +38,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   AssetImage assetImage = AssetImage("MyAssets/imagebackground.png");
   List<Widget> viewsList = [];
   int activeIndex = 0;
-  bool showLoading = false;
+  bool showLoading = true;
   bool categoryVisible = false;
 
   @override
@@ -168,26 +169,29 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             }).toList(),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 7.0),
-                          color: Colors.white,
-                          height: 52.w,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    // padding: EdgeInsets.symmetric(vertical:6),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: productList.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return listContainer(productList[index]);
-                                    }),
-                              ),
-                            ],
+                        Visibility(
+                          visible: !showLoading,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 7.0),
+                            color: Colors.white,
+                            height: 52.w,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      // padding: EdgeInsets.symmetric(vertical:6),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: productList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return listContainer(productList[index]);
+                                      }),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Visibility(
@@ -209,13 +213,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                   ],
                 ),
               ],
-            ),
-          ),
-          Visibility(
-            visible: showLoading,
-            child: Positioned.fill(
-              child:
-                  Align(alignment: Alignment.centerRight, child: showloader()),
             ),
           ),
         ],
@@ -323,9 +320,13 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
-    setState(() {
-      showLoading = true;
-    });
+    CustomProgressDialog progressDialog =
+    CustomProgressDialog(context, blur: 2,dismissable: false);
+    progressDialog.setLoadingWidget(SpinKitRipple(
+      color: Colors.red,
+      size: 90,
+    ));
+    progressDialog.show();
     String url =
         BuildConfig.base_url + BuildConfig.banners + '?apiToken=' + '$value';
 
@@ -371,17 +372,22 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                           categoryList[i].imageUrl,
                           categoryList[i].id,
                           categoryList[i].isSubCategory));
+
                     }
+                    progressDialog.dismiss();
                   }
                 }
               })
             : null;
       }
+      progressDialog.dismiss();
     } else {
       setState(() {
         showLoading = false;
       });
     }
+    progressDialog.dismiss();
+
     return response;
   }
 

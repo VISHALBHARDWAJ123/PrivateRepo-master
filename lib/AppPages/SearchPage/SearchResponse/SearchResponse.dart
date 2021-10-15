@@ -52,9 +52,9 @@ class Product {
   String stockQuantity;
   String productPicture;
   String price;
-  dynamic discountedPrice;
-  dynamic discountPercent;
-  int priceValue;
+  String discountedPrice;
+  String discountPercent;
+  double priceValue;
   bool isDisable;
   bool isAvailable;
 
@@ -65,22 +65,27 @@ class Product {
     productPicture: json["ProductPicture"],
     price: json["Price"],
     discountedPrice: json["DiscountedPrice"],
-    discountPercent: json["DiscountPercent"],
+    discountPercent: json["DiscountPercent"] == null?'':json["DiscountPercent"],
     priceValue: json["PriceValue"],
     isDisable: json["IsDisable"],
     isAvailable: json["IsAvailable"],
   );
-
   Map<String, dynamic> toJson() => {
     "Id": id,
     "Name": name,
     "StockQuantity": stockQuantity,
     "ProductPicture": productPicture,
     "Price": price,
-    "DiscountedPrice": discountedPrice,
-    "DiscountPercent": discountPercent,
-    "PriceValue": priceValue,
     "IsDisable": isDisable,
     "IsAvailable": isAvailable,
+    'DiscountPercent ': discountPercent,
   };
 }
+
+
+
+
+
+
+
+

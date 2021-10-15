@@ -102,6 +102,9 @@ dependencies:
   flutter_native_splash: ^1.2.4
   another_xlider: ^1.0.0
   flutter_multi_slider: ^1.1.0
+  flutter_staggered_animations: "^1.0.0"
+  ndialog: ^4.1.0
+  animations: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

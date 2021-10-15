@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
@@ -91,11 +92,17 @@ class ApiCalls {
   ) async {
     print(password);
 
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
+    CustomProgressDialog progressDialog = CustomProgressDialog(
+      context,
+      blur: 2,
+      dismissable: false,
+    );
+    progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
     ));
+    progressDialog.show();
+
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
     ConstantsVar.prefs.setString('sepGuid', guestUId!);
@@ -134,11 +141,11 @@ class ApiCalls {
           return false;
         } else if (responseData.toString().contains('Account is not active')) {
           Fluttertoast.showToast(msg: 'Account is not active yet.');
-          context.loaderOverlay.hide();
+          progressDialog.dismiss();
           return false;
         } else if (responseData.toString().contains('Customer is deleted')) {
           Fluttertoast.showToast(msg: 'Customer is deleted');
-          context.loaderOverlay.hide();
+          progressDialog.dismiss();
         } else {
           Fluttertoast.showToast(
             msg: 'Successfully Logged In',
@@ -164,7 +171,8 @@ class ApiCalls {
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
 
-          context.loaderOverlay.hide();
+          progressDialog.dismiss();
+
           print('Success ');
 
           readCounter(customerGuid: gUId).then(
@@ -221,7 +229,7 @@ class ApiCalls {
         // Fluttertoast.showToast(msg: responseData.toString().substring(0, 20));
 
       } else {
-        context.loaderOverlay.hide();
+        progressDialog.dismiss();
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
         return false;
       }
@@ -229,7 +237,8 @@ class ApiCalls {
       // return true;
 
     } on Exception catch (e) {
-      context.loaderOverlay.hide();
+      progressDialog.dismiss();
+
       ConstantsVar.excecptionMessage(e);
       return false;
     }

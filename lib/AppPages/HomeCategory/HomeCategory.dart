@@ -73,8 +73,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                 resultList
                   ..sort(
                       (a, b) => a['DisplayOrder'].compareTo(b['DisplayOrder']));
-                // List<dynamic> subList = result['sbc'];
-                // subList..sort((a, b) => a['DisplayOrder'].compareTo(b['DisplayOrder']));
+
                 return FlutterSizer(
                     builder: (context, orientation, deviceType) {
                   return Column(
