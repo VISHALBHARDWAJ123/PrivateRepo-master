@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
+  animated_item_picker:
+    dependency: "direct main"
+    description:
+      name: animated_item_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -22,13 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.1"
-  animations:
-    dependency: "direct main"
-    description:
-      name: animations
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   another_xlider:
     dependency: "direct main"
     description:
@@ -78,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.6+10"
+  awesome_select:
+    dependency: "direct main"
+    description:
+      name: awesome_select
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.3"
   badges:
     dependency: "direct main"
     description:
@@ -765,6 +772,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  menu_button:
+    dependency: "direct main"
+    description:
+      name: menu_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.2+1"
   meta:
     dependency: transitive
     description:

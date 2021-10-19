@@ -95,7 +95,7 @@ class ApiCalls {
     CustomProgressDialog progressDialog = CustomProgressDialog(
       context,
       blur: 2,
-      dismissable: false,
+      dismissable: true,
     );
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
@@ -234,7 +234,6 @@ class ApiCalls {
         return false;
       }
 
-      // return true;
 
     } on Exception catch (e) {
       progressDialog.dismiss();
