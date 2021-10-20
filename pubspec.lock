@@ -323,6 +323,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  cupertino_range_slider:
+    dependency: "direct main"
+    description:
+      name: cupertino_range_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   cupertino_will_pop_scope:
     dependency: "direct main"
     description:

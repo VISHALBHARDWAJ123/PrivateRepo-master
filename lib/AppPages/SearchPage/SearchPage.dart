@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:another_xlider/another_xlider.dart';
 import 'package:ej_selector/ej_selector.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,6 +41,10 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
   String _selectedSeats = '', _selectedColors = '', _selectedFaimly = '';
+  String _selectedSeatsId = '',
+      _selectedColorsId = '',
+      _selectedFaimlyId = '',
+      _mainString = '';
 
   final colorizeColors = [
     Colors.white,
@@ -91,7 +96,7 @@ class _SearchPageState extends State<SearchPage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  double _maxPrice = 0, _minPrice = 0, _minPRICE = 0, _maxPRICE = 0;
+  double _maxPrice = 25000, _minPrice = 0, _minPRICE = 0, _maxPRICE = 0;
 
   double _width = 0;
   double _height = 0;
@@ -99,13 +104,15 @@ class _SearchPageState extends State<SearchPage>
   List<Specificationoption> _numberOfSeatList = [];
   List<Specificationoption> _familyList = [];
 
+  var _isChecked = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _animationController =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
-
+    _maxPRICE = _maxPrice.toStringAsFixed(0).toDouble();
     noMore = false;
     guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
   }
@@ -134,6 +141,7 @@ class _SearchPageState extends State<SearchPage>
       },
       child: SafeArea(
         top: true,
+        bottom:true,
         child: Scaffold(
           key: _scaffoldKey,
           resizeToAvoidBottomInset: false,
@@ -172,13 +180,18 @@ class _SearchPageState extends State<SearchPage>
                                             currentFocus.unfocus();
                                           }
                                           setState(() {
+                                            _selectedColorsId = '';
+                                            _selectedSeatsId = '';
+                                            _selectedFaimlyId = '';                                            _colorList = [];
+                                            _numberOfSeatList = [];
+                                            _familyList = [];
                                             _height = 0.h;
                                             isVisible = false;
                                             noMore = false;
                                             _catId = '';
                                             _minPrice = 0;
                                             pageIndex = 0;
-                                            _maxPrice = 0;
+                                            _maxPrice = 25000;
 
                                             _range = RangeValues(
                                                 _minPrice.toDouble(),
@@ -220,11 +233,17 @@ class _SearchPageState extends State<SearchPage>
                                                 currentFocus.unfocus();
                                               }
                                               setState(() {
+                                                _selectedColorsId = '';
+                                                _selectedSeatsId = '';
+                                                _selectedFaimlyId = '';
+                                                _colorList = [];
+                                                _numberOfSeatList = [];
+                                                _familyList = [];
                                                 _height = 0.h;
                                                 noMore = false;
                                                 _catId = '';
                                                 _minPrice = 0;
-                                                _maxPrice = 0;
+                                                _maxPrice = 25000;
                                                 _range = RangeValues(
                                                     _minPrice.toDouble(),
                                                     _maxPrice.toDouble());
@@ -252,11 +271,11 @@ class _SearchPageState extends State<SearchPage>
                                       highlightColor: Colors.red,
                                       onTap: _toggle,
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 8),
                                         child: Icon(
                                           HeartIcon.searchFilter,
                                           color: Colors.white,
-                                          size: 32,
+                                          size: 42,
                                         ),
                                       ),
                                     ),
@@ -266,7 +285,7 @@ class _SearchPageState extends State<SearchPage>
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: 55.0),
+                                  padding: EdgeInsets.only(top: 60.0),
                                   child: showSearchFilter(_animation),
                                 ),
                               ),
@@ -274,7 +293,7 @@ class _SearchPageState extends State<SearchPage>
                           ),
                         ),
                       ),
-                      Flexible(
+                      Expanded(
                         child: Visibility(
                           visible: isListVisible,
                           child: Container(
@@ -655,12 +674,14 @@ class _SearchPageState extends State<SearchPage>
     ));
     progressDialog.show();
     setState(() {
+      noMore = false;
       searchedProducts.clear();
       isLoadVisible = true;
       isListVisible = false;
+      _mainString = _selectedSeatsId + _selectedColorsId + _selectedFaimlyId;
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$productName&pagesize=8&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice');
+        'apis/GetSearch?keyword=$productName&pagesize=8&pageindex=$pageNumber&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId=$_mainString');
 
     print(uri);
     try {
@@ -676,6 +697,8 @@ class _SearchPageState extends State<SearchPage>
         });
       } else {
         SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
+        progressDialog.dismiss();
+
         if (mySearchResponse.responseData.getProductsByCategoryIdClasses ==
             null) {
           setState(() {
@@ -691,21 +714,22 @@ class _SearchPageState extends State<SearchPage>
             searchedProducts =
                 mySearchResponse.responseData.getProductsByCategoryIdClasses;
             mList = mySearchResponse.responseData.specificationAttributeFilters;
-            _maxPrice = mySearchResponse.responseData.priceRange.maxPrice;
-            _minPrice = mySearchResponse.responseData.priceRange.minPrice;
-            _range = RangeValues(_minPrice, _maxPrice);
 
             if (mList.length == 0) {
             } else {
               for (int i = 0; i <= mList.length - 1; i++) {
                 if (mList[i].name.contains('Number of Seats')) {
-                  _numberOfSeatList.addAll(mList[i].specificationoptions);
+                  _numberOfSeatList.clear();
+                  _numberOfSeatList = mList[i].specificationoptions;
                 }
                 if (mList[i].name.contains('Family')) {
-                  _familyList.addAll(mList[i].specificationoptions);
+                  _familyList.clear();
+                  _familyList = mList[i].specificationoptions;
                 }
                 if (mList[i].name.contains('Colour')) {
-                  _colorList.addAll(mList[i].specificationoptions);
+                  _colorList.clear();
+
+                  _colorList = mList[i].specificationoptions;
                 }
               }
             }
@@ -735,6 +759,7 @@ class _SearchPageState extends State<SearchPage>
       ConstantsVar.excecptionMessage(e);
       progressDialog.dismiss();
     }
+    progressDialog.dismiss();
   }
 
   void _onLoading() async {
@@ -746,7 +771,7 @@ class _SearchPageState extends State<SearchPage>
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=8&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}');
+        'apis/GetSearch?keyword=$prodName&pagesize=8&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
@@ -796,7 +821,7 @@ class _SearchPageState extends State<SearchPage>
                     Container(
                       width: 25.w,
                       child: AutoSizeText(
-                        'Number of seats: '.toUpperCase(),
+                        'No. of seats: '.toUpperCase(),
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
@@ -818,16 +843,38 @@ class _SearchPageState extends State<SearchPage>
                         },
                         topDivider: true,
                         items: _numberOfSeatList,
-                        toggledChild: normalChildButton(_selectedSeats),
+                        toggledChild: Container(
+                            child: Container(
+                                height: 2.w, child: Text(_selectedSeats))),
                         showSelectedItemOnList: true,
-                        onItemSelected: (value) =>
+                        onItemSelected: (value)
                             // wait mam
-                            setState(() => _selectedSeats = value.name),
+                            {
+                          setState(() {
+                            _isChecked = true;
+                            _selectedSeats = value.name;
+
+                            _selectedSeatsId = '';
+                            _selectedSeatsId = value.id + ',';
+                          });
+
+                        },
                         child: normalChildButton(_selectedSeats),
                         // selectedItem: _selectedSeats,
                         // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
-                    )
+                    ),
+                    IconButton(
+                      onPressed: () {
+
+                        setState(() {
+                          _selectedSeats = '';
+
+                          _selectedSeatsId = '';
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
                   ]),
                 ),
               ),
@@ -861,16 +908,33 @@ class _SearchPageState extends State<SearchPage>
                         },
                         topDivider: true,
                         items: _colorList,
-                        toggledChild: normalChildButton(_selectedColors),
+                        toggledChild: Text(_selectedColors),
                         showSelectedItemOnList: true,
-                        onItemSelected: (value) =>
+                        onItemSelected: (value)
                             // wait mam
-                            setState(() => _selectedColors = value.name),
+                            {
+                          setState(() {
+                            _selectedColorsId = '';
+
+                            _selectedColorsId = value.id + ',';
+
+                            _selectedColors = value.name;
+                          });
+
+                        },
                         child: normalChildButton(_selectedColors),
-                        // selectedItem: _selectedColors,
-                        // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
-                    )
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedColors = '';
+
+                          _selectedColorsId = '';
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
                   ]),
                 ),
               ),
@@ -904,16 +968,35 @@ class _SearchPageState extends State<SearchPage>
                         },
                         topDivider: true,
                         items: _familyList,
-                        toggledChild: normalChildButton(_selectedFaimly),
+                        toggledChild: Text(_selectedFaimly),
                         showSelectedItemOnList: true,
-                        onItemSelected: (value) =>
+                        onItemSelected: (value)
                             // wait mam
-                            setState(() => _selectedFaimly = value.name),
+                            {
+                          setState(() {
+                            _selectedFaimly = value.name;
+                            _selectedFaimlyId = '';
+                            _selectedFaimlyId = value.id + ',';
+                          });
+
+
+                        },
                         child: normalChildButton(_selectedFaimly),
                         // selectedItem: _selectedFaimly,
                         // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
-                    )
+                    ),
+                    IconButton(
+                      splashColor: Colors.red,
+                      onPressed: () {
+                        setState((){
+                          _selectedFaimly = '';
+
+                          _selectedSeatsId = '';
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
                   ]),
                 ),
               ),
@@ -921,26 +1004,20 @@ class _SearchPageState extends State<SearchPage>
                 height: 2.w,
               ),
               AutoSizeText(
-                'Price Range: '.toUpperCase(),
+                'Price Range: '.toUpperCase()
+                ,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  fontSize: 4.8.w,
+                  fontSize: 3.2.w,
                 ),
               ),
               Container(
                 width: 100.w,
                 child: RangeSlider(
-                  onChangeEnd: (value) {
-                    searchProducts(
-                        _searchController.text.trim(),
-                        pageIndex,
-                        _minPRICE.toStringAsFixed(2),
-                        _maxPRICE.toStringAsFixed(2));
-                  },
                   activeColor: Colors.red,
                   inactiveColor: Colors.black,
-                  min: _minPrice.toStringAsFixed(2).toDouble(),
-                  max: _maxPrice,
+                  min: 0,
+                  max: 25000,
                   values: _range,
                   onChanged: (value) {
                     print('$value');
@@ -969,34 +1046,34 @@ class _SearchPageState extends State<SearchPage>
               SizedBox(
                 height: 1.w,
               ),
-              // AppButton(
-              //   textStyle: TextStyle(color: Colors.white),
-              //   height: 4.w,
-              //   text: 'Apply Filters',
-              //   color: ConstantsVar.appColor,
-              //   splashColor: Colors.white,
-              //   onTap: () {
-              //     // _minPrice = _minPriceController.text;
-              //     // _maxPrice = _maxPriceController.text;
-              //     setState(() {
-              //       noMore = false;
-              //     });
-              //     Future.delayed(
-              //         Duration(
-              //           seconds: 1,
-              //         ),
-              //         () => setState(() => isVisible = false));
-              //
-              //     searchProducts(
-              //             _searchController.text.toString(),
-              //             0,
-              //
-              //             _minPrice.toStringAsFixed(2),
-              //             _maxPRICE.toStringAsFixed(2))
-              //         .then((value) => print(value));
-              //   },
-              //   width: 100.w,
-              // ),
+              AppButton(
+                textStyle: TextStyle(color: Colors.white),
+                height: 4.w,
+                text: 'Apply Filters',
+                color: ConstantsVar.appColor,
+                splashColor: Colors.white,
+                onTap: () {
+                  // _minPrice = _minPriceController.text;
+                  // _maxPrice = _maxPriceController.text;
+                  setState(() {
+                    noMore = false;
+                  });
+                  Future.delayed(
+                      Duration(
+                        seconds: 1,
+                      ),
+                      () => setState(() => isVisible = false));
+
+                  searchProducts(
+                          _searchController.text.toString(),
+                          0,
+
+                          _minPrice.toStringAsFixed(2),
+                          _maxPRICE.toStringAsFixed(2))
+                      .then((value) => print(value));
+                },
+                width: 100.w,
+              ),
             ],
           ),
         ),
@@ -1015,7 +1092,7 @@ class _SearchPageState extends State<SearchPage>
         _width = 100.w;
         mList.length == 0
             ? setState(() => _height = 25.h)
-            : setState(() => _height = 88.w);
+            : setState(() => _height = 78.w);
       }
     });
   }
