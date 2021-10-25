@@ -132,6 +132,7 @@ class ApiCalls {
                 .contains('The credentials provided are incorrect') ||
             responseData.toString().contains('No customer account found')) {
           print('Wrong account');
+          progressDialog.dismiss();
           Fluttertoast.showToast(
             msg: 'Wrong Details',
             gravity: ToastGravity.CENTER,

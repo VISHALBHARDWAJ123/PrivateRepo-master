@@ -100,7 +100,7 @@ Future<void> main() async {
       isInDebugMode:
           true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
       );
-  Workmanager().registerPeriodicTask("1", "simpleTask",
+  Workmanager().registerPeriodicTask("1", simplePeriodicTask,
       frequency: Duration(seconds: 10));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

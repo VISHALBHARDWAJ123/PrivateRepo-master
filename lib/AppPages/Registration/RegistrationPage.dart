@@ -324,12 +324,15 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   child: TextFormField(
                                       validator: (val) {
                                         if (isAddress(val!.trim()))
-                                          return 'Enter your address';
-                                        else
                                           return null;
+                                        else
+                                          return 'Enter your address';
                                       },
-                                      textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.next,
                                       maxLines: 3,
+
+                                      autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                       controller: addressController,
                                       cursorColor: Colors.black,
                                       style: TextStyle(
@@ -589,9 +592,6 @@ class _RegstrationPageState extends State<RegstrationPage>
                                           ),
                                         ),
                                       );
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: 'Please provide all details');
                                 }
                               },
                               color: ConstantsVar.appColor,

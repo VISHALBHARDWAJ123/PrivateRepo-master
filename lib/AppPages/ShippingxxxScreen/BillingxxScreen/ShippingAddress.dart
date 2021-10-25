@@ -283,23 +283,26 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                     showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
-                                        content: RichText(
-                                          textAlign: TextAlign.center,
-                                          text: TextSpan(
-                                            text: 'You have selected:\n',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 3.5.w,
-                                                fontWeight: FontWeight.bold),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text:
-                                                      '${myPickPoint[index].name}',
-                                                  style: TextStyle(
-                                                      fontSize: 3.w,
-                                                      fontWeight:
-                                                          FontWeight.bold))
-                                            ],
+                                        content: Container(
+                                          height: 4.h,
+                                          child: RichText(
+                                            textAlign: TextAlign.center,
+                                            text: TextSpan(
+                                              text: 'You have selected:\n',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 3.5.w,
+                                                  fontWeight: FontWeight.bold),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text:
+                                                        '${myPickPoint[index].name}',
+                                                    style: TextStyle(
+                                                        fontSize: 3.w,
+                                                        fontWeight:
+                                                            FontWeight.bold))
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         title: AutoSizeText(
@@ -768,14 +771,14 @@ class _ShippingAddressState extends State<ShippingAddress> {
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
                         style: CustomTextStyle.textFormFieldSemiBold
-                            .copyWith(fontSize: 16),
+                            .copyWith(fontSize: 3.w),
                       ),
                     ),
                     Utils.getSizedBox(null, 6),
                     AutoSizeText(
                       "SKU : ${item.sku}",
                       style: CustomTextStyle.textFormFieldRegular
-                          .copyWith(color: Colors.grey, fontSize: 15),
+                          .copyWith(color: Colors.grey, fontSize: 2.8.w),
                     ),
                     Container(
                       child: Row(

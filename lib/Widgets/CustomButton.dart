@@ -20,7 +20,7 @@ class CustomTextStyle {
       textFormFieldRegular.copyWith(fontWeight: FontWeight.w700);
 
   static var textFormFieldBlack =
-      textFormFieldRegular.copyWith(fontWeight: FontWeight.w900,fontSize: 14);
+      textFormFieldRegular.copyWith(fontWeight: FontWeight.w900,fontSize: 2.5.w);
 }
 
 class Utils {

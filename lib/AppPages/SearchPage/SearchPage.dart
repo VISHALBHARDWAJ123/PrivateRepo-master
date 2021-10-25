@@ -14,9 +14,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:menu_button/menu_button.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -42,9 +39,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
-  String _selectedSeats = '',
-      _selectedColors = '',
-      _selectedFaimly = '';
+  String _selectedSeats = '', _selectedColors = '', _selectedFaimly = '';
   String _selectedSeatsId = '',
       _selectedColorsId = '',
       _selectedFaimlyId = '',
@@ -100,10 +95,7 @@ class _SearchPageState extends State<SearchPage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  double _maxPrice = 25000,
-      _minPrice = 0,
-      _minPRICE = 0,
-      _maxPRICE = 0;
+  double _maxPrice = 25000, _minPrice = 0, _minPRICE = 0, _maxPRICE = 0;
 
   double _width = 0;
   double _height = 0;
@@ -158,10 +150,7 @@ class _SearchPageState extends State<SearchPage>
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     begin: begin, end: end, colors: [bottomColor, topColor])),
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
+            height: MediaQuery.of(context).size.height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -173,12 +162,14 @@ class _SearchPageState extends State<SearchPage>
                     child: Stack(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Card(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
+                                    borderRadius:
+                                    BorderRadius.circular(10.0)),
                                 elevation: 8.0,
                                 child: TextFormField(
                                   onFieldSubmitted: (val) {
@@ -200,7 +191,8 @@ class _SearchPageState extends State<SearchPage>
                                       pageIndex = 0;
                                       _maxPrice = 25000;
 
-                                      _range = RangeValues(_minPrice.toDouble(),
+                                      _range = RangeValues(
+                                          _minPrice.toDouble(),
                                           _maxPrice.toDouble());
                                     });
                                     searchProducts(
@@ -218,10 +210,9 @@ class _SearchPageState extends State<SearchPage>
                                   // keyboardType: TextInputType.,
                                   keyboardAppearance: Brightness.light,
                                   // autofocus: true,
-                                  onChanged: (_) =>
-                                      setState(() {
-                                        btnColor = ConstantsVar.appColor;
-                                      }),
+                                  onChanged: (_) => setState(() {
+                                    btnColor = ConstantsVar.appColor;
+                                  }),
                                   controller: _searchController,
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 5.w),
@@ -231,10 +222,12 @@ class _SearchPageState extends State<SearchPage>
                                         vertical: 13, horizontal: 10),
                                     hintText: 'Search here',
                                     labelStyle: TextStyle(
-                                        fontSize: 7.w, color: Colors.grey),
+                                        fontSize: 7.w,
+                                        color: Colors.grey),
                                     suffixIcon: InkWell(
                                       onTap: () async {
-                                        if (!currentFocus.hasPrimaryFocus) {
+                                        if (!currentFocus
+                                            .hasPrimaryFocus) {
                                           currentFocus.unfocus();
                                         }
                                         setState(() {
@@ -311,7 +304,8 @@ class _SearchPageState extends State<SearchPage>
                         radius: Radius.circular(8),
                         child: SmartRefresher(
                           onLoading: _onLoading,
-                          enablePullUp: searchedProducts.length == totalCount
+                          enablePullUp:
+                          searchedProducts.length == totalCount
                               ? false
                               : true,
                           enablePullDown: false,
@@ -324,9 +318,11 @@ class _SearchPageState extends State<SearchPage>
                               } else if (mode == LoadStatus.loading) {
                                 body = CupertinoActivityIndicator();
                               } else if (mode == LoadStatus.failed) {
-                                body = AutoSizeText("Load Failed!Click retry!");
+                                body = AutoSizeText(
+                                    "Load Failed!Click retry!");
                               } else if (mode == LoadStatus.canLoading) {
-                                body = AutoSizeText("release to load more");
+                                body =
+                                    AutoSizeText("release to load more");
                               } else {
                                 body = AutoSizeText("No more Data");
                               }
@@ -349,27 +345,30 @@ class _SearchPageState extends State<SearchPage>
                                 // var name = searchedProducts[index].stockQuantity.contains('In stock');
                                 return InkWell(
                                   onTap: () {
-                                    print(
-                                        searchedProducts[index].id.toString());
+                                    print(searchedProducts[index]
+                                        .id
+                                        .toString());
 
                                     //
                                     SchedulerBinding.instance!
-                                        .addPostFrameCallback((timeStamp) {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) {
-                                            return NewProductDetails(
-                                              productId: searchedProducts[index]
-                                                  .id
-                                                  .toString(),
-                                              screenName: 'Product List',
-                                              // customerId: ConstantsVar.customerID,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    });
+                                        .addPostFrameCallback(
+                                            (timeStamp) {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) {
+                                                return NewProductDetails(
+                                                  productId:
+                                                  searchedProducts[index]
+                                                      .id
+                                                      .toString(),
+                                                  screenName: 'Product List',
+                                                  // customerId: ConstantsVar.customerID,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        });
                                   },
                                   child: Stack(
                                     children: [
@@ -378,20 +377,23 @@ class _SearchPageState extends State<SearchPage>
                                         child: Container(
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment
+                                                .spaceBetween,
                                             crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                             children: [
                                               Container(
                                                 color: Colors.white,
-                                                padding: EdgeInsets.all(4.0),
+                                                padding:
+                                                EdgeInsets.all(4.0),
                                                 child: CachedNetworkImage(
                                                   imageUrl:
-                                                  searchedProducts[index]
+                                                  searchedProducts[
+                                                  index]
                                                       .productPicture,
                                                   fit: BoxFit.cover,
-                                                  placeholder:
-                                                      (context, reason) =>
+                                                  placeholder: (context,
+                                                      reason) =>
                                                   new SpinKitRipple(
                                                     color: Colors.red,
                                                     size: 90,
@@ -399,11 +401,12 @@ class _SearchPageState extends State<SearchPage>
                                                 ),
                                               ),
                                               Container(
-                                                padding: EdgeInsets.symmetric(
+                                                padding:
+                                                EdgeInsets.symmetric(
                                                     vertical: 8.0,
                                                     horizontal: 8.0),
-                                                width: MediaQuery
-                                                    .of(context)
+                                                width:
+                                                MediaQuery.of(context)
                                                     .size
                                                     .width,
                                                 // color: Color(0xFFe0e1e0),
@@ -411,29 +414,35 @@ class _SearchPageState extends State<SearchPage>
                                                   mainAxisSize:
                                                   MainAxisSize.max,
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment
+                                                      .start,
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                                   children: [
                                                     // sorry mam nahi hua!
                                                     AutoSizeText(
-                                                      searchedProducts[index]
+                                                      searchedProducts[
+                                                      index]
                                                           .name,
                                                       maxLines: 2,
                                                       style: TextStyle(
                                                           height: 1,
-                                                          color: Colors.black,
+                                                          color: Colors
+                                                              .black,
                                                           fontSize: 5.w,
                                                           fontWeight:
-                                                          FontWeight.bold),
+                                                          FontWeight
+                                                              .bold),
                                                       textAlign:
                                                       TextAlign.start,
                                                     ),
                                                     Padding(
-                                                      padding: const EdgeInsets
+                                                      padding:
+                                                      const EdgeInsets
                                                           .symmetric(
-                                                          vertical: 6.0),
+                                                          vertical:
+                                                          6.0),
                                                       child: Column(
                                                         crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -441,29 +450,27 @@ class _SearchPageState extends State<SearchPage>
                                                         children: [
                                                           Padding(
                                                             padding:
-                                                            EdgeInsets.only(
+                                                            EdgeInsets
+                                                                .only(
                                                               top: 2.w,
                                                               left: 2,
                                                             ),
                                                             child:
                                                             discountWidget(
                                                               actualPrice:
-                                                              searchedProducts[
-                                                              index]
+                                                              searchedProducts[index]
                                                                   .price,
-                                                              fontSize: 2.4.w,
+                                                              fontSize:
+                                                              2.4.w,
                                                               width: 25.w,
-                                                              isSpace: searchedProducts[
-                                                              index]
-                                                                  .discountedPrice ==
+                                                              isSpace: searchedProducts[index].discountedPrice ==
                                                                   null
                                                                   ? true
                                                                   : false,
                                                             ),
                                                           ),
                                                           AutoSizeText(
-                                                            searchedProducts[
-                                                            index]
+                                                            searchedProducts[index]
                                                                 .discountedPrice ==
                                                                 null
                                                                 ? searchedProducts[
@@ -478,40 +485,40 @@ class _SearchPageState extends State<SearchPage>
                                                                 color: Colors
                                                                     .grey
                                                                     .shade600,
-                                                                fontSize: 4.w,
+                                                                fontSize:
+                                                                4.w,
                                                                 fontWeight:
                                                                 FontWeight
                                                                     .bold),
                                                             textAlign:
-                                                            TextAlign.start,
+                                                            TextAlign
+                                                                .start,
                                                           ),
                                                           Padding(
                                                             padding:
-                                                            EdgeInsets.only(
+                                                            EdgeInsets
+                                                                .only(
                                                               top: 4,
                                                               bottom: 2,
                                                             ),
-                                                            child: AutoSizeText(
+                                                            child:
+                                                            AutoSizeText(
                                                               searchedProducts[
                                                               index]
                                                                   .stockQuantity,
                                                               maxLines: 1,
                                                               style: TextStyle(
-                                                                  height: 1,
-                                                                  color: searchedProducts[
-                                                                  index]
-                                                                      .stockQuantity
-                                                                      .contains(
-                                                                      'In stock')
+                                                                  height:
+                                                                  1,
+                                                                  color: searchedProducts[index].stockQuantity.contains('In stock')
                                                                       ? Colors
                                                                       .green
                                                                       : Colors
                                                                       .red,
-                                                                  fontSize:
-                                                                  20.dp,
+                                                                  fontSize: 20
+                                                                      .dp,
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                                  FontWeight.bold),
                                                               textAlign:
                                                               TextAlign
                                                                   .start,
@@ -525,19 +532,23 @@ class _SearchPageState extends State<SearchPage>
                                               ),
                                               AddCartBtn(
                                                 productId:
-                                                searchedProducts[index].id,
+                                                searchedProducts[
+                                                index]
+                                                    .id,
                                                 // width: 2.w,
                                                 isTrue: true,
                                                 guestCustomerId:
                                                 guestCustomerId,
-                                                checkIcon:
-                                                searchedProducts[index]
+                                                checkIcon: searchedProducts[
+                                                index]
                                                     .stockQuantity
                                                     .contains(
                                                     'Out of stock')
-                                                    ? Icon(HeartIcon.cross)
+                                                    ? Icon(
+                                                    HeartIcon.cross)
                                                     : Icon(Icons.check),
-                                                text: searchedProducts[index]
+                                                text: searchedProducts[
+                                                index]
                                                     .stockQuantity
                                                     .contains(
                                                     'Out of stock')
@@ -545,12 +556,14 @@ class _SearchPageState extends State<SearchPage>
                                                     .toUpperCase()
                                                     : 'ADD TO CArt'
                                                     .toUpperCase(),
-                                                color: searchedProducts[index]
+                                                color: searchedProducts[
+                                                index]
                                                     .stockQuantity
                                                     .contains(
                                                     'Out of stock')
                                                     ? Colors.grey
-                                                    : ConstantsVar.appColor,
+                                                    : ConstantsVar
+                                                    .appColor,
                                                 // fontSize: 12,
                                               )
                                             ],
@@ -568,7 +581,8 @@ class _SearchPageState extends State<SearchPage>
                                               ? true
                                               : false,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
+                                            padding:
+                                            const EdgeInsets.all(4.0),
                                             child: Container(
                                               width: 10.w,
                                               height: 10.w,
@@ -580,15 +594,19 @@ class _SearchPageState extends State<SearchPage>
                                                     height: 10.w,
                                                   ),
                                                   Align(
-                                                    alignment: Alignment.center,
+                                                    alignment:
+                                                    Alignment.center,
                                                     child: Text(
-                                                      searchedProducts[index]
+                                                      searchedProducts[
+                                                      index]
                                                           .discountPercent,
                                                       style: TextStyle(
                                                         fontWeight:
-                                                        FontWeight.w800,
+                                                        FontWeight
+                                                            .w800,
                                                         fontSize: 3.w,
-                                                        color: Colors.white,
+                                                        color:
+                                                        Colors.white,
                                                       ),
                                                     ),
                                                   )
@@ -624,6 +642,7 @@ class _SearchPageState extends State<SearchPage>
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
@@ -694,7 +713,8 @@ class _SearchPageState extends State<SearchPage>
                 mySearchResponse.responseData.getProductsByCategoryIdClasses;
             mList = mySearchResponse.responseData.specificationAttributeFilters;
 
-            if (mList.length == 0) {} else {
+            if (mList.length == 0) {
+            } else {
               for (int i = 0; i <= mList.length - 1; i++) {
                 if (mList[i].name.contains('Number of Seats')) {
                   _numberOfSeatList.clear();
@@ -749,9 +769,7 @@ class _SearchPageState extends State<SearchPage>
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=8&pageindex=$pageIndex&minPrice=${_minPRICE
-            .toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(
-            2)}&specId = $_mainString');
+        'apis/GetSearch?keyword=$prodName&pagesize=8&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
@@ -790,264 +808,283 @@ class _SearchPageState extends State<SearchPage>
         width: _width,
         child: PageView.builder(
           physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) =>
-              ListView(
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(4),
-                children: [
-                  Visibility(
-                    visible: _numberOfSeatList.isEmpty ? false : true,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Row(children: [
-                        Container(
-                          width: 25.w,
-                          child: AutoSizeText(
-                            'No. of seats: ',
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 3.5.w,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: MenuButton<Specificationoption>(
-                            scrollPhysics: AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (value) {
-                              return Container(
-                                height: 30,
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 16),
-                                child: Text(value.name),
-                              );
-                            },
-                            topDivider: true,
-                            items: _numberOfSeatList,
-                            toggledChild: Container(
-                                child: Container(
-                                    height: 2.w, child: Text(_selectedSeats))),
-                            showSelectedItemOnList: true,
-                            onItemSelected: (value)
-                            // wait mam
-                            {
-                              setState(() {
-                                _isChecked = true;
-                                _selectedSeats = value.name;
-
-                                _selectedSeatsId = '';
-                                _selectedSeatsId = value.id + ',';
-                              });
-                            },
-                            child: normalChildButton(_selectedSeats),
-                            // selectedItem: _selectedSeats,
-                            // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedSeats = '';
-
-                              _selectedSeatsId = '';
-                            });
-                          },
-                          icon: Icon(Icons.remove),
-                        ),
-                      ]),
-                    ),
-                  ),
-                  Visibility(
-                    visible: _colorList.isEmpty ? false : true,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Row(children: [
-                        Container(
-                          width: 25.w,
-                          child: AutoSizeText(
-                            'Color: ',
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 3.5.w,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: MenuButton<Specificationoption>(
-                            scrollPhysics: AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (value) {
-                              return Container(
-                                height: 30,
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 16),
-                                child: Text(value.name),
-                              );
-                            },
-                            topDivider: true,
-                            items: _colorList,
-                            toggledChild: Text(_selectedColors),
-                            showSelectedItemOnList: true,
-                            onItemSelected: (value)
-                            // wait mam
-                            {
-                              setState(() {
-                                _selectedColorsId = '';
-
-                                _selectedColorsId = value.id + ',';
-
-                                _selectedColors = value.name;
-                              });
-                            },
-                            child: normalChildButton(_selectedColors),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedColors = '';
-
-                              _selectedColorsId = '';
-                            });
-                          },
-                          icon: Icon(Icons.remove),
-                        ),
-                      ]),
-                    ),
-                  ),
-                  Visibility(
-                    visible: _familyList.isEmpty ? false : true,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Row(children: [
-                        Container(
-                          width: 25.w,
-                          child: AutoSizeText(
-                            'Family: ',
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 3.5.w,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: MultiSelectDialogField(
-                            searchable: true,
-                            onConfirm: (val) {},
-                            items: _familyList
-                                .map((e) => MultiSelectItem(e, e.name))
-                                .toList(),
-                            listType: MultiSelectListType.LIST,
-                          ),
-                        ),
-                        IconButton(
-                          splashColor: Colors.red,
-                          onPressed: () {
-                            setState(() {
-                              _selectedFaimly = '';
-
-                              _selectedFaimlyId = '';
-                            });
-                          },
-                          icon: Icon(Icons.remove),
-                        ),
-                      ]),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  AutoSizeText(
-                    'Price Range: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 3.5.w,
-                    ),
-                  ),
-                  Container(
-                    width: 100.w,
-                    child: SliderTheme(
-                      data: SliderThemeData(
-                        thumbColor: ConstantsVar.appColor,
-                        overlayColor: ConstantsVar.appColor,
-                        overlayShape: RoundSliderOverlayShape(
-                          overlayRadius: 16,
-                        ),
-                        trackHeight: 2,
-                        thumbShape: RoundSliderThumbShape(
-                          enabledThumbRadius: 3.0,
-                          disabledThumbRadius: 3.0,
+          itemBuilder: (context, index) => ListView(
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.all(4),
+            children: [
+              Visibility(
+                visible: _numberOfSeatList.isEmpty ? false : true,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: Row(children: [
+                    Container(
+                      width: 25.w,
+                      child: AutoSizeText(
+                        'No. of seats: ',
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 3.5.w,
                         ),
                       ),
-                      child: RangeSlider(
-                        activeColor: Colors.red,
-                        inactiveColor: Colors.black,
-                        min: 0,
-                        max: 25000,
-                        values: _range,
-                        onChanged: (value) {
-                          print('$value');
+                    ),
+                    Expanded(
+                      child: MenuButton<Specificationoption>(
+                        scrollPhysics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (value) {
+                          return Container(
+                            height: 30,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 16),
+                            child: Text(value.name),
+                          );
+                        },
+                        topDivider: true,
+                        items: _numberOfSeatList,
+                        toggledChild: Container(
+                            child: Container(
+                                height: 2.w, child: Text(_selectedSeats))),
+                        showSelectedItemOnList: true,
+                        onItemSelected: (value)
+                        // wait mam
+                        {
                           setState(() {
-                            _range = value;
-                            _minPRICE = double.parse(_range.start.toString())
-                                .toStringAsFixed(2)
-                                .toDouble();
-                            _maxPRICE = double.parse(_range.end.toString())
-                                .toStringAsFixed(2)
-                                .toDouble();
+                            _isChecked = true;
+                            _selectedSeats = value.name;
+
+                            _selectedSeatsId = '';
+                            _selectedSeatsId = value.id + ',';
                           });
                         },
+                        child: normalChildButton(_selectedSeats),
+                        // selectedItem: _selectedSeats,
+                        // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 100.w,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Min Price: $_minPRICE'),
-                        Text('Max Price: $_maxPRICE'),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AppButton(
-                      textStyle: TextStyle(color: Colors.white),
-                      height: 4.w,
-                      text: 'Apply Filters',
-                      color: ConstantsVar.appColor,
-                      splashColor: Colors.white,
-                      onTap: () {
-                        // _minPrice = _minPriceController.text;
-                        // _maxPrice = _maxPriceController.text;
+                    IconButton(
+                      onPressed: () {
                         setState(() {
-                          noMore = false;
-                        });
-                        Future.delayed(
-                            Duration(
-                              seconds: 1,
-                            ),
-                                () => setState(() => isVisible = false));
+                          _selectedSeats = '';
 
-                        searchProducts(
-                            _searchController.text.toString(),
-                            0,
-                            _minPrice.toStringAsFixed(2),
-                            _maxPRICE.toStringAsFixed(2))
-                            .then((value) => print(value));
+                          _selectedSeatsId = '';
+                        });
                       },
-                      width: 100.w,
+                      icon: Icon(Icons.remove),
+                    ),
+                  ]),
+                ),
+              ),
+              Visibility(
+                visible: _colorList.isEmpty ? false : true,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: Row(children: [
+                    Container(
+                      width: 25.w,
+                      child: AutoSizeText(
+                        'Color: ',
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 3.5.w,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: MenuButton<Specificationoption>(
+                        scrollPhysics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (value) {
+                          return Container(
+                            height: 30,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 16),
+                            child: Text(value.name),
+                          );
+                        },
+                        topDivider: true,
+                        items: _colorList,
+                        toggledChild: Text(_selectedColors),
+                        showSelectedItemOnList: true,
+                        onItemSelected: (value)
+                        // wait mam
+                        {
+                          setState(() {
+                            _selectedColorsId = '';
+
+                            _selectedColorsId = value.id + ',';
+
+                            _selectedColors = value.name;
+                          });
+                        },
+                        child: normalChildButton(_selectedColors),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedColors = '';
+
+                          _selectedColorsId = '';
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                  ]),
+                ),
+              ),
+              Visibility(
+                visible: _familyList.isEmpty ? false : true,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: Row(children: [
+                    Container(
+                      width: 25.w,
+                      child: AutoSizeText(
+                        'Family: ',
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 3.5.w,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: MenuButton<Specificationoption>(
+                        scrollPhysics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (value) {
+                          return Container(
+                            height: 30,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 16),
+                            child: Text(value.name),
+                          );
+                        },
+                        topDivider: true,
+                        items: _familyList,
+                        toggledChild: Text(_selectedFaimly),
+                        showSelectedItemOnList: true,
+                        onItemSelected: (value)
+                        // wait mam
+                        {
+                          setState(() {
+                            _selectedFaimly = value.name;
+                            _selectedFaimlyId = '';
+                            _selectedFaimlyId = value.id + ',';
+                          });
+                        },
+                        child: normalChildButton(_selectedFaimly),
+                        // selectedItem: _selectedFaimly,
+                        // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
+                      ),
+                    ),
+                    IconButton(
+                      splashColor: Colors.red,
+                      onPressed: () {
+                        setState(() {
+                          _selectedFaimly = '';
+
+                          _selectedFaimlyId = '';
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                  ]),
+                ),
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              AutoSizeText(
+                'Price Range: ',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 3.5.w,
+                ),
+              ),
+              Container(
+                width: 100.w,
+                child: SliderTheme(
+                  data: SliderThemeData(
+                    thumbColor: ConstantsVar.appColor,
+                    overlayColor: ConstantsVar.appColor,
+                    overlayShape: RoundSliderOverlayShape(
+                      overlayRadius: 16,
+                    ),
+                    trackHeight: 2,
+                    thumbShape: RoundSliderThumbShape(
+                      enabledThumbRadius: 3.0,
+                      disabledThumbRadius: 3.0,
                     ),
                   ),
-                ],
+                  child: RangeSlider(
+                    activeColor: Colors.red,
+                    inactiveColor: Colors.black,
+                    min: 0,
+                    max: 25000,
+                    values: _range,
+                    onChanged: (value) {
+                      print('$value');
+                      setState(() {
+                        _range = value;
+                        _minPRICE = double.parse(_range.start.toString())
+                            .toStringAsFixed(2)
+                            .toDouble();
+                        _maxPRICE = double.parse(_range.end.toString())
+                            .toStringAsFixed(2)
+                            .toDouble();
+                      });
+                    },
+                  ),
+                ),
               ),
+              Container(
+                width: 100.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Min Price: $_minPRICE'),
+                    Text('Max Price: $_maxPRICE'),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AppButton(
+                  textStyle: TextStyle(color: Colors.white),
+                  height: 4.w,
+                  text: 'Apply Filters',
+                  color: ConstantsVar.appColor,
+                  splashColor: Colors.white,
+                  onTap: () {
+                    // _minPrice = _minPriceController.text;
+                    // _maxPrice = _maxPriceController.text;
+                    setState(() {
+                      noMore = false;
+                    });
+                    Future.delayed(
+                        Duration(
+                          seconds: 1,
+                        ),
+                            () => setState(() => isVisible = false));
+
+                    searchProducts(
+                        _searchController.text.toString(),
+                        0,
+                        _minPrice.toStringAsFixed(2),
+                        _maxPRICE.toStringAsFixed(2))
+                        .then((value) => print(value));
+                  },
+                  width: 100.w,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1064,36 +1101,43 @@ class _SearchPageState extends State<SearchPage>
         _width = 100.w;
         mList.length == 0
             ? setState(() => _height = 25.h)
-            : setState(() => _height = 73.5.w);
+            : setState(() => _height = 81.w);
       }
     });
   }
 
-  Widget normalChildButton(String _name) =>
-      SizedBox(
-        width: 93,
-        height: 30,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 11),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Flexible(
-                  child: Text(_name == null ? '' : _name,
-                      overflow: TextOverflow.ellipsis)),
-              const SizedBox(
-                width: 12,
-                height: 17,
-                child: FittedBox(
-                  fit: BoxFit.fill,
-                  child: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.grey,
-                  ),
-                ),
+  _selectData(Specificationoption value, String _selectedKey) {
+    setState(() {
+      _selectedSeats = value.name;
+      _selectedKey = value.name;
+      Fluttertoast.showToast(msg: _selectedKey);
+    });
+  }
+
+  Widget normalChildButton(String _name) => SizedBox(
+    width: 93,
+    height: 30,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 16, right: 11),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+              child: Text(_name == null ? '' : _name,
+                  overflow: TextOverflow.ellipsis)),
+          const SizedBox(
+            width: 12,
+            height: 17,
+            child: FittedBox(
+              fit: BoxFit.fill,
+              child: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.grey,
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
