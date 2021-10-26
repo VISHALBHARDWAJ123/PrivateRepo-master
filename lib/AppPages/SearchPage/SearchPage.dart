@@ -52,7 +52,37 @@ class _SearchPageState extends State<SearchPage>
     ConstantsVar.appColor,
   ];
   late AnimationController _animationController;
-
+List<String> _sugegstionList = ["WOW",
+  "Home Decor",
+  "Cushions",
+  "Throws",
+  "Bathroom",
+  "Modular Sofas",
+  "SPRING 2020 Living",
+  "Mattresses Qatar",
+  "RAMADAN COLLECTION",
+  "Chaise Lounge Sofa",
+  "2 Seater Sofa Couch",
+  "U Sofa Couch",
+  "3 Seater Sofa Couch",
+  "Corner Sofa",
+  "Microfiber Couch",
+  "Autumn Winter Collection 2021 UAE",
+  "THE One Spring Collection 2021 Kuwait",
+  "THE One  Spring Collection 2021 Bahrain",
+  "Autumn Collection -  Studio 3",
+  "Christmas Gift Ideas",
+  "Service Charges",
+  "Service Charges BAH",
+  "Service Charges KWT",
+  "GIFT SHOP",
+  "3 Seater Sofas",
+  "Natural Neutrals",
+  "Lavender Hues",
+  "Blush Green",
+  "2 Seater Sofas",
+  "Marketplace",
+  "DIWALI",];
   final colorizeTextStyle =
   TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold);
   var _range;
@@ -172,6 +202,8 @@ class _SearchPageState extends State<SearchPage>
                                     BorderRadius.circular(10.0)),
                                 elevation: 8.0,
                                 child: TextFormField(
+                                  autocorrect: true,
+                                  enableSuggestions: true,
                                   onFieldSubmitted: (val) {
                                     if (!currentFocus.hasPrimaryFocus) {
                                       currentFocus.unfocus();
@@ -334,7 +366,7 @@ class _SearchPageState extends State<SearchPage>
                           ),
                           controller: _refreshController,
                           child: GridView.count(
-                            physics: AlwaysScrollableScrollPhysics(),
+                            // physics: AlwaysScrollableScrollPhysics(),
                             crossAxisCount: 2,
                             crossAxisSpacing: 5,
                             childAspectRatio: 3 / 6,

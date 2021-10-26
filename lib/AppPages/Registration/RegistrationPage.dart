@@ -190,6 +190,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 3),
                                   child: TextFormField(
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
                                     maxLength: 100,
                                     textInputAction: TextInputAction.next,
                                     controller: fController,

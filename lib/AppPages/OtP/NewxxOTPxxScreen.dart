@@ -340,8 +340,9 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     final uri = Uri.parse(BuildConfig.base_url + 'customer/SendOTP');
     print(uri);
     final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
+    var response = await post(uri, body: body);
+
     try {
-      var response = await post(uri, body: body);
       context.loaderOverlay.hide();
       OtpResponse otpResponse = OtpResponse.fromJson(jsonDecode(response.body));
       if (otpResponse.status.contains('Success')) {
@@ -406,7 +407,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       context.loaderOverlay.hide();
 
       print(result);
-      if (result['Status'] == 'Failed') {
+      if (result['Status'].toString().contains('Failed')) {
         Fluttertoast.showToast(msg: 'Verification failed');
       } else {
         register();
@@ -440,7 +441,8 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       print(result);
       String status = result['status'];
       if (status.contains(statusSus)) {
-        ApiCalls.login(context, widget.email, widget.password,'OTP Screen').then((value) {
+        ApiCalls.login(context, widget.email, widget.password, 'OTP Screen')
+            .then((value) {
           context.loaderOverlay.hide();
           showSucessDialog();
         });

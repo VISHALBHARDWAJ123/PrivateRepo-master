@@ -110,6 +110,7 @@ dependencies:
   cupertino_range_slider: ^1.0.1
   workmanager: ^0.4.1
   multi_select_flutter: ^4.0.0
+  field_suggestion: ^0.2.2
 
 dev_dependencies:
   flutter_test:
