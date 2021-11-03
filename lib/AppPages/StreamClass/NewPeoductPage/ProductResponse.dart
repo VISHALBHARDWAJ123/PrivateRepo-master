@@ -31,6 +31,8 @@ class ProductResponse {
     required this.associatedProducts,
     required this.id,
     required this.discountPercentage,
+    required this.subscribedToBackInStockSubscription,
+    required this.displayBackInStockSubscription,
   });
 
   PictureModel defaultPictureModel;
@@ -51,6 +53,8 @@ class ProductResponse {
   List<dynamic> associatedProducts;
   int id;
   String discountPercentage;
+  bool subscribedToBackInStockSubscription;
+  bool displayBackInStockSubscription;
 
   factory ProductResponse.fromJson(Map<String, dynamic> json) =>
       ProductResponse(
@@ -81,6 +85,9 @@ class ProductResponse {
         discountPercentage: json["DiscountPercentage"] == null
             ? ''
             : json["DiscountPercentage"],
+        displayBackInStockSubscription: json['displayBackInStockSubscription'],
+        subscribedToBackInStockSubscription:
+            json['subscribedToBackInStockSubscription'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,6 +113,9 @@ class ProductResponse {
             List<dynamic>.from(associatedProducts.map((x) => x)),
         "id": id,
         "DiscountPercentage": discountPercentage,
+        "subscribedToBackInStockSubscription":
+            subscribedToBackInStockSubscription,
+        "displayBackInStockSubscription": displayBackInStockSubscription,
       };
 }
 

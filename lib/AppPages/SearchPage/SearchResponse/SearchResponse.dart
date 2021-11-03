@@ -48,6 +48,7 @@ class ResponseData {
   List<Sorting> sorting;
   int totalCount;
   PriceRange priceRange;
+
   factory ResponseData.fromJson(Map<String, dynamic> json) => ResponseData(
         getProductsByCategoryIdClasses: List<GetProductsByCategoryIdClass>.from(
             json["getProductsByCategoryIdClasses"]
@@ -58,8 +59,8 @@ class ResponseData {
         sorting:
             List<Sorting>.from(json["sorting"].map((x) => Sorting.fromJson(x))),
         totalCount: json["TotalCount"],
-    priceRange: PriceRange.fromJson(json["priceRange"]),      );
-
+        priceRange: PriceRange.fromJson(json["priceRange"]),
+      );
 
   Map<String, dynamic> toJson() => {
         "getProductsByCategoryIdClasses": List<dynamic>.from(
@@ -83,6 +84,8 @@ class GetProductsByCategoryIdClass {
     required this.priceValue,
     required this.isDisable,
     required this.isAvailable,
+    required this.isGiftCard,
+    required this.isDeliveryProduct,
   });
 
   int id;
@@ -95,6 +98,8 @@ class GetProductsByCategoryIdClass {
   double priceValue;
   bool isDisable;
   bool isAvailable;
+  bool isGiftCard;
+  bool isDeliveryProduct;
 
   factory GetProductsByCategoryIdClass.fromJson(Map<String, dynamic> json) =>
       GetProductsByCategoryIdClass(
@@ -110,6 +115,8 @@ class GetProductsByCategoryIdClass {
         priceValue: json["PriceValue"].toDouble(),
         isDisable: json["IsDisable"],
         isAvailable: json["IsAvailable"],
+        isDeliveryProduct: json['havingattributes'],
+        isGiftCard: json['IsGiftCard'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -123,6 +130,8 @@ class GetProductsByCategoryIdClass {
         "PriceValue": priceValue,
         "IsDisable": isDisable,
         "IsAvailable": isAvailable,
+        "havingattributes": isDeliveryProduct,
+        'IsGiftCard': isGiftCard,
       };
 }
 
@@ -194,6 +203,7 @@ class Specificationoption {
         "name": name,
       };
 }
+
 class PriceRange {
   PriceRange({
     required this.minPrice,
@@ -204,12 +214,12 @@ class PriceRange {
   double maxPrice;
 
   factory PriceRange.fromJson(Map<String, dynamic> json) => PriceRange(
-    minPrice: json["minPrice"].toDouble(),
-    maxPrice: json["maxPrice"].toDouble(),
-  );
+        minPrice: json["minPrice"].toDouble(),
+        maxPrice: json["maxPrice"].toDouble(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "minPrice": minPrice,
-    "maxPrice": maxPrice,
-  };
+        "minPrice": minPrice,
+        "maxPrice": maxPrice,
+      };
 }

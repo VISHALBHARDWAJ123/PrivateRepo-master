@@ -31,6 +31,7 @@ dependencies:
   foldable_list: ^1.0.0
   carousel_slider: ^4.0.0
   fluttertoast: ^8.0.7
+  material_floating_search_bar: ^0.3.6
   cached_network_image: ^3.1.0
   flutter_carousel_slider: ^1.0.8
   nb_utils: ^4.4.2
@@ -112,7 +113,7 @@ dependencies:
   multi_select_flutter: ^4.0.0
   field_suggestion: ^0.2.2
   refresh_loadmore: ^2.0.5
-
+  checkbox_grouped: ^1.7.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -155,6 +156,10 @@ flutter:
     - MyAssets/okay.jpeg
     - MyAssets/imagebackground.jpeg
     - MyAssets/banner.jpg
+    - ServicesImages/delivery_icon.jpg
+    - ServicesImages/designer_card_icon.jpg
+    - ServicesImages/easy_payment_icon.jpg
+    - ServicesImages/hs_icon.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -206,6 +211,10 @@ flutter:
     - family: SearchFilter
       fonts:
         - asset: MyAssets/icons/searchfilter.ttf
+    - family: SocialMedia
+      fonts:
+        - asset: MyAssets/icons/SocialMedia.ttf
+
   #    - family: Monstserrat
   #      fonts:
   #        - asset: MyAssets/fonts/UserFont/MonstserratBold.ttf

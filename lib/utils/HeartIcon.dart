@@ -48,4 +48,14 @@ class HeartIcon {
       IconData(0xe870, fontFamily: _kFontFamRemove, fontPackage: _kFontPkg);
 
   static const IconData searchFilter = IconData(0xf1de, fontFamily: _kFontFamSearch, );
+
+  static const _socialMediaFam = 'SocialMedia';
+
+  static const IconData socialMedia = IconData(0xf1de, fontFamily: _socialMediaFam,);
+  static const _kFontFamInsta = 'MyFlutterApp';
+
+  // static const IconData instagramNew = IconData(0xf16d, fontFamily: _kFontFamInsta, );
+
+
+
 }

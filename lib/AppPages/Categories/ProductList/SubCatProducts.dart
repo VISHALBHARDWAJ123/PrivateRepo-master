@@ -37,6 +37,8 @@ class _ProductListState extends State<ProductList> {
   var guestCustomerId;
   ProductListModel? inititalData;
 
+  bool isShown = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -63,7 +65,14 @@ class _ProductListState extends State<ProductList> {
             actions: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
+                child: InkWell(
+                  child: Icon(Icons.search),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                 child: InkWell(
                   // splashColor: Colors.amber,
                   radius: 48,
@@ -85,11 +94,14 @@ class _ProductListState extends State<ProductList> {
                   onTap: () => Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => CartScreen2(otherScreenName: '', isOtherScren: true,),
+                      builder: (context) => CartScreen2(
+                        otherScreenName: '',
+                        isOtherScren: true,
+                      ),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
 
             toolbarHeight: 18.w,
@@ -99,7 +111,10 @@ class _ProductListState extends State<ProductList> {
             title: InkWell(
               onTap: () => Navigator.pushAndRemoveUntil(
                   context,
-                  CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
+                  CupertinoPageRoute(
+                      builder: (context) => MyHomePage(
+                            pageIndex: 0,
+                          )),
                   (route) => false),
               child: Image.asset(
                 'MyAssets/logo.png',
@@ -137,7 +152,8 @@ class _ProductListState extends State<ProductList> {
                             padding: EdgeInsets.all(5),
                             shape: BadgeShape.circle,
                             position: BadgePosition.topEnd(),
-                            badgeContent: new AutoSizeText('${value.badgeNumber}'),
+                            badgeContent:
+                                new AutoSizeText('${value.badgeNumber}'),
                             child: Icon(
                               Icons.shopping_cart_outlined,
                               color: Colors.white,
@@ -148,11 +164,14 @@ class _ProductListState extends State<ProductList> {
                       onTap: () => Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => CartScreen2(otherScreenName: 'Product List',isOtherScren: true,),
+                          builder: (context) => CartScreen2(
+                            otherScreenName: 'Product List',
+                            isOtherScren: true,
+                          ),
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
 
                 toolbarHeight: 18.w,
@@ -162,7 +181,10 @@ class _ProductListState extends State<ProductList> {
                 title: InkWell(
                   onTap: () => Navigator.pushAndRemoveUntil(
                       context,
-                      CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
+                      CupertinoPageRoute(
+                          builder: (context) => MyHomePage(
+                                pageIndex: 0,
+                              )),
                       (route) => false),
                   child: Image.asset(
                     'MyAssets/logo.png',
@@ -172,7 +194,6 @@ class _ProductListState extends State<ProductList> {
                 ),
               ),
               body: prodListWidget(
-
                 products: products,
                 title: widget.title,
                 // result: result,
@@ -180,6 +201,7 @@ class _ProductListState extends State<ProductList> {
                 id: '${widget.categoryId}',
                 productCount: productCount,
                 guestCustomerId: guestCustomerId,
+                isShown: isShown,
               )));
     }
   }
@@ -200,15 +222,27 @@ class AddCartBtn extends StatefulWidget {
     required this.guestCustomerId,
     required this.checkIcon,
     required this.color,
+    required this.isProductAttributeAvail,
+    required this.isGiftCard,
+    required this.recipEmail,
+    required this.attributeId,
+    required this.message,
+    required this.name,
+    required this.email,
+    required this.recipName,
   }) : super(key: key);
   final productId;
   final guestCustomerId;
   Icon checkIcon;
   String text;
   Color color;
+  String attributeId, name, recipName, email, recipEmail, message;
 
   // double width;
   bool isTrue;
+
+  bool isProductAttributeAvail;
+  bool isGiftCard;
 
   // final fontSize;
 
@@ -266,7 +300,15 @@ class _AddCartBtnState extends State<AddCartBtn> {
           stateId = AddToCartButtonStateId.loading;
           AddToCartResponse result;
           ApiCalls.addToCart(
-                  widget.guestCustomerId, '${widget.productId}', context)
+                  widget.guestCustomerId,
+                  '${widget.productId}',
+                  context,
+                  widget.attributeId,
+                  widget.recipName,
+                  widget.recipEmail,
+                  widget.name,
+                  widget.email,
+                  widget.message)
               .then((response) {
             setState(() {
               int val = 0;

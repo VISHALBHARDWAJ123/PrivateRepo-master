@@ -12,6 +12,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
+import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -25,7 +26,7 @@ class prodListWidget extends StatefulWidget {
     Key? key,
     required this.products,
     required this.title,
-    // required this.result,
+    required this.isShown,
     required this.id,
     required this.pageIndex,
     required this.productCount,
@@ -33,6 +34,7 @@ class prodListWidget extends StatefulWidget {
   }) : super(key: key);
   List<ResponseDatum> products;
   final title;
+  FocusNode focusNode = FocusNode();
 
   // dynamic result;
   int pageIndex;
@@ -40,6 +42,7 @@ class prodListWidget extends StatefulWidget {
   int productCount;
   final guestCustomerId;
   RefreshController myController = RefreshController();
+  bool isShown;
 
   @override
   _prodListWidgetState createState() => _prodListWidgetState();
@@ -49,6 +52,15 @@ class _prodListWidgetState extends State<prodListWidget> {
   var pageIndex1 = 1;
 
   bool isLoading = true;
+
+  Color btnColor = Colors.black;
+
+  var _suggestController = ScrollController();
+
+  TextEditingController _searchController = TextEditingController();
+
+  bool _isGiftCard = false;
+  bool _isProductAttributeAvail = false;
 
   void _onLoading() async {
     print('object');
@@ -96,11 +108,212 @@ class _prodListWidgetState extends State<prodListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Container(
+          color:ConstantsVar.appColor,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
+              ),
+              child: RawAutocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == null ||
+                      textEditingValue.text == '') {
+                    return const Iterable<String>.empty();
+                  }
+                  return ConstantsVar.suggestionList.where((String option) {
+                    return option
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (String selection) {
+                  debugPrint('$selection selected');
+                },
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController textEditingController,
+                    FocusNode focusNodee,
+                    VoidCallback onFieldSubmitted) {
+                  _searchController = textEditingController;
+                  widget.focusNode = focusNodee;
+                  // FocusScopeNode currentFocus = FocusScopeNode.of(context);
+                  return TextFormField(
+                    autocorrect: true,
+                    enableSuggestions: true,
+                    onFieldSubmitted: (val) {
+                      widget.focusNode.unfocus();
+                      if (currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                      if (mounted)
+                        setState(() {
+                          var value = _searchController.text;
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) => SearchPage(
+                                isScreen: true,
+                                keyword: value,
+                              ),
+                            ),
+                          );
+                        });
+
+                      print('Pressed via keypad');
+                    },
+                    textInputAction: TextInputAction.search,
+                    // keyboardType: TextInputType.,
+                    keyboardAppearance: Brightness.light,
+                    // autofocus: true,
+                    onChanged: (_) => setState(() {
+                      btnColor = ConstantsVar.appColor;
+                    }),
+                    controller: _searchController,
+                    style: TextStyle(color: Colors.black, fontSize: 5.w),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                      hintText: 'Search here',
+                      labelStyle: TextStyle(fontSize: 7.w, color: Colors.grey),
+                      suffixIcon: InkWell(
+                        onTap: () async {
+                          widget.focusNode.unfocus();
+
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                          if (mounted)
+                            setState(() {
+                              var value = _searchController.text;
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (context) => SearchPage(
+                                    isScreen: true,
+                                    keyword: value,
+                                  ),
+                                ),
+                              );
+                            });
+                        },
+                        child: Icon(Icons.search_sharp),
+                      ),
+                    ),
+                    focusNode: widget.focusNode,
+                  );
+                },
+                optionsViewBuilder: (BuildContext context,
+                    AutocompleteOnSelected<String> onSelected,
+                    Iterable<String> options) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8.0,
+                      right: 10,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Material(
+                        child: Card(
+                          child: Container(
+                            height: 178,
+                            child: Scrollbar(
+                              controller: _suggestController,
+                              thickness: 5,
+                              isAlwaysShown: true,
+                              child: ListView.builder(
+                                // padding: EdgeInsets.all(8.0),
+                                itemCount: options.length + 1,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index >= options.length) {
+                                    return Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: TextButton(
+                                        child: const Text(
+                                          'Clear',
+                                          style: TextStyle(
+                                            color: ConstantsVar.appColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          _searchController.clear();
+                                        },
+                                      ),
+                                    );
+                                  }
+                                  final String option = options.elementAt(index);
+                                  return GestureDetector(
+                                      onTap: () {
+                                        onSelected(option);
+                                        Navigator.push(context, CupertinoPageRoute(builder:(context)=>SearchPage(keyword: option, isScreen: true,)));
+                                      },
+                                      child: Container(
+                                        height: 5.2.h,
+                                        width: 95.w,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: 100.w,
+                                              child: AutoSizeText(
+                                                '  ' + option,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  wordSpacing: 2,
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 100.w,
+                                              child: Divider(
+                                                thickness: 1,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+
+                                      // ListTile(
+                                      //   title: Text(option),
+                                      //   subtitle: Container(
+                                      //     width: 100.w,
+                                      //     child: Divider(
+                                      //       thickness: 1,
+                                      //       color:
+                                      //           ConstantsVar.appColor,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
         ListTile(
           title: Center(
             child: AutoSizeText(
@@ -222,7 +435,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                           children: [
                                             AutoSizeText(
                                               widget.products[index].name,
-                                              maxLines :2,
+                                              maxLines: 2,
                                               style: TextStyle(
                                                   height: 1,
                                                   color: Colors.black,
@@ -281,21 +494,32 @@ class _prodListWidgetState extends State<prodListWidget> {
                                                       top: 4,
                                                       bottom: 2,
                                                     ),
-                                                    child: AutoSizeText(
-                                                      widget.products[index]
-                                                          .stockQuantity,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          height: 1,
-                                                          color: name.contains(
-                                                                  'In')
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                          fontSize: 20.dp,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                      textAlign:
-                                                          TextAlign.start,
+                                                    child: Visibility(
+                                                      visible: widget
+                                                              .products[index]
+                                                              .stockQuantity
+                                                              .contains(
+                                                                  'Out of stock')
+                                                          ? false
+                                                          : true,
+                                                      child: AutoSizeText(
+                                                        widget.products[index]
+                                                            .stockQuantity,
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                            height: 1,
+                                                            color: name
+                                                                    .contains(
+                                                                        'In')
+                                                                ? Colors.green
+                                                                : Colors.grey,
+                                                            fontSize: 20.dp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -324,6 +548,13 @@ class _prodListWidgetState extends State<prodListWidget> {
                                                 .contains('Out of stock')
                                             ? Colors.grey
                                             : ConstantsVar.appColor,
+                                        isGiftCard: _isGiftCard,
+                                        isProductAttributeAvail:
+                                            _isProductAttributeAvail,
+                                        attributeId: '',
+                                        recipEmail: '',
+                                        email: '',
+                                        message: '', name: '', recipName: '',
                                         // fontSize: 12,
                                       )
                                     ],

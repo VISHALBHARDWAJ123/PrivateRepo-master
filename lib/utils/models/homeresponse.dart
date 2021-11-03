@@ -14,22 +14,26 @@ class HomeResponse1 {
     required this.banners,
     required this.homePageCategoriesImage,
     required this.homePageProductImage,
+    required this.homepageProductsTitle,
   });
 
   List<Bannerxx> banners;
   List<HomePageCategoriesImage> homePageCategoriesImage;
   List<HomePageProductImage> homePageProductImage;
+  String homepageProductsTitle;
 
   factory HomeResponse1.fromJson(Map<String, dynamic> json) => HomeResponse1(
-        banners: List<Bannerxx>.from(
-            json["banners"].map((x) => Bannerxx.fromJson(x))),
-        homePageCategoriesImage: List<HomePageCategoriesImage>.from(
-            json["HomePageCategoriesImage"]
-                .map((x) => HomePageCategoriesImage.fromJson(x))),
-        homePageProductImage: List<HomePageProductImage>.from(
-            json["HomePageProductImage"]
-                .map((x) => HomePageProductImage.fromJson(x))),
-      );
+      banners:
+          List<Bannerxx>.from(json["banners"].map((x) => Bannerxx.fromJson(x))),
+      homePageCategoriesImage: List<HomePageCategoriesImage>.from(
+          json["HomePageCategoriesImage"]
+              .map((x) => HomePageCategoriesImage.fromJson(x))),
+      homePageProductImage: List<HomePageProductImage>.from(
+          json["HomePageProductImage"]
+              .map((x) => HomePageProductImage.fromJson(x))),
+      homepageProductsTitle: json['HomepageProductsTitle'] == null
+          ? ""
+          : json['HomepageProductsTitle']);
 
   Map<String, dynamic> toJson() => {
         "banners": List<dynamic>.from(banners.map((x) => x.toJson())),
@@ -37,6 +41,7 @@ class HomeResponse1 {
             List<dynamic>.from(homePageCategoriesImage.map((x) => x.toJson())),
         "HomePageProductImage":
             List<dynamic>.from(homePageProductImage.map((x) => x.toJson())),
+        "HomepageProductsTitle": homepageProductsTitle,
       };
 }
 

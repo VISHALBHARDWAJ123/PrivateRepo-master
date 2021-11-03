@@ -270,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage>
       case 1:
         return HomeCategory();
       case 2:
-        return SearchPage();
+        return SearchPage(keyword: '', isScreen: false,);
       case 3:
         return CartScreen2(
           isOtherScren: false,

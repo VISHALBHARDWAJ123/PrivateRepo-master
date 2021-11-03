@@ -59,6 +59,7 @@ class ApiCalls {
   }
 
   static Future getApiTokken(BuildContext context) async {
+    print('I am being beaten');
     final body = {'email': 'apitest@gmail.com', 'password': '12345'};
 
     final uri = Uri.parse(BuildConfig.base_url + 'token/GetToken?');
@@ -71,6 +72,7 @@ class ApiCalls {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var apiTokken = responseData['tokenId'];
+        print(apiTokken);
         ConstantsVar.prefs = await SharedPreferences.getInstance();
         ConstantsVar.prefs.setString('apiTokken', apiTokken);
 
@@ -234,8 +236,6 @@ class ApiCalls {
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
         return false;
       }
-
-
     } on Exception catch (e) {
       progressDialog.dismiss();
 
@@ -319,9 +319,19 @@ class ApiCalls {
   }
 
   static Future addToCart(
-      String customerId, String productId, BuildContext context) async {
+    String customerId,
+    String productId,
+    BuildContext context,
+    String attributeId,
+    String name,
+    String recipName,
+    String email,
+    String recipEmail,
+    String message,
+  ) async {
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1');
+        'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1&' +
+        'selectedAttributeId=$attributeId&recipientName=$recipName&recipientEmail=$recipEmail&senderName=$name&senderEmail=$email&giftCardMessage=$message');
     try {
       dynamic response = await http.post(uri, headers: header);
 
@@ -1003,6 +1013,69 @@ class ApiCalls {
       ConstantsVar.excecptionMessage(e);
 
       ctx.loaderOverlay.hide();
+    }
+  }
+
+  static Future subscribeProdcut(
+      {required String productId,
+      required String customerId,
+      required String apiToken}) async {
+    final uri = Uri.parse(
+        BuildConfig.base_url + 'apis/SubscribeBackInStockNotification?');
+    var response = await http.post(uri, body: {
+      'apiToken': apiToken,
+      'customerid': customerId,
+      'productId': productId,
+    });
+    try {
+      var jsonResult = jsonDecode(response.body);
+      String _status = jsonResult['Status'].toString();
+      String _message = jsonResult['Message'].toString();
+      print(response.body);
+      if (_status.contains('Failed')) {
+        if (_message.contains('No Customer Found with Id: $customerId')) {
+          Fluttertoast.showToast(msg: 'Customer Id does not exist.');
+          _message = 'Subscribe';
+          return _message;
+        } else if (_message
+            .contains('No product found with the specified id')) {
+          Fluttertoast.showToast(
+              msg: 'No product available with this product id: $productId',
+              toastLength: Toast.LENGTH_LONG);
+          _message = 'Subscribe';
+          return _message;
+        } else if (_message.contains('Invalid API token: $apiToken')) {
+          Fluttertoast.showToast(
+              msg:
+                  'Api Token has been expired. Please log out or reinstall the app.',
+              toastLength: Toast.LENGTH_LONG);
+          _message = 'Subscribe';
+          return _message;
+        } else if (_message
+            .contains('Only registered customers can use this feature')) {
+          Fluttertoast.showToast(
+              msg: 'Only registered customers can use this feature.',
+              toastLength: Toast.LENGTH_LONG);
+          _message = 'Subscribe';
+          return _message;
+        }
+        _message = 'Subscribe';
+        return _message;
+      } else {
+        if (_message.contains('Unsubscribed')) {
+          Fluttertoast.showToast(
+              msg: 'You will be notify soon when product available.',
+              toastLength: Toast.LENGTH_LONG);
+        } else {
+          Fluttertoast.showToast(
+              msg:
+                  'Please Click on Notify Me\! to get e-mail when this product is available for ordering again.',
+              toastLength: Toast.LENGTH_LONG);
+        }
+        return _message;
+      }
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
     }
   }
 }

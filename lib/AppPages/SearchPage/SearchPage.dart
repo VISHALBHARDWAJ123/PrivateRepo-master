@@ -20,6 +20,7 @@ import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -30,7 +31,14 @@ import 'package:untitled2/utils/utils/build_config.dart';
 enum AniProps { color }
 
 class SearchPage extends StatefulWidget {
-  SearchPage({Key? key}) : super(key: key);
+  SearchPage({
+    Key? key,
+    required this.keyword,
+    required this.isScreen,
+  }) : super(key: key);
+  String keyword;
+  final bool isScreen;
+  double _maxPrice = 25000, _minPrice = 0;
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -60,7 +68,7 @@ class _SearchPageState extends State<SearchPage>
   late Animation<double> size;
   bool isLoadVisible = false;
   bool isListVisible = false, isFilterVisible = false;
-  TextEditingController _searchController = TextEditingController();
+  var _searchController;
 
   List<SpecificationAttributeFilter> mList = [];
 
@@ -94,7 +102,7 @@ class _SearchPageState extends State<SearchPage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  double _maxPrice = 25000, _minPrice = 0, _minPRICE = 0, _maxPRICE = 0;
+  double _minPRICE = 0, _maxPRICE = 0;
 
   double _width = 0;
   double _height = 0;
@@ -108,6 +116,8 @@ class _SearchPageState extends State<SearchPage>
   ScrollController _scrollListController = ScrollController();
 
   var _myController = ScrollController();
+  String initialData = '';
+  var _hintText = 'Search Here';
 
   _scrollListener() {
     if (searchedProducts.length == 0) {
@@ -118,15 +128,26 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   void initState() {
+    print(widget.keyword);
     // TODO: implement initState
-    super.initState();
+    setState(() {
+      initialData = widget.keyword;
+    });
+    widget.isScreen == true
+        ?getInitSearch()
+        : null;
+    _searchController = TextEditingController(text: initialData);
+    //
+    widget.isScreen == true
+        ? setState(() => _hintText = widget.keyword)
+        : setState(() => _hintText = 'Search Here');
     _scrollListController.addListener(() {
       if (_scrollListController.position.pixels ==
           _scrollListController.position.maxScrollExtent) {
         print('Hi There I Am Triggered');
-        if(searchedProducts.length<=totalCount) {
+        if (searchedProducts.length <= totalCount) {
           _onLoading();
-        }else{
+        } else {
           Fluttertoast.showToast(msg: 'No more product available');
         }
       }
@@ -134,19 +155,28 @@ class _SearchPageState extends State<SearchPage>
     scrollControllerFunct();
     _animationController =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
-    _maxPRICE = _maxPrice.toStringAsFixed(0).toDouble();
+    _maxPRICE = widget._maxPrice.toStringAsFixed(0).toDouble();
+
     noMore = false;
     guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
+    Future.delayed(Duration.zero).then(
+      (value) => setState(
+        () {
+          _range = RangeValues(widget._minPrice, widget._maxPrice);
+        },
+      ),
+    );
+    super.initState();
   }
 
-  @override
-  void dispose() {
-    _myController.dispose();
-    _animationController.dispose();
-    _refreshController.dispose();
-    // TODO: implement dispose
-    super.dispose();
-  }
+  // @override
+  // // void dispose() {
+  // //   _myController.dispose();
+  // //   _animationController.dispose();
+  // //   _refreshController.dispose();
+  //   // TODO: implement dispose
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -170,118 +200,88 @@ class _SearchPageState extends State<SearchPage>
         child: Scaffold(
           key: _scaffoldKey,
           resizeToAvoidBottomInset: false,
+          appBar: new AppBar(
+            backgroundColor: ConstantsVar.appColor,
+            title: InkWell(
+              onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => MyHomePage(
+                            pageIndex: 0,
+                          )),
+                  (route) => false),
+              child: Image.asset(
+                'MyAssets/logo.png',
+                width: 15.w,
+                height: 15.w,
+              ),
+            ),
+            centerTitle: true,
+            toolbarHeight: 18.w,
+          ),
           body: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     begin: begin, end: end, colors: [bottomColor, topColor])),
             height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Container(
-                    width: 100.w,
-                    child: Stack(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Container(
+                        width: 100.w,
+                        child: Stack(
                           children: [
-                            Expanded(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                elevation: 8.0,
-                                child: RawAutocomplete<String>(
-                                  optionsBuilder:
-                                      (TextEditingValue textEditingValue) {
-                                    if (textEditingValue.text == null ||
-                                        textEditingValue.text == '') {
-                                      return const Iterable<String>.empty();
-                                    }
-                                    return ConstantsVar.suggestionList
-                                        .where((String option) {
-                                      return option.toLowerCase().contains(
-                                          textEditingValue.text.toLowerCase());
-                                    });
-                                  },
-                                  onSelected: (String selection) {
-                                    debugPrint('$selection selected');
-                                  },
-                                  fieldViewBuilder: (BuildContext context,
-                                      TextEditingController
-                                          textEditingController,
-                                      FocusNode focusNode,
-                                      VoidCallback onFieldSubmitted) {
-                                    _searchController = textEditingController;
-                                    _focusNode = focusNode;
-                                    return TextFormField(
-                                      autocorrect: true,
-                                      enableSuggestions: true,
-                                      onFieldSubmitted: (val) {
-                                        focusNode.unfocus();
-                                        if (!currentFocus.hasPrimaryFocus) {
-                                          currentFocus.unfocus();
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    elevation: 8.0,
+                                    child: RawAutocomplete<String>(
+                                      optionsBuilder:
+                                          (TextEditingValue textEditingValue) {
+                                        if (textEditingValue.text == null ||
+                                            textEditingValue.text == '' ||
+                                            textEditingValue.text.length < 3) {
+                                          return const Iterable<String>.empty();
                                         }
-                                        setState(() {
-                                          _selectedColorsId = '';
-                                          _selectedSeatsId = '';
-                                          _selectedFaimlyId = '';
-                                          _colorList = [];
-                                          _numberOfSeatList = [];
-                                          _familyList = [];
-                                          _height = 0.h;
-                                          isVisible = false;
-                                          noMore = false;
-                                          _catId = '';
-                                          _minPrice = 0;
-                                          pageIndex = 0;
-                                          _maxPrice = 25000;
-
-                                          _range = RangeValues(
-                                              _minPrice.toDouble(),
-                                              _maxPrice.toDouble());
+                                        return ConstantsVar.suggestionList
+                                            .where((String option) {
+                                          return option.toLowerCase().contains(
+                                              textEditingValue.text
+                                                  .toLowerCase());
                                         });
-                                        searchProducts(
-                                                val,
-                                                0,
-                                                _minPRICE.toStringAsFixed(2),
-                                                _maxPRICE.toStringAsFixed(2))
-                                            .then((value) => print(value));
-
-                                        print('Pressed via keypad');
                                       },
-                                      textInputAction: isVisible
-                                          ? TextInputAction.done
-                                          : TextInputAction.search,
-                                      // keyboardType: TextInputType.,
-                                      keyboardAppearance: Brightness.light,
-                                      // autofocus: true,
-                                      onChanged: (_) => setState(() {
-                                        btnColor = ConstantsVar.appColor;
-                                      }),
-                                      controller: _searchController,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 5.w),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 13, horizontal: 10),
-                                        hintText: 'Search here',
-                                        labelStyle: TextStyle(
-                                            fontSize: 7.w, color: Colors.grey),
-                                        suffixIcon: InkWell(
-                                          onTap: () async {
-                                            focusNode.unfocus();
+                                      onSelected: (String selection) {
+                                        debugPrint('$selection selected');
+                                      },
+                                      fieldViewBuilder: (BuildContext context,
+                                          TextEditingController
+                                              textEditingController,
+                                          FocusNode focusNode,
+                                          VoidCallback onFieldSubmitted) {
+                                        // textEditingController.text = widget.keyword;
+                                        _searchController =
+                                            textEditingController;
+                                        _focusNode = focusNode;
+                                        return TextFormField(
+                                          autocorrect: true,
+                                          enableSuggestions: true,
 
+                                          onFieldSubmitted: (val) {
+                                            focusNode.unfocus();
                                             if (!currentFocus.hasPrimaryFocus) {
                                               currentFocus.unfocus();
                                             }
                                             setState(() {
-                                              if (isFilterVisible == true) {
-                                                isFilterVisible = false;
-                                              }
                                               _selectedColorsId = '';
                                               _selectedSeatsId = '';
                                               _selectedFaimlyId = '';
@@ -289,449 +289,640 @@ class _SearchPageState extends State<SearchPage>
                                               _numberOfSeatList = [];
                                               _familyList = [];
                                               _height = 0.h;
+                                              isVisible = false;
                                               noMore = false;
                                               _catId = '';
-                                              _minPrice = 0;
-                                              _maxPrice = 25000;
+                                              widget._minPrice = 0;
+                                              pageIndex = 0;
+                                              widget._maxPrice = 25000;
+
                                               _range = RangeValues(
-                                                  _minPrice.toDouble(),
-                                                  _maxPrice.toDouble());
+                                                  widget._minPrice.toDouble(),
+                                                  widget._maxPrice.toDouble());
                                             });
                                             searchProducts(
-                                                    _searchController.text
-                                                        .toString(),
+                                                    val,
                                                     0,
-                                                    '',
-                                                    '')
-                                                .then((value) => null);
-                                          },
-                                          child: Icon(Icons.search_sharp),
-                                        ),
-                                      ),
-                                      focusNode: _focusNode,
-                                    );
-                                  },
-                                  optionsViewBuilder: (BuildContext context,
-                                      AutocompleteOnSelected<String> onSelected,
-                                      Iterable<String> options) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 8.0,
-                                        right: 10,
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Material(
-                                          child: Card(
-                                            child: Container(
-                                              height: 178,
-                                              child: Scrollbar(
-                                                controller: _suggestController,
-                                                thickness: 5,
-                                                isAlwaysShown: true,
-                                                child: ListView.builder(
-                                                  // padding: EdgeInsets.all(8.0),
-                                                  itemCount: options.length + 1,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    if (index >=
-                                                        options.length) {
-                                                      return Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: TextButton(
-                                                          child: const Text(
-                                                            'Clear',
-                                                            style: TextStyle(
-                                                              color:ConstantsVar.appColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                          onPressed: () {
-                                                            _searchController
-                                                                .clear();
-                                                          },
-                                                        ),
-                                                      );
-                                                    }
-                                                    final String option =
-                                                        options
-                                                            .elementAt(index);
-                                                    return GestureDetector(
-                                                        onTap: () {
-                                                          onSelected(option);
-                                                        },
-                                                        child: Container(
-                                                          height: 5.2.h,
-                                                          width: 95.w,
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Container(
-                                                                width: 100.w,
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  '  ' + option,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    wordSpacing:
-                                                                        2,
-                                                                    letterSpacing:
-                                                                        1,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                width: 100.w,
-                                                                child: Divider(
-                                                                  thickness: 1,
-                                                                  color: Colors.
-                                                                      grey.shade400,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
+                                                    _minPRICE
+                                                        .toStringAsFixed(2),
+                                                    _maxPRICE
+                                                        .toStringAsFixed(2))
+                                                .then((value) => print(value));
 
-                                                        // ListTile(
-                                                        //   title: Text(option),
-                                                        //   subtitle: Container(
-                                                        //     width: 100.w,
-                                                        //     child: Divider(
-                                                        //       thickness: 1,
-                                                        //       color:
-                                                        //           ConstantsVar.appColor,
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
-                                                        );
-                                                  },
+                                            print('Pressed via keypad');
+                                          },
+                                          textInputAction: isVisible
+                                              ? TextInputAction.done
+                                              : TextInputAction.search,
+                                          // keyboardType: TextInputType.,
+                                          keyboardAppearance: Brightness.light,
+                                          // autofocus: true,
+                                          onChanged: (_) => setState(() {
+                                            btnColor = ConstantsVar.appColor;
+                                            _hintText = 'Search Here';
+                                          }),
+                                          controller: _searchController,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 5.w),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 13,
+                                                    horizontal: 10),
+                                            hintText: _hintText,
+                                            labelStyle: TextStyle(
+                                                fontSize: 7.w,
+                                                color: Colors.grey),
+                                            suffixIcon: InkWell(
+                                              onTap: () async {
+                                                focusNode.unfocus();
+
+                                                if (!currentFocus
+                                                    .hasPrimaryFocus) {
+                                                  currentFocus.unfocus();
+                                                }
+                                                setState(() {
+                                                  if (isFilterVisible == true) {
+                                                    isFilterVisible = false;
+                                                  }
+                                                  _selectedSeats = '';
+                                                  _selectedColors = '';
+                                                  _selectedFaimly = '';
+                                                  _selectedColorsId = '';
+                                                  _selectedSeatsId = '';
+                                                  _selectedFaimlyId = '';
+                                                  _colorList = [];
+                                                  _numberOfSeatList = [];
+                                                  _familyList = [];
+                                                  _height = 0.h;
+                                                  noMore = false;
+                                                  _catId = '';
+                                                  widget._minPrice = 0;
+                                                  widget._maxPrice = 25000;
+                                                  _range = RangeValues(
+                                                      widget._minPrice
+                                                          .toDouble(),
+                                                      widget._maxPrice
+                                                          .toDouble());
+                                                });
+                                                searchProducts(
+                                                        _searchController.text
+                                                            .toString(),
+                                                        0,
+                                                        '',
+                                                        '')
+                                                    .then((value) => null);
+                                              },
+                                              child: Icon(Icons.search_sharp),
+                                            ),
+                                          ),
+                                          focusNode: _focusNode,
+                                        );
+                                      },
+                                      optionsViewBuilder: (BuildContext context,
+                                          AutocompleteOnSelected<String>
+                                              onSelected,
+                                          Iterable<String> options) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 8.0,
+                                            right: 10,
+                                          ),
+                                          child: Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Material(
+                                              child: Card(
+                                                child: Container(
+                                                  height: 178,
+                                                  child: Scrollbar(
+                                                    controller:
+                                                        _suggestController,
+                                                    thickness: 5,
+                                                    isAlwaysShown: true,
+                                                    child: ListView.builder(
+                                                      // padding: EdgeInsets.all(8.0),
+                                                      itemCount:
+                                                          options.length + 1,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        if (index >=
+                                                            options.length) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: TextButton(
+                                                              child: const Text(
+                                                                'Clear',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: ConstantsVar
+                                                                      .appColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              onPressed: () {
+                                                                _searchController
+                                                                    .clear();
+                                                              },
+                                                            ),
+                                                          );
+                                                        }
+                                                        final String option =
+                                                            options.elementAt(
+                                                                index);
+                                                        return GestureDetector(
+                                                            onTap: () {
+                                                              onSelected(
+                                                                  option);
+                                                              if (!currentFocus
+                                                                  .hasPrimaryFocus) {
+                                                                currentFocus
+                                                                    .unfocus();
+                                                              }
+                                                              setState(() {
+                                                                if (isFilterVisible ==
+                                                                    true) {
+                                                                  isFilterVisible =
+                                                                      false;
+                                                                }
+                                                                _selectedSeats =
+                                                                    '';
+                                                                _selectedColors =
+                                                                    '';
+                                                                _selectedFaimly =
+                                                                    '';
+                                                                _selectedColorsId =
+                                                                    '';
+                                                                _selectedSeatsId =
+                                                                    '';
+                                                                _selectedFaimlyId =
+                                                                    '';
+                                                                _colorList = [];
+                                                                _numberOfSeatList =
+                                                                    [];
+                                                                _familyList =
+                                                                    [];
+                                                                _height = 0.h;
+                                                                noMore = false;
+                                                                _catId = '';
+                                                                widget._minPrice =
+                                                                    0;
+                                                                widget._maxPrice =
+                                                                    25000;
+                                                                _range = RangeValues(
+                                                                    widget
+                                                                        ._minPrice
+                                                                        .toDouble(),
+                                                                    widget
+                                                                        ._maxPrice
+                                                                        .toDouble());
+                                                              });
+                                                              searchProducts(
+                                                                      option
+                                                                          .toString(),
+                                                                      0,
+                                                                      '',
+                                                                      '')
+                                                                  .then(
+                                                                      (value) =>
+                                                                          null);
+                                                            },
+                                                            child: Container(
+                                                              height: 5.2.h,
+                                                              width: 95.w,
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    width:
+                                                                        100.w,
+                                                                    child:
+                                                                        AutoSizeText(
+                                                                      '  ' +
+                                                                          option,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        wordSpacing:
+                                                                            2,
+                                                                        letterSpacing:
+                                                                            1,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                    width:
+                                                                        100.w,
+                                                                    child:
+                                                                        Divider(
+                                                                      thickness:
+                                                                          1,
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade400,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+
+                                                            // ListTile(
+                                                            //   title: Text(option),
+                                                            //   subtitle: Container(
+                                                            //     width: 100.w,
+                                                            //     child: Divider(
+                                                            //       thickness: 1,
+                                                            //       color:
+                                                            //           ConstantsVar.appColor,
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
+                                                            );
+                                                      },
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: isFilterVisible,
-                              child: InkWell(
-                                radius: 36,
-                                splashColor: Colors.red,
-                                hoverColor: Colors.red,
-                                highlightColor: Colors.red,
-                                onTap: () => _toggle(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 8),
-                                  child: Icon(
-                                    HeartIcon.searchFilter,
-                                    color: Colors.white,
-                                    size: 42,
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
+                                Visibility(
+                                  visible: isFilterVisible,
+                                  child: InkWell(
+                                    radius: 36,
+                                    splashColor: Colors.red,
+                                    hoverColor: Colors.red,
+                                    highlightColor: Colors.red,
+                                    onTap: () => _toggle(),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 8),
+                                      child: Icon(
+                                        HeartIcon.searchFilter,
+                                        color: Colors.white,
+                                        size: 42,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 60.0),
+                                child: showSearchFilter(_animation),
                               ),
                             ),
                           ],
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 60.0),
-                            child: showSearchFilter(_animation),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Visibility(
-                    visible: isListVisible,
-                    child: Container(
-                      // height:82.5.h,
-                      child: Scrollbar(
-                        isAlwaysShown:true,
-                        controller: _scrollController,
-                        thickness: 10,
-                        child: GridView.count(
-                          controller: _scrollListController,
-                          // physics: AlwaysScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 5,
-                          childAspectRatio: 3 / 6,
-                          mainAxisSpacing: 5,
-                          children: List.generate(
-                            searchedProducts.length,
-                            (index) {
-                              // var name = searchedProducts[index].stockQuantity.contains('In stock');
-                              return InkWell(
-                                onTap: () {
-                                  print(searchedProducts[index].id.toString());
+                    Expanded(
+                      child: Visibility(
+                        visible: isListVisible,
+                        child: Container(
+                          // height:82.5.h,
+                          child: Scrollbar(
+                            isAlwaysShown: true,
+                            controller: _scrollController,
+                            thickness: 10,
+                            child: GridView.count(
+                              controller: _scrollListController,
+                              // physics: AlwaysScrollableScrollPhysics(),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 5,
+                              childAspectRatio: 3 / 6,
+                              mainAxisSpacing: 5,
+                              children: List.generate(
+                                searchedProducts.length,
+                                (index) {
+                                  // var name = searchedProducts[index].stockQuantity.contains('In stock');
+                                  return InkWell(
+                                    onTap: () {
+                                      print(searchedProducts[index]
+                                          .id
+                                          .toString());
 
-                                  //
-                                  SchedulerBinding.instance!
-                                      .addPostFrameCallback((timeStamp) {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) {
-                                          return NewProductDetails(
-                                            productId: searchedProducts[index]
-                                                .id
-                                                .toString(),
-                                            screenName: 'Product List',
-                                            // customerId: ConstantsVar.customerID,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  });
-                                },
-                                child: Stack(
-                                  children: [
-                                    Card(
-                                      // elevation: 2,
-                                      child: Container(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              color: Colors.white,
-                                              padding: EdgeInsets.all(4.0),
-                                              child: CachedNetworkImage(
-                                                imageUrl:
+                                      //
+                                      SchedulerBinding.instance!
+                                          .addPostFrameCallback((timeStamp) {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) {
+                                              return NewProductDetails(
+                                                productId:
                                                     searchedProducts[index]
-                                                        .productPicture,
-                                                fit: BoxFit.cover,
-                                                placeholder:
-                                                    (context, reason) =>
-                                                        new SpinKitRipple(
-                                                  color: Colors.red,
-                                                  size: 90,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8.0,
-                                                  horizontal: 8.0),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              // color: Color(0xFFe0e1e0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  // sorry mam nahi hua!
-                                                  AutoSizeText(
-                                                    searchedProducts[index]
-                                                        .name,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        height: 1,
-                                                        color: Colors.black,
-                                                        fontSize: 5.w,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                    textAlign: TextAlign.start,
+                                                        .id
+                                                        .toString(),
+                                                screenName: 'Product List',
+                                                // customerId: ConstantsVar.customerID,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      });
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Card(
+                                          // elevation: 2,
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  color: Colors.white,
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        searchedProducts[index]
+                                                            .productPicture,
+                                                    fit: BoxFit.cover,
+                                                    placeholder:
+                                                        (context, reason) =>
+                                                            new SpinKitRipple(
+                                                      color: Colors.red,
+                                                      size: 90,
+                                                    ),
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 6.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 2.w,
-                                                            left: 2,
-                                                          ),
-                                                          child: discountWidget(
-                                                            actualPrice:
-                                                                searchedProducts[
-                                                                        index]
-                                                                    .price,
-                                                            fontSize: 2.4.w,
-                                                            width: 25.w,
-                                                            isSpace: searchedProducts[
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 8.0,
+                                                      horizontal: 8.0),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  // color: Color(0xFFe0e1e0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      // sorry mam nahi hua!
+                                                      AutoSizeText(
+                                                        searchedProducts[index]
+                                                            .name,
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                            height: 1,
+                                                            color: Colors.black,
+                                                            fontSize: 5.w,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 6.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                top: 2.w,
+                                                                left: 2,
+                                                              ),
+                                                              child:
+                                                                  discountWidget(
+                                                                actualPrice:
+                                                                    searchedProducts[
                                                                             index]
-                                                                        .discountedPrice ==
-                                                                    null
-                                                                ? true
-                                                                : false,
-                                                          ),
-                                                        ),
-                                                        AutoSizeText(
-                                                          searchedProducts[
+                                                                        .price,
+                                                                fontSize: 2.4.w,
+                                                                width: 25.w,
+                                                                isSpace:
+                                                                    searchedProducts[index].discountedPrice ==
+                                                                            null
+                                                                        ? true
+                                                                        : false,
+                                                              ),
+                                                            ),
+                                                            AutoSizeText(
+                                                              searchedProducts[
+                                                                              index]
+                                                                          .discountedPrice ==
+                                                                      null
+                                                                  ? searchedProducts[
                                                                           index]
-                                                                      .discountedPrice ==
-                                                                  null
-                                                              ? searchedProducts[
-                                                                      index]
-                                                                  .price
-                                                              : searchedProducts[
-                                                                      index]
-                                                                  .discountedPrice,
-                                                          maxLines: 1,
-                                                          style: TextStyle(
-                                                              height: 1,
-                                                              color: Colors.grey
-                                                                  .shade600,
-                                                              fontSize: 4.w,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 4,
-                                                            bottom: 2,
-                                                          ),
-                                                          child: AutoSizeText(
-                                                            searchedProducts[
-                                                                    index]
-                                                                .stockQuantity,
-                                                            maxLines: 1,
-                                                            style: TextStyle(
-                                                                height: 1,
-                                                                color: searchedProducts[
+                                                                      .price
+                                                                  : searchedProducts[
+                                                                          index]
+                                                                      .discountedPrice,
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                  height: 1,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade600,
+                                                                  fontSize: 4.w,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                top: 4,
+                                                                bottom: 2,
+                                                              ),
+                                                              child: Visibility(
+                                                                visible: searchedProducts[
                                                                             index]
                                                                         .stockQuantity
                                                                         .contains(
-                                                                            'In stock')
-                                                                    ? Colors
-                                                                        .green
-                                                                    : Colors
-                                                                        .red,
-                                                                fontSize: 20.dp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                          ),
+                                                                            'Out of stock')
+                                                                    ? false
+                                                                    : true,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  searchedProducts[
+                                                                          index]
+                                                                      .stockQuantity,
+                                                                  maxLines: 1,
+                                                                  style: TextStyle(
+                                                                      height: 1,
+                                                                      color: searchedProducts[index].stockQuantity.contains(
+                                                                              'In stock')
+                                                                          ? Colors
+                                                                              .green
+                                                                          : Colors
+                                                                              .red,
+                                                                      fontSize:
+                                                                          20.dp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            AddCartBtn(
-                                              productId:
-                                                  searchedProducts[index].id,
-                                              // width: 2.w,
-                                              isTrue: true,
-                                              guestCustomerId: guestCustomerId,
-                                              checkIcon: searchedProducts[index]
-                                                      .stockQuantity
-                                                      .contains('Out of stock')
-                                                  ? Icon(HeartIcon.cross)
-                                                  : Icon(Icons.check),
-                                              text: searchedProducts[index]
-                                                      .stockQuantity
-                                                      .contains('Out of stock')
-                                                  ? 'Out of Stock'.toUpperCase()
-                                                  : 'ADD TO CArt'.toUpperCase(),
-                                              color: searchedProducts[index]
-                                                      .stockQuantity
-                                                      .contains('Out of stock')
-                                                  ? Colors.grey
-                                                  : ConstantsVar.appColor,
-                                              // fontSize: 12,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 3,
-                                      left: 3,
-                                      child: Visibility(
-                                        visible: searchedProducts[index]
-                                                    .discountPercent
-                                                    .length !=
-                                                0
-                                            ? true
-                                            : false,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Container(
-                                            width: 10.w,
-                                            height: 10.w,
-                                            child: Stack(
-                                              children: [
-                                                Image.asset(
-                                                  'MyAssets/plaincircle.png',
-                                                  width: 10.w,
-                                                  height: 10.w,
                                                 ),
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    searchedProducts[index]
-                                                        .discountPercent,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 3.w,
-                                                      color: Colors.white,
-                                                    ),
+                                                Visibility(
+                                                  visible: searchedProducts[
+                                                                      index]
+                                                                  .isGiftCard ==
+                                                              true ||
+                                                          searchedProducts[
+                                                                      index]
+                                                                  .isDeliveryProduct ==
+                                                              true
+                                                      ? false
+                                                      : true,
+                                                  child: AddCartBtn(
+                                                    productId:
+                                                        searchedProducts[index]
+                                                            .id,
+                                                    // width: 2.w,
+                                                    isTrue: true,
+                                                    guestCustomerId:
+                                                        guestCustomerId,
+                                                    checkIcon: searchedProducts[
+                                                                index]
+                                                            .stockQuantity
+                                                            .contains(
+                                                                'Out of stock')
+                                                        ? Icon(HeartIcon.cross)
+                                                        : Icon(Icons.check),
+                                                    text: searchedProducts[
+                                                                index]
+                                                            .stockQuantity
+                                                            .contains(
+                                                                'Out of stock')
+                                                        ? 'Out of Stock'
+                                                            .toUpperCase()
+                                                        : 'ADD TO CArt'
+                                                            .toUpperCase(),
+                                                    color: searchedProducts[
+                                                                index]
+                                                            .stockQuantity
+                                                            .contains(
+                                                                'Out of stock')
+                                                        ? Colors.grey
+                                                        : ConstantsVar.appColor,
+                                                    isGiftCard: false,
+                                                    isProductAttributeAvail:
+                                                        false,
+                                                    email: '',
+                                                    recipName: '',
+                                                    recipEmail: '',
+                                                    attributeId: '',
+                                                    name: '',
+                                                    message: '',
+                                                    // fontSize: 12,
                                                   ),
                                                 )
                                               ],
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
+                                        Positioned(
+                                          top: 3,
+                                          left: 3,
+                                          child: Visibility(
+                                            visible: searchedProducts[index]
+                                                        .discountPercent
+                                                        .length !=
+                                                    0
+                                                ? true
+                                                : false,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Container(
+                                                width: 10.w,
+                                                height: 10.w,
+                                                child: Stack(
+                                                  children: [
+                                                    Image.asset(
+                                                      'MyAssets/plaincircle.png',
+                                                      width: 10.w,
+                                                      height: 10.w,
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        searchedProducts[index]
+                                                            .discountPercent,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 3.w,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
                 Visibility(
                   visible: noMore,
-                  child: Center(
+                  child: Align(
+                    alignment: Alignment(0, .3),
                     child: AnimatedTextKit(
                       repeatForever: true,
                       animatedTexts: [
@@ -772,7 +963,9 @@ class _SearchPageState extends State<SearchPage>
       color: Colors.red,
       size: 90,
     ));
-    progressDialog.show();
+    Future.delayed(Duration.zero, () {
+      progressDialog.show();
+    });
 
     setState(() {
       noMore = false;
@@ -782,7 +975,7 @@ class _SearchPageState extends State<SearchPage>
       _mainString = _selectedSeatsId + _selectedColorsId + _selectedFaimlyId;
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$productName&pagesize=8&pageindex=$pageNumber&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId=$_mainString');
+        'apis/GetSearch?keyword=$productName&pagesize=8&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice&specId=$_mainString');
 
     print(uri);
     try {
@@ -791,12 +984,12 @@ class _SearchPageState extends State<SearchPage>
       print(jsonMap);
       if (mounted) if (jsonMap['ResponseData'] == null) {
         Fluttertoast.showToast(msg: 'No Product found');
-        progressDialog.dismiss();
         if (mounted)
           setState(() {
             isLoadVisible = false;
             isFilterVisible = true;
             noMore = true;
+            progressDialog.dismiss();
           });
       } else {
         SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
@@ -872,8 +1065,11 @@ class _SearchPageState extends State<SearchPage>
   void _onLoading() async {
     Fluttertoast.showToast(msg: 'Loading please wait');
     var prodName;
+
     setState(() {
-      prodName = _searchController.text.toString();
+      widget.isScreen == true
+          ? prodName = widget.keyword
+          : prodName = _searchController.text.toString();
       pageIndex = pageIndex + 1;
       print(pageIndex);
     });
@@ -952,8 +1148,11 @@ class _SearchPageState extends State<SearchPage>
                         topDivider: true,
                         items: _numberOfSeatList,
                         toggledChild: Container(
-                            child: Container(
-                                height: 2.w, child: Text(_selectedSeats))),
+                          child: Container(
+                            height: 2.w,
+                            child: Text(_selectedSeats),
+                          ),
+                        ),
                         showSelectedItemOnList: true,
                         onItemSelected: (value)
                             // wait mam
@@ -1188,7 +1387,7 @@ class _SearchPageState extends State<SearchPage>
                     await searchProducts(
                             _searchController.text.toString(),
                             0,
-                            _minPrice.toStringAsFixed(2),
+                            widget._minPrice.toStringAsFixed(2),
                             _maxPRICE.toStringAsFixed(2))
                         .then((value) => print(value));
                   },
@@ -1270,5 +1469,10 @@ class _SearchPageState extends State<SearchPage>
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  void getInitSearch() async {
+    await searchProducts(
+        widget.keyword, 0, _minPRICE.toString(), '25000');
   }
 }
