@@ -214,6 +214,21 @@ flutter:
     - family: SocialMedia
       fonts:
         - asset: MyAssets/icons/SocialMedia.ttf
+    - family: InstaGramIcon
+      fonts:
+        - asset: MyAssets/icons/InstagramIcon.ttf
+    - family: InstagramNew
+      fonts:
+        - asset: MyAssets/icons/InstagramNew.ttf
+    - family: PrinterestNew
+      fonts:
+        - asset: MyAssets/icons/PrinterestNew.ttf
+    - family: YoutubeNew
+      fonts:
+        - asset: MyAssets/icons/YoutubeNew.ttf
+    - family: Facebook
+      fonts:
+        - asset: MyAssets/icons/FacebookNew.ttf
 
   #    - family: Monstserrat
   #      fonts:

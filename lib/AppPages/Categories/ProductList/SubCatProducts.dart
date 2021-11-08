@@ -293,46 +293,117 @@ class _AddCartBtnState extends State<AddCartBtn> {
   }
 
   void checkStateId(AddToCartButtonStateId id) async {
+    // bool giftCardAvail = false;
+
     if (id == AddToCartButtonStateId.idle) {
       //handle logic when pressed on idle state button.
       if (widget.guestCustomerId != null || widget.guestCustomerId != '') {
-        setState(() {
-          stateId = AddToCartButtonStateId.loading;
-          AddToCartResponse result;
-          ApiCalls.addToCart(
-                  widget.guestCustomerId,
-                  '${widget.productId}',
-                  context,
-                  widget.attributeId,
-                  widget.recipName,
-                  widget.recipEmail,
-                  widget.name,
-                  widget.email,
-                  widget.message)
-              .then((response) {
-            setState(() {
-              int val = 0;
-              ApiCalls.readCounter(
-                      customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
-                  .then((value) {
-                setState(() {
-                  val = value;
-                });
-                context.read<cartCounter>().changeCounter(val);
-              });
 
-              stateId = AddToCartButtonStateId.done;
-              Future.delayed(Duration(seconds: 1), () {
-                setState(() {
-                  stateId = AddToCartButtonStateId.idle;
+        if (widget.isGiftCard == true &&
+            widget.recipEmail.trim().length == 0 &&
+            widget.recipName.trim().length == 0 &&
+            widget.name.trim().length == 0 &&
+            widget.email.trim().length == 0) {
+          Fluttertoast.showToast(
+              msg:
+              'Please Provide following Fields:\nRecipient\'s Name,\nRecipient\'s Email,\nSender Name,\nSender Email.');
+        }else
+        if (widget.isGiftCard == true && widget.recipName.trim().length == 0) {
+          Fluttertoast.showToast(msg: 'Please Provide Recipient\'s Name.');
+          // setState(()=>giftCardAvail =)
+        } else if (widget.isGiftCard == true &&
+            widget.recipEmail.trim().length == 0) {
+          Fluttertoast.showToast(msg: 'Please Provide Recipient\'s Email.');
+        }
+        // if (widget.recipEmail.trim().length == 0) {}
+        else if (widget.isGiftCard == true && widget.name.trim().length == 0) {
+          Fluttertoast.showToast(msg: 'Please Provide Sender Name.');
+        } else if (widget.isGiftCard == true &&
+            widget.email.trim().length == 0) {
+          Fluttertoast.showToast(msg: 'Please Provide Sender Email.');
+        }  else if (widget.isGiftCard == true &&
+            widget.recipEmail.trim().length != 0 &&
+            widget.recipName.trim().length != 0 &&
+            widget.name.trim().length != 0 &&
+            widget.email.trim().length != 0) {
+          setState(() {
+            stateId = AddToCartButtonStateId.loading;
+            AddToCartResponse result;
+            ApiCalls.addToCart(
+                    widget.guestCustomerId,
+                    '${widget.productId}',
+                    context,
+                    widget.attributeId,
+                    widget.name,
+                    widget.recipName,
+                    widget.email,
+                    widget.recipEmail,
+                    widget.message)
+                .then((response) {
+              setState(() {
+                int val = 0;
+                ApiCalls.readCounter(
+                        customerGuid:
+                            ConstantsVar.prefs.getString('guestGUID')!)
+                    .then((value) {
+                  setState(() {
+                    val = value;
+                  });
+                  context.read<cartCounter>().changeCounter(val);
+                });
+
+                stateId = AddToCartButtonStateId.done;
+                Future.delayed(Duration(seconds: 1), () {
+                  setState(() {
+                    stateId = AddToCartButtonStateId.idle;
+                  });
                 });
               });
             });
+            // setState(() {
+            //   stateId = AddToCartButtonStateId.done;
+            // });
           });
-          // setState(() {
-          //   stateId = AddToCartButtonStateId.done;
-          // });
-        });
+        } else {
+          setState(() {
+            stateId = AddToCartButtonStateId.loading;
+            AddToCartResponse result;
+            ApiCalls.addToCart(
+                    widget.guestCustomerId,
+                    '${widget.productId}',
+                    context,
+                    widget.attributeId,
+                    widget.name,
+                    widget.recipName,
+                    widget.email,
+                    widget.recipEmail,
+                    widget.message)
+                .then((response) {
+              setState(() {
+                int val = 0;
+                ApiCalls.readCounter(
+                        customerGuid:
+                            ConstantsVar.prefs.getString('guestGUID')!)
+                    .then((value) {
+                  setState(() {
+                    val = value;
+                  });
+                  context.read<cartCounter>().changeCounter(val);
+                });
+
+                stateId = AddToCartButtonStateId.done;
+                Future.delayed(Duration(seconds: 1), () {
+                  setState(() {
+                    stateId = AddToCartButtonStateId.idle;
+                  });
+                });
+              });
+            });
+            // setState(() {
+            //   stateId = AddToCartButtonStateId.done;
+            // });
+          });
+        }
       } else {}
     } else if (id == AddToCartButtonStateId.done) {
       //handle logic when pressed on done state button.

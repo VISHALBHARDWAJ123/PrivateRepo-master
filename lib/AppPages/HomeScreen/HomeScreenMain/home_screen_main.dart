@@ -19,6 +19,7 @@ import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
+import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,6 +53,11 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   var _suggestController = ScrollController();
 
   String _titleName = '';
+  ScrollController _scrollController = ScrollController();
+
+  void _scrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
 
   @override
   void initState() {
@@ -442,29 +448,37 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                     MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    height: 45,
-                                    child: Column(
-                                      children: [
-                                        AutoSizeText(
-                                          _titleName,
-                                          style: TextStyle(
-                                            fontSize: 5.w,
-                                            fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      child: Column(
+                                        children: [
+                                          AutoSizeText(
+                                            _titleName.toUpperCase(),
+                                            style: TextStyle(
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 3.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 8.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                              ],
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          width: 60.w,
-                                          child: Divider(
-                                            thickness: 2,
-                                            color: ConstantsVar.appColor,
-                                          ),
-                                        )
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Expanded(
                                     child: ListView.builder(
+                                        controller: _scrollController,
                                         clipBehavior:
                                             Clip.antiAliasWithSaveLayer,
                                         // padding: EdgeInsets.symmetric(vertical:6),
@@ -506,21 +520,34 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Padding(
                                 padding: const EdgeInsets.only(
                                   top: 8.0,
+                                  bottom: 8.0,
                                 ),
                                 child: AutoSizeText(
-                                  'Our Services',
+                                  'Our Services'.toUpperCase(),
                                   style: TextStyle(
-                                      fontSize: 4.5.w,
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(1.0, 1.2),
+                                          blurRadius: 3.0,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        Shadow(
+                                          offset: Offset(1.0, 1.2),
+                                          blurRadius: 8.0,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ],
+                                      fontSize: 5.w,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Container(
-                                width: 30.w,
-                                child: Divider(
-                                  thickness: 4,
-                                  color: ConstantsVar.appColor,
-                                ),
-                              ),
+                              // Container(
+                              //   width: 30.w,
+                              //   child: Divider(
+                              //     thickness: 4,
+                              //     color: ConstantsVar.appColor,
+                              //   ),
+                              // ),
                               Container(
                                 width: 100.w,
                                 child: SingleChildScrollView(
@@ -555,13 +582,10 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                               e.imageName),
                                                           fit: BoxFit.fill,
                                                         ),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(20),
-                                                        ),
+
                                                       ),
-                                                      width: 42.w,
-                                                      height: 42.w,
+                                                      width: 180,
+                                                      height: 180,
                                                     ),
                                                     Padding(
                                                       padding: const EdgeInsets
@@ -570,10 +594,10 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                         vertical: 11,
                                                       ),
                                                       child: Container(
-                                                        width: 42.w,
+                                                        width: 180,
                                                         child: AutoSizeText(
                                                           e.shortDesc,
-                                                          maxLines: 2,
+                                                          maxLines: 1,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -610,10 +634,22 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: AutoSizeText(
-                                  'Follow us!',
+                                  'Follow us!'.toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 4.2.w,
                                     fontWeight: FontWeight.bold,
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(1.0, 1.2),
+                                        blurRadius: 3.0,
+                                        color: Colors.grey.shade300,
+                                      ),
+                                      Shadow(
+                                        offset: Offset(1.0, 1.2),
+                                        blurRadius: 8.0,
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -643,13 +679,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                   const EdgeInsets.symmetric(
                                                 horizontal: 6.0,
                                               ),
-                                              child: ClipOval(
-                                                child: CircleAvatar(
-                                                  backgroundColor: e.color,
-                                                  radius: 26,
-                                                  child: e.icon,
-                                                ),
-                                              ),
+                                              child: e.icon,
                                             )))
                                         .toList()),
                               ),
@@ -679,8 +709,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       new SocialModel(
         icon: Icon(
           Icons.facebook,
-          color: Colors.blue,
-          size: 54,
+          color:Colors.black,
+          size: 48,
         ),
         url: 'https://www.facebook.com/THEOnePlanet/',
         color: Colors.white,
@@ -689,9 +719,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     socialLinks.add(
       new SocialModel(
         icon: Icon(
-          HeartIcon.pinterest,
-          color: Colors.white,
-          size: 32,
+          NewIcons.pinterest__1_,
+
+          size: 42,
         ),
         url: 'https://in.pinterest.com/theoneplanet/_created/',
         color: Colors.red.shade800,
@@ -700,9 +730,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
     socialLinks.add(new SocialModel(
       icon: Icon(
-        HeartIcon.instagram,
+        NewIcons.instagram__8_,
         size: 42,
-        color: Colors.redAccent,
+        // color: Colors.redAccent,
       ),
       url: 'https://www.instagram.com/theoneplanet/',
       color: Colors.white,
@@ -710,7 +740,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     socialLinks.add(
       new SocialModel(
         icon: Icon(
-          HeartIcon.youtube,
+        NewIcons.youtube__1_,
+          size: 42,
+
         ),
         url: 'https://www.youtube.com/user/theoneplanet',
         color: Colors.red.shade800,
@@ -1136,7 +1168,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       new ServicesModel(
         desc: 'https://www.theone.com/delivery-assembly-4',
         imageName: 'ServicesImages/delivery_icon.jpg',
-        shortDesc: 'Delivery and Assembly',
+        shortDesc: 'Delivery & Assembly',
       ),
     );
     modelList.add(

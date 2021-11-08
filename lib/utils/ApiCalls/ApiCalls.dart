@@ -332,6 +332,7 @@ class ApiCalls {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1&' +
         'selectedAttributeId=$attributeId&recipientName=$recipName&recipientEmail=$recipEmail&senderName=$name&senderEmail=$email&giftCardMessage=$message');
+  print(uri);
     try {
       dynamic response = await http.post(uri, headers: header);
 
@@ -344,7 +345,7 @@ class ApiCalls {
         showDialog(
           context: context,
           builder: (context) => CustomDialogBox1(
-            descriptions: '${resp.warning.first}',
+            descriptions: '${resp.warning.join('\n')}',
             text: 'Okay',
             img: 'MyAssets/logo.png',
             reason: '',

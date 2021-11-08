@@ -15,8 +15,8 @@ import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
-import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Slider.dart';
@@ -25,6 +25,7 @@ import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
+import 'package:untitled2/utils/utils/general_functions.dart';
 // import 'package:loader_overlay/loader_overlay.dart';
 
 import 'ProductResponse.dart';
@@ -41,7 +42,8 @@ class NewProductDetails extends StatefulWidget {
   _NewProductDetailsState createState() => _NewProductDetailsState();
 }
 
-class _NewProductDetailsState extends State<NewProductDetails> {
+class _NewProductDetailsState extends State<NewProductDetails>
+    with InputValidationMixin {
   var visible;
   var indVisibility;
   var snapshot;
@@ -97,6 +99,14 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   var data = '';
 
   bool _isGiftCard = false, _isProductAttributeAvailable = false;
+
+  TextEditingController _messageController = TextEditingController();
+
+  TextEditingController recEmailController = TextEditingController();
+
+  TextEditingController _yourEmailController = TextEditingController();
+  TextEditingController _yourNameController = TextEditingController();
+  TextEditingController _recNameController = TextEditingController();
 
   @override
   void dispose() {
@@ -156,6 +166,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         sku = initialData!.sku;
         stockAvailabilty = initialData!.stockAvailability;
         discountPercentage = initialData!.discountPercentage;
+        _isGiftCard = initialData!.giftCard.isGiftCard;
         if (initialData!.productAttributes!.length != 0) {
           setState(() {
             isExtra = true;
@@ -211,7 +222,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         bottom: true,
         child: Scaffold(
             backgroundColor: Colors.white,
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: new AppBar(
               // backgroundColor: ConstantsVar.appColor,
               actions: [
@@ -418,7 +429,14 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                                           return GestureDetector(
                                               onTap: () {
                                                 onSelected(option);
-                                                Navigator.push(context, CupertinoPageRoute(builder:(context)=>SearchPage(keyword: option, isScreen: true,)));
+                                                Navigator.push(
+                                                    context,
+                                                    CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            SearchPage(
+                                                              keyword: option,
+                                                              isScreen: true,
+                                                            )));
                                               },
                                               child: Container(
                                                 height: 5.2.h,
@@ -506,12 +524,12 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         : ConstantsVar.appColor,
                     isGiftCard: _isGiftCard,
                     isProductAttributeAvail: _isProductAttributeAvailable,
-                    recipEmail: '',
-                    name: '',
-                    message: '',
+                    recipEmail: recEmailController.text,
+                    name: _yourNameController.text,
+                    message: _messageController.text,
                     attributeId: data,
-                    recipName: '',
-                    email: '',
+                    recipName: _recNameController.text,
+                    email: _yourEmailController.text,
                   ),
                 )
               ],
@@ -599,115 +617,134 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                             visible: isExtra,
                             child: InkWell(
                               onTap: () async {
-                                showModalBottomSheet<void>(
+                                showModalBottomSheet<dynamic>(
                                   // context and builder are
                                   // required properties in this widget
                                   context: context,
+                                  isScrollControlled: true,
                                   builder: (BuildContext context) {
                                     // we set up a container inside which
                                     // we create center column and display text
                                     return Container(
                                       width: 100.w,
-                                      height: 60.h,
-                                      child: Stack(
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 6.0),
-                                                child: AutoSizeText(
-                                                  productAttributeName,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                height: 40.h,
-                                                child: Scrollbar(
-                                                  isAlwaysShown: true,
-                                                  child: ListView(
-                                                    children: [
-                                                      SimpleGroupedCheckbox<
-                                                          String>(
-                                                        isLeading: true,
-                                                        itemsTitle:
-                                                            _giftCardPriceList
-                                                                .map((e) =>
-                                                                    e.name)
-                                                                .toList(),
-                                                        controller:
-                                                            _groupController!,
-                                                        values:
-                                                            _giftCardPriceList
-                                                                .map(
-                                                                    (e) => e.id)
-                                                                .toList(),
-                                                        onItemSelected: (val) {
-                                                          _selectedList.clear();
-                                                          _selectedList
-                                                              .addAll(val);
-                                                          data = '';
-                                                          data =
-                                                              _groupController!
-                                                                  .selectedItem
-                                                                  .join(",");
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.65,
 
-                                                          print(data);
-                                                          setState(() {});
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                      // height: 60.h,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 6.0),
+                                            child: AutoSizeText(
+                                              productAttributeName,
+                                              maxLines: 1,
+                                              maxFontSize: 18,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          Positioned(
-                                            bottom: 50,
-                                            right: 3,
-                                            child: Row(
-                                              children: [
-                                                AppButton(
-                                                  onTap: () {
-                                                    if (mounted)
-                                                      Future.delayed(
-                                                              Duration.zero)
-                                                          .then((value) =>
-                                                              setState(() {
-                                                                _groupController!
-                                                                    .deselectAll();
-                                                                data = '';
-                                                                _selectedList
-                                                                    .clear();
-                                                              }));
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Container(
-                                                    width: 25.w,
-                                                    height: 2.5.h,
-                                                    child: Center(
-                                                        child: Text('Cancel')),
-                                                  ),
-                                                  // color: Colors.transparent,
-                                                ),
-                                                AppButton(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Container(
-                                                    width: 25.w,
-                                                    height: 2.5.h,
-                                                    child: Center(
-                                                        child: Text('Apply')),
-                                                  ),
-                                                  // color: Colors.transparent,
-                                                ),
-                                              ],
                                             ),
-                                          )
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Scrollbar(
+                                              isAlwaysShown: true,
+                                              child: ListView(
+                                                children: [
+                                                  SimpleGroupedCheckbox<String>(
+                                                    isLeading: true,
+                                                    itemsTitle:
+                                                        _giftCardPriceList
+                                                            .map((e) => e.name)
+                                                            .toList(),
+                                                    controller:
+                                                        _groupController!,
+                                                    values: _giftCardPriceList
+                                                        .map((e) => e.id)
+                                                        .toList(),
+                                                    onItemSelected: (val) {
+                                                      _selectedList.clear();
+                                                      _selectedList.addAll(val);
+                                                      data = '';
+                                                      data = _groupController!
+                                                          .selectedItem
+                                                          .join(",");
+
+                                                      print(data);
+                                                      setState(() {});
+                                                    },
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 8.0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            if (mounted)
+                                                              Future.delayed(
+                                                                      Duration
+                                                                          .zero)
+                                                                  .then((value) =>
+                                                                      setState(
+                                                                          () {
+                                                                        _groupController!
+                                                                            .deselectAll();
+                                                                        data =
+                                                                            '';
+                                                                        _selectedList
+                                                                            .clear();
+                                                                      }));
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .red)),
+                                                            width: 30.w,
+                                                            height: 35,
+                                                            child: Center(
+                                                                child: Text(
+                                                                    'Cancel')),
+                                                          ),
+                                                          // color: Colors.transparent,
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .red)),
+                                                            width: 30.w,
+                                                            height: 35,
+                                                            child: Center(
+                                                                child: Text(
+                                                                    'Apply')),
+                                                          ),
+                                                          // color: Colors.transparent,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     );
@@ -760,9 +797,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                                     text: stockAvaialbility,
                                     style: TextStyle(
                                         fontSize: 5.w,
-                                        color: stockAvailabilty.contains('In')
-                                            ? Colors.green
-                                            : Colors.grey,
+                                        color: Colors.grey,
                                         fontWeight: FontWeight.w400))
                               ],
                             ),
@@ -860,6 +895,171 @@ class _NewProductDetailsState extends State<NewProductDetails> {
             ),
           ),
         ),
+        Visibility(
+          visible: _isGiftCard,
+          child: addVerticalSpace(15),
+        ),
+        Visibility(
+          visible: _isGiftCard,
+          child: Container(
+            width: 100.w,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
+                    ),
+                    child: TextFormField(
+                      validator: (email) {
+                        // if (isEmailValid(email!))
+                        //   return null;
+                        // else
+                        //   return 'Enter a valid email address';
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _recNameController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      cursorColor: Colors.black,
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(),
+
+                        labelStyle: TextStyle(
+                          fontSize: 3.5.w,
+                        ),
+                        // color:
+                        // myFocusNode.hasFocus ? AppColor.PrimaryAccentColor : Colors.grey),
+                        labelText: 'RECIPIENT\'S NAME:',
+                        border: OutlineInputBorder(),
+                        counterText: '',
+                      ),
+                    ),
+                  ),
+                  addVerticalSpace(14),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    child: TextFormField(
+                      validator: (email) {
+                        // if (isEmailValid(email!))
+                        //   return null;
+                        // else
+                        //   return 'Enter a valid email address';
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: recEmailController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      cursorColor: Colors.black,
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(),
+
+                        labelStyle: TextStyle(
+                          fontSize: 3.5.w,
+                        ),
+                        // color:
+                        // myFocusNode.hasFocus ? AppColor.PrimaryAccentColor : Colors.grey),
+                        labelText: 'RECIPIENT\'S EMAIL:',
+                        border: OutlineInputBorder(),
+                        counterText: '',
+                      ),
+                    ),
+                  ),
+                  addVerticalSpace(14),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    child: TextFormField(
+                      validator: (email) {
+                        // if (isEmailValid(email!))
+                        //   return null;
+                        // else
+                        //   return 'Enter a valid email address';
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _yourNameController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      cursorColor: Colors.black,
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(),
+
+                        labelStyle: TextStyle(
+                          fontSize: 3.5.w,
+                        ),
+                        // color:
+                        // myFocusNode.hasFocus ? AppColor.PrimaryAccentColor : Colors.grey),
+                        labelText: 'YOUR NAME:',
+                        border: OutlineInputBorder(),
+                        counterText: '',
+                      ),
+                    ),
+                  ),
+                  addVerticalSpace(14),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    child: TextFormField(
+                      validator: (email) {
+                        // if (isEmailValid(email!))
+                        //   return null;
+                        // else
+                        //   return 'Enter a valid email address';
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _yourEmailController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      cursorColor: Colors.black,
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(),
+
+                        labelStyle: TextStyle(
+                          fontSize: 3.5.w,
+                        ),
+                        // color:
+                        // myFocusNode.hasFocus ? AppColor.PrimaryAccentColor : Colors.grey),
+                        labelText: 'YOUR EMAIL:',
+                        border: OutlineInputBorder(),
+                        counterText: '',
+                      ),
+                    ),
+                  ),
+                  addVerticalSpace(14),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    child: TextFormField(
+                        validator: (val) {
+                          // if (isAddress(val!.trim()))
+                          //   return null;
+                          // else
+                          //   return 'Enter your address';
+                        },
+                        textInputAction: TextInputAction.newline,
+                        maxLines: 3,
+                        // autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: _messageController,
+                        cursorColor: Colors.black,
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                        decoration: InputDecoration(
+                            counterText: '',
+                            labelStyle:
+                                TextStyle(fontSize: 5.w, color: Colors.grey),
+                            labelText: 'Message',
+                            border: OutlineInputBorder())),
+                  ),
+                  addVerticalSpace(14),
+                ],
+              ),
+            ),
+          ),
+        ),
         Container(
           width: MediaQuery.of(context).size.width,
           child: Divider(
@@ -920,6 +1120,22 @@ class _NewProductDetailsState extends State<NewProductDetails> {
   void getInstance() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
+}
+
+InputDecoration editBoxDecoration(String name, Icon icon, String prefixText) {
+  return new InputDecoration(
+    focusedBorder: OutlineInputBorder(),
+    prefixText: prefixText,
+    prefixIcon: icon,
+    labelStyle: TextStyle(
+      fontSize: 5.w,
+    ),
+    // color:
+    // myFocusNode.hasFocus ? AppColor.PrimaryAccentColor : Colors.grey),
+    labelText: name,
+    border: InputBorder.none,
+    counterText: '',
+  );
 }
 
 void showDialog1(BuildContext context) {

@@ -54,6 +54,13 @@ class HeartIcon {
   static const IconData socialMedia = IconData(0xf1de, fontFamily: _socialMediaFam,);
   static const _kFontFamInsta = 'MyFlutterApp';
 
+
+  static const _kFontFamInstagram = 'InstaGramIcon';
+
+  static const IconData instagram1 = IconData(0xf16d, fontFamily: _kFontFamInstagram, );
+
+
+
   // static const IconData instagramNew = IconData(0xf16d, fontFamily: _kFontFamInsta, );
 
 

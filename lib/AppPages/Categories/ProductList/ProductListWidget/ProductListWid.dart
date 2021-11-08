@@ -489,39 +489,6 @@ class _prodListWidgetState extends State<prodListWidget> {
                                                             FontWeight.bold),
                                                     textAlign: TextAlign.start,
                                                   ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                      top: 4,
-                                                      bottom: 2,
-                                                    ),
-                                                    child: Visibility(
-                                                      visible: widget
-                                                              .products[index]
-                                                              .stockQuantity
-                                                              .contains(
-                                                                  'Out of stock')
-                                                          ? false
-                                                          : true,
-                                                      child: AutoSizeText(
-                                                        widget.products[index]
-                                                            .stockQuantity,
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            height: 1,
-                                                            color: name
-                                                                    .contains(
-                                                                        'In')
-                                                                ? Colors.green
-                                                                : Colors.grey,
-                                                            fontSize: 20.dp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                      ),
-                                                    ),
-                                                  ),
                                                 ],
                                               ),
                                             ),

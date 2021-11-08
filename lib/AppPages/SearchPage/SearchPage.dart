@@ -698,6 +698,7 @@ class _SearchPageState extends State<SearchPage>
                                                             color: Colors.black,
                                                             fontSize: 5.w,
                                                             fontWeight:
+
                                                                 FontWeight
                                                                     .bold),
                                                         textAlign:
@@ -760,46 +761,7 @@ class _SearchPageState extends State<SearchPage>
                                                                   TextAlign
                                                                       .start,
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                top: 4,
-                                                                bottom: 2,
-                                                              ),
-                                                              child: Visibility(
-                                                                visible: searchedProducts[
-                                                                            index]
-                                                                        .stockQuantity
-                                                                        .contains(
-                                                                            'Out of stock')
-                                                                    ? false
-                                                                    : true,
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  searchedProducts[
-                                                                          index]
-                                                                      .stockQuantity,
-                                                                  maxLines: 1,
-                                                                  style: TextStyle(
-                                                                      height: 1,
-                                                                      color: searchedProducts[index].stockQuantity.contains(
-                                                                              'In stock')
-                                                                          ? Colors
-                                                                              .green
-                                                                          : Colors
-                                                                              .red,
-                                                                      fontSize:
-                                                                          20.dp,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start,
-                                                                ),
-                                                              ),
-                                                            ),
+
                                                           ],
                                                         ),
                                                       ),
