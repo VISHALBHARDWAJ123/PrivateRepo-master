@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
             () => Navigator.pushReplacement(
                 context, CupertinoPageRoute(builder: (context) => MyApp()))));
       }
-    });
+    }).then((value) => getSearchSuggestions());
 
     // // } else {
     // }
@@ -183,4 +183,10 @@ class _SplashScreenState extends State<SplashScreen> {
   requestPermission() async {
     await NotificationPermissions.requestNotificationPermissions();
   }
+
+ Future<void> getSearchSuggestions()  async {
+    final uri = Uri.parse("uri");
+
+
+ }
 }

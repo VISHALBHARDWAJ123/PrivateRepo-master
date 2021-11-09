@@ -44,6 +44,18 @@ class NewProductDetails extends StatefulWidget {
 
 class _NewProductDetailsState extends State<NewProductDetails>
     with InputValidationMixin {
+  void initSharedPrefs() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
+    if (mounted)
+      setState(() {
+        String listString = ConstantsVar.prefs.getString('searchList')!;
+        // print(listString);
+        List<dynamic> testingList = jsonDecode(listString);
+        searchSuggestions = testingList.cast<String>();
+        print(searchSuggestions.length.toString());
+      });
+  }
+List<String> searchSuggestions = [];
   var visible;
   var indVisibility;
   var snapshot;
@@ -116,7 +128,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
   @override
   void initState() {
     super.initState();
-    getInstance();
+    // getInstance();
+    initSharedPrefs();
     setState(() {
       _groupController = GroupController(
           isMultipleSelection: true, initSelectedItem: _selectedList);
@@ -217,323 +230,330 @@ class _NewProductDetailsState extends State<NewProductDetails>
         ),
       );
     } else {
-      return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            resizeToAvoidBottomInset: true,
-            appBar: new AppBar(
-              // backgroundColor: ConstantsVar.appColor,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 10),
-                  child: InkWell(
-                    radius: 48,
-                    child: Consumer<cartCounter>(
-                      builder: (context, value, child) {
-                        return Badge(
-                          position: BadgePosition.topEnd(),
-                          badgeColor: Colors.white,
-                          badgeContent:
-                              new AutoSizeText(value.badgeNumber.toString()),
-                          child: Icon(
-                            Icons.shopping_cart_outlined,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => CartScreen2(
-                          isOtherScren: true,
-                          otherScreenName: 'Product Screen',
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-              toolbarHeight: 18.w,
-              backgroundColor: ConstantsVar.appColor,
-              centerTitle: true,
-              title: InkWell(
-                onTap: () => Navigator.pushAndRemoveUntil(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => MyHomePage(
-                              pageIndex: 0,
-                            )),
-                    (route) => false),
-                child: Image.asset(
-                  'MyAssets/logo.png',
-                  width: 15.w,
-                  height: 15.w,
-                ),
-              ),
-            ),
-            body: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  color: ConstantsVar.appColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5),
-                        ),
-                      ),
-                      child: RawAutocomplete<String>(
-                        optionsBuilder: (TextEditingValue textEditingValue) {
-                          if (textEditingValue.text == null ||
-                              textEditingValue.text == '') {
-                            return const Iterable<String>.empty();
-                          }
-                          return ConstantsVar.suggestionList
-                              .where((String option) {
-                            return option
-                                .toLowerCase()
-                                .contains(textEditingValue.text.toLowerCase());
-                          });
-                        },
-                        onSelected: (String selection) {
-                          debugPrint('$selection selected');
-                        },
-                        fieldViewBuilder: (BuildContext context,
-                            TextEditingController textEditingController,
-                            FocusNode focusNode,
-                            VoidCallback onFieldSubmitted) {
-                          _searchController = textEditingController;
-                          _focusNode = focusNode;
-                          // FocusScopeNode currentFocus = FocusScopeNode.of(context);
-                          return TextFormField(
-                            autocorrect: true,
-                            enableSuggestions: true,
-                            onFieldSubmitted: (val) {
-                              focusNode.unfocus();
-                              if (currentFocus.hasPrimaryFocus) {
-                                currentFocus.unfocus();
-                              }
-                              if (mounted)
-                                setState(() {
-                                  var value = _searchController.text;
-                                  Navigator.of(context).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) => SearchPage(
-                                        isScreen: true,
-                                        keyword: value,
-                                      ),
-                                    ),
-                                  );
-                                });
-
-                              print('Pressed via keypad');
-                            },
-                            textInputAction: isVisible
-                                ? TextInputAction.done
-                                : TextInputAction.search,
-                            // keyboardType: TextInputType.,
-                            keyboardAppearance: Brightness.light,
-                            // autofocus: true,
-                            onChanged: (_) => setState(() {
-                              btnColor = ConstantsVar.appColor;
-                            }),
-                            controller: _searchController,
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 5.w),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 13, horizontal: 10),
-                              hintText: 'Search here',
-                              labelStyle:
-                                  TextStyle(fontSize: 7.w, color: Colors.grey),
-                              suffixIcon: InkWell(
-                                onTap: () async {
-                                  focusNode.unfocus();
-
-                                  if (!currentFocus.hasPrimaryFocus) {
-                                    currentFocus.unfocus();
-                                  }
-                                  if (mounted)
-                                    setState(() {
-                                      var value = _searchController.text;
-                                      Navigator.of(context).push(
-                                        CupertinoPageRoute(
-                                          builder: (context) => SearchPage(
-                                            isScreen: true,
-                                            keyword: value,
-                                          ),
-                                        ),
-                                      );
-                                    });
-                                },
-                                child: Icon(Icons.search_sharp),
-                              ),
+      return GestureDetector(
+        onTap:(){
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SafeArea(
+          top: true,
+          bottom: true,
+          child: Scaffold(
+              backgroundColor: Colors.white,
+              resizeToAvoidBottomInset: true,
+              appBar: new AppBar(
+                // backgroundColor: ConstantsVar.appColor,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10),
+                    child: InkWell(
+                      radius: 48,
+                      child: Consumer<cartCounter>(
+                        builder: (context, value, child) {
+                          return Badge(
+                            position: BadgePosition.topEnd(),
+                            badgeColor: Colors.white,
+                            badgeContent:
+                                new AutoSizeText(value.badgeNumber.toString()),
+                            child: Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Colors.white,
                             ),
-                            focusNode: _focusNode,
                           );
                         },
-                        optionsViewBuilder: (BuildContext context,
-                            AutocompleteOnSelected<String> onSelected,
-                            Iterable<String> options) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              right: 10,
-                            ),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Material(
-                                child: Card(
-                                  child: Container(
-                                    height: 178,
-                                    child: Scrollbar(
-                                      controller: _suggestController,
-                                      thickness: 5,
-                                      isAlwaysShown: true,
-                                      child: ListView.builder(
-                                        // padding: EdgeInsets.all(8.0),
-                                        itemCount: options.length + 1,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          if (index >= options.length) {
-                                            return Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: TextButton(
-                                                child: const Text(
-                                                  'Clear',
-                                                  style: TextStyle(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => CartScreen2(
+                            isOtherScren: true,
+                            otherScreenName: 'Product Screen',
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+                toolbarHeight: 18.w,
+                backgroundColor: ConstantsVar.appColor,
+                centerTitle: true,
+                title: InkWell(
+                  onTap: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => MyHomePage(
+                                pageIndex: 0,
+                              )),
+                      (route) => false),
+                  child: Image.asset(
+                    'MyAssets/logo.png',
+                    width: 15.w,
+                    height: 15.w,
+                  ),
+                ),
+              ),
+              body: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    color: ConstantsVar.appColor,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: RawAutocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            if (textEditingValue.text == null ||
+                                textEditingValue.text == '') {
+                              return const Iterable<String>.empty();
+                            }
+                            return searchSuggestions
+                                .where((String option) {
+                              return option
+                                  .toLowerCase()
+                                  .contains(textEditingValue.text.toLowerCase());
+                            });
+                          },
+                          onSelected: (String selection) {
+                            debugPrint('$selection selected');
+                          },
+                          fieldViewBuilder: (BuildContext context,
+                              TextEditingController textEditingController,
+                              FocusNode focusNode,
+                              VoidCallback onFieldSubmitted) {
+                            _searchController = textEditingController;
+                            _focusNode = focusNode;
+                            // FocusScopeNode currentFocus = FocusScopeNode.of(context);
+                            return TextFormField(
+                              autocorrect: true,
+                              enableSuggestions: true,
+                              onFieldSubmitted: (val) {
+                                focusNode.unfocus();
+                                if (currentFocus.hasPrimaryFocus) {
+                                  currentFocus.unfocus();
+                                }
+                                if (mounted)
+                                  setState(() {
+                                    var value = _searchController.text;
+                                    Navigator.of(context).push(
+                                      CupertinoPageRoute(
+                                        builder: (context) => SearchPage(
+                                          isScreen: true,
+                                          keyword: value,
+                                        ),
+                                      ),
+                                    );
+                                  });
+
+                                print('Pressed via keypad');
+                              },
+                              textInputAction: isVisible
+                                  ? TextInputAction.done
+                                  : TextInputAction.search,
+                              // keyboardType: TextInputType.,
+                              keyboardAppearance: Brightness.light,
+                              // autofocus: true,
+                              onChanged: (_) => setState(() {
+                                btnColor = ConstantsVar.appColor;
+                              }),
+                              controller: _searchController,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 5.w),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 13, horizontal: 10),
+                                hintText: 'Search here',
+                                labelStyle:
+                                    TextStyle(fontSize: 7.w, color: Colors.grey),
+                                suffixIcon: InkWell(
+                                  onTap: () async {
+                                    focusNode.unfocus();
+
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
+                                    if (mounted)
+                                      setState(() {
+                                        var value = _searchController.text;
+                                        Navigator.of(context).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => SearchPage(
+                                              isScreen: true,
+                                              keyword: value,
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                  },
+                                  child: Icon(Icons.search_sharp),
+                                ),
+                              ),
+                              focusNode: _focusNode,
+                            );
+                          },
+                          optionsViewBuilder: (BuildContext context,
+                              AutocompleteOnSelected<String> onSelected,
+                              Iterable<String> options) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                right: 10,
+                              ),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Material(
+                                  child: Card(
+                                    child: Container(
+                                      height: 178,
+                                      child: Scrollbar(
+                                        controller: _suggestController,
+                                        thickness: 5,
+                                        isAlwaysShown: true,
+                                        child: ListView.builder(
+                                          // padding: EdgeInsets.all(8.0),
+                                          itemCount: options.length + 1,
+                                          itemBuilder:
+                                              (BuildContext context, int index) {
+                                            if (index >= options.length) {
+                                              return Align(
+                                                alignment: Alignment.bottomCenter,
+                                                child: TextButton(
+                                                  child: const Text(
+                                                    'Clear',
+                                                    style: TextStyle(
+                                                      color:
+                                                          ConstantsVar.appColor,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
                                                   ),
+                                                  onPressed: () {
+                                                    _searchController.clear();
+                                                  },
                                                 ),
-                                                onPressed: () {
-                                                  _searchController.clear();
+                                              );
+                                            }
+                                            final String option =
+                                                options.elementAt(index);
+                                            return GestureDetector(
+                                                onTap: () {
+                                                  onSelected(option);
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                          builder: (context) =>
+                                                              SearchPage(
+                                                                keyword: option,
+                                                                isScreen: true,
+                                                              )));
                                                 },
-                                              ),
-                                            );
-                                          }
-                                          final String option =
-                                              options.elementAt(index);
-                                          return GestureDetector(
-                                              onTap: () {
-                                                onSelected(option);
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            SearchPage(
-                                                              keyword: option,
-                                                              isScreen: true,
-                                                            )));
-                                              },
-                                              child: Container(
-                                                height: 5.2.h,
-                                                width: 95.w,
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: 100.w,
-                                                      child: AutoSizeText(
-                                                        '  ' + option,
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          wordSpacing: 2,
-                                                          letterSpacing: 1,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                child: Container(
+                                                  height: 5.2.h,
+                                                  width: 95.w,
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: 100.w,
+                                                        child: AutoSizeText(
+                                                          '  ' + option,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            wordSpacing: 2,
+                                                            letterSpacing: 1,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    Container(
-                                                      width: 100.w,
-                                                      child: Divider(
-                                                        thickness: 1,
-                                                        color: Colors
-                                                            .grey.shade400,
+                                                      Container(
+                                                        width: 100.w,
+                                                        child: Divider(
+                                                          thickness: 1,
+                                                          color: Colors
+                                                              .grey.shade400,
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ));
-                                        },
+                                                    ],
+                                                  ),
+                                                ));
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  // flex: 9,
-                  child: customList(
-                    context: context,
-                    name: name,
-                    price: price,
-                    descritption: description,
-                    priceValue: '$priceValue',
-                    sku: sku,
-                    stockAvaialbility: stockAvailabilty,
-                    imageList: imageList,
-                    largeImage: largeImage,
-                    assemblyCharges: assemblyCharges,
-                    initialData: initialData,
-                    isDiscountAvail: isDiscountAvail,
-                    discountedPrice:
-                        discountedPrice != null ? discountedPrice : '',
-                    disPercentage: discountPercentage,
-                    showSub: showSubBtn,
-                    isSubAlready: isSubAlready,
+                  Expanded(
+                    // flex: 9,
+                    child: customList(
+                      context: context,
+                      name: name,
+                      price: price,
+                      descritption: description,
+                      priceValue: '$priceValue',
+                      sku: sku,
+                      stockAvaialbility: stockAvailabilty,
+                      imageList: imageList,
+                      largeImage: largeImage,
+                      assemblyCharges: assemblyCharges,
+                      initialData: initialData,
+                      isDiscountAvail: isDiscountAvail,
+                      discountedPrice:
+                          discountedPrice != null ? discountedPrice : '',
+                      disPercentage: discountPercentage,
+                      showSub: showSubBtn,
+                      isSubAlready: isSubAlready,
+                    ),
                   ),
-                ),
-                Container(
-                  width: 100.w,
-                  child: AddCartBtn(
-                    productId: id,
-                    isTrue: false,
-                    guestCustomerId: guestCustomerID,
-                    checkIcon:
-                        stockAvailabilty.toString().contains('Out of stock')
-                            ? Icon(HeartIcon.cross)
-                            : Icon(Icons.check),
-                    text: stockAvailabilty.toString().contains('Out of stock')
-                        ? 'out of stock'.toUpperCase()
-                        : 'add to cart'.toUpperCase(),
-                    color: stockAvailabilty.toString().contains('Out of stock')
-                        ? Colors.grey.shade700
-                        : ConstantsVar.appColor,
-                    isGiftCard: _isGiftCard,
-                    isProductAttributeAvail: _isProductAttributeAvailable,
-                    recipEmail: recEmailController.text,
-                    name: _yourNameController.text,
-                    message: _messageController.text,
-                    attributeId: data,
-                    recipName: _recNameController.text,
-                    email: _yourEmailController.text,
-                  ),
-                )
-              ],
-            )),
+                  Container(
+                    width: 100.w,
+                    child: AddCartBtn(
+                      productId: id,
+                      isTrue: false,
+                      guestCustomerId: guestCustomerID,
+                      checkIcon:
+                          stockAvailabilty.toString().contains('Out of stock')
+                              ? Icon(HeartIcon.cross)
+                              : Icon(Icons.check),
+                      text: stockAvailabilty.toString().contains('Out of stock')
+                          ? 'out of stock'.toUpperCase()
+                          : 'add to cart'.toUpperCase(),
+                      color: stockAvailabilty.toString().contains('Out of stock')
+                          ? Colors.grey.shade700
+                          : ConstantsVar.appColor,
+                      isGiftCard: _isGiftCard,
+                      isProductAttributeAvail: _isProductAttributeAvailable,
+                      recipEmail: recEmailController.text,
+                      name: _yourNameController.text,
+                      message: _messageController.text,
+                      attributeId: data,
+                      recipName: _recNameController.text,
+                      email: _yourEmailController.text,
+                    ),
+                  )
+                ],
+              )),
+        ),
       );
     }
   }
@@ -1117,9 +1137,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
     );
   }
 
-  void getInstance() async {
-    ConstantsVar.prefs = await SharedPreferences.getInstance();
-  }
+
 }
 
 InputDecoration editBoxDecoration(String name, Icon icon, String prefixText) {

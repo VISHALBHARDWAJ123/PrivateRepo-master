@@ -12,13 +12,13 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/SearchSuggestions/SearchSuggestion.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
-import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
@@ -30,7 +30,8 @@ class HomeScreenMain extends StatefulWidget {
   HomeScreenMain({Key? key}) : super(key: key);
 }
 
-class _HomeScreenMainState extends State<HomeScreenMain> {
+class _HomeScreenMainState extends State<HomeScreenMain>
+    with WidgetsBindingObserver {
   String bannerImage = '';
   List<ServicesModel> modelList = [];
   List<Bannerxx> banners = [];
@@ -42,6 +43,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   bool showLoading = true;
   bool categoryVisible = false;
   List<SocialModel> socialLinks = [];
+  List<String> searchSuggestions = [];
 
   TextEditingController _searchController = TextEditingController();
   var _focusNode = FocusNode();
@@ -54,9 +56,24 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   String _titleName = '';
   ScrollController _scrollController = ScrollController();
+  String listString = '';
 
   void _scrollToBottom() {
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.detached:
+        ConstantsVar.prefs.setString('searchList', '');
+
+        Fluttertoast.showToast(msg: 'Hi There. I am Detached now ');
+        print('Hi There. I am Detached now');
+
+        break;
+      default:
+    }
   }
 
   @override
@@ -65,6 +82,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) => apiCallToHomeScreen(value));
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
@@ -102,429 +120,565 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   Widget buildSafeArea(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        overflow: Overflow.visible,
-        clipBehavior: Clip.hardEdge,
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  top: .1,
-                  child: Container(
-                    height: 50.h,
-                    child: Image.asset(
-                      "MyAssets/banner.jpg",
-                      fit: BoxFit.fitWidth,
+    return GestureDetector(
+      onTap: () {
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Container(
+        color: Colors.black,
+        child: Stack(
+          overflow: Overflow.visible,
+          clipBehavior: Clip.hardEdge,
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: .1,
+                    child: Container(
+                      height: 50.h,
+                      child: Image.asset(
+                        "MyAssets/banner.jpg",
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 100.h,
-                  child: ListView(
-                    // physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 6),
-                        child: Container(
-                          width: 100.w,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Image.asset('MyAssets/logo.png',
-                                fit: BoxFit.fill,
-                                width: Adaptive.w(14),
-                                height: Adaptive.w(14)),
+                  Container(
+                    height: 100.h,
+                    child: ListView(
+                      // physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 6),
+                          child: Container(
+                            width: 100.w,
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Image.asset('MyAssets/logo.png',
+                                  fit: BoxFit.fill,
+                                  width: Adaptive.w(14),
+                                  height: Adaptive.w(14)),
+                            ),
                           ),
                         ),
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
                                 ),
-                              ),
-                              child: RawAutocomplete<String>(
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == null ||
-                                      textEditingValue.text == '' ||
-                                      textEditingValue.text.length < 3) {
-                                    return const Iterable<String>.empty();
-                                  }
-                                  return ConstantsVar.suggestionList
-                                      .where((String option) {
-                                    return option.toLowerCase().contains(
-                                        new RegExp(
-                                            textEditingValue.text.toLowerCase(),
-                                            caseSensitive: false));
-                                  });
-                                },
-                                onSelected: (String selection) {
-                                  debugPrint('$selection selected');
-                                },
-                                fieldViewBuilder: (BuildContext context,
-                                    TextEditingController textEditingController,
-                                    FocusNode focusNode,
-                                    VoidCallback onFieldSubmitted) {
-                                  _searchController = textEditingController;
-                                  _focusNode = focusNode;
-                                  // FocusScopeNode currentFocus = FocusScopeNode.of(context);
-                                  return TextFormField(
-                                    autocorrect: true,
-                                    enableSuggestions: true,
-                                    onFieldSubmitted: (val) {
-                                      focusNode.unfocus();
-                                      if (currentFocus.hasPrimaryFocus) {
-                                        currentFocus.unfocus();
-                                      }
-                                      if (mounted)
-                                        setState(() {
-                                          var value = _searchController.text;
-                                          Navigator.of(context).push(
-                                            CupertinoPageRoute(
-                                              builder: (context) => SearchPage(
-                                                isScreen: true,
-                                                keyword: value,
-                                              ),
-                                            ),
-                                          );
-                                        });
-
-                                      print('Pressed via keypad');
-                                    },
-                                    textInputAction: isVisible
-                                        ? TextInputAction.done
-                                        : TextInputAction.search,
-                                    // keyboardType: TextInputType.,
-                                    keyboardAppearance: Brightness.light,
-                                    // autofocus: true,
-                                    onChanged: (_) => setState(() {
-                                      btnColor = ConstantsVar.appColor;
-                                    }),
-                                    controller: _searchController,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 5.w),
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 13, horizontal: 10),
-                                      hintText: 'Search here',
-                                      labelStyle: TextStyle(
-                                          fontSize: 7.w, color: Colors.grey),
-                                      suffixIcon: InkWell(
-                                        onTap: () async {
-                                          focusNode.unfocus();
-
-                                          if (!currentFocus.hasPrimaryFocus) {
-                                            currentFocus.unfocus();
-                                          }
-                                          if (mounted)
-                                            setState(() {
-                                              var value =
-                                                  _searchController.text;
-                                              Navigator.of(context).push(
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      SearchPage(
-                                                    isScreen: true,
-                                                    keyword: value,
-                                                  ),
+                                child: RawAutocomplete<String>(
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == null ||
+                                        textEditingValue.text == '' ||
+                                        textEditingValue.text.length < 3) {
+                                      return const Iterable<String>.empty();
+                                    }
+                                    return searchSuggestions
+                                        .where((String option) {
+                                      return option.toLowerCase().contains(
+                                          new RegExp(
+                                              textEditingValue.text
+                                                  .toLowerCase(),
+                                              caseSensitive: false));
+                                    });
+                                  },
+                                  onSelected: (String selection) {
+                                    debugPrint('$selection selected');
+                                  },
+                                  fieldViewBuilder: (BuildContext context,
+                                      TextEditingController
+                                          textEditingController,
+                                      FocusNode focusNode,
+                                      VoidCallback onFieldSubmitted) {
+                                    _searchController = textEditingController;
+                                    _focusNode = focusNode;
+                                    // FocusScopeNode currentFocus = FocusScopeNode.of(context);
+                                    return TextFormField(
+                                      autocorrect: true,
+                                      enableSuggestions: true,
+                                      onFieldSubmitted: (val) {
+                                        focusNode.unfocus();
+                                        if (currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+                                        if (mounted)
+                                          setState(() {
+                                            var value = _searchController.text;
+                                            Navigator.of(context).push(
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    SearchPage(
+                                                  isScreen: true,
+                                                  keyword: value,
                                                 ),
-                                              );
-                                            });
-                                        },
-                                        child: Icon(Icons.search_sharp),
+                                              ),
+                                            );
+                                          });
+
+                                        print('Pressed via keypad');
+                                      },
+                                      textInputAction: isVisible
+                                          ? TextInputAction.done
+                                          : TextInputAction.search,
+                                      // keyboardType: TextInputType.,
+                                      keyboardAppearance: Brightness.light,
+                                      // autofocus: true,
+                                      onChanged: (_) => setState(() {
+                                        btnColor = ConstantsVar.appColor;
+                                      }),
+                                      controller: _searchController,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 5.w),
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 13, horizontal: 10),
+                                        hintText: 'Search here',
+                                        labelStyle: TextStyle(
+                                            fontSize: 7.w, color: Colors.grey),
+                                        suffixIcon: InkWell(
+                                          onTap: () async {
+                                            focusNode.unfocus();
+
+                                            if (!currentFocus.hasPrimaryFocus) {
+                                              currentFocus.unfocus();
+                                            }
+                                            if (mounted)
+                                              setState(() {
+                                                var value =
+                                                    _searchController.text;
+                                                Navigator.of(context).push(
+                                                  CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPage(
+                                                      isScreen: true,
+                                                      keyword: value,
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                          },
+                                          child: Icon(Icons.search_sharp),
+                                        ),
                                       ),
-                                    ),
-                                    focusNode: _focusNode,
-                                  );
-                                },
-                                optionsViewBuilder: (BuildContext context,
-                                    AutocompleteOnSelected<String> onSelected,
-                                    Iterable<String> options) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 8.0,
-                                      right: 10,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Material(
-                                        child: Card(
-                                          child: Container(
-                                            height: 178,
-                                            child: Scrollbar(
-                                              controller: _suggestController,
-                                              thickness: 5,
-                                              isAlwaysShown: true,
-                                              child: ListView.builder(
-                                                // padding: EdgeInsets.all(8.0),
-                                                itemCount: options.length + 1,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  if (index >= options.length) {
-                                                    return Align(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      child: TextButton(
-                                                        child: const Text(
-                                                          'Clear',
-                                                          style: TextStyle(
-                                                            color: ConstantsVar
-                                                                .appColor,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          _searchController
-                                                              .clear();
-                                                        },
-                                                      ),
-                                                    );
-                                                  }
-                                                  final String option =
-                                                      options.elementAt(index);
-                                                  return InkWell(
-                                                      onTap: () {
-                                                        onSelected(option);
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    SearchPage(
-                                                              keyword: option,
-                                                              isScreen: true,
+                                      focusNode: _focusNode,
+                                    );
+                                  },
+                                  optionsViewBuilder: (BuildContext context,
+                                      AutocompleteOnSelected<String> onSelected,
+                                      Iterable<String> options) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8.0,
+                                        right: 10,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Material(
+                                          child: Card(
+                                            child: Container(
+                                              height: 178,
+                                              child: Scrollbar(
+                                                controller: _suggestController,
+                                                thickness: 5,
+                                                isAlwaysShown: true,
+                                                child: ListView.builder(
+                                                  // padding: EdgeInsets.all(8.0),
+                                                  itemCount: options.length + 1,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    if (index >=
+                                                        options.length) {
+                                                      return Align(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        child: TextButton(
+                                                          child: const Text(
+                                                            'Clear',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  ConstantsVar
+                                                                      .appColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 16,
                                                             ),
                                                           ),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        height: 5.8.h,
-                                                        width: 95.w,
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Container(
-                                                              width: 100.w,
-                                                              child:
-                                                                  AutoSizeText(
-                                                                '  ' + option,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 16,
-                                                                  wordSpacing:
-                                                                      2,
-                                                                  letterSpacing:
-                                                                      1,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                          onPressed: () {
+                                                            _searchController
+                                                                .clear();
+                                                          },
+                                                        ),
+                                                      );
+                                                    }
+                                                    final String option =
+                                                        options
+                                                            .elementAt(index);
+                                                    return InkWell(
+                                                        onTap: () {
+                                                          onSelected(option);
+                                                          Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      SearchPage(
+                                                                keyword: option,
+                                                                isScreen: true,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          height: 5.8.h,
+                                                          width: 95.w,
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Container(
+                                                                width: 100.w,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  '  ' + option,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    wordSpacing:
+                                                                        2,
+                                                                    letterSpacing:
+                                                                        1,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            Container(
-                                                              width: 100.w,
-                                                              child: Divider(
-                                                                thickness: 1,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade400,
+                                                              Container(
+                                                                width: 100.w,
+                                                                child: Divider(
+                                                                  thickness: 1,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade400,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
+                                                            ],
+                                                          ),
+                                                        )
 
-                                                      // ListTile(
-                                                      //   title: Text(option),
-                                                      //   subtitle: Container(
-                                                      //     width: 100.w,
-                                                      //     child: Divider(
-                                                      //       thickness: 1,
-                                                      //       color:
-                                                      //           ConstantsVar.appColor,
-                                                      //     ),
-                                                      //   ),
-                                                      // ),
-                                                      );
-                                                },
+                                                        // ListTile(
+                                                        //   title: Text(option),
+                                                        //   subtitle: Container(
+                                                        //     width: 100.w,
+                                                        //     child: Divider(
+                                                        //       thickness: 1,
+                                                        //       color:
+                                                        //           ConstantsVar.appColor,
+                                                        //     ),
+                                                        //   ),
+                                                        // ),
+                                                        );
+                                                  },
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: 2,
-                              right: 2,
-                              bottom: 4,
-                            ),
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                  // enlargeStrategy: CenterPageEnlargeStrategy.height,
-                                  disableCenter: true,
-                                  pageSnapping: true,
-                                  // height: 24.h,
-                                  viewportFraction: 1,
-                                  aspectRatio: 4.5 / 2,
-                                  autoPlay: true,
-                                  enlargeCenterPage: false),
-                              items: banners.map((banner) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return InkWell(
-                                      onTap: () {
-                                        String type = banner.type;
-
-                                        if (type.contains('Category')) {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) => ProductList(
-                                                  categoryId: banner.id,
-                                                  title: ''),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 2.0),
-                                          child: Container(
-                                            child: CachedNetworkImage(
-                                              imageUrl: banner.imageUrl,
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, reason) =>
-                                                  Center(
-                                                child: SpinKitRipple(
-                                                  color: Colors.red,
-                                                  size: 90,
-                                                ),
-                                              ),
-                                            ),
-                                          )),
                                     );
                                   },
-                                );
-                              }).toList(),
+                                ),
+                              ),
                             ),
-                          ),
-                          Visibility(
-                            visible: !showLoading,
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 7.0),
-                              color: Colors.white,
-                              height: 60.w,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          AutoSizeText(
-                                            _titleName.toUpperCase(),
-                                            style: TextStyle(
-                                              shadows: <Shadow>[
-                                                Shadow(
-                                                  offset: Offset(1.0, 1.2),
-                                                  blurRadius: 3.0,
-                                                  color: Colors.grey.shade300,
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: 2,
+                                right: 2,
+                                bottom: 4,
+                              ),
+                              child: CarouselSlider(
+                                options: CarouselOptions(
+                                    // enlargeStrategy: CenterPageEnlargeStrategy.height,
+                                    disableCenter: true,
+                                    pageSnapping: true,
+                                    // height: 24.h,
+                                    viewportFraction: 1,
+                                    aspectRatio: 4.5 / 2,
+                                    autoPlay: true,
+                                    enlargeCenterPage: false),
+                                items: banners.map((banner) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return InkWell(
+                                        onTap: () {
+                                          String type = banner.type;
+
+                                          if (type.contains('Category')) {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    ProductList(
+                                                        categoryId: banner.id,
+                                                        title: ''),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 2.0),
+                                            child: Container(
+                                              child: CachedNetworkImage(
+                                                imageUrl: banner.imageUrl,
+                                                fit: BoxFit.fill,
+                                                placeholder:
+                                                    (context, reason) => Center(
+                                                  child: SpinKitRipple(
+                                                    color: Colors.red,
+                                                    size: 90,
+                                                  ),
                                                 ),
-                                                Shadow(
-                                                  offset: Offset(1.0, 1.2),
-                                                  blurRadius: 8.0,
-                                                  color: Colors.grey.shade300,
-                                                ),
-                                              ],
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold,
+                                              ),
+                                            )),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            Visibility(
+                              visible: !showLoading,
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 7.0),
+                                color: Colors.white,
+                                height: 60.w,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            AutoSizeText(
+                                              _titleName.toUpperCase(),
+                                              style: TextStyle(
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(1.0, 1.2),
+                                                    blurRadius: 3.0,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  Shadow(
+                                                    offset: Offset(1.0, 1.2),
+                                                    blurRadius: 8.0,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                ],
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: ListView.builder(
-                                        controller: _scrollController,
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        // padding: EdgeInsets.symmetric(vertical:6),
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: productList.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return listContainer(
-                                              productList[index]);
-                                        }),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: categoryVisible,
-                            child: Container(
-                              color: Colors.white,
-                              padding: EdgeInsets.all(4),
-                              // margin: EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                mainAxisSize: MainAxisSize.max,
-                                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: viewsList,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        visible: categoryVisible,
-                        child: Container(
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 8.0,
-                                  bottom: 8.0,
+                                    Expanded(
+                                      child: ListView.builder(
+                                          controller: _scrollController,
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                          // padding: EdgeInsets.symmetric(vertical:6),
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: productList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return listContainer(
+                                                productList[index]);
+                                          }),
+                                    ),
+                                  ],
                                 ),
-                                child: AutoSizeText(
-                                  'Our Services'.toUpperCase(),
-                                  style: TextStyle(
+                              ),
+                            ),
+                            Visibility(
+                              visible: categoryVisible,
+                              child: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(4),
+                                // margin: EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: viewsList,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Visibility(
+                          visible: categoryVisible,
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 8.0,
+                                    bottom: 8.0,
+                                  ),
+                                  child: AutoSizeText(
+                                    'Our Services'.toUpperCase(),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                // Container(
+                                //   width: 30.w,
+                                //   child: Divider(
+                                //     thickness: 4,
+                                //     color: ConstantsVar.appColor,
+                                //   ),
+                                // ),
+                                Container(
+                                  width: 100.w,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: modelList
+                                          .map((e) => InkWell(
+                                                onTap: () => e.desc.trim() != ''
+                                                    ? Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) =>
+                                                              TopicPage(
+                                                            paymentUrl: e.desc,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : null,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                e.imageName),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
+                                                        width: 180,
+                                                        height: 180,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 2.0,
+                                                          vertical: 11,
+                                                        ),
+                                                        child: Container(
+                                                          width: 180,
+                                                          child: AutoSizeText(
+                                                            e.shortDesc,
+                                                            maxLines: 1,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: categoryVisible,
+                          child: Container(
+                            color: Colors.white,
+                            width: 100.w,
+                            height: 150,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: AutoSizeText(
+                                    'Follow us!'.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 4.2.w,
+                                      fontWeight: FontWeight.bold,
                                       shadows: <Shadow>[
                                         Shadow(
                                           offset: Offset(1.0, 1.2),
@@ -537,166 +691,55 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                           color: Colors.grey.shade300,
                                         ),
                                       ],
-                                      fontSize: 5.w,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              // Container(
-                              //   width: 30.w,
-                              //   child: Divider(
-                              //     thickness: 4,
-                              //     color: ConstantsVar.appColor,
-                              //   ),
-                              // ),
-                              Container(
-                                width: 100.w,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: modelList
-                                        .map((e) => InkWell(
-                                              onTap: () => e.desc.trim() != ''
-                                                  ? Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            TopicPage(
-                                                          paymentUrl: e.desc,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : null,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              e.imageName),
-                                                          fit: BoxFit.fill,
-                                                        ),
-
-                                                      ),
-                                                      width: 180,
-                                                      height: 180,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 2.0,
-                                                        vertical: 11,
-                                                      ),
-                                                      child: Container(
-                                                        width: 180,
-                                                        child: AutoSizeText(
-                                                          e.shortDesc,
-                                                          maxLines: 1,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ))
-                                        .toList(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: categoryVisible,
-                        child: Container(
-                          color: Colors.white,
-                          width: 100.w,
-                          height: 150,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: AutoSizeText(
-                                  'Follow us!'.toUpperCase(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                AutoSizeText(
+                                  'Get news and inspiration and much more.',
                                   style: TextStyle(
+                                    color: Colors.grey,
                                     fontSize: 4.2.w,
                                     fontWeight: FontWeight.bold,
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              AutoSizeText(
-                                'Get news and inspiration and much more.',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 4.2.w,
-                                  fontWeight: FontWeight.bold,
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: 100.w,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: socialLinks
-                                        .map((e) => InkWell(
-                                            onTap: () => _launchURL(e.url),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 6.0,
-                                              ),
-                                              child: e.icon,
-                                            )))
-                                        .toList()),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                                Container(
+                                  width: 100.w,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: socialLinks
+                                          .map((e) => InkWell(
+                                              onTap: () => _launchURL(e.url),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 6.0,
+                                                ),
+                                                child: e.icon,
+                                              )))
+                                          .toList()),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -709,7 +752,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       new SocialModel(
         icon: Icon(
           Icons.facebook,
-          color:Colors.black,
+          color: Colors.black,
           size: 48,
         ),
         url: 'https://www.facebook.com/THEOnePlanet/',
@@ -720,7 +763,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       new SocialModel(
         icon: Icon(
           NewIcons.pinterest__1_,
-
           size: 42,
         ),
         url: 'https://in.pinterest.com/theoneplanet/_created/',
@@ -740,9 +782,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     socialLinks.add(
       new SocialModel(
         icon: Icon(
-        NewIcons.youtube__1_,
+          NewIcons.youtube__1_,
           size: 42,
-
         ),
         url: 'https://www.youtube.com/user/theoneplanet',
         color: Colors.red.shade800,
@@ -846,6 +887,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
+    getSearchSuggestions();
+
     var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
@@ -1195,6 +1238,27 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       ),
     );
     setState(() {});
+  }
+
+  void getSearchSuggestions() async {
+    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetActiveUAECategories');
+
+    var response = await http.get(uri);
+    try {
+      var result = jsonDecode(response.body);
+      SearchSuggestionResponse suggestions =
+          SearchSuggestionResponse.fromJson(result);
+      print(suggestions.status);
+      for (int i = 0; i < suggestions.responseData.length; i++) {
+        searchSuggestions.add(suggestions.responseData[i].name);
+      }
+      listString = jsonEncode(searchSuggestions);
+      print(listString);
+      ConstantsVar.prefs.setString('searchList', listString);
+      setState(() {});
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+    }
   }
 }
 //Please wait for few seconds

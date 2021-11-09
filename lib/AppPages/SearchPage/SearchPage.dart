@@ -119,6 +119,8 @@ class _SearchPageState extends State<SearchPage>
   String initialData = '';
   var _hintText = 'Search Here';
 
+  List<String> searchSuggestions = [];
+
   _scrollListener() {
     if (searchedProducts.length == 0) {
       _myController.animateTo(_myController.offset + 120,
@@ -128,7 +130,8 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   void initState() {
-    print(widget.keyword);
+    // print(widget.keyword);
+    initSharedPrefs();
     // TODO: implement initState
     setState(() {
       initialData = widget.keyword;
@@ -169,14 +172,7 @@ class _SearchPageState extends State<SearchPage>
     super.initState();
   }
 
-  // @override
-  // // void dispose() {
-  // //   _myController.dispose();
-  // //   _animationController.dispose();
-  // //   _refreshController.dispose();
-  //   // TODO: implement dispose
-  //   super.dispose();
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +249,7 @@ class _SearchPageState extends State<SearchPage>
                                             textEditingValue.text.length < 3) {
                                           return const Iterable<String>.empty();
                                         }
-                                        return ConstantsVar.suggestionList
+                                        return searchSuggestions
                                             .where((String option) {
                                           return option.toLowerCase().contains(
                                               textEditingValue.text
@@ -303,9 +299,9 @@ class _SearchPageState extends State<SearchPage>
                                             searchProducts(
                                                     val,
                                                     0,
-                                                    _minPRICE
+                                                widget._minPrice
                                                         .toStringAsFixed(2),
-                                                    _maxPRICE
+                                                widget._maxPrice
                                                         .toStringAsFixed(2))
                                                 .then((value) => print(value));
 
@@ -487,8 +483,10 @@ class _SearchPageState extends State<SearchPage>
                                                                       option
                                                                           .toString(),
                                                                       0,
-                                                                      '',
-                                                                      '')
+                                                                  widget
+                                                                      ._minPrice.toStringAsFixed(2),
+                                                                  widget
+                                                                      ._maxPrice.toStringAsFixed(2))
                                                                   .then(
                                                                       (value) =>
                                                                           null);
@@ -925,6 +923,7 @@ class _SearchPageState extends State<SearchPage>
       color: Colors.red,
       size: 90,
     ));
+
     Future.delayed(Duration.zero, () {
       progressDialog.show();
     });
@@ -937,7 +936,7 @@ class _SearchPageState extends State<SearchPage>
       _mainString = _selectedSeatsId + _selectedColorsId + _selectedFaimlyId;
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$productName&pagesize=8&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice&specId=$_mainString');
+        'apis/GetSearch?keyword=$productName&pagesize=10&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice&specId=$_mainString');
 
     print(uri);
     try {
@@ -1036,7 +1035,7 @@ class _SearchPageState extends State<SearchPage>
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=8&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
+        'apis/GetSearch?keyword=$prodName&pagesize=12&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
@@ -1437,4 +1436,19 @@ class _SearchPageState extends State<SearchPage>
     await searchProducts(
         widget.keyword, 0, _minPRICE.toString(), '25000');
   }
+
+
+  void initSharedPrefs() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
+    if (mounted)
+      setState(() {
+        String listString = ConstantsVar.prefs.getString('searchList')!;
+        // print(listString);
+        List<dynamic> testingList = jsonDecode(listString);
+        searchSuggestions = testingList.cast<String>();
+        print(searchSuggestions.length.toString());
+      });
+  }
+
+
 }
