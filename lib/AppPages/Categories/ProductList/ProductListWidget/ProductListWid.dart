@@ -395,6 +395,8 @@ class _prodListWidgetState extends State<prodListWidget> {
                     enableTwoLevel: false,
                     physics: ClampingScrollPhysics(),
                     child: GridView.count(
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
                       shrinkWrap: false,
                       crossAxisSpacing: 4,
                       mainAxisSpacing: 4,

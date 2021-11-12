@@ -13,6 +13,7 @@ import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/NotificationxxScreen/Notification_Screen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/SearchPage/NewSearchPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
@@ -536,6 +537,58 @@ class _MenuPageState extends State<MenuPage> {
                                   customerId == '' || customerId == null
                                       ? 'login'.toUpperCase()
                                       : 'logout'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  DelayedDisplay(
+                    delay: Duration(
+                      milliseconds: 70,
+                    ),
+                    child: InkWell(
+                      onTap: () {
+
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => NewSearchPage(
+                                      )));
+
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6.w,
+                            horizontal: 8.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: Icon(
+                                  HeartIcon.logout,
+                                  color: ConstantsVar.appColor,
+                                  size: 34,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                // color: Colors.white,
+                                child: AutoSizeText(
+                              'New Search Page'.toUpperCase()
+                              ,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 5.w,

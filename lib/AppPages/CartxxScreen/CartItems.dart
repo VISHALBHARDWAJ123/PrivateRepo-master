@@ -57,7 +57,7 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
                     NewProductDetails(productId: widget.productId.toString(), screenName: 'Cart Screen2',)));
       },
       child: Container(
-        height: 30.h,
+        height: 24.h,
         child: Stack(
           children: <Widget>[
             Container(
@@ -78,15 +78,15 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
                       )),
                   Expanded(
                     child: Container(
-                      height: 1116,
-                      padding: const EdgeInsets.all(8.0),
+                      height: 23.h,
+                      padding: const EdgeInsets.all(4.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(right: 8, top: 4),
+                            // padding: EdgeInsets.only(right: 8, top: 4),
                             child: AutoSizeText(
                               widget.title,
                               maxLines: 1,
@@ -96,13 +96,13 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
                                   .copyWith(fontSize: 16),
                             ),
                           ),
-                          Utils.getSizedBox(null, 6),
+                          // Utils.getSizedBox(null, 6),
                           AutoSizeText(
                             "SKU : ${widget.sku}",
                             style: CustomTextStyle.textFormFieldRegular
                                 .copyWith(color: Colors.grey, fontSize: 15),
                           ),
-                          Utils.getSizedBox(null, 6),
+                          // Utils.getSizedBox(null, 6),
                           AutoSizeText(
                             widget.unitPrice,
                             overflow: TextOverflow.ellipsis,
@@ -120,7 +120,7 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(4.0),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

@@ -90,48 +90,48 @@ class _RegstrationPageState extends State<RegstrationPage>
 
   bool passError = true, cpError = true;
 
-  Future register() async {
-    String dataBody = ConstantsVar.prefs.getString('regBody')!;
-    print(dataBody);
-
-    String urL = BuildConfig.base_url + 'Customer/CustomerRegister';
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
-      size: 90,
-      color: Colors.red,
-    ));
-    final body = {
-      'apiToken': ConstantsVar.apiTokken,
-      'CustomerGuid': ConstantsVar.prefs.getString('guestGUID'),
-      'data': dataBody
-    };
-    final url = Uri.parse(urL);
-
-    try {
-      var response = await post(url, body: body);
-      var result = jsonDecode(response.body);
-      print(result);
-      String status = result['status'];
-      if (status.contains('Sucess')) {
-        ApiCalls.login(context, eController.text.toString(),
-                cpController.text.toString(),'')
-            .then((value) {
-          context.loaderOverlay.hide();
-          showSucessDialog();
-        });
-      } else {
-        context.loaderOverlay.hide();
-
-        setState(() => reason = result['Message']);
-        showErrorDialog();
-        print(result);
-      }
-    } on Exception catch (e) {
-      context.loaderOverlay.hide();
-      ConstantsVar.excecptionMessage(e);
-      print(e.toString());
-    }
-  }
+  // Future register() async {
+  //   String dataBody = ConstantsVar.prefs.getString('regBody')!;
+  //   print(dataBody);
+  //
+  //   String urL = BuildConfig.base_url + 'Customer/CustomerRegister';
+  //   context.loaderOverlay.show(
+  //       widget: SpinKitRipple(
+  //     size: 90,
+  //     color: Colors.red,
+  //   ));
+  //   final body = {
+  //     'apiToken': ConstantsVar.apiTokken,
+  //     'CustomerGuid': ConstantsVar.prefs.getString('guestGUID'),
+  //     'data': dataBody
+  //   };
+  //   final url = Uri.parse(urL);
+  //
+  //   try {
+  //     var response = await post(url, body: body);
+  //     var result = jsonDecode(response.body);
+  //     print(result);
+  //     String status = result['status'];
+  //     if (status.contains('Sucess')) {
+  //       ApiCalls.login(context, eController.text.toString(),
+  //               cpController.text.toString(),'')
+  //           .then((value) {
+  //         context.loaderOverlay.hide();
+  //         showSucessDialog();
+  //       });
+  //     } else {
+  //       context.loaderOverlay.hide();
+  //
+  //       setState(() => reason = result['Message']);
+  //       showErrorDialog();
+  //       print(result);
+  //     }
+  //   } on Exception catch (e) {
+  //     context.loaderOverlay.hide();
+  //     ConstantsVar.excecptionMessage(e);
+  //     print(e.toString());
+  //   }
+  // }
 
   FocusNode myFocusNode = new FocusNode();
 

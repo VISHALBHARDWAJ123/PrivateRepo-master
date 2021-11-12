@@ -242,6 +242,7 @@ class _SearchPageState extends State<SearchPage>
                                             BorderRadius.circular(10.0)),
                                     elevation: 8.0,
                                     child: RawAutocomplete<String>(
+                                      initialValue: TextEditingValue(text:widget.keyword),
                                       optionsBuilder:
                                           (TextEditingValue textEditingValue) {
                                         if (textEditingValue.text == null ||

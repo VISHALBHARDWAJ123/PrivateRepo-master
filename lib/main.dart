@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
+import 'package:untitled2/utils/CartBadgeCounter/SearchModel/SearchNotifier.dart';
 import 'package:workmanager/workmanager.dart';
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
@@ -121,6 +122,9 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(
             create: (_) => cartCounter(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => SearchModel(),
           ),
         ],
         child: Phoenix(

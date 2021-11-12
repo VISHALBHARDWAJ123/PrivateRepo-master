@@ -420,6 +420,7 @@ List<String> searchSuggestions = [];
                                         thickness: 5,
                                         isAlwaysShown: true,
                                         child: ListView.builder(
+
                                           // padding: EdgeInsets.all(8.0),
                                           itemCount: options.length + 1,
                                           itemBuilder:
@@ -577,6 +578,8 @@ List<String> searchSuggestions = [];
     required bool isSubAlready,
   }) {
     return ListView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
       children: [
         Padding(
           padding: const EdgeInsets.all(6.0),

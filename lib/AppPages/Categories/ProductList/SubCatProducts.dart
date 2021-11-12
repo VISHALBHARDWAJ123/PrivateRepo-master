@@ -269,6 +269,8 @@ class _AddCartBtnState extends State<AddCartBtn> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
     return Container(
       color: widget.color,
       child: AddToCartButton(
@@ -287,13 +289,19 @@ class _AddCartBtnState extends State<AddCartBtn> {
           ),
         ),
         check: widget.checkIcon,
-        onPressed: (id) => checkStateId(stateId),
+        onPressed: (id) => checkStateId(stateId,currentFocus),
       ),
     );
   }
 
-  void checkStateId(AddToCartButtonStateId id) async {
+  void checkStateId(AddToCartButtonStateId id,  FocusScopeNode currentFocus ) async {
     // bool giftCardAvail = false;
+
+
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+
 
     if (id == AddToCartButtonStateId.idle) {
       //handle logic when pressed on idle state button.

@@ -41,6 +41,7 @@ class _SubCatNewState extends State<SubCatNew> {
   Color btnColor = Colors.black;
 
   var _suggestController = ScrollController();
+
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     if (mounted)
@@ -52,7 +53,9 @@ class _SubCatNewState extends State<SubCatNew> {
         print(searchSuggestions.length.toString());
       });
   }
+
   List<String> searchSuggestions = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -68,7 +71,7 @@ class _SubCatNewState extends State<SubCatNew> {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     return GestureDetector(
-      onTap:(){
+      onTap: () {
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -99,6 +102,8 @@ class _SubCatNewState extends State<SubCatNew> {
             ),
           ),
           body: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
               Container(
                 color: ConstantsVar.appColor,
@@ -283,7 +288,8 @@ class _SubCatNewState extends State<SubCatNew> {
                                                     width: 100.w,
                                                     child: Divider(
                                                       thickness: 1,
-                                                      color: Colors.grey.shade400,
+                                                      color:
+                                                          Colors.grey.shade400,
                                                     ),
                                                   ),
                                                 ],
@@ -337,153 +343,7 @@ class _SubCatNewState extends State<SubCatNew> {
                           } else {
                             myList = snapshot.data;
 
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  color: Colors.grey.shade200,
-                                  padding: EdgeInsets.all(2.h),
-                                  child: Center(
-                                    child: AutoSizeText(
-                                      widget.title,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 6.w),
-                                      softWrap: true,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                    child: ListView.builder(
-                                  itemCount: myList.length,
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.all(8.0),
-                                  scrollDirection: Axis.vertical,
-                                  itemBuilder: (context, int index) {
-                                    isSubCategory =
-                                        myList[index]['IsSubcategory'];
-                                    return InkWell(
-                                      onTap: () {
-                                        print('${myList[index]['Id']}');
-                                        String id =
-                                            myList[index]['Id'].toString();
-                                        isSubCategory == true
-                                            ? Navigator.push(context,
-                                                CupertinoPageRoute(
-                                                    builder: (context) {
-                                                return SubCatNew(
-                                                    catId: id,
-                                                    title: myList[index]['Name']);
-                                              }))
-                                            : Navigator.push(context,
-                                                CupertinoPageRoute(
-                                                    builder: (context) {
-                                                return ProductList(
-                                                  categoryId: myList[index]['Id'],
-                                                  title: myList[index]['Name'],
-                                                );
-                                              }));
-                                      },
-                                      child: Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 8.0,
-                                            horizontal: 12.0,
-                                          ),
-                                          child: Container(
-                                            // padding: EdgeInsets.all(8.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Container(
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                8),
-                                                        child: Card(
-                                                          elevation: 8,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl: myList[
-                                                                      index]
-                                                                  ['PictureUrl'],
-                                                              fit: BoxFit.fill,
-                                                              width: 33.w,
-                                                              height: 16.h,
-                                                              placeholder:
-                                                                  (context,
-                                                                      reason) {
-                                                                return Center(
-                                                                  child:
-                                                                      SpinKitRipple(
-                                                                    color: Colors
-                                                                        .red,
-                                                                    size: 90,
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ))),
-                                                Expanded(
-                                                  child: Container(
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width,
-                                                    padding: EdgeInsets.all(2.w),
-                                                    height: 18.h,
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      8.0),
-                                                          child: AutoSizeText(
-                                                            myList[index]['Name'],
-                                                            maxLines: 2,
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            style: TextStyle(
-                                                                height: 1.1,
-                                                                fontSize: 5.w,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ))
-                              ],
-                            );
+                            return  SubCatWidget(title: widget.title, myList: myList,);
                           }
                       }
                     }),
@@ -505,5 +365,140 @@ class _SubCatNewState extends State<SubCatNew> {
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
     }
+  }
+}
+
+class SubCatWidget extends StatefulWidget {
+  SubCatWidget({
+    Key? key,
+    required this.title,
+    required this.myList,
+  }) : super(key: key);
+  final title;
+  List<dynamic> myList;
+
+  @override
+  _SubCatWidgetState createState() => _SubCatWidgetState();
+}
+
+class _SubCatWidgetState extends State<SubCatWidget> {
+  late bool isSubCategory;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          color: Colors.grey.shade200,
+          padding: EdgeInsets.all(2.h),
+          child: Center(
+            child: AutoSizeText(
+              widget.title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 6.w),
+              softWrap: true,
+            ),
+          ),
+        ),
+        Expanded(
+            child: ListView.builder(
+          itemCount: widget.myList.length,
+          shrinkWrap: true,
+          padding: EdgeInsets.all(8.0),
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, int index) {
+            isSubCategory = widget.myList[index]['IsSubcategory'];
+            return InkWell(
+              onTap: () {
+                print('${widget.myList[index]['Id']}');
+                String id = widget.myList[index]['Id'].toString();
+                isSubCategory == true
+                    ? Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) {
+                        return SubCatNew(
+                            catId: id, title: widget.myList[index]['Name']);
+                      }))
+                    : Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) {
+                        return ProductList(
+                          categoryId: widget.myList[index]['Id'],
+                          title: widget.myList[index]['Name'],
+                        );
+                      }));
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
+                  ),
+                  child: Container(
+                    // padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Card(
+                                  elevation: 8,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.myList[index]['PictureUrl'],
+                                      fit: BoxFit.fill,
+                                      width: 33.w,
+                                      height: 16.h,
+                                      placeholder: (context, reason) {
+                                        return Center(
+                                          child: SpinKitRipple(
+                                            color: Colors.red,
+                                            size: 90,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ))),
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(2.w),
+                            height: 18.h,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: AutoSizeText(
+                                    widget.myList[index]['Name'],
+                                    maxLines: 2,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        height: 1.1,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ))
+      ],
+    );
   }
 }

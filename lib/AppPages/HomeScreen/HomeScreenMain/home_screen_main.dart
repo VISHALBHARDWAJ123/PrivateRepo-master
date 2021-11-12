@@ -57,6 +57,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   String _titleName = '';
   ScrollController _scrollController = ScrollController();
   String listString = '';
+  var cokkie;
 
   void _scrollToBottom() {
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -81,7 +82,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     super.initState();
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
-    getApiToken().then((value) => apiCallToHomeScreen(value));
+    getApiToken().then((value) {
+      setState(() {
+        cokkie = ConstantsVar.prefs.getString('cokkie');
+        print(cokkie);
+      });
+      apiCallToHomeScreen(value);
+    });
     WidgetsBinding.instance!.addObserver(this);
   }
 
@@ -93,7 +100,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   }
 
   void _launchURL(String _url) async => await canLaunch(_url)
-      ? await launch(_url)
+      ? await launch(
+          _url,
+          forceWebView: false,
+          forceSafariVC: false,
+        )
       : Fluttertoast.showToast(msg: 'Could not launch $_url');
 
   // @override
@@ -121,6 +132,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanDown: (_) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
       onTap: () {
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
@@ -150,6 +165,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                   Container(
                     height: 100.h,
                     child: ListView(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       // physics: NeverScrollableScrollPhysics(),
                       children: [
                         Padding(
@@ -195,6 +212,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                     });
                                   },
                                   onSelected: (String selection) {
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
                                     debugPrint('$selection selected');
                                   },
                                   fieldViewBuilder: (BuildContext context,
@@ -330,6 +350,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                             .elementAt(index);
                                                     return InkWell(
                                                         onTap: () {
+                                                          if (!currentFocus
+                                                              .hasPrimaryFocus) {
+                                                            currentFocus
+                                                                .unfocus();
+                                                          }
                                                           onSelected(option);
                                                           Navigator.push(
                                                             context,
@@ -752,10 +777,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       new SocialModel(
         icon: Icon(
           Icons.facebook,
-          color: Colors.black,
+          color: Colors.black.withOpacity(.8),
           size: 48,
         ),
-        url: 'https://www.facebook.com/THEOnePlanet/',
+        url: 'fb://page?id=THEOnePlanet',
         color: Colors.white,
       ),
     );
@@ -904,10 +929,18 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
     final response = await http.get(
       Uri.parse(url),
-      headers: ApiCalls.header,
+      headers: {'Cookie': cokkie},
     );
-
+// response.headers
     if (response.statusCode == 200) {
+      const start = "samesite=lax,";
+      const end = "; expires";
+      final startIndex = response.headers.toString().indexOf(start);
+      final endIndex =
+          response.headers.toString().indexOf(end, startIndex + start.length);
+      print(response.headers
+          .toString()
+          .substring(startIndex + start.length, endIndex));
       mounted
           ? setState(() {
               showLoading = false;
@@ -1200,6 +1233,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   Future getApiToken() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
+
     return ConstantsVar.prefs.get('apiTokken');
   }
 
@@ -1224,17 +1258,16 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
     modelList.add(
       new ServicesModel(
-        desc: '',
-        imageName: 'ServicesImages/designer_card_icon.jpg',
-        shortDesc: 'Designer One Card',
-      ),
-    );
-
-    modelList.add(
-      new ServicesModel(
         desc: 'https://www.theone.com/easy-payment-plan-options-2',
         imageName: 'ServicesImages/easy_payment_icon.jpg',
         shortDesc: 'Easy Payment Plan',
+      ),
+    );
+    modelList.add(
+      new ServicesModel(
+        desc: 'http://www.theone.com/terms-conditions-3',
+        imageName: 'ServicesImages/terms&conditions_icon.jpeg',
+        shortDesc: 'Terms \& Conditions',
       ),
     );
     setState(() {});
@@ -1243,7 +1276,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void getSearchSuggestions() async {
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetActiveUAECategories');
 
-    var response = await http.get(uri);
+    var response = await http.get(
+      uri,
+      headers: {'Cookie':cokkie},
+    );
     try {
       var result = jsonDecode(response.body);
       SearchSuggestionResponse suggestions =

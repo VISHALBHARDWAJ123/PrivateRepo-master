@@ -1,47 +1,49 @@
-// import 'dart:convert';
-//
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-//
-// import 'place.dart';
-//
-// class SearchModel extends ChangeNotifier {
-//   bool _isLoading = false;
-//   bool get isLoading => _isLoading;
-//
-//   List<Place> _suggestions = history;
-//   List<Place> get suggestions => _suggestions;
-//
-//   String _query = '';
-//   String get query => _query;
-//
-//   void onQueryChanged(String query,String productId,String pageNumber) async {
-//     if (query == _query) return;
-//
-//     _query = query;
-//     _isLoading = true;
-//     notifyListeners();
-//
-//     if (query.isEmpty) {
-//       _suggestions = history;
-//     } else {
-//       final response = await ;
-//       final body = json.decode(utf8.decode(response.bodyBytes));
-//       final features = body['features'] as List;
-//
-//       _suggestions = features.map((e) => Place.fromJson(e)).toSet().toList();
-//     }
-//
-//     _isLoading = false;
-//     notifyListeners();
-//   }
-//
-//   void clear() {
-//     _suggestions = history;
-//     notifyListeners();
-//   }
-// }
-//
-// const List<String> history = [
-//   'Sofa','Chair','Bed','Flower'
-// ];
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/SearchSuggestions/SearchSuggestion.dart';
+import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchSuggestionsResp.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+
+
+class SearchModel extends ChangeNotifier {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  List<String> _suggestions = history;
+  List<String> get suggestions => _suggestions;
+
+  String _query = '';
+  String get query => _query;
+
+  void onQueryChanged(String query,) async {
+    if (query == _query) return;
+
+    _query = query;
+    _isLoading = true;
+    notifyListeners();
+
+    if (query.isEmpty) {
+      _suggestions = history;
+    } else if(query.length>=3){
+      final response = await http.get(Uri.parse('https://www.theone.com/apis/GetCategorySuggestions?text=$query'),headers: ApiCalls.header);
+      SearchSuggestionResponseNew body = SearchSuggestionResponseNew.fromJson(json.decode(response.body));
+      List<String> features = body.responseData;
+
+      _suggestions = features;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void clear() {
+    _suggestions = history;
+    notifyListeners();
+  }
+}
+
+const List<String> history = [
+  'Sofa','Chair','Bed','Flower'
+];

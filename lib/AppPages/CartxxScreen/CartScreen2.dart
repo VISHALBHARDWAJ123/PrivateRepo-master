@@ -350,7 +350,7 @@ class _CartScreen2State extends State<CartScreen2>
                                   padding: const EdgeInsets.only(
                                       left: 4.0, right: 4.0),
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.max,
+                                    // mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -362,7 +362,7 @@ class _CartScreen2State extends State<CartScreen2>
                                         ),
                                       ),
                                       AutoSizeText(
-                                        taxPrice,
+                                         taxPrice == null?'':taxPrice,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 15,

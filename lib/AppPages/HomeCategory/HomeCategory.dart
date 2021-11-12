@@ -44,7 +44,7 @@ class _HomeCategoryState extends State<HomeCategory> {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     return GestureDetector(
-      onTap:(){
+      onTap: () {
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
@@ -75,6 +75,8 @@ class _HomeCategoryState extends State<HomeCategory> {
               ),
             ),
             body: ListView(
+              physics: NeverScrollableScrollPhysics(),
+
               children: [
                 Container(
                   color: ConstantsVar.appColor,
@@ -94,8 +96,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                               textEditingValue.text.length < 3) {
                             return const Iterable<String>.empty();
                           }
-                          return searchSuggestions
-                              .where((String option) {
+                          return searchSuggestions.where((String option) {
                             return option
                                 .toLowerCase()
                                 .contains(textEditingValue.text.toLowerCase());
@@ -144,7 +145,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                               btnColor = ConstantsVar.appColor;
                             }),
                             controller: _searchController,
-                            style: TextStyle(color: Colors.black, fontSize: 5.w),
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 5.w),
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
@@ -208,7 +210,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                 child: const Text(
                                                   'Clear',
                                                   style: TextStyle(
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
                                                   ),
@@ -229,7 +232,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                 height: 5.2.h,
                                                 width: 95.w,
                                                 child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
@@ -250,8 +254,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       width: 100.w,
                                                       child: Divider(
                                                         thickness: 1,
-                                                        color:
-                                                            Colors.grey.shade400,
+                                                        color: Colors
+                                                            .grey.shade400,
                                                       ),
                                                     ),
                                                   ],
@@ -287,8 +291,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                   height: 100.h,
                   child: FutureBuilder<dynamic>(
                     future: ApiCalls.getCategory(context),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.hasData) {
                         var result = snapshot.data;
                         List<dynamic> resultList = result;
@@ -318,8 +322,11 @@ class _HomeCategoryState extends State<HomeCategory> {
                                 ),
                                 Expanded(
                                     child: ListView.builder(
-                                  itemCount: resultList.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
+                                      itemCount: resultList.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return Padding(
                                       padding:
                                           EdgeInsets.fromLTRB(1.h, 0, 1.h, 2.h),
@@ -359,7 +366,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                   )),
                                                   child: Center(
                                                     child: AutoSizeText(
-                                                        resultList[index]['name'],
+                                                        resultList[index]
+                                                            ['name'],
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -376,8 +384,9 @@ class _HomeCategoryState extends State<HomeCategory> {
                                               physics:
                                                   NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
-                                              itemCount:
-                                                  resultList[index]['sbc'].length,
+                                              itemCount: resultList[index]
+                                                      ['sbc']
+                                                  .length,
                                               itemBuilder: (context, minindex) {
                                                 var imageUrl = resultList[index]
                                                         ['sbc']
@@ -400,11 +409,14 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       print(id);
 
                                                       var title =
-                                                          resultList[index]['sbc']
-                                                              [minindex]['Name'];
+                                                          resultList[index]
+                                                                      ['sbc']
+                                                                  [minindex]
+                                                              ['Name'];
                                                       Navigator.push(context,
                                                           CupertinoPageRoute(
-                                                              builder: (context) {
+                                                              builder:
+                                                                  (context) {
                                                         return SubCatNew(
                                                             catId: id,
                                                             title: title);
@@ -413,11 +425,14 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       var id =
                                                           '${resultList[index]['sbc'][minindex]['Id']}';
                                                       var title =
-                                                          resultList[index]['sbc']
-                                                              [minindex]['Name'];
+                                                          resultList[index]
+                                                                      ['sbc']
+                                                                  [minindex]
+                                                              ['Name'];
                                                       Navigator.push(context,
                                                           CupertinoPageRoute(
-                                                              builder: (context) {
+                                                              builder:
+                                                                  (context) {
                                                         return ProductList(
                                                             categoryId: id,
                                                             title: title);
@@ -442,56 +457,48 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Container(
-                                                                child: ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
+                                                                child:
+                                                                    ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
                                                                                 8),
-                                                                    child: Card(
-                                                                      elevation:
-                                                                          12,
-                                                                      shadowColor:
-                                                                          Colors
-                                                                              .grey,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(
-                                                                                8.0),
                                                                         child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              imageUrl,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                          width:
-                                                                              33.w,
-                                                                          height:
-                                                                              16.h,
-                                                                          placeholder:
-                                                                              (context,
-                                                                                  reason) {
-                                                                            return Center(
-                                                                              child:
-                                                                                  SpinKitRipple(
-                                                                                color: Colors.red,
-                                                                                size: 90,
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ),
-                                                                      ),
-                                                                    ))),
+                                                                            Card(
+                                                                          elevation:
+                                                                              12,
+                                                                          shadowColor:
+                                                                              Colors.grey,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(8.0),
+                                                                            child:
+                                                                                CachedNetworkImage(
+                                                                              imageUrl: imageUrl,
+                                                                              fit: BoxFit.cover,
+                                                                              width: 33.w,
+                                                                              height: 16.h,
+                                                                              placeholder: (context, reason) {
+                                                                                return Center(
+                                                                                  child: SpinKitRipple(
+                                                                                    color: Colors.red,
+                                                                                    size: 90,
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ))),
                                                             Expanded(
                                                               child: Container(
-                                                                width:
-                                                                    MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
                                                                 padding:
                                                                     EdgeInsets
-                                                                        .all(2.w),
+                                                                        .all(2
+                                                                            .w),
                                                                 height: 18.h,
                                                                 child: Column(
                                                                   mainAxisSize:
@@ -515,15 +522,13 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                         maxLines:
                                                                             2,
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .start,
+                                                                            TextAlign.start,
                                                                         style: TextStyle(
                                                                             height:
                                                                                 1.1,
-                                                                            fontSize: 5
-                                                                                .w,
-                                                                            fontWeight:
-                                                                                FontWeight.w600),
+                                                                            fontSize:
+                                                                                5.w,
+                                                                            fontWeight: FontWeight.w600),
                                                                       ),
                                                                     ),
                                                                   ],
