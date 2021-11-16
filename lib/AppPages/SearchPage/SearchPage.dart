@@ -141,9 +141,7 @@ class _SearchPageState extends State<SearchPage>
         : null;
     _searchController = TextEditingController(text: initialData);
     //
-    widget.isScreen == true
-        ? setState(() => _hintText = widget.keyword)
-        : setState(() => _hintText = 'Search Here');
+
     _scrollListController.addListener(() {
       if (_scrollListController.position.pixels ==
           _scrollListController.position.maxScrollExtent) {
@@ -1027,7 +1025,16 @@ class _SearchPageState extends State<SearchPage>
   void _onLoading() async {
     Fluttertoast.showToast(msg: 'Loading please wait');
     var prodName;
+    CustomProgressDialog progressDialog =
+    CustomProgressDialog(context, blur: 2, dismissable: false);
+    progressDialog.setLoadingWidget(SpinKitRipple(
+      color: Colors.red,
+      size: 90,
+    ));
 
+    Future.delayed(Duration.zero, () {
+      progressDialog.show();
+    });
     setState(() {
       widget.isScreen == true
           ? prodName = widget.keyword
@@ -1036,12 +1043,14 @@ class _SearchPageState extends State<SearchPage>
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=12&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
+        'apis/GetSearch?keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
       var result = jsonDecode(response.body);
       print(result);
+      progressDialog.dismiss();
+
       SearchResponse mySearchResponse = SearchResponse.fromJson(result);
 
       setState(() {
@@ -1053,12 +1062,25 @@ class _SearchPageState extends State<SearchPage>
       if (searchedProducts.length == totalCount) {
         setState(() {
           _refreshController.loadComplete();
+          progressDialog.dismiss();
         });
+
       }
+      if(mySearchResponse.status.contains('Failed')){
+        progressDialog.dismiss();
+        setState((){});
+      }
+      progressDialog.dismiss();
+
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
       _refreshController.loadFailed();
+      progressDialog.dismiss();
     }
+    progressDialog.dismiss();
+
+    Fluttertoast.showToast(msg: '${searchedProducts.length.toString()}/${totalCount.toString()}');
+
   }
 
   Widget showSearchFilter(Animation<Offset> _animation) {

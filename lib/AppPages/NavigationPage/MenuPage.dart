@@ -8,17 +8,22 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
+import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/NotificationxxScreen/Notification_Screen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/AppPages/SearchPage/NewSearchPage.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:provider/provider.dart';
+import 'package:untitled2/utils/NewIcons.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 enum AniProps { color }
 
 class MenuPage extends StatefulWidget {
@@ -78,10 +83,10 @@ class _MenuPageState extends State<MenuPage> {
       phnNumber = ConstantsVar.prefs.getString('phone');
       customerGuid = ConstantsVar.prefs.getString('guestGUID');
 
-      ApiCalls.readCounter(customerGuid: customerGuid).then((value) =>
-          setState(() {
-            context.read<cartCounter>().changeCounter(value);
-          }));
+      ApiCalls.readCounter(customerGuid: customerGuid)
+          .then((value) => setState(() {
+                context.read<cartCounter>().changeCounter(value);
+              }));
 
       if (customerId.toString().trim() != null &&
           email.toString().trim() != null &&
@@ -499,6 +504,98 @@ class _MenuPageState extends State<MenuPage> {
                     ),
                     child: InkWell(
                       onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) =>
+                                    ContactUS(id: '', name: '', desc: '')));
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6.w,
+                            horizontal: 8.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: Icon(
+                                  Icons.connect_without_contact,
+                                  color: ConstantsVar.appColor,
+                                  size: 34,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                // color: Colors.white,
+                                child: AutoSizeText(
+                                  'Contact Us'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  DelayedDisplay(
+                    delay: Duration(
+                      milliseconds: 70,
+                    ),
+                    child: InkWell(
+                      onTap: () async =>_launchURL( 'https://www.theone.com/privacy-policy-uae'),
+                      child: Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6.w,
+                            horizontal: 8.w,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: Icon(
+                                  Icons.visibility,
+                                  color: ConstantsVar.appColor,
+                                  size: 34,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                // color: Colors.white,
+                                child: AutoSizeText(
+                                  'PRIVACY POLICY',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  DelayedDisplay(
+                    delay: Duration(
+                      milliseconds: 70,
+                    ),
+                    child: InkWell(
+                      onTap: () {
                         if (customerId == '' || customerId == null) {
                           Navigator.push(
                               context,
@@ -550,53 +647,52 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                   ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-
+                  Visibility(
+                    visible: false,
+                    child: DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () {
                           Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => NewSearchPage(
-                                      )));
-
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  HeartIcon.logout,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                              'New Search Page'.toUpperCase()
-                              ,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
+                                  builder: (context) => NewSearchPage()));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.search,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'New Search Page'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -609,6 +705,16 @@ class _MenuPageState extends State<MenuPage> {
         ],
       ),
     );
+  }
+
+  void _launchURL(String _url) async {
+    await canLaunch(_url)
+        ? await launch(
+            _url,
+            forceWebView: false,
+            forceSafariVC: false,
+          )
+        : Fluttertoast.showToast(msg: 'Could not launch $_url');
   }
 
   Future getCustomerId() async {

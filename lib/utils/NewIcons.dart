@@ -20,19 +20,26 @@ class NewIcons {
 
   static const _kFontFamYou = 'YoutubeNew';
   static const String? _kFontPkg = null;
-
-  static const IconData youtube__1_ = IconData(0xe803, fontFamily: _kFontFamYou, fontPackage: _kFontPkg);
-
+  static const IconData youtube__1_ =
+      IconData(0xe803, fontFamily: _kFontFamYou, fontPackage: _kFontPkg);
   static const _kFontFamFacebook = 'Facebook';
-
-  static const IconData facebookNew = IconData(0xe800, fontFamily: _kFontFamFacebook, fontPackage: _kFontPkg);
+  static const IconData facebookNew =
+      IconData(0xe800, fontFamily: _kFontFamFacebook, fontPackage: _kFontPkg);
   static const _kFontFamInsta = 'InstagramNew';
-
-  static const IconData instagram__8_ = IconData(0xe801, fontFamily: _kFontFamInsta, fontPackage: _kFontPkg);
+  static const IconData instagram__8_ =
+      IconData(0xe801, fontFamily: _kFontFamInsta, fontPackage: _kFontPkg);
   static const _kFontFamPrinterest = 'PrinterestNew';
+  static const IconData pinterest__1_ =
+      IconData(0xe802, fontFamily: _kFontFamPrinterest, fontPackage: _kFontPkg);
+  static const _kFontFamContact = 'ContactUs';
+  static const IconData contact = IconData(
+    0xe800,
+    fontFamily: _kFontFamContact,
+  );
+  static const _kFontFamPrivacy = 'PrivacyClass';
 
-  static const IconData pinterest__1_ = IconData(0xe802, fontFamily: _kFontFamPrinterest, fontPackage: _kFontPkg);
-
-
-
+  static const IconData privacy_ = IconData(
+    0xe800,
+    fontFamily: _kFontFamPrivacy,
+  );
 }

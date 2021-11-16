@@ -157,7 +157,9 @@ class _SubCatNewState extends State<SubCatNew> {
                                       keyword: value,
                                     ),
                                   ),
-                                );
+                                ).then((value) => setState((){
+                                  _searchController.clear();
+                                }));
                               });
 
                             print('Pressed via keypad');
@@ -197,7 +199,9 @@ class _SubCatNewState extends State<SubCatNew> {
                                           keyword: value,
                                         ),
                                       ),
-                                    );
+                                    ).then((value) => setState((){
+                                      _searchController.clear();
+                                    }));
                                   });
                               },
                               child: Icon(Icons.search_sharp),
@@ -261,7 +265,9 @@ class _SubCatNewState extends State<SubCatNew> {
                                                     isScreen: true,
                                                   ),
                                                 ),
-                                              );
+                                              ).then((value) => setState((){
+                                                _searchController.clear();
+                                              }));
                                             },
                                             child: Container(
                                               height: 5.2.h,
@@ -403,10 +409,11 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           ),
         ),
         Expanded(
+
             child: ListView.builder(
           itemCount: widget.myList.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.all(8.0),
+          shrinkWrap: false,
+          padding: EdgeInsets.only(bottom: 220),
           scrollDirection: Axis.vertical,
           itemBuilder: (context, int index) {
             isSubCategory = widget.myList[index]['IsSubcategory'];

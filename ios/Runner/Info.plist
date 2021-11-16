@@ -2,7 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>io.flutter. embedded_views_preview</key>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb10150150309565478</string>
+			</array>
+		</dict>
+	</array>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>

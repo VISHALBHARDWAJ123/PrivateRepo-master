@@ -75,8 +75,10 @@ class _HomeCategoryState extends State<HomeCategory> {
               ),
             ),
             body: ListView(
+                padding: EdgeInsets.only(
+                  bottom: 16.h,
+                ),
               physics: NeverScrollableScrollPhysics(),
-
               children: [
                 Container(
                   color: ConstantsVar.appColor,
@@ -123,14 +125,18 @@ class _HomeCategoryState extends State<HomeCategory> {
                               if (mounted)
                                 setState(() {
                                   var value = _searchController.text;
-                                  Navigator.of(context).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) => SearchPage(
-                                        isScreen: true,
-                                        keyword: value,
-                                      ),
-                                    ),
-                                  );
+                                  Navigator.of(context)
+                                      .push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => SearchPage(
+                                            isScreen: true,
+                                            keyword: value,
+                                          ),
+                                        ),
+                                      )
+                                      .then((value) => setState(() {
+                                            _searchController.clear();
+                                          }));
                                 });
 
                               print('Pressed via keypad');
@@ -164,14 +170,18 @@ class _HomeCategoryState extends State<HomeCategory> {
                                   if (mounted)
                                     setState(() {
                                       var value = _searchController.text;
-                                      Navigator.of(context).push(
-                                        CupertinoPageRoute(
-                                          builder: (context) => SearchPage(
-                                            isScreen: true,
-                                            keyword: value,
-                                          ),
-                                        ),
-                                      );
+                                      Navigator.of(context)
+                                          .push(
+                                            CupertinoPageRoute(
+                                              builder: (context) => SearchPage(
+                                                isScreen: true,
+                                                keyword: value,
+                                              ),
+                                            ),
+                                          )
+                                          .then((value) => setState(() {
+                                                _searchController.clear();
+                                              }));
                                     });
                                 },
                                 child: Icon(Icons.search_sharp),
@@ -289,6 +299,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                 ),
                 Container(
                   height: 100.h,
+
                   child: FutureBuilder<dynamic>(
                     future: ApiCalls.getCategory(context),
                     builder: (BuildContext context,
@@ -304,7 +315,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                             builder: (context, orientation, deviceType) {
                           return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Container(
                                   width: 100.w,
@@ -322,9 +333,9 @@ class _HomeCategoryState extends State<HomeCategory> {
                                 ),
                                 Expanded(
                                     child: ListView.builder(
-                                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-
-                                      itemCount: resultList.length,
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
+                                  itemCount: resultList.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return Padding(
@@ -384,6 +395,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                               physics:
                                                   NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
+                                              padding: EdgeInsets.only(),
                                               itemCount: resultList[index]
                                                       ['sbc']
                                                   .length,

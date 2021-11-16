@@ -87,16 +87,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return LoaderOverlay(
       child: FlutterSizer(
-        builder: (context, ori, deviceType) => MaterialApp(
-          title: 'THE One',
-          theme: ThemeData(
-              primarySwatch: Colors.red,
-              appBarTheme: AppBarTheme(
-                backgroundColor: ConstantsVar.appColor,
-              )),
-          home: MyHomePage(
-            pageIndex: 0,
-          ),
+        builder: (context, ori, deviceType) =>  MyHomePage(
+          pageIndex: 0,
         ),
       ),
     );
@@ -157,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
+      bottom: true,
       child: WillPopScope(
         onWillPop: () async {
           //

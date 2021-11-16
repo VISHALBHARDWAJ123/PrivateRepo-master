@@ -188,7 +188,9 @@ class _prodListWidgetState extends State<prodListWidget> {
                                   keyword: value,
                                 ),
                               ),
-                            );
+                            ).then((value) => setState((){
+                              _searchController.clear();
+                            }));
                           });
 
                         print('Pressed via keypad');
@@ -219,14 +221,20 @@ class _prodListWidgetState extends State<prodListWidget> {
                             if (mounted)
                               setState(() {
                                 var value = _searchController.text;
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute(
-                                    builder: (context) => SearchPage(
-                                      isScreen: true,
-                                      keyword: value,
-                                    ),
-                                  ),
-                                );
+                                Navigator.of(context)
+                                    .push(
+                                      CupertinoPageRoute(
+                                        builder: (context) => SearchPage(
+                                          isScreen: true,
+                                          keyword: value,
+                                        ),
+                                      ),
+                                    )
+                                    .then(
+                                      (value) => setState(() {
+                                        _searchController.clear();
+                                      }),
+                                    );
                               });
                           },
                           child: Icon(Icons.search_sharp),
@@ -282,13 +290,16 @@ class _prodListWidgetState extends State<prodListWidget> {
                                         onTap: () {
                                           onSelected(option);
                                           Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      SearchPage(
-                                                        keyword: option,
-                                                        isScreen: true,
-                                                      )));
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          SearchPage(
+                                                            keyword: option,
+                                                            isScreen: true,
+                                                          )))
+                                              .then((value) => setState(() {
+                                                    _searchController.clear();
+                                                  }));
                                         },
                                         child: Container(
                                           height: 5.2.h,
@@ -395,8 +406,8 @@ class _prodListWidgetState extends State<prodListWidget> {
                     enableTwoLevel: false,
                     physics: ClampingScrollPhysics(),
                     child: GridView.count(
-                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       shrinkWrap: false,
                       crossAxisSpacing: 4,
                       mainAxisSpacing: 4,

@@ -351,7 +351,9 @@ List<String> searchSuggestions = [];
                                           keyword: value,
                                         ),
                                       ),
-                                    );
+                                    ).then((value) => setState((){
+                                      _searchController.text = '';
+                                    }));
                                   });
 
                                 print('Pressed via keypad');
@@ -392,7 +394,9 @@ List<String> searchSuggestions = [];
                                               keyword: value,
                                             ),
                                           ),
-                                        );
+                                        ).then((value) => setState((){
+                                          _searchController.clear();
+                                        }));
                                       });
                                   },
                                   child: Icon(Icons.search_sharp),
@@ -456,7 +460,7 @@ List<String> searchSuggestions = [];
                                                               SearchPage(
                                                                 keyword: option,
                                                                 isScreen: true,
-                                                              )));
+                                                              ))).then((value) => _searchController.clear());
                                                 },
                                                 child: Container(
                                                   height: 5.2.h,
@@ -834,7 +838,7 @@ List<String> searchSuggestions = [];
                               splashColor: ConstantsVar.appColor,
                               onTap: () {
                                 ApiCalls.subscribeProdcut(
-                                        productId: widget.productId,
+                                        productId: widget.productId.toString(),
                                         customerId: guestCustomerID,
                                         apiToken: apiToken)
                                     .then((value) => setState(() {

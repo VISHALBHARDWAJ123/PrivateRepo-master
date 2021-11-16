@@ -232,6 +232,12 @@ flutter:
     - family: Facebook
       fonts:
         - asset: MyAssets/icons/FacebookNew.ttf
+    - family: ContactUs
+      fonts:
+        - asset: MyAssets/icons/ContactUs.ttf
+    - family: PrivacyClass
+      fonts:
+        - asset: MyAssets/icons/PrivacyClass.ttf
 
   #    - family: Monstserrat
   #      fonts:

@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -57,17 +58,23 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     getUserCreds().then((value) => setState(() {
           name.text = _userName;
           email.text = _email;
-          String body = 'Name: ' +
-              widget.name +
-              '\n' '\n' +
-              'SKU: ' +
-              widget.id.toString() +
-              '\n' '\n' +
-              'Short Descritption: ' +
-              widget.desc +
-              '\n' +
-              '\n';
-          emailBody.text = body;
+          if (widget.name.toString().trim().length == 0 ||
+              widget.id.toString().trim().length == 0) {
+            emailBody.text = '';
+            setState(() {});
+          } else {
+            String body = 'Name: ' +
+                widget.name +
+                '\n' '\n' +
+                'SKU: ' +
+                widget.id.toString() +
+                '\n' '\n' +
+                'Short Descritption: ' +
+                widget.desc +
+                '\n' +
+                '\n';
+            emailBody.text = body;
+          }
         }));
   }
 
@@ -211,10 +218,10 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
           ),
           InkWell(
               onTap: () async {
-                if(_formKey.currentState!.validate()){
+                if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
                   sendEnquiry().then((value) => Navigator.pop(context));
-                }else{}
+                } else {}
               },
               child: Container(
                 color: ConstantsVar.appColor,
@@ -285,7 +292,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
       context.loaderOverlay.hide();
     } on Exception catch (e) {
       print(e.toString());
-   ConstantsVar.excecptionMessage(e);
+      ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
     }
   }

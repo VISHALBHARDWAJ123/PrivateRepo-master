@@ -99,13 +99,29 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     buildSafeArea(context);
   }
 
-  void _launchURL(String _url) async => await canLaunch(_url)
-      ? await launch(
-          _url,
-          forceWebView: false,
-          forceSafariVC: false,
-        )
-      : Fluttertoast.showToast(msg: 'Could not launch $_url');
+  void _launchURL(String _url) async {
+    if (_url.contains('fb')) {
+      await canLaunch(_url)
+          ? await launch(
+              _url,
+              forceWebView: false,
+              forceSafariVC: false,
+            )
+          :await launch(
+        'https://www.facebook.com/THEOnePlanet/',
+        forceWebView: false,
+        forceSafariVC: false,
+      );
+    } else {
+      await canLaunch(_url)
+          ? await launch(
+              _url,
+              forceWebView: false,
+              forceSafariVC: false,
+            )
+          : Fluttertoast.showToast(msg: 'Could not launch $_url');
+    }
+  }
 
   // @override
   // void didUpdateWidget (
@@ -236,15 +252,19 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         if (mounted)
                                           setState(() {
                                             var value = _searchController.text;
-                                            Navigator.of(context).push(
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    SearchPage(
-                                                  isScreen: true,
-                                                  keyword: value,
-                                                ),
-                                              ),
-                                            );
+                                            Navigator.of(context)
+                                                .push(
+                                                  CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPage(
+                                                      isScreen: true,
+                                                      keyword: value,
+                                                    ),
+                                                  ),
+                                                )
+                                                .then((value) => setState(() {
+                                                      _searchController.clear();
+                                                    }));
                                           });
 
                                         print('Pressed via keypad');
@@ -366,7 +386,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                                 isScreen: true,
                                                               ),
                                                             ),
-                                                          );
+                                                          ).then((value) =>
+                                                              setState(() {
+                                                                _searchController
+                                                                    .clear();
+                                                              }));
                                                         },
                                                         child: Container(
                                                           height: 5.8.h,
@@ -740,7 +764,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                           MainAxisAlignment.center,
                                       children: socialLinks
                                           .map((e) => InkWell(
-                                              onTap: () => _launchURL(e.url),
+                                              onTap: () async => _launchURL(e.url),
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -780,7 +804,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           color: Colors.black.withOpacity(.8),
           size: 48,
         ),
-        url: 'fb://page?id=THEOnePlanet',
+        url: 'fb://page/10150150309565478',
         color: Colors.white,
       ),
     );
@@ -1278,7 +1302,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
     var response = await http.get(
       uri,
-      headers: {'Cookie':cokkie},
+      headers: {'Cookie': cokkie},
     );
     try {
       var result = jsonDecode(response.body);
