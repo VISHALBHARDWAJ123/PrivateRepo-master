@@ -24,6 +24,7 @@ import 'OrderDetails.dart';
 class MyOrders extends StatefulWidget {
   const MyOrders({Key? key, required this.isFromWeb}) : super(key: key);
   final bool isFromWeb;
+
   @override
   _MyOrdersState createState() => _MyOrdersState();
 }
@@ -45,7 +46,6 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
     var response = await get(uri);
     try {
       var result = jsonDecode(response.body);
-      print(result);
       context.loaderOverlay.hide();
       return result;
     } on Exception catch (e) {
@@ -75,353 +75,369 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
   }
 
   var _color;
+  bool _willGo = true;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
-          appBar: new AppBar(
-            leading: Platform.isAndroid
-                ? InkWell(
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => MyAccount(
+    Future<bool> _willGoBack() async {
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (context) => MyAccount()),
+          (route) => false);
+      setState(() {
+        _willGo = true;
+      });
+      return _willGo;
+    }
 
-                          )),
-                          (route) => false);
-                },
-                child: Icon(Icons.arrow_back))
-                : InkWell(
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => MyAccount(
-                          )),
-                          (route) => false);
-                },
-                child: Icon(Icons.arrow_back_ios)),
-            backgroundColor: ConstantsVar.appColor,
-            toolbarHeight: 18.w,
-            centerTitle: true,
-            title: InkWell(
-              onTap: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => MyApp(),
-                  ),
-                  (route) => false),
-              child: Image.asset(
-                'MyAssets/logo.png',
-                width: 15.w,
-                height: 15.w,
+    return WillPopScope(
+      onWillPop: _willGo ? _willGoBack : () async => false,
+      child: SafeArea(
+          top: true,
+          bottom: true,
+          maintainBottomViewPadding: true,
+          child: Scaffold(
+            appBar: new AppBar(
+              leading: Platform.isAndroid
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyAccount()),
+                            (route) => false);
+                      },
+                      child: Icon(Icons.arrow_back))
+                  : InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyAccount()),
+                            (route) => false);
+                      },
+                      child: Icon(Icons.arrow_back_ios)),
+              backgroundColor: ConstantsVar.appColor,
+              toolbarHeight: 18.w,
+              centerTitle: true,
+              title: InkWell(
+                onTap: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => MyApp(),
+                    ),
+                    (route) => false),
+                child: Image.asset(
+                  'MyAssets/logo.png',
+                  width: 15.w,
+                  height: 15.w,
+                ),
               ),
             ),
-          ),
-          body: Container(
-            width: 100.w,
-            height: 100.h,
-            child: Stack(
-              children: [
-                Container(
-                  width: 100.w,
-                  height: 100.h,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          width: 100.w,
-                          child: Center(
-                            child: AutoSizeText(
-                              'MY ORDERS',
-                              style: TextStyle(
-                                fontSize: 8.5.w,
-                                fontWeight: FontWeight.bold,
+            body: Container(
+              width: 100.w,
+              height: 100.h,
+              child: Stack(
+                children: [
+                  Container(
+                    width: 100.w,
+                    height: 100.h,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Container(
+                            width: 100.w,
+                            child: Center(
+                              child: AutoSizeText(
+                                'MY ORDERS',
+                                style: TextStyle(
+                                  fontSize: 8.5.w,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Visibility(
-                        visible: isVisible,
-                        child: Expanded(
-                          child: ListView(
-                            children: List.generate(
-                              orders['customerorders']!['Orders']!.length,
-                              (index) {
-                                if (orders['customerorders']['Orders'].length <
-                                    0) {
-                                  return Container(
-                                      child: AutoSizeText('No Orders found.'));
-                                } else {
-                                  orderDate =
-                                      '${orders['customerorders']['Orders'][index]['CreatedOn']}';
-                                  var resultDate = orderDate
-                                      .toString()
-                                      .replaceAll('T', '  ')
-                                      .toString()
-                                      .splitBefore('.');
-                                  if (orders['customerorders']['Orders'][index]
-                                          ['OrderStatus']
-                                      .toString()
-                                      .contains('Pending')) {
-                                    setState(() => _color = Colors.amberAccent);
-                                  } else if (orders['customerorders']['Orders']
-                                          [index]['OrderStatus']
-                                      .toString()
-                                      .contains('Cancelled')) {
-                                    setState(() => _color = Colors.red);
+                        Visibility(
+                          visible: isVisible,
+                          child: Expanded(
+                            child: ListView(
+                              children: List.generate(
+                                orders['customerorders']!['Orders']!.length,
+                                (index) {
+                                  if (orders['customerorders']['Orders']
+                                          .length <
+                                      0) {
+                                    return Container(
+                                        child:
+                                            AutoSizeText('No Orders found.'));
                                   } else {
-                                    setState(() => _color = Colors.green);
-                                  }
+                                    orderDate =
+                                        '${orders['customerorders']['Orders'][index]['CreatedOn']}';
+                                    var resultDate = orderDate
+                                        .toString()
+                                        .replaceAll('T', '  ')
+                                        .toString()
+                                        .splitBefore('.');
+                                    if (orders['customerorders']['Orders']
+                                            [index]['OrderStatus']
+                                        .toString()
+                                        .contains('Pending')) {
+                                      setState(
+                                          () => _color = Colors.amberAccent);
+                                    } else if (orders['customerorders']
+                                            ['Orders'][index]['OrderStatus']
+                                        .toString()
+                                        .contains('Cancelled')) {
+                                      setState(() => _color = Colors.red);
+                                    } else {
+                                      setState(() => _color = Colors.green);
+                                    }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          // borderRadius:
-                                          ),
-                                      child: Container(
-                                        // height: 35.h,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 3.0, vertical: 2),
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            // borderRadius:
+                                            ),
                                         child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Center(
-                                                child: AutoSizeText(
-                                                  '\nORDER NUMBER\n ' +
-                                                      orders['customerorders']
-                                                                      ['Orders']
-                                                                  [index][
-                                                              'CustomOrderNumber']
-                                                          .toString()
-                                                          .toUpperCase(),
-                                                  // maxLines: 1,
-                                                  textAlign: TextAlign.center,
-                                                  textDirection:
-                                                      TextDirection.ltr,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: true,
-                                                  // textAlign: TextAlign.center,
-                                                  style: CustomTextStyle
-                                                      .textFormFieldBold
-                                                      .copyWith(
-                                                          fontSize: 5.5.w),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                height: 30.w,
-                                                width: 100.w,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Container(
-                                                      child: RichText(
-                                                        text: TextSpan(
-                                                          text:
-                                                              'Order Status: ',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 5.w,
-                                                            // fontWeight:
-                                                            //     FontWeight.bold,
-                                                          ),
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                              text: orders['customerorders']
-                                                                              [
-                                                                              'Orders']
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      'OrderStatus']
-                                                                  .toString()
-                                                                  .toUpperCase(),
-                                                              style: TextStyle(
-                                                                color: _color,
-                                                                fontSize: 5.w,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-
-                                                                // fontWeight:
-                                                                //     FontWeight
-                                                                //         .bold,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Utils.getSizedBox(null, 3),
-                                                    Container(
-                                                        child: AutoSizeText(
-                                                      'Order Date: ' +
-                                                          resultDate,
-                                                      style: TextStyle(
-                                                        fontSize: 5.w,
-
-                                                        // fontWeight:
-                                                        //     FontWeight.bold,
-                                                      ),
-                                                    )),
-                                                    Utils.getSizedBox(null, 3),
-                                                    Container(
-                                                      child: AutoSizeText(
-                                                        'Order Total: ' +
-                                                            orders['customerorders']
+                                          // height: 35.h,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 3.0, vertical: 2),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Center(
+                                                  child: AutoSizeText(
+                                                    '\nORDER NUMBER\n ' +
+                                                        orders['customerorders']
                                                                         [
                                                                         'Orders']
-                                                                    [index]
-                                                                ['OrderTotal'],
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
+                                                                    [index][
+                                                                'CustomOrderNumber']
+                                                            .toString()
+                                                            .toUpperCase(),
+                                                    // maxLines: 1,
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    // textAlign: TextAlign.center,
+                                                    style: CustomTextStyle
+                                                        .textFormFieldBold
+                                                        .copyWith(
+                                                            fontSize: 5.5.w),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  height: 30.w,
+                                                  width: 100.w,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Container(
+                                                        child: RichText(
+                                                          text: TextSpan(
+                                                            text:
+                                                                'Order Status: ',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 5.w,
+                                                              // fontWeight:
+                                                              //     FontWeight.bold,
+                                                            ),
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                text: orders['customerorders']['Orders']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'OrderStatus']
+                                                                    .toString()
+                                                                    .toUpperCase(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: _color,
+                                                                  fontSize: 5.w,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+
+                                                                  // fontWeight:
+                                                                  //     FontWeight
+                                                                  //         .bold,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Utils.getSizedBox(
+                                                          null, 3),
+                                                      Container(
+                                                          child: AutoSizeText(
+                                                        'Order Date: ' +
+                                                            resultDate,
                                                         style: TextStyle(
                                                           fontSize: 5.w,
 
                                                           // fontWeight:
                                                           //     FontWeight.bold,
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: AppButton(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    child: Container(
-                                                      width: 100.w,
-                                                      height: 2.7.h,
-                                                      child: Center(
+                                                      )),
+                                                      Utils.getSizedBox(
+                                                          null, 3),
+                                                      Container(
                                                         child: AutoSizeText(
-                                                          'Details',
+                                                          'Order Total: ' +
+                                                              orders['customerorders']
+                                                                          [
+                                                                          'Orders']
+                                                                      [index][
+                                                                  'OrderTotal'],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 4.4.w,
+                                                            fontSize: 5.w,
+
+                                                            // fontWeight:
+                                                            //     FontWeight.bold,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    onTap: () {
-                                                      getOderDetails(
-                                                              orderid: orders['customerorders']
-                                                                              [
-                                                                              'Orders']
-                                                                          [
-                                                                          index]
-                                                                      ['Id']
-                                                                  .toString(),
-                                                              apiToekbn:
-                                                                  apiToken,
-                                                              customerId:
-                                                                  customerId)
-                                                          .then(
-                                                        (value) =>
-                                                            Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder: (context) =>
-                                                                OrderDetails(
-                                                              orderNumber: '\nORDER  #' +
-                                                                  orders['customerorders']['Orders']
-                                                                              [
-                                                                              index]
-                                                                          [
-                                                                          'CustomOrderNumber']
-                                                                      .toString(),
-                                                              orderProgress: orders[
-                                                                          'customerorders']
-                                                                      [
-                                                                      'Orders'][index]
-                                                                  [
-                                                                  'OrderStatus'],
-                                                              orderTotal: 'Order Total: ' +
-                                                                  orders['customerorders']
-                                                                              [
-                                                                              'Orders']
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      'OrderTotal'],
-                                                              orderDate:
-                                                                  'Order Date: ' +
-                                                                      resultDate,
-                                                              color: _color,
-                                                              resultas: value,
-                                                              orderId: orders['customerorders']
-                                                                          [
-                                                                          'Orders']
-                                                                      [
-                                                                      index]['Id']
-                                                                  .toString(),
-                                                              apiToken:
-                                                                  apiToken,
-                                                              customerId:
-                                                                  customerId,
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Center(
+                                                    child: AppButton(
+                                                      color:
+                                                          ConstantsVar.appColor,
+                                                      child: Container(
+                                                        width: 100.w,
+                                                        height: 2.7.h,
+                                                        child: Center(
+                                                          child: AutoSizeText(
+                                                            'Details',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 4.4.w,
                                                             ),
                                                           ),
                                                         ),
-                                                      );
-                                                    },
+                                                      ),
+                                                      onTap: () async {
+                                                        print(
+                                                            '${orders['customerorders']['Orders'][index]['CustomOrderNumber'].toString()}');
+                                                        await getOderDetails(
+                                                                orderid: orders['customerorders']['Orders']
+                                                                            [
+                                                                            index]
+                                                                        ['Id']
+                                                                    .toString(),
+                                                                apiToekbn:
+                                                                    apiToken,
+                                                                customerId:
+                                                                    customerId)
+                                                            .then(
+                                                          (value) =>
+                                                              Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderDetails(
+                                                                orderNumber:
+                                                                    '\nORDER  # ${orders['customerorders']['Orders'][index]['CustomOrderNumber'].toString()}',
+                                                                orderProgress: orders[
+                                                                            'customerorders']
+                                                                        [
+                                                                        'Orders'][index]
+                                                                    [
+                                                                    'OrderStatus'],
+                                                                orderTotal: 'Order Total: ' +
+                                                                    orders['customerorders']['Orders']
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        'OrderTotal'],
+                                                                orderDate:
+                                                                    'Order Date: ' +
+                                                                        resultDate,
+                                                                color: _color,
+                                                                resultas: value,
+                                                                orderId: orders['customerorders']
+                                                                            [
+                                                                            'Orders']
+                                                                        [
+                                                                        index]['Id']
+                                                                    .toString(),
+                                                                apiToken:
+                                                                    apiToken,
+                                                                customerId:
+                                                                    customerId,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }
-                              },
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Future getOderDetails({
@@ -437,12 +453,12 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
     ));
     final uri = Uri.parse(BuildConfig.base_url +
         "apis/GetCustomerOrderDetail?apiToken=${apiToken}&customerId=${customerId}&orderid=${orderid}");
-
+    print(uri);
     var response = await get(uri);
 
     try {
       var result = jsonDecode(response.body);
-      print(result);
+      // print(result);
 
       context.loaderOverlay.hide();
       return result;

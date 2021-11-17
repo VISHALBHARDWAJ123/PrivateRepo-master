@@ -79,6 +79,7 @@ class _SubCatNewState extends State<SubCatNew> {
       child: SafeArea(
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           appBar: new AppBar(
             toolbarHeight: 18.w,
@@ -418,6 +419,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           itemBuilder: (context, int index) {
             isSubCategory = widget.myList[index]['IsSubcategory'];
             return InkWell(
+
               onTap: () {
                 print('${widget.myList[index]['Id']}');
                 String id = widget.myList[index]['Id'].toString();

@@ -136,6 +136,8 @@ class _ProductListState extends State<ProductList> {
     } else {
       return SafeArea(
           top: true,
+          bottom: true,
+          maintainBottomViewPadding: true,
           child: Scaffold(
               appBar: new AppBar(
                 actions: [

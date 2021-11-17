@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -101,6 +102,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   void _launchURL(String _url) async {
     if (_url.contains('fb')) {
+      Platform.isIOS?
       await canLaunch(_url)
           ? await launch(
               _url,
@@ -108,11 +110,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
               forceSafariVC: false,
             )
           :await launch(
-        'https://www.facebook.com/THEOnePlanet/',
+        'fb://profile/10150150309565478',
         forceWebView: false,
         forceSafariVC: false,
-      );
-    } else {
+      )
+    :
       await canLaunch(_url)
           ? await launch(
               _url,
@@ -138,6 +140,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
       child: Scaffold(
         body: buildSafeArea(context),
       ),

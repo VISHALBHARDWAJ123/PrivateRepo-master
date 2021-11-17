@@ -100,566 +100,209 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      // resizeToAvoidBottomInset: false,
-      appBar: new AppBar(
-        backgroundColor: ConstantsVar.appColor,
-        backwardsCompatibility: true,
-        toolbarHeight: 18.w,
-        // leading: IconButton(
-        //   onPressed: () {},
-        //   icon: Icon(Icons.arrow_back),
-        // ),
-        title: InkWell(
-          onTap: () => Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MyHomePage(
-                  pageIndex: 0,
+    return SafeArea(
+      top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        // resizeToAvoidBottomInset: false,
+        appBar: new AppBar(
+          backgroundColor: ConstantsVar.appColor,
+          backwardsCompatibility: true,
+          toolbarHeight: 18.w,
+          // leading: IconButton(
+          //   onPressed: () {},
+          //   icon: Icon(Icons.arrow_back),
+          // ),
+          title: InkWell(
+            onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MyHomePage(
+                    pageIndex: 0,
+                  ),
                 ),
-              ),
-              (route) => false),
-          child: Image.asset(
-            'MyAssets/logo.png',
-            width: 15.w,
-            height: 15.w,
+                (route) => false),
+            child: Image.asset(
+              'MyAssets/logo.png',
+              width: 15.w,
+              height: 15.w,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              color: Colors.white,
-              width: 100.w,
-              height: 100.h,
-              child: ListView(
-                children: [
-                  Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2.w, horizontal: 4.w),
-                        child: DelayedDisplay(
-                          delay: Duration(milliseconds: 50),
-                          slidingBeginOffset: Offset(
-                            -1,
-                            0,
-                          ),
-                          child: Container(
-                            color: Colors.white,
-                            width: 100.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: !isUserNameVisible ? 10 : 0),
-                                  child: Container(
-                                    width: 100.w,
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        'Welcome',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 8.5.w,
-                                          fontWeight: FontWeight.bold,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                color: Colors.white,
+                width: 100.w,
+                height: 100.h,
+                child: ListView(
+                  children: [
+                    Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 2.w, horizontal: 4.w),
+                          child: DelayedDisplay(
+                            delay: Duration(milliseconds: 50),
+                            slidingBeginOffset: Offset(
+                              -1,
+                              0,
+                            ),
+                            child: Container(
+                              color: Colors.white,
+                              width: 100.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: !isUserNameVisible ? 10 : 0),
+                                    child: Container(
+                                      width: 100.w,
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'Welcome',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 8.5.w,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  width: 100.w,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 100.w,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Visibility(
-                                              visible: userName == null
-                                                  ? false
-                                                  : true,
-                                              child: Icon(
-                                                Icons.person,
-                                                color: ConstantsVar.appColor,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Visibility(
-                                              visible: userName == null
-                                                  ? false
-                                                  : true,
-                                              child: AutoSizeText(
-                                                userName == null
-                                                    ? ''
-                                                    : userName,
-                                                style: TextStyle(
-                                                  color: Colors.grey.shade700,
-                                                  fontSize: 5.w,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Visibility(
-                                        visible: email == null ? false : true,
-                                        child: Container(
-                                          width: 100.w,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Icon(
-                                                Icons.email,
-                                                color: ConstantsVar.appColor,
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              AutoSizeText(
-                                                email == null ? '' : email,
-                                                style: TextStyle(
-                                                  color: Colors.grey.shade700,
-                                                  fontSize: 5.w,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Visibility(
-                                        visible:
-                                            phnNumber == null ? false : true,
-                                        child: Container(
+                                  Container(
+                                    width: 100.w,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
                                           width: 100.w,
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Icon(Icons.phone,
-                                                  color: ConstantsVar.appColor),
+                                              Visibility(
+                                                visible: userName == null
+                                                    ? false
+                                                    : true,
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: ConstantsVar.appColor,
+                                                ),
+                                              ),
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              AutoSizeText(
-                                                phnNumber == null
-                                                    ? ''
-                                                    : phnNumber,
-                                                style: TextStyle(
-                                                  color: Colors.grey.shade700,
-                                                  fontSize: 5.w,
-                                                  fontWeight: FontWeight.bold,
+                                              Visibility(
+                                                visible: userName == null
+                                                    ? false
+                                                    : true,
+                                                child: AutoSizeText(
+                                                  userName == null
+                                                      ? ''
+                                                      : userName,
+                                                  style: TextStyle(
+                                                    color: Colors.grey.shade700,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Visibility(
+                                          visible: email == null ? false : true,
+                                          child: Container(
+                                            width: 100.w,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  color: ConstantsVar.appColor,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                AutoSizeText(
+                                                  email == null ? '' : email,
+                                                  style: TextStyle(
+                                                    color: Colors.grey.shade700,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              phnNumber == null ? false : true,
+                                          child: Container(
+                                            width: 100.w,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Icon(Icons.phone,
+                                                    color: ConstantsVar.appColor),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                AutoSizeText(
+                                                  phnNumber == null
+                                                      ? ''
+                                                      : phnNumber,
+                                                  style: TextStyle(
+                                                    color: Colors.grey.shade700,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
+                      ],
                     ),
-                    child: InkWell(
-                      onTap: () => Navigator.pushReplacement(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => MyAccount())),
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  Icons.account_circle_sharp,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'My Account'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        final result = await Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => CartScreen2(
-                                      otherScreenName: 'Cart Screen2',
-                                      isOtherScren: true,
-                                    )));
-                        if (result == true) {
-                          setState(() {
-                            customerId = ConstantsVar.prefs.getString('userId');
-                            email = ConstantsVar.prefs.getString('email');
-                            userName = ConstantsVar.prefs.getString('userName');
-                            phnNumber = ConstantsVar.prefs.getString('phone');
-                            isPhoneNumberVisible = true;
-                            isUserNameVisible = true;
-                            isEmailVisible = true;
-                          });
-                        }
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  Icons.shopping_cart,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'My Cart'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => NotificationClass())),
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  Icons.notifications,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'notifications'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        customerId == '' || customerId == null
-                            ? Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => RegstrationPage()))
-                            : Fluttertoast.showToast(
-                                msg:
-                                    'You are already logged in with THE One account',
-                                toastLength: Toast.LENGTH_LONG,
-                              );
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  HeartIcon.user,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'Register'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) =>
-                                    ContactUS(id: '', name: '', desc: '')));
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  Icons.connect_without_contact,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'Contact Us'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () async =>_launchURL( 'https://www.theone.com/privacy-policy-uae'),
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  Icons.visibility,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  'PRIVACY POLICY',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DelayedDisplay(
-                    delay: Duration(
-                      milliseconds: 70,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        if (customerId == '' || customerId == null) {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginScreen(
-                                        screenKey: 'Menu Page',
-                                      )));
-                        } else {
-                          clearUserDetails()
-                              .whenComplete(() => Phoenix.rebirth(context));
-                        }
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 6.w,
-                            horizontal: 8.w,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: Icon(
-                                  HeartIcon.logout,
-                                  color: ConstantsVar.appColor,
-                                  size: 34,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                // color: Colors.white,
-                                child: AutoSizeText(
-                                  customerId == '' || customerId == null
-                                      ? 'login'.toUpperCase()
-                                      : 'logout'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 5.w,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: false,
-                    child: DelayedDisplay(
+                    DelayedDisplay(
                       delay: Duration(
                         milliseconds: 70,
                       ),
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => NewSearchPage()));
-                        },
+                        onTap: () => Navigator.pushReplacement(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => MyAccount())),
                         child: Card(
                           color: Colors.white,
                           child: Padding(
@@ -672,7 +315,7 @@ class _MenuPageState extends State<MenuPage> {
                               children: [
                                 Card(
                                   child: Icon(
-                                    Icons.search,
+                                    Icons.account_circle_sharp,
                                     color: ConstantsVar.appColor,
                                     size: 34,
                                   ),
@@ -683,7 +326,7 @@ class _MenuPageState extends State<MenuPage> {
                                 Container(
                                   // color: Colors.white,
                                   child: AutoSizeText(
-                                    'New Search Page'.toUpperCase(),
+                                    'My Account'.toUpperCase(),
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 5.w,
@@ -697,12 +340,374 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          final result = await Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => CartScreen2(
+                                        otherScreenName: 'Cart Screen2',
+                                        isOtherScren: true,
+                                      )));
+                          if (result == true) {
+                            setState(() {
+                              customerId = ConstantsVar.prefs.getString('userId');
+                              email = ConstantsVar.prefs.getString('email');
+                              userName = ConstantsVar.prefs.getString('userName');
+                              phnNumber = ConstantsVar.prefs.getString('phone');
+                              isPhoneNumberVisible = true;
+                              isUserNameVisible = true;
+                              isEmailVisible = true;
+                            });
+                          }
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.shopping_cart,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'My Cart'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => NotificationClass())),
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.notifications,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'notifications'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          customerId == '' || customerId == null
+                              ? Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => RegstrationPage()))
+                              : Fluttertoast.showToast(
+                                  msg:
+                                      'You are already logged in with THE One account',
+                                  toastLength: Toast.LENGTH_LONG,
+                                );
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    HeartIcon.user,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'Register'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      ContactUS(id: '', name: '', desc: '')));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.connect_without_contact,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'Contact Us'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () async =>_launchURL( 'https://www.theone.com/privacy-policy-uae'),
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.visibility,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'PRIVACY POLICY',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          if (customerId == '' || customerId == null) {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => LoginScreen(
+                                          screenKey: 'Menu Page',
+                                        )));
+                          } else {
+                            clearUserDetails()
+                                .whenComplete(() => Phoenix.rebirth(context));
+                          }
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    HeartIcon.logout,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    customerId == '' || customerId == null
+                                        ? 'login'.toUpperCase()
+                                        : 'logout'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: false,
+                      child: DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => NewSearchPage()));
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      Icons.search,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'New Search Page'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

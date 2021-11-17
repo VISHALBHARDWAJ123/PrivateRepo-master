@@ -163,8 +163,10 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       createStyle(accentPurpleColor),
     ];
     return SafeArea(
+
       top: true,
       bottom: true,
+      maintainBottomViewPadding: true,
       child: Scaffold(
         appBar: new AppBar(
             backgroundColor: ConstantsVar.appColor,

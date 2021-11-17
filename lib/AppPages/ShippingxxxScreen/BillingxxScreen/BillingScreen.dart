@@ -142,7 +142,10 @@ class _BillingDetailsState extends State<BillingDetails>
       );
     } else {
       return SafeArea(
+
         top: true,
+        bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
             appBar: AppBar(
               toolbarHeight: 18.w,

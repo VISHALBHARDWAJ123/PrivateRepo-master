@@ -191,6 +191,7 @@ class _SearchPageState extends State<SearchPage>
       child: SafeArea(
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           key: _scaffoldKey,
           resizeToAvoidBottomInset: false,

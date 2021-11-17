@@ -63,6 +63,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
     return SafeArea(
       top: true,
       bottom: true,
+      maintainBottomViewPadding: true,
       child: Scaffold(
         // backgroundColor: Page.background,
         appBar: AppBar(

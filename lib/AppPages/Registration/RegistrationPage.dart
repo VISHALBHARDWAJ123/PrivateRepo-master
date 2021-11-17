@@ -139,6 +139,8 @@ class _RegstrationPageState extends State<RegstrationPage>
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
       child: Scaffold(
         appBar: new AppBar(
             backgroundColor: ConstantsVar.appColor,
@@ -190,7 +192,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 3),
                                   child: TextFormField(
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     maxLength: 100,
                                     textInputAction: TextInputAction.next,
                                     controller: fController,
@@ -331,9 +334,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                       },
                                       textInputAction: TextInputAction.next,
                                       maxLines: 3,
-
                                       autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+                                          AutovalidateMode.onUserInteraction,
                                       controller: addressController,
                                       cursorColor: Colors.black,
                                       style: TextStyle(
@@ -395,7 +397,6 @@ class _RegstrationPageState extends State<RegstrationPage>
                                               child: Icon(
                                                 Icons.visibility,
                                                 size: 20,
-
                                               ),
                                             ),
                                             uncheckedWidget: Center(
@@ -403,7 +404,6 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                 Icons.visibility_off,
                                                 color: ConstantsVar.appColor,
                                                 size: 20,
-
                                               ),
                                             ),
                                           ),
@@ -467,8 +467,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                 isChecked: cpError,
                                                 checkedWidget: Center(
                                                   child: Icon(
-                                                    Icons
-                                                        .visibility,
+                                                    Icons.visibility,
                                                     size: 20,
                                                   ),
                                                 ),

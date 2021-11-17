@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 // import 'package:custom_dialog_flutter_demo/constants.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
@@ -80,29 +82,41 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        appBar: new AppBar(
-          toolbarHeight: 18.w,
-          centerTitle: true,
-          title: InkWell(
-            onTap: () => Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => MyApp(),
-                ),
-                (route) => false),
-            child: Image.asset(
-              'MyAssets/logo.png',
-              width: 15.w,
-              height: 15.w,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (currentFocus.hasFocus) {
+          setState(() {
+            currentFocus.unfocus();
+          });
+        }
+      },      child: SafeArea(
+        top: true,
+        bottom: true,
+        maintainBottomViewPadding: true,
+        child: Scaffold(
+          appBar: new AppBar(
+            toolbarHeight: 18.w,
+            backgroundColor: ConstantsVar.appColor,
+            centerTitle: true,
+            title: InkWell(
+              onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MyApp(),
+                  ),
+                  (route) => false),
+              child: Image.asset(
+                'MyAssets/logo.png',
+                width: 15.w,
+                height: 15.w,
+              ),
             ),
           ),
-        ),
-        body: Form(
-          key: _formKey,
-          child: contentBox(context),
+          body: Form(
+            key: _formKey,
+            child: contentBox(context),
+          ),
         ),
       ),
     );
@@ -154,12 +168,16 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                       ),
                     ),
                     subtitle: TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (firstName) {
                         if (isFirstName(firstName!))
                           return null;
                         else
                           return 'Enter your Name.';
                       },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       maxLines: 1,
                       controller: name,
                       style: TextStyle(
@@ -178,12 +196,17 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                       ),
                     ),
                     subtitle: TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (email) {
                         if (isEmailValid(email!))
                           return null;
                         else
                           return 'Enter a valid email address';
                       },
+
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       maxLines: 1,
                       // maxLength: 20,
                       controller: email,
@@ -203,8 +226,18 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                       ),
                     ),
                     subtitle: TextFormField(
-                      maxLines: 12,
-                      // maxLength: ,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      maxLines: 10,
+                      decoration: InputDecoration(
+
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (val){
+                        if(emailBody.text.length<5){
+                          return 'Please enter proper information ';
+                        }
+                        return null;
+                      },
                       controller: emailBody,
                       style: TextStyle(
                         color: Colors.black,
@@ -220,7 +253,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
               onTap: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  sendEnquiry().then((value) => Navigator.pop(context));
+                  sendEnquiry();
                 } else {}
               },
               child: Container(
@@ -242,15 +275,16 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     );
   }
 
-  Future sendEnquiry() async {
-    // final header = {"content-type": 'application/json'};
-    Map<String, dynamic> body = {};
-    // var apiToken;
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
+  Future  sendEnquiry() async {
+    CustomProgressDialog progressDialog =
+    CustomProgressDialog(context, blur: 2, dismissable: false);
+    progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
     ));
+    // final header = {"content-type": 'application/json'};
+    Map<String, dynamic> body = {};
+    // var apiToken;
     setState(() {
       // apiToken = '${ConstantsVar.apiTokken}';
       print(apiToken);
@@ -271,6 +305,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
         'contactUsModel': json.encode(contactUsBody)
       };
     });
+
     // String url = ;
     final uri =
         Uri.parse(BuildConfig.base_url + 'customer/SendContactUsEnquiry');
@@ -279,21 +314,12 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
       var response = await post(uri, body: body);
 
       print('${jsonDecode(response.body)}');
-      showDialog(
-          builder: (context) {
-            return CustomDialogBox(
-              descriptions: jsonDecode(response.body),
-              text: 'You will hear from us soon.',
-              img: '',
-              isOkay: false,
-            );
-          },
-          context: context);
-      context.loaderOverlay.hide();
-    } on Exception catch (e) {
+    Fluttertoast.showToast(msg: jsonDecode(response.body));
+      } on Exception catch (e) {
       print(e.toString());
       ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
+
     }
   }
 

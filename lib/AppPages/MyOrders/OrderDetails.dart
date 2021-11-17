@@ -44,7 +44,7 @@ class OrderDetails extends StatefulWidget {
       orderId;
 
   Color color;
-  final dynamic resultas;
+  dynamic resultas;
 
   @override
   _OrderDetailsState createState() => _OrderDetailsState();
@@ -616,6 +616,7 @@ class _OrderDetailsState extends State<OrderDetails>
                             String imageUrl = widget.resultas!['orderdetail']
                                 ['PictureList'][id];
                             print(imageUrl);
+                            setState(() {});
                             return orderItem(
                                 productId: productId,
                                 title: title,

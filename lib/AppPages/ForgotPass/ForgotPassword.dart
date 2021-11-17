@@ -29,6 +29,8 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
       child: Scaffold(
         appBar: new AppBar(
           backgroundColor: ConstantsVar.appColor,

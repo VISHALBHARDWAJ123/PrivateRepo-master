@@ -84,6 +84,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
       onWillPop: _willGoBack,
       child: SafeArea(
         top: true,
+        bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,

@@ -134,6 +134,7 @@ Future<void> main() async {
             title: 'The One',
             home: SplashScreen(),
             theme: ThemeData(
+
                 pageTransitionsTheme: PageTransitionsTheme(
                   builders: {
                     TargetPlatform.android: ZoomPageTransitionsBuilder(),

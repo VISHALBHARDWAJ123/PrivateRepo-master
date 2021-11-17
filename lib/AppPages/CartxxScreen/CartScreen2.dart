@@ -195,6 +195,7 @@ class _CartScreen2State extends State<CartScreen2>
         return SafeArea(
           top: true,
           bottom: true,
+          maintainBottomViewPadding: true,
           child: Scaffold(
             appBar: new AppBar(
               leading: widget.isOtherScren == true ? setBackIcon() : null,

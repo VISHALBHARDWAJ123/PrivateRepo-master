@@ -79,8 +79,10 @@ class _TopicPageState extends State<TopicPage> {
         }
       },
       child: SafeArea(
+
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: new AppBar(

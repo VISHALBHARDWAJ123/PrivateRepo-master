@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return LoaderOverlay(
       child: FlutterSizer(
-        builder: (context, ori, deviceType) =>  MyHomePage(
+        builder: (context, ori, deviceType) => MyHomePage(
           pageIndex: 0,
         ),
       ),
@@ -150,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage>
     return SafeArea(
       top: true,
       bottom: true,
+      maintainBottomViewPadding: true,
       child: WillPopScope(
         onWillPop: () async {
           //
@@ -263,7 +264,10 @@ class _MyHomePageState extends State<MyHomePage>
       case 1:
         return HomeCategory();
       case 2:
-        return SearchPage(keyword: '', isScreen: false,);
+        return SearchPage(
+          keyword: '',
+          isScreen: false,
+        );
       case 3:
         return CartScreen2(
           isOtherScren: false,

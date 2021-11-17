@@ -26,8 +26,10 @@ class _NotificationClassState extends State<NotificationClass> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
             appBar: new AppBar(
               backgroundColor: ConstantsVar.appColor,

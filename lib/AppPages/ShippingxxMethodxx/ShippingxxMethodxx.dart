@@ -54,6 +54,8 @@ class _ShippingMethodState extends State<ShippingMethod> {
       onWillPop: _willGo ? null : () async => false,
       child: SafeArea(
         top: true,
+        bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           appBar: new AppBar(
               backgroundColor: ConstantsVar.appColor,
@@ -74,7 +76,10 @@ class _ShippingMethodState extends State<ShippingMethod> {
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
+                    CupertinoPageRoute(
+                        builder: (context) => MyHomePage(
+                              pageIndex: 0,
+                            )),
                     (route) => false,
                   );
                 },
@@ -235,7 +240,15 @@ class _ShippingMethodState extends State<ShippingMethod> {
       setState(() {
         shippingMethods.addAll(methodResponse.shippingmethods.shippingMethods);
       });
+
       context.loaderOverlay.hide();
+      if (shippingMethods.isEmpty) {
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) =>
+                    PaymentPage(paymentUrl: widget.paymentUrl)));
+      }
     } on Exception catch (e) {
       context.loaderOverlay.hide();
 

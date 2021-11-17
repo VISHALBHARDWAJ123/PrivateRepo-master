@@ -70,7 +70,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
         }
       });
     } on Exception catch (e) {
-      ConstantsVar.excecptionMessage(e);    }
+      ConstantsVar.excecptionMessage(e);
+    }
   }
 
   /// this fu
@@ -146,6 +147,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
         onWillPop: _willGo ? null : () async => false,
         child: SafeArea(
           top: true,
+          bottom: true,
+          maintainBottomViewPadding: true,
           child: Scaffold(
               appBar: AppBar(
                 toolbarHeight: 18.w,
@@ -154,7 +157,10 @@ class _ShippingAddressState extends State<ShippingAddress> {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                         context,
-                        CupertinoPageRoute(builder: (context) => MyHomePage(pageIndex: 0,)),
+                        CupertinoPageRoute(
+                            builder: (context) => MyHomePage(
+                                  pageIndex: 0,
+                                )),
                         (route) => false);
                   },
                   child: Image.asset(
@@ -265,7 +271,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: LoadingButton(
                               color: Colors.white,
-                              defaultWidget: AutoSizeText(myPickPoint[index].name,
+                              defaultWidget: AutoSizeText(
+                                  myPickPoint[index].name,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 4.6.w, color: Colors.black)),

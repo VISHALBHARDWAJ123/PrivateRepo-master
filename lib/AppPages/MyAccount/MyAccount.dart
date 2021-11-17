@@ -50,6 +50,7 @@ class _MyAccountState extends State<MyAccount> {
       child: SafeArea(
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           appBar: new AppBar(
               leading: Platform.isAndroid

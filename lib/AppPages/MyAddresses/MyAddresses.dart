@@ -142,7 +142,8 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
       onWillPop:  _willGo?null:() async => false,
       child: SafeArea(
         top: true,
-        child: Scaffold(
+        bottom: true,
+        maintainBottomViewPadding: true,        child: Scaffold(
             appBar: AppBar(
               toolbarHeight: 18.w,
               backgroundColor: ConstantsVar.appColor,

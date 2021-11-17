@@ -237,8 +237,10 @@ List<String> searchSuggestions = [];
           }
         },
         child: SafeArea(
+
           top: true,
           bottom: true,
+          maintainBottomViewPadding: true,
           child: Scaffold(
               backgroundColor: Colors.white,
               resizeToAvoidBottomInset: true,

@@ -70,7 +70,10 @@ setState((){
         }
       },
       child: SafeArea(
+
         top: true,
+        bottom: true,
+        maintainBottomViewPadding: true,
         child: WillPopScope(
           onWillPop: _willGo ? _willGoBack : () async => false,
           child: Scaffold(

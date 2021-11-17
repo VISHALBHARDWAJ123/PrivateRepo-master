@@ -133,8 +133,10 @@ class _AddressScreenState extends State<AddressScreen>
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: SafeArea(
+
         top: true,
         bottom: true,
+        maintainBottomViewPadding: true,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: new AppBar(
