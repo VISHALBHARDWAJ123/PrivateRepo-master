@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,7 @@ import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/SearchSuggestions/SearchSuggestion.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/TopicPageResponse/TopicPageResponse.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
@@ -34,7 +36,7 @@ class HomeScreenMain extends StatefulWidget {
 class _HomeScreenMainState extends State<HomeScreenMain>
     with WidgetsBindingObserver {
   String bannerImage = '';
-  List<ServicesModel> modelList = [];
+  List<TopicItems> modelList = [];
   List<Bannerxx> banners = [];
   List<HomePageCategoriesImage> categoryList = [];
   List<HomePageProductImage> productList = [];
@@ -60,6 +62,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   String listString = '';
   var cokkie;
 
+  var _productController, _serviceController;
+
   void _scrollToBottom() {
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
@@ -81,6 +85,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   @override
   void initState() {
     super.initState();
+    _productController = new ScrollController();
+    _serviceController = new ScrollController();
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) {
@@ -102,26 +108,17 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   void _launchURL(String _url) async {
     if (_url.contains('fb')) {
-      Platform.isIOS?
+      Platform.isIOS
+          ? forIos(_url)
+          : forAndroid(_url);}else{
       await canLaunch(_url)
           ? await launch(
-              _url,
-              forceWebView: false,
-              forceSafariVC: false,
-            )
-          :await launch(
-        'fb://profile/10150150309565478',
+        _url,
         forceWebView: false,
         forceSafariVC: false,
       )
-    :
-      await canLaunch(_url)
-          ? await launch(
-              _url,
-              forceWebView: false,
-              forceSafariVC: false,
-            )
           : Fluttertoast.showToast(msg: 'Could not launch $_url');
+
     }
   }
 
@@ -565,18 +562,28 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                       ),
                                     ),
                                     Expanded(
-                                      child: ListView.builder(
-                                          controller: _scrollController,
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          // padding: EdgeInsets.symmetric(vertical:6),
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: productList.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return listContainer(
-                                                productList[index]);
-                                          }),
+                                      child: Scrollbar(
+                                        controller: _productController,
+                                        isAlwaysShown: true,
+                                        thickness: 4,
+                                        interactive: true,
+                                        hoverThickness: 4,
+                                        showTrackOnHover: true,
+                                        scrollbarOrientation:
+                                            ScrollbarOrientation.bottom,
+                                        child: ListView.builder(
+                                            controller: _scrollController,
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            // padding: EdgeInsets.symmetric(vertical:6),
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: productList.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return listContainer(
+                                                  productList[index]);
+                                            }),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -638,77 +645,105 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                 // ),
                                 Container(
                                   width: 100.w,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: modelList
-                                          .map((e) => InkWell(
-                                                onTap: () => e.desc.trim() != ''
-                                                    ? Navigator.push(
-                                                        context,
-                                                        CupertinoPageRoute(
-                                                          builder: (context) =>
-                                                              TopicPage(
-                                                            paymentUrl: e.desc,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : null,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          image:
-                                                              DecorationImage(
-                                                            image: AssetImage(
-                                                                e.imageName),
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                        ),
-                                                        width: 180,
-                                                        height: 180,
-                                                      ),
-                                                      Padding(
+                                  child: Stack(
+                                    children: [
+                                      Scrollbar(
+                                        controller: _serviceController,
+                                        isAlwaysShown: true,
+                                        thickness: 4,
+                                        interactive: true,
+                                        hoverThickness: 4,
+                                        showTrackOnHover: true,
+                                        scrollbarOrientation:
+                                            ScrollbarOrientation.bottom,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: modelList
+                                                .map((e) => InkWell(
+                                                      onTap: () =>
+                                                          e.url.trim() != ''
+                                                              ? Navigator.push(
+                                                                  context,
+                                                                  CupertinoPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            TopicPage(
+                                                                      paymentUrl:
+                                                                          e.url,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : null,
+                                                      child: Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 2.0,
-                                                          vertical: 11,
-                                                        ),
-                                                        child: Container(
-                                                          width: 180,
-                                                          child: AutoSizeText(
-                                                            e.shortDesc,
-                                                            maxLines: 1,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                                .all(5.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image: CachedNetworkImageProvider(
+                                                                      e.imagePath),
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                              width: 160,
+                                                              height: 160,
                                                             ),
-                                                          ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 2.0,
+                                                                vertical: 11,
+                                                              ),
+                                                              child: Container(
+                                                                width: 160,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  e.textToDisplay,
+                                                                  maxLines: 1,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
+                                                    ))
+                                                .toList(),
+                                          ),
+                                        ),
+                                      ),
+                                      // Positioned(
+                                      //     right: 1,
+                                      //     height: 180,
+                                      //     child: Icon(
+                                      //         Icons.arrow_forward_ios_outlined),),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -730,7 +765,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   child: AutoSizeText(
                                     'Follow us!'.toUpperCase(),
                                     style: TextStyle(
-                                      fontSize: 4.2.w,
+                                      fontSize: 5.w,
                                       fontWeight: FontWeight.bold,
                                       shadows: <Shadow>[
                                         Shadow(
@@ -768,7 +803,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                           MainAxisAlignment.center,
                                       children: socialLinks
                                           .map((e) => InkWell(
-                                              onTap: () async => _launchURL(e.url),
+                                              onTap: () async =>
+                                                  _launchURL(e.url),
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -941,7 +977,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     getSearchSuggestions();
-
+    getTopicPage();
     var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
@@ -990,7 +1026,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                   productList = products;
                   categoryList = categories;
                   categoryVisible = true;
-                  getServiceList();
+                  // getServiceList();
 
                   for (var i = 0; i < categoryList.length; i++) {
                     if (i % 2 == 0) {
@@ -1268,39 +1304,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void navigate(Widget className) => Navigator.push(
       context, CupertinoPageRoute(builder: (context) => className));
 
-  void getServiceList() {
-    modelList.add(
-      new ServicesModel(
-        desc: 'https://www.theone.com/delivery-assembly-4',
-        imageName: 'ServicesImages/delivery_icon.jpg',
-        shortDesc: 'Delivery & Assembly',
-      ),
-    );
-    modelList.add(
-      new ServicesModel(
-        desc: 'https://www.theone.com/home-styling-2',
-        imageName: 'ServicesImages/hs_icon.jpg',
-        shortDesc: 'Home Styling',
-      ),
-    );
-
-    modelList.add(
-      new ServicesModel(
-        desc: 'https://www.theone.com/easy-payment-plan-options-2',
-        imageName: 'ServicesImages/easy_payment_icon.jpg',
-        shortDesc: 'Easy Payment Plan',
-      ),
-    );
-    modelList.add(
-      new ServicesModel(
-        desc: 'http://www.theone.com/terms-conditions-3',
-        imageName: 'ServicesImages/terms&conditions_icon.jpeg',
-        shortDesc: 'Terms \& Conditions',
-      ),
-    );
-    setState(() {});
-  }
-
   void getSearchSuggestions() async {
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetActiveUAECategories');
 
@@ -1323,6 +1326,45 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
     }
+  }
+
+  void getTopicPage() async {
+    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetAppTopics');
+    try {
+      var response = await http.get(uri);
+      TopicPageResponse result = TopicPageResponse.fromJson(
+        jsonDecode(response.body),
+      );
+      modelList = result.responseData;
+      setState(() {});
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+    }
+  }
+
+  forIos(String _url) async{
+    await canLaunch(_url)
+        ? await launch(
+      _url,
+      forceWebView: false,
+      forceSafariVC: false,
+    )
+        : await launch(
+    'fb://profile/10150150309565478',
+    forceWebView: false,
+    forceSafariVC: false,
+    );
+  }
+
+  forAndroid(String _url) async{
+    await canLaunch(_url)
+        ? await launch(
+      _url,
+      forceWebView: false,
+      forceSafariVC: false,
+    )
+        : Fluttertoast.showToast(msg: 'Could not launch $_url');
+
   }
 }
 //Please wait for few seconds

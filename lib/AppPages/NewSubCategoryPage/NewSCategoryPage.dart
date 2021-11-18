@@ -486,7 +486,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: AutoSizeText(
-                                    widget.myList[index]['Name'],
+                                    widget.myList[index]['Name'].toString().toUpperCase(),
                                     maxLines: 2,
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
@@ -506,7 +506,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
               ),
             );
           },
-        ))
+        )),
       ],
     );
   }

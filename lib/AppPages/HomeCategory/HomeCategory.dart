@@ -384,7 +384,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                     child: Center(
                                                       child: AutoSizeText(
                                                           resultList[index]
-                                                              ['name'],
+                                                              ['name'].toUpperCase(),
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -537,7 +537,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                             const EdgeInsets.symmetric(horizontal: 8.0),
                                                                         child:
                                                                             AutoSizeText(
-                                                                          name,
+                                                                          name.toString().toUpperCase(),
                                                                           maxLines:
                                                                               2,
                                                                           textAlign:

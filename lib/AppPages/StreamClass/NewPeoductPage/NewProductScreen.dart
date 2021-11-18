@@ -55,7 +55,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
         print(searchSuggestions.length.toString());
       });
   }
-List<String> searchSuggestions = [];
+
+  List<String> searchSuggestions = [];
   var visible;
   var indVisibility;
   var snapshot;
@@ -83,7 +84,7 @@ List<String> searchSuggestions = [];
   FocusNode yourfoucs = FocusNode();
   ProductResponse? initialData;
   bool showSubBtn = false;
-  bool isSubAlready = false;
+
   String subBtnName = '';
   var apiToken;
   List<GiftCardModel> _giftCardPriceList = [];
@@ -148,14 +149,9 @@ List<String> searchSuggestions = [];
       ProductResponse myResponse = ProductResponse.fromJson(value);
       setState(() {
         initialData = myResponse;
-        isSubAlready = initialData!.subscribedToBackInStockSubscription;
 
         showSubBtn = initialData!.displayBackInStockSubscription;
-        if (isSubAlready == true) {
-          subBtnName = 'Unsubscribe';
-        } else {
-          subBtnName = 'Notify Me\!';
-        }
+        print('Subscribe btn >>>>>>>>>>>>>>>>'+initialData!.subscribedToBackInStockSubscription.toString());
         // List<Value> value=[] ;
         for (int i = 0; i <= initialData!.pictureModels.length - 1; i++) {
           image1 = initialData!.pictureModels[i].imageUrl;
@@ -231,13 +227,12 @@ List<String> searchSuggestions = [];
       );
     } else {
       return GestureDetector(
-        onTap:(){
+        onTap: () {
           if (!currentFocus.hasPrimaryFocus) {
             currentFocus.unfocus();
           }
         },
         child: SafeArea(
-
           top: true,
           bottom: true,
           maintainBottomViewPadding: true,
@@ -318,11 +313,9 @@ List<String> searchSuggestions = [];
                                 textEditingValue.text == '') {
                               return const Iterable<String>.empty();
                             }
-                            return searchSuggestions
-                                .where((String option) {
-                              return option
-                                  .toLowerCase()
-                                  .contains(textEditingValue.text.toLowerCase());
+                            return searchSuggestions.where((String option) {
+                              return option.toLowerCase().contains(
+                                  textEditingValue.text.toLowerCase());
                             });
                           },
                           onSelected: (String selection) {
@@ -346,16 +339,18 @@ List<String> searchSuggestions = [];
                                 if (mounted)
                                   setState(() {
                                     var value = _searchController.text;
-                                    Navigator.of(context).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => SearchPage(
-                                          isScreen: true,
-                                          keyword: value,
-                                        ),
-                                      ),
-                                    ).then((value) => setState((){
-                                      _searchController.text = '';
-                                    }));
+                                    Navigator.of(context)
+                                        .push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => SearchPage(
+                                              isScreen: true,
+                                              keyword: value,
+                                            ),
+                                          ),
+                                        )
+                                        .then((value) => setState(() {
+                                              _searchController.text = '';
+                                            }));
                                   });
 
                                 print('Pressed via keypad');
@@ -377,8 +372,8 @@ List<String> searchSuggestions = [];
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 13, horizontal: 10),
                                 hintText: 'Search here',
-                                labelStyle:
-                                    TextStyle(fontSize: 7.w, color: Colors.grey),
+                                labelStyle: TextStyle(
+                                    fontSize: 7.w, color: Colors.grey),
                                 suffixIcon: InkWell(
                                   onTap: () async {
                                     focusNode.unfocus();
@@ -389,16 +384,19 @@ List<String> searchSuggestions = [];
                                     if (mounted)
                                       setState(() {
                                         var value = _searchController.text;
-                                        Navigator.of(context).push(
-                                          CupertinoPageRoute(
-                                            builder: (context) => SearchPage(
-                                              isScreen: true,
-                                              keyword: value,
-                                            ),
-                                          ),
-                                        ).then((value) => setState((){
-                                          _searchController.clear();
-                                        }));
+                                        Navigator.of(context)
+                                            .push(
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    SearchPage(
+                                                  isScreen: true,
+                                                  keyword: value,
+                                                ),
+                                              ),
+                                            )
+                                            .then((value) => setState(() {
+                                                  _searchController.clear();
+                                                }));
                                       });
                                   },
                                   child: Icon(Icons.search_sharp),
@@ -426,21 +424,22 @@ List<String> searchSuggestions = [];
                                         thickness: 5,
                                         isAlwaysShown: true,
                                         child: ListView.builder(
-
                                           // padding: EdgeInsets.all(8.0),
                                           itemCount: options.length + 1,
-                                          itemBuilder:
-                                              (BuildContext context, int index) {
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
                                             if (index >= options.length) {
                                               return Align(
-                                                alignment: Alignment.bottomCenter,
+                                                alignment:
+                                                    Alignment.bottomCenter,
                                                 child: TextButton(
                                                   child: const Text(
                                                     'Clear',
                                                     style: TextStyle(
                                                       color:
                                                           ConstantsVar.appColor,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -462,7 +461,10 @@ List<String> searchSuggestions = [];
                                                               SearchPage(
                                                                 keyword: option,
                                                                 isScreen: true,
-                                                              ))).then((value) => _searchController.clear());
+                                                              ))).then(
+                                                      (value) =>
+                                                          _searchController
+                                                              .clear());
                                                 },
                                                 child: Container(
                                                   height: 5.2.h,
@@ -471,7 +473,8 @@ List<String> searchSuggestions = [];
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Container(
                                                         width: 100.w,
@@ -529,7 +532,8 @@ List<String> searchSuggestions = [];
                           discountedPrice != null ? discountedPrice : '',
                       disPercentage: discountPercentage,
                       showSub: showSubBtn,
-                      isSubAlready: isSubAlready,
+                      isSubAlready:
+                          initialData!.subscribedToBackInStockSubscription,
                     ),
                   ),
                   Container(
@@ -545,9 +549,10 @@ List<String> searchSuggestions = [];
                       text: stockAvailabilty.toString().contains('Out of stock')
                           ? 'out of stock'.toUpperCase()
                           : 'add to cart'.toUpperCase(),
-                      color: stockAvailabilty.toString().contains('Out of stock')
-                          ? Colors.grey.shade700
-                          : ConstantsVar.appColor,
+                      color:
+                          stockAvailabilty.toString().contains('Out of stock')
+                              ? Colors.grey.shade700
+                              : ConstantsVar.appColor,
                       isGiftCard: _isGiftCard,
                       isProductAttributeAvail: _isProductAttributeAvailable,
                       recipEmail: recEmailController.text,
@@ -585,7 +590,6 @@ List<String> searchSuggestions = [];
   }) {
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-
       children: [
         Padding(
           padding: const EdgeInsets.all(6.0),
@@ -849,8 +853,14 @@ List<String> searchSuggestions = [];
                                               .contains('Subscribed')) {
                                             value = 'Notify Me\!';
                                             subBtnName = value;
+                                            initialData!
+                                                    .subscribedToBackInStockSubscription =
+                                                false;
                                           } else {
                                             subBtnName = value;
+                                            initialData!
+                                                    .subscribedToBackInStockSubscription =
+                                               true;
                                           }
                                         }));
                               },
@@ -859,15 +869,20 @@ List<String> searchSuggestions = [];
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(subBtnName),
-                                      )),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(initialData!
+                                                  .subscribedToBackInStockSubscription ==
+                                              true
+                                          ? 'Notify Me\!'
+                                          : 'Unsubscribe'),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -1145,8 +1160,6 @@ List<String> searchSuggestions = [];
       ],
     );
   }
-
-
 }
 
 InputDecoration editBoxDecoration(String name, Icon icon, String prefixText) {

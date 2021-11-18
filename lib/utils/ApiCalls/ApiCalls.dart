@@ -1055,7 +1055,7 @@ class ApiCalls {
         _message = 'Subscribe';
         return _message;
       } else {
-        if (_message.contains('Unsubscribed')) {
+        if (_message.contains('Subscribed')) {
           Fluttertoast.showToast(
               msg: 'You will be notify soon when product available.',
               toastLength: Toast.LENGTH_LONG);

@@ -136,9 +136,7 @@ class _SearchPageState extends State<SearchPage>
     setState(() {
       initialData = widget.keyword;
     });
-    widget.isScreen == true
-        ?getInitSearch()
-        : null;
+    widget.isScreen == true ? getInitSearch() : null;
     _searchController = TextEditingController(text: initialData);
     //
 
@@ -169,8 +167,6 @@ class _SearchPageState extends State<SearchPage>
     );
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +237,8 @@ class _SearchPageState extends State<SearchPage>
                                             BorderRadius.circular(10.0)),
                                     elevation: 8.0,
                                     child: RawAutocomplete<String>(
-                                      initialValue: TextEditingValue(text:widget.keyword),
+                                      initialValue: TextEditingValue(
+                                          text: widget.keyword),
                                       optionsBuilder:
                                           (TextEditingValue textEditingValue) {
                                         if (textEditingValue.text == null ||
@@ -299,9 +296,9 @@ class _SearchPageState extends State<SearchPage>
                                             searchProducts(
                                                     val,
                                                     0,
-                                                widget._minPrice
+                                                    widget._minPrice
                                                         .toStringAsFixed(2),
-                                                widget._maxPrice
+                                                    widget._maxPrice
                                                         .toStringAsFixed(2))
                                                 .then((value) => print(value));
 
@@ -483,10 +480,14 @@ class _SearchPageState extends State<SearchPage>
                                                                       option
                                                                           .toString(),
                                                                       0,
-                                                                  widget
-                                                                      ._minPrice.toStringAsFixed(2),
-                                                                  widget
-                                                                      ._maxPrice.toStringAsFixed(2))
+                                                                      widget
+                                                                          ._minPrice
+                                                                          .toStringAsFixed(
+                                                                              2),
+                                                                      widget
+                                                                          ._maxPrice
+                                                                          .toStringAsFixed(
+                                                                              2))
                                                                   .then(
                                                                       (value) =>
                                                                           null);
@@ -696,7 +697,6 @@ class _SearchPageState extends State<SearchPage>
                                                             color: Colors.black,
                                                             fontSize: 5.w,
                                                             fontWeight:
-
                                                                 FontWeight
                                                                     .bold),
                                                         textAlign:
@@ -759,7 +759,6 @@ class _SearchPageState extends State<SearchPage>
                                                                   TextAlign
                                                                       .start,
                                                             ),
-
                                                           ],
                                                         ),
                                                       ),
@@ -968,6 +967,11 @@ class _SearchPageState extends State<SearchPage>
         } else {
           if (mounted)
             setState(() {
+              widget._maxPrice =
+                  mySearchResponse.responseData.priceRange.maxPrice;
+              widget._minPrice =
+                  mySearchResponse.responseData.priceRange.minPrice;
+              _range = RangeValues(widget._minPrice, widget._maxPrice);
               isLoadVisible = false;
               isFilterVisible = true;
               progressDialog.dismiss();
@@ -1027,7 +1031,7 @@ class _SearchPageState extends State<SearchPage>
     Fluttertoast.showToast(msg: 'Loading please wait');
     var prodName;
     CustomProgressDialog progressDialog =
-    CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
@@ -1065,14 +1069,12 @@ class _SearchPageState extends State<SearchPage>
           _refreshController.loadComplete();
           progressDialog.dismiss();
         });
-
       }
-      if(mySearchResponse.status.contains('Failed')){
+      if (mySearchResponse.status.contains('Failed')) {
         progressDialog.dismiss();
-        setState((){});
+        setState(() {});
       }
       progressDialog.dismiss();
-
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
       _refreshController.loadFailed();
@@ -1080,8 +1082,8 @@ class _SearchPageState extends State<SearchPage>
     }
     progressDialog.dismiss();
 
-    Fluttertoast.showToast(msg: '${searchedProducts.length.toString()}/${totalCount.toString()}');
-
+    Fluttertoast.showToast(
+        msg: '${searchedProducts.length.toString()}/${totalCount.toString()}');
   }
 
   Widget showSearchFilter(Animation<Offset> _animation) {
@@ -1315,8 +1317,8 @@ class _SearchPageState extends State<SearchPage>
                   child: RangeSlider(
                     activeColor: Colors.red,
                     inactiveColor: Colors.black,
-                    min: 0,
-                    max: 25000,
+                    min: widget._minPrice,
+                    max: widget._maxPrice,
                     values: _range,
                     onChanged: (value) {
                       print('$value');
@@ -1457,10 +1459,8 @@ class _SearchPageState extends State<SearchPage>
   }
 
   void getInitSearch() async {
-    await searchProducts(
-        widget.keyword, 0, _minPRICE.toString(), '25000');
+    await searchProducts(widget.keyword, 0, _minPRICE.toString(), '25000');
   }
-
 
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
@@ -1473,6 +1473,4 @@ class _SearchPageState extends State<SearchPage>
         print(searchSuggestions.length.toString());
       });
   }
-
-
 }

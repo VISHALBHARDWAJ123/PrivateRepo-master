@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage>
               iconText: <Widget>[
                 Text('Home',
                     style: TextStyle(color: Colors.black, fontSize: 11)),
-                Text('Products',
+                Text('Categories',
                     style: TextStyle(color: Colors.black, fontSize: 11)),
                 Text('Search',
                     style: TextStyle(color: Colors.black, fontSize: 11)),

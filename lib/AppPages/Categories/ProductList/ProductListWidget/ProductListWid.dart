@@ -360,7 +360,7 @@ class _prodListWidgetState extends State<prodListWidget> {
           ListTile(
             title: Center(
               child: AutoSizeText(
-                widget.title.toUpperCase(),
+                widget.title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 6.w,

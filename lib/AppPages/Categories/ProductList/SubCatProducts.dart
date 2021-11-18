@@ -197,7 +197,7 @@ class _ProductListState extends State<ProductList> {
               ),
               body: prodListWidget(
                 products: products,
-                title: widget.title,
+                title: widget.title.toString().toUpperCase(),
                 // result: result,
                 pageIndex: pageIndex,
                 id: '${widget.categoryId}',
