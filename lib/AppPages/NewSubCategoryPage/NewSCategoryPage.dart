@@ -403,7 +403,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           padding: EdgeInsets.all(2.h),
           child: Center(
             child: AutoSizeText(
-              widget.title,
+              widget.title.toString().toUpperCase(),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 6.w),
               softWrap: true,
             ),

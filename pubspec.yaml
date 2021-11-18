@@ -116,6 +116,9 @@ dependencies:
   checkbox_grouped: ^1.7.1
   material_design_icons_flutter: ^5.0.6295
   implicitly_animated_reorderable_list: ^0.4.2
+  draggable_scrollbar: ^0.1.0
+  vs_scrollbar: ^0.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

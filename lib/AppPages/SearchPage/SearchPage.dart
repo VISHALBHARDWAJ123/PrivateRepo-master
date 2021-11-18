@@ -102,7 +102,7 @@ class _SearchPageState extends State<SearchPage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  double _minPRICE = 0, _maxPRICE = 0;
+  double _minPRICE = 0, _maxPRICE = 25000;
 
   double _width = 0;
   double _height = 0;
@@ -359,11 +359,14 @@ class _SearchPageState extends State<SearchPage>
                                                           .toDouble(),
                                                       widget._maxPrice
                                                           .toDouble());
+                                                  pageIndex = 0;
                                                 });
+
+
                                                 searchProducts(
                                                         _searchController.text
                                                             .toString(),
-                                                        0,
+                                                        pageIndex,
                                                         '',
                                                         '')
                                                     .then((value) => null);
@@ -475,11 +478,12 @@ class _SearchPageState extends State<SearchPage>
                                                                     widget
                                                                         ._maxPrice
                                                                         .toDouble());
+                                                                pageIndex = 0;
                                                               });
                                                               searchProducts(
                                                                       option
                                                                           .toString(),
-                                                                      0,
+                                                                      pageIndex,
                                                                       widget
                                                                           ._minPrice
                                                                           .toStringAsFixed(
@@ -602,7 +606,7 @@ class _SearchPageState extends State<SearchPage>
                           // height:82.5.h,
                           child: Scrollbar(
                             isAlwaysShown: true,
-                            controller: _scrollController,
+                            controller: _scrollListController,
                             thickness: 10,
                             child: GridView.count(
                               controller: _scrollListController,
@@ -941,7 +945,6 @@ class _SearchPageState extends State<SearchPage>
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
       var jsonMap = jsonDecode(response.body);
-      print(jsonMap);
       if (mounted) if (jsonMap['ResponseData'] == null) {
         Fluttertoast.showToast(msg: 'No Product found');
         if (mounted)
@@ -972,6 +975,11 @@ class _SearchPageState extends State<SearchPage>
               widget._minPrice =
                   mySearchResponse.responseData.priceRange.minPrice;
               _range = RangeValues(widget._minPrice, widget._maxPrice);
+              print("minPrice >>>>>>>>" +widget._maxPrice.toString());
+
+              _minPRICE = widget._minPrice;
+              _maxPRICE = widget._maxPrice;
+
               isLoadVisible = false;
               isFilterVisible = true;
               progressDialog.dismiss();
@@ -1044,7 +1052,7 @@ class _SearchPageState extends State<SearchPage>
       widget.isScreen == true
           ? prodName = widget.keyword
           : prodName = _searchController.text.toString();
-      pageIndex = pageIndex + 1;
+      pageIndex ++;
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
@@ -1053,7 +1061,7 @@ class _SearchPageState extends State<SearchPage>
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
       var result = jsonDecode(response.body);
-      print(result);
+      // print(result);
       progressDialog.dismiss();
 
       SearchResponse mySearchResponse = SearchResponse.fromJson(result);

@@ -26,6 +26,7 @@ import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
@@ -562,17 +563,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                       ),
                                     ),
                                     Expanded(
-                                      child: Scrollbar(
+                                      child: VsScrollbar(
+                                        style: VsScrollbarStyle(thickness: 3.5),
                                         controller: _productController,
                                         isAlwaysShown: true,
-                                        thickness: 4,
-                                        interactive: true,
-                                        hoverThickness: 4,
-                                        showTrackOnHover: true,
-                                        scrollbarOrientation:
-                                            ScrollbarOrientation.bottom,
                                         child: ListView.builder(
-                                            controller: _scrollController,
+                                            controller: _productController,
                                             clipBehavior:
                                                 Clip.antiAliasWithSaveLayer,
                                             // padding: EdgeInsets.symmetric(vertical:6),
@@ -636,114 +632,95 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                // Container(
-                                //   width: 30.w,
-                                //   child: Divider(
-                                //     thickness: 4,
-                                //     color: ConstantsVar.appColor,
-                                //   ),
-                                // ),
-                                Container(
-                                  width: 100.w,
-                                  child: Stack(
-                                    children: [
-                                      Scrollbar(
-                                        controller: _serviceController,
-                                        isAlwaysShown: true,
-                                        thickness: 4,
-                                        interactive: true,
-                                        hoverThickness: 4,
-                                        showTrackOnHover: true,
-                                        scrollbarOrientation:
-                                            ScrollbarOrientation.bottom,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: modelList
-                                                .map((e) => InkWell(
-                                                      onTap: () =>
-                                                          e.url.trim() != ''
-                                                              ? Navigator.push(
-                                                                  context,
-                                                                  CupertinoPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            TopicPage(
-                                                                      paymentUrl:
-                                                                          e.url,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : null,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                image:
-                                                                    DecorationImage(
-                                                                  image: CachedNetworkImageProvider(
-                                                                      e.imagePath),
-                                                                  fit: BoxFit
-                                                                      .fill,
+
+                                VsScrollbar(
+
+                                  controller: _serviceController,
+                                  style: VsScrollbarStyle(thickness: 3.5),
+                                  isAlwaysShown: true,
+                                  child: SingleChildScrollView(
+                                    controller: _serviceController,
+                                    scrollDirection: Axis.horizontal,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal:
+                                      5.0),
+                                      child: Row(
+                                        children: modelList
+                                            .map((e) => InkWell(
+                                                  onTap: () =>
+                                                      e.url.trim() != ''
+                                                          ? Navigator.push(
+                                                              context,
+                                                              CupertinoPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        TopicPage(
+                                                                  paymentUrl:
+                                                                      e.url,
                                                                 ),
                                                               ),
-                                                              width: 160,
-                                                              height: 160,
+                                                            )
+                                                          : null,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(6.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            image:
+                                                                DecorationImage(
+                                                              image: CachedNetworkImageProvider(
+                                                                  e.imagePath),
+                                                              fit: BoxFit
+                                                                  .fill,
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 2.0,
-                                                                vertical: 11,
-                                                              ),
-                                                              child: Container(
-                                                                width: 160,
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  e.textToDisplay,
-                                                                  maxLines: 1,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
+                                                          ),
+                                                          width: 45.w,
+                                                          height: 45.w,
                                                         ),
-                                                      ),
-                                                    ))
-                                                .toList(),
-                                          ),
-                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 2.0,
+                                                            vertical: 11,
+                                                          ),
+                                                          child: Container(
+                                                            width: 45.w,
+                                                            child:
+                                                                AutoSizeText(
+                                                              e.textToDisplay,
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .grey,
+                                                                fontSize:
+                                                                    14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
                                       ),
-                                      // Positioned(
-                                      //     right: 1,
-                                      //     height: 180,
-                                      //     child: Icon(
-                                      //         Icons.arrow_forward_ios_outlined),),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -1366,6 +1343,19 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         : Fluttertoast.showToast(msg: 'Could not launch $_url');
 
   }
+
+final itemSize = 45.w;
+  _moveUp() {
+    _serviceController.animateTo(_serviceController.offset - itemSize,
+        curve: Curves.linear, duration: Duration(milliseconds: 500));
+  }
+  _moveDown() {
+    _serviceController.animateTo(_serviceController.offset + itemSize,
+        curve: Curves.linear, duration: Duration(milliseconds: 500));
+  }
+
+
+
 }
 //Please wait for few seconds
 
