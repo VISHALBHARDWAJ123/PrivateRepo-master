@@ -1,24 +1,26 @@
 //import 'dart:html';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
+
+// import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
-import 'package:untitled2/AppPages/SplashScreen/GuestxxResponsexx/GuestResponsexx.dart';
+
+// import 'package:untitled2/AppPages/SplashScreen/GuestxxResponsexx/GuestResponsexx.dart';
 import 'package:untitled2/AppPages/SplashScreen/TokenResponse/TokenxxResponsexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
-import 'package:untitled2/utils/utils/build_config.dart';
+// import 'package:untitled2/utils/utils/build_config.dart';
 
-import '../LoginScreen/LoginScreen.dart';
+// import '../LoginScreen/LoginScreen.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,7 +28,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   String name = "MyAssets/logo.png";
   var _guestCustomerID;
   var _guestGUID;
@@ -34,9 +37,14 @@ class _SplashScreenState extends State<SplashScreen> {
   var permDenied = "denied";
   var permUnknown = "unknown";
   var permProvisional = "provisional";
-  bool shouldScaleDown = true;// c
+  bool shouldScaleDown = true; // c
   final width = 200.0;
   final height = 300.0;
+  late AnimationController animationController;
+  var animation;
+
+  var isVisible = false;
+
   Future initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
   }
@@ -45,15 +53,26 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    animationController = new AnimationController(
+        vsync: this, duration: new Duration(seconds: 5));
+    animation =
+    new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
+    animation.addListener(() => this.setState(() {}));
+    animationController.forward();
     getCheckNotificationPermStatus();
+    Future.delayed(
+      Duration(seconds: 4, milliseconds: 80),
+    ).then((value) => setState(() => isVisible = true));
     initilaize().then((value) {
       _guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
       print('init');
       print('$_guestCustomerID');
       if (_guestCustomerID == null ||
           _guestCustomerID == '' ||
-          _guestCustomerID.toString().isEmpty) {
+          _guestCustomerID
+              .toString()
+              .isEmpty) {
         print('guestCustomerID is null');
         ApiCalls.getApiTokken(context).then((value) {
           TokenResponse myResponse = TokenResponse.fromJson(value);
@@ -64,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ConstantsVar.prefs.setString('sepGuid', _guestGUID!);
           int val = 0;
           ApiCalls.readCounter(
-                  customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+              customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
               .then((value) {
             setState(() {
               val = value;
@@ -77,16 +96,25 @@ class _SplashScreenState extends State<SplashScreen> {
                 ));
           });
         }
-            // },
-            );
+          // },
+        );
       } else {
         // int val = 0;
-        getCartBagdge().then((value) => Future.delayed(
-            Duration(seconds: 3),
-            () => Navigator.pushReplacement(
-                context, CupertinoPageRoute(builder: (context) => MyApp()))));
+        getCartBagdge().then(
+              (value) =>
+              Future.delayed(
+                Duration(seconds: 6),
+                    () =>
+                    Navigator.pushReplacement(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => MyApp(),
+                      ),
+                    ),
+              ),
+        );
       }
-    }).then((value) => getSearchSuggestions());
+    }).then((value) => null);
 
     // // } else {
     // }
@@ -96,6 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    animationController.dispose();
   }
 
   @override
@@ -110,16 +139,15 @@ class _SplashScreenState extends State<SplashScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(child: Image.asset(name)),
-                  SpinKitCircle(
-                    itemBuilder: (context, index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
-                        ),
-                      );
-                    },
+
+                  Container(
+                    width: animation.value * width,
+                    height: animation.value * height,
+                    child: Image.asset(name),
+                  ),
+                  SpinKitRipple(
+                    color: Colors.red,
+                    size: 60,
                   )
                 ],
               ),
@@ -143,8 +171,9 @@ class _SplashScreenState extends State<SplashScreen> {
     int val = 0;
     Future.delayed(
         Duration(seconds: 3),
-        () => ApiCalls.readCounter(
-                    customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+            () =>
+            ApiCalls.readCounter(
+                customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
                 .then((value) {
               if (mounted)
                 setState(() {
@@ -184,9 +213,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await NotificationPermissions.requestNotificationPermissions();
   }
 
- Future<void> getSearchSuggestions()  async {
-    final uri = Uri.parse("uri");
-
-
- }
+// Future<void> getSearchSuggestions() async {
+//   final uri = Uri.parse("uri");
+// }
 }

@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+import 'package:untitled2/AppPages/ReturnScreen/ReturnScreen.dart';
 
 // import 'package:untitled2/AppPages/MyOrders/Response/OrderDetailsResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
@@ -90,6 +91,7 @@ class _OrderDetailsState extends State<OrderDetails>
   String totalPrice = '';
 
   var shipping = '';
+  bool isReturnAvail = false;
 
   Widget orderItem({
     required String productId,
@@ -244,6 +246,8 @@ class _OrderDetailsState extends State<OrderDetails>
         subTotal = widget.resultas!['orderdetail']['orderDetailsModel']
             ['OrderSubtotal'];
         isRetryPayment = widget.resultas!['orderdetail']['RetryButton'];
+        isReturnAvail =
+            widget.resultas!['orderdetail']['orderDetailsModel']['IsReturnRequestAllowed'];
         if (isPickUpStore == true) {
         } else {
           sFirstName = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -425,6 +429,44 @@ class _OrderDetailsState extends State<OrderDetails>
                                   ? repayment()
                                   : reorder();
                             },
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isReturnAvail,
+                        child: SizedBox(
+                          height: 15,
+                        ),
+                      ),
+                      Visibility(
+                        visible: isReturnAvail,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: AppButton(
+                              color: ConstantsVar.appColor,
+                              child: Container(
+                                width: 100.w,
+                                height: 2.7.h,
+                                child: Center(
+                                  child: AutoSizeText(
+                                    'Return'.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 4.4.w,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => ReturnScreen(),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

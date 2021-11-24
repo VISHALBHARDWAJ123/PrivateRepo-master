@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
@@ -115,26 +113,6 @@ class _MyHomePageState extends State<MyHomePage>
 
   ListQueue<int> _navQueue = new ListQueue();
 
-  // List<Widget> viewsList = [
-  //   Container(
-  //     child: HomeScreenMain(
-  //         // key: PageStorageKey('HomeScreenMain'),
-  //         ),
-  //   ),
-  //   HomeCategory(
-  //       // key: PageStorageKey('HomeCategory'),
-  //       ),
-  //   SearchPage(
-  //       // key: PageStorageKey('SearchPage'),
-  //       ),
-  //   CartScreen2(
-  //       // key: PageStorageKey('CartScreen2'),
-  //       ),
-  //   MenuPage(
-  //       // key: PageStorageKey('MenuPage'),
-  //       ),
-  // ];
-
   @override
   void initState() {
     // TODO: implement initState
@@ -173,7 +151,44 @@ class _MyHomePageState extends State<MyHomePage>
         child: Scaffold(
           // transitionBackgroundColor: Colors.black54,
           key: _scaffoldKey,
-          body: getBodies(activeIndex),
+          body: OfflineBuilder(
+            debounceDuration: Duration.zero,
+            connectivityBuilder: (BuildContext context,
+                ConnectivityResult connectivity, Widget child) {
+              bool connected = connectivity != ConnectivityResult.none;
+              return new Stack(
+                fit: StackFit.expand,
+                children: [
+                  getBodies(activeIndex),
+                  Positioned(
+                    left: 0.0,
+                    right: 0.0,
+                    child: Visibility(
+                      visible: false,
+                      child: Container(
+                        width: 100.w,
+                        color: Color(0xFFEE4400),
+                        child: Center(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SpinKitCircle(
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                              Text("OFFLINE"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            child: Container(),
+          ),
           bottomNavigationBar: Container(
             color: Colors.black,
             height: 50,
@@ -218,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage>
               iconText: <Widget>[
                 Text('Home',
                     style: TextStyle(color: Colors.black, fontSize: 11)),
-                Text('Categories',
+                Text('Products',
                     style: TextStyle(color: Colors.black, fontSize: 11)),
                 Text('Search',
                     style: TextStyle(color: Colors.black, fontSize: 11)),

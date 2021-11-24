@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,6 @@ import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
-// import 'package:loader_overlay/loader_overlay.dart';
 
 import 'ProductResponse.dart';
 
@@ -82,7 +82,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
   bool isScroll = true;
   var assemblyCharges;
   FocusNode yourfoucs = FocusNode();
-  ProductResponse? initialData;
+   ProductResponse? initialDatas;
   bool showSubBtn = false;
 
   String subBtnName = '';
@@ -145,51 +145,55 @@ class _NewProductDetailsState extends State<NewProductDetails>
               context.read<cartCounter>().changeCounter(value);
             }));
 
-    ApiCalls.getProductData('$productID').then((value) {
+    ApiCalls.getProductData('$productID',context, guestCustomerID).then((value) {
       ProductResponse myResponse = ProductResponse.fromJson(value);
       setState(() {
-        initialData = myResponse;
+        initialDatas = myResponse;
 
-        showSubBtn = initialData!.displayBackInStockSubscription;
-        print('Subscribe btn >>>>>>>>>>>>>>>>'+initialData!.subscribedToBackInStockSubscription.toString());
+        showSubBtn = initialDatas!.displayBackInStockSubscription;
+        print('Subscribe btn >>>>>>>>>>>>>>>>' +
+            initialDatas!.subscribedToBackInStockSubscription.toString());
+        initialDatas!.subscribedToBackInStockSubscription == false
+            ? setState(() => subBtnName = 'Notify Me\!')
+            : setState(() => subBtnName = 'Unsubscribe');
         // List<Value> value=[] ;
-        for (int i = 0; i <= initialData!.pictureModels.length - 1; i++) {
-          image1 = initialData!.pictureModels[i].imageUrl;
-          image2 = initialData!.pictureModels[i].fullSizeImageUrl;
+        for (int i = 0; i <= initialDatas!.pictureModels.length - 1; i++) {
+          image1 = initialDatas!.pictureModels[i].imageUrl;
+          image2 = initialDatas!.pictureModels[i].fullSizeImageUrl;
           imageList.add(image1);
           largeImage.add(image2);
-          // setState((){value.addAll(initialData!.productAttributes[i].values);});
+          // setState((){value.addAll(initialData.productAttributes[i].values);});
         }
 
         // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
-        discountedPrice = initialData!.productPrice.priceWithDiscount;
+        discountedPrice = initialDatas!.productPrice.priceWithDiscount;
         discountedPrice != null
             ? isDiscountAvail = true
             : isDiscountAvail = false;
-        id = initialData!.id;
-        name = initialData!.name;
-        description = initialData!.shortDescription;
-        price = initialData!.productPrice.price;
+        id = initialDatas!.id;
+        name = initialDatas!.name;
+        description = initialDatas!.shortDescription;
+        price = initialDatas!.productPrice.price;
         priceValue =
-            double.parse(initialData!.productPrice.priceValue.toString());
-        sku = initialData!.sku;
-        stockAvailabilty = initialData!.stockAvailability;
-        discountPercentage = initialData!.discountPercentage;
-        _isGiftCard = initialData!.giftCard.isGiftCard;
-        if (initialData!.productAttributes!.length != 0) {
+            double.parse(initialDatas!.productPrice.priceValue.toString());
+        sku = initialDatas!.sku;
+        stockAvailabilty = initialDatas!.stockAvailability;
+        discountPercentage = initialDatas!.discountPercentage;
+        _isGiftCard = initialDatas!.giftCard.isGiftCard;
+        if (initialDatas!.productAttributes!.length != 0) {
           setState(() {
             isExtra = true;
-            productAttributeName = initialData!.productAttributes![0].name;
+            productAttributeName = initialDatas!.productAttributes![0].name;
           });
           for (int i = 0;
-              i < initialData!.productAttributes![0].values.length;
+              i < initialDatas!.productAttributes![0].values.length;
               i++) {
             setState(() {
               _giftCardPriceList.add(
                 new GiftCardModel(
-                  name: initialData!.productAttributes![0].values[i].name +
-                      '\[${initialData!.productAttributes![0].values[i].priceAdjustment}\]',
-                  id: initialData!.productAttributes![0].values[i].id
+                  name: initialDatas!.productAttributes![0].values[i].name +
+                      '\[${initialDatas!.productAttributes![0].values[i].priceAdjustment}\]',
+                  id: initialDatas!.productAttributes![0].values[i].id
                       .toString(),
                 ),
               );
@@ -197,11 +201,11 @@ class _NewProductDetailsState extends State<NewProductDetails>
             });
           }
 
-          if (initialData!.giftCard.isGiftCard == true) {
+          if (initialDatas!.giftCard.isGiftCard == true) {
             // setState(() {
             //   isExtra = true;
             //   productAttributeName =
-            //       initialData!.productAttributes![0].name.toString();
+            //       initialData.productAttributes![0].name.toString();
             // });
           }
         } else {
@@ -218,7 +222,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
   Widget build(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
-    if (initialData == null) {
+    if (initialDatas == null) {
       return SafeArea(
         child: Scaffold(
           body: Container(
@@ -227,16 +231,16 @@ class _NewProductDetailsState extends State<NewProductDetails>
       );
     } else {
       return GestureDetector(
-        onTap: () {
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: SafeArea(
-          top: true,
-          bottom: true,
-          maintainBottomViewPadding: true,
-          child: Scaffold(
+          onTap: () {
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: SafeArea(
+            top: true,
+            bottom: true,
+            maintainBottomViewPadding: true,
+            child: Scaffold(
               backgroundColor: Colors.white,
               resizeToAvoidBottomInset: true,
               appBar: new AppBar(
@@ -291,282 +295,313 @@ class _NewProductDetailsState extends State<NewProductDetails>
                   ),
                 ),
               ),
-              body: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    color: ConstantsVar.appColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        child: RawAutocomplete<String>(
-                          optionsBuilder: (TextEditingValue textEditingValue) {
-                            if (textEditingValue.text == null ||
-                                textEditingValue.text == '') {
-                              return const Iterable<String>.empty();
-                            }
-                            return searchSuggestions.where((String option) {
-                              return option.toLowerCase().contains(
-                                  textEditingValue.text.toLowerCase());
-                            });
-                          },
-                          onSelected: (String selection) {
-                            debugPrint('$selection selected');
-                          },
-                          fieldViewBuilder: (BuildContext context,
-                              TextEditingController textEditingController,
-                              FocusNode focusNode,
-                              VoidCallback onFieldSubmitted) {
-                            _searchController = textEditingController;
-                            _focusNode = focusNode;
-                            // FocusScopeNode currentFocus = FocusScopeNode.of(context);
-                            return TextFormField(
-                              autocorrect: true,
-                              enableSuggestions: true,
-                              onFieldSubmitted: (val) {
-                                focusNode.unfocus();
-                                if (currentFocus.hasPrimaryFocus) {
-                                  currentFocus.unfocus();
-                                }
-                                if (mounted)
-                                  setState(() {
-                                    var value = _searchController.text;
-                                    Navigator.of(context)
-                                        .push(
-                                          CupertinoPageRoute(
-                                            builder: (context) => SearchPage(
-                                              isScreen: true,
-                                              keyword: value,
-                                            ),
-                                          ),
-                                        )
-                                        .then((value) => setState(() {
-                                              _searchController.text = '';
-                                            }));
-                                  });
-
-                                print('Pressed via keypad');
-                              },
-                              textInputAction: isVisible
-                                  ? TextInputAction.done
-                                  : TextInputAction.search,
-                              // keyboardType: TextInputType.,
-                              keyboardAppearance: Brightness.light,
-                              // autofocus: true,
-                              onChanged: (_) => setState(() {
-                                btnColor = ConstantsVar.appColor;
-                              }),
-                              controller: _searchController,
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 5.w),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 13, horizontal: 10),
-                                hintText: 'Search here',
-                                labelStyle: TextStyle(
-                                    fontSize: 7.w, color: Colors.grey),
-                                suffixIcon: InkWell(
-                                  onTap: () async {
-                                    focusNode.unfocus();
-
-                                    if (!currentFocus.hasPrimaryFocus) {
-                                      currentFocus.unfocus();
-                                    }
-                                    if (mounted)
-                                      setState(() {
-                                        var value = _searchController.text;
-                                        Navigator.of(context)
-                                            .push(
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    SearchPage(
-                                                  isScreen: true,
-                                                  keyword: value,
-                                                ),
-                                              ),
-                                            )
-                                            .then((value) => setState(() {
-                                                  _searchController.clear();
-                                                }));
-                                      });
-                                  },
-                                  child: Icon(Icons.search_sharp),
+              body: initialDatas! != null
+                  ? Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          color: ConstantsVar.appColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5),
                                 ),
                               ),
-                              focusNode: _focusNode,
-                            );
-                          },
-                          optionsViewBuilder: (BuildContext context,
-                              AutocompleteOnSelected<String> onSelected,
-                              Iterable<String> options) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                top: 8.0,
-                                right: 10,
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Material(
-                                  child: Card(
-                                    child: Container(
-                                      height: 178,
-                                      child: Scrollbar(
-                                        controller: _suggestController,
-                                        thickness: 5,
-                                        isAlwaysShown: true,
-                                        child: ListView.builder(
-                                          // padding: EdgeInsets.all(8.0),
-                                          itemCount: options.length + 1,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            if (index >= options.length) {
-                                              return Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: TextButton(
-                                                  child: const Text(
-                                                    'Clear',
-                                                    style: TextStyle(
-                                                      color:
-                                                          ConstantsVar.appColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
+                              child: RawAutocomplete<String>(
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == null ||
+                                      textEditingValue.text == '') {
+                                    return const Iterable<String>.empty();
+                                  }
+                                  return searchSuggestions
+                                      .where((String option) {
+                                    return option.toLowerCase().contains(
+                                        textEditingValue.text.toLowerCase());
+                                  });
+                                },
+                                onSelected: (String selection) {
+                                  debugPrint('$selection selected');
+                                },
+                                fieldViewBuilder: (BuildContext context,
+                                    TextEditingController textEditingController,
+                                    FocusNode focusNode,
+                                    VoidCallback onFieldSubmitted) {
+                                  _searchController = textEditingController;
+                                  _focusNode = focusNode;
+                                  // FocusScopeNode currentFocus = FocusScopeNode.of(context);
+                                  return TextFormField(
+                                    autocorrect: true,
+                                    enableSuggestions: true,
+                                    onFieldSubmitted: (val) {
+                                      focusNode.unfocus();
+                                      if (currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
+                                      if (mounted)
+                                        setState(() {
+                                          var value = _searchController.text;
+                                          Navigator.of(context)
+                                              .push(
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      SearchPage(
+                                                    isScreen: true,
+                                                    keyword: value,
                                                   ),
-                                                  onPressed: () {
-                                                    _searchController.clear();
-                                                  },
                                                 ),
-                                              );
-                                            }
-                                            final String option =
-                                                options.elementAt(index);
-                                            return GestureDetector(
-                                                onTap: () {
-                                                  onSelected(option);
-                                                  Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                          builder: (context) =>
-                                                              SearchPage(
-                                                                keyword: option,
-                                                                isScreen: true,
-                                                              ))).then(
-                                                      (value) =>
-                                                          _searchController
-                                                              .clear());
-                                                },
-                                                child: Container(
-                                                  height: 5.2.h,
-                                                  width: 95.w,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        width: 100.w,
-                                                        child: AutoSizeText(
-                                                          '  ' + option,
+                                              )
+                                              .then((value) => setState(() {
+                                                    _searchController.text = '';
+                                                  }));
+                                        });
+
+                                      print('Pressed via keypad');
+                                    },
+                                    textInputAction: isVisible
+                                        ? TextInputAction.done
+                                        : TextInputAction.search,
+                                    // keyboardType: TextInputType.,
+                                    keyboardAppearance: Brightness.light,
+                                    // autofocus: true,
+                                    onChanged: (_) => setState(() {
+                                      btnColor = ConstantsVar.appColor;
+                                    }),
+                                    controller: _searchController,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 5.w),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 13, horizontal: 10),
+                                      hintText: 'Search here',
+                                      labelStyle: TextStyle(
+                                          fontSize: 7.w, color: Colors.grey),
+                                      suffixIcon: InkWell(
+                                        onTap: () async {
+                                          focusNode.unfocus();
+
+                                          if (!currentFocus.hasPrimaryFocus) {
+                                            currentFocus.unfocus();
+                                          }
+                                          if (mounted)
+                                            setState(() {
+                                              var value =
+                                                  _searchController.text;
+                                              Navigator.of(context)
+                                                  .push(
+                                                    CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          SearchPage(
+                                                        isScreen: true,
+                                                        keyword: value,
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .then((value) => setState(() {
+                                                        _searchController
+                                                            .clear();
+                                                      }));
+                                            });
+                                        },
+                                        child: Icon(Icons.search_sharp),
+                                      ),
+                                    ),
+                                    focusNode: _focusNode,
+                                  );
+                                },
+                                optionsViewBuilder: (BuildContext context,
+                                    AutocompleteOnSelected<String> onSelected,
+                                    Iterable<String> options) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      right: 10,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Material(
+                                        child: Card(
+                                          child: Container(
+                                            height: 178,
+                                            child: Scrollbar(
+                                              controller: _suggestController,
+                                              thickness: 5,
+                                              isAlwaysShown: true,
+                                              child: ListView.builder(
+                                                // padding: EdgeInsets.all(8.0),
+                                                itemCount: options.length + 1,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  if (index >= options.length) {
+                                                    return Align(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      child: TextButton(
+                                                        child: const Text(
+                                                          'Clear',
                                                           style: TextStyle(
-                                                            fontSize: 16,
-                                                            wordSpacing: 2,
-                                                            letterSpacing: 1,
+                                                            color: ConstantsVar
+                                                                .appColor,
                                                             fontWeight:
                                                                 FontWeight.bold,
+                                                            fontSize: 16,
                                                           ),
                                                         ),
+                                                        onPressed: () {
+                                                          _searchController
+                                                              .clear();
+                                                        },
                                                       ),
-                                                      Container(
-                                                        width: 100.w,
-                                                        child: Divider(
-                                                          thickness: 1,
-                                                          color: Colors
-                                                              .grey.shade400,
+                                                    );
+                                                  }
+                                                  final String option =
+                                                      options.elementAt(index);
+                                                  return GestureDetector(
+                                                      onTap: () {
+                                                        onSelected(option);
+                                                        Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        SearchPage(
+                                                                          keyword:
+                                                                              option,
+                                                                          isScreen:
+                                                                              true,
+                                                                        ))).then(
+                                                            (value) =>
+                                                                _searchController
+                                                                    .clear());
+                                                      },
+                                                      child: Container(
+                                                        height: 5.2.h,
+                                                        width: 95.w,
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              width: 100.w,
+                                                              child:
+                                                                  AutoSizeText(
+                                                                '  ' + option,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  wordSpacing:
+                                                                      2,
+                                                                  letterSpacing:
+                                                                      1,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: 100.w,
+                                                              child: Divider(
+                                                                thickness: 1,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade400,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ));
-                                          },
+                                                      ));
+                                                },
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          // flex: 9,
+                          child: customList(
+                            context: context,
+                            name: name,
+                            price: price,
+                            descritption: description,
+                            priceValue: '$priceValue',
+                            sku: sku,
+                            stockAvaialbility: stockAvailabilty,
+                            imageList: imageList,
+                            largeImage: largeImage,
+                            assemblyCharges: assemblyCharges,
+                            initialData: initialDatas!,
+                            isDiscountAvail: isDiscountAvail,
+                            discountedPrice:
+                                discountedPrice != null ? discountedPrice : '',
+                            disPercentage: discountPercentage,
+                            showSub: showSubBtn,
+                            isSubAlready: initialDatas!
+                                .subscribedToBackInStockSubscription,
+                          ),
+                        ),
+                        Container(
+                          width: 100.w,
+                          child: AddCartBtn(
+                            productId: id,
+                            isTrue: false,
+                            guestCustomerId: guestCustomerID,
+                            checkIcon: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? Icon(HeartIcon.cross)
+                                : Icon(Icons.check),
+                            text: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? 'out of stock'.toUpperCase()
+                                : 'add to cart'.toUpperCase(),
+                            color: stockAvailabilty
+                                    .toString()
+                                    .contains('Out of stock')
+                                ? Colors.grey.shade700
+                                : ConstantsVar.appColor,
+                            isGiftCard: _isGiftCard,
+                            isProductAttributeAvail:
+                                _isProductAttributeAvailable,
+                            recipEmail: recEmailController.text,
+                            name: _yourNameController.text,
+                            message: _messageController.text,
+                            attributeId: data,
+                            recipName: _recNameController.text,
+                            email: _yourEmailController.text,
+                          ),
+                        )
+                      ],
+                    )
+                  : Container(
+                      height: 100.h,
+                      child: Center(
+                        child: SpinKitRipple(
+                          size: 50,
+                          color: Colors.red,
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    // flex: 9,
-                    child: customList(
-                      context: context,
-                      name: name,
-                      price: price,
-                      descritption: description,
-                      priceValue: '$priceValue',
-                      sku: sku,
-                      stockAvaialbility: stockAvailabilty,
-                      imageList: imageList,
-                      largeImage: largeImage,
-                      assemblyCharges: assemblyCharges,
-                      initialData: initialData,
-                      isDiscountAvail: isDiscountAvail,
-                      discountedPrice:
-                          discountedPrice != null ? discountedPrice : '',
-                      disPercentage: discountPercentage,
-                      showSub: showSubBtn,
-                      isSubAlready:
-                          initialData!.subscribedToBackInStockSubscription,
-                    ),
-                  ),
-                  Container(
-                    width: 100.w,
-                    child: AddCartBtn(
-                      productId: id,
-                      isTrue: false,
-                      guestCustomerId: guestCustomerID,
-                      checkIcon:
-                          stockAvailabilty.toString().contains('Out of stock')
-                              ? Icon(HeartIcon.cross)
-                              : Icon(Icons.check),
-                      text: stockAvailabilty.toString().contains('Out of stock')
-                          ? 'out of stock'.toUpperCase()
-                          : 'add to cart'.toUpperCase(),
-                      color:
-                          stockAvailabilty.toString().contains('Out of stock')
-                              ? Colors.grey.shade700
-                              : ConstantsVar.appColor,
-                      isGiftCard: _isGiftCard,
-                      isProductAttributeAvail: _isProductAttributeAvailable,
-                      recipEmail: recEmailController.text,
-                      name: _yourNameController.text,
-                      message: _messageController.text,
-                      attributeId: data,
-                      recipName: _recNameController.text,
-                      email: _yourEmailController.text,
-                    ),
-                  )
-                ],
-              )),
-        ),
-      );
+            ),
+          ));
     }
   }
 
@@ -848,20 +883,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                         customerId: guestCustomerID,
                                         apiToken: apiToken)
                                     .then((value) => setState(() {
-                                          if (value
-                                              .toString()
-                                              .contains('Subscribed')) {
-                                            value = 'Notify Me\!';
-                                            subBtnName = value;
-                                            initialData!
-                                                    .subscribedToBackInStockSubscription =
-                                                false;
-                                          } else {
-                                            subBtnName = value;
-                                            initialData!
-                                                    .subscribedToBackInStockSubscription =
-                                               true;
-                                          }
+                                          subBtnName = value;
                                         }));
                               },
                               child: Ink(
@@ -876,11 +898,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(initialData!
-                                                  .subscribedToBackInStockSubscription ==
-                                              true
-                                          ? 'Notify Me\!'
-                                          : 'Unsubscribe'),
+                                      child: Text(subBtnName),
                                     ),
                                   ),
                                 ),
@@ -1125,14 +1143,19 @@ class _NewProductDetailsState extends State<NewProductDetails>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                child: AutoSizeText(
-                  name,
-                  style: TextStyle(
-                    fontSize: 6.w,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
+                child:
+                    HtmlWidget(initialDatas!.fullDescription,)
+                // AutoSizeText(
+                //   ConstantsVar.stripHtmlIfNeeded(
+                //       '''${initialDatas!.fullDescription}'''),
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontSize: 3.w,
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.grey.shade700,
+                //   ),
+                // )
+                ,
               ),
             ),
           ),

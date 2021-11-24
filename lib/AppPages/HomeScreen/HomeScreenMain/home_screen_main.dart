@@ -21,7 +21,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
-import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+// import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
@@ -59,15 +59,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   var _suggestController = ScrollController();
 
   String _titleName = '';
-  ScrollController _scrollController = ScrollController();
+  // ScrollController _scrollController = ScrollController();
   String listString = '';
   var cokkie;
 
-  var _productController, _serviceController;
-
-  void _scrollToBottom() {
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-  }
+  late ScrollController _productController, _serviceController;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -87,7 +83,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void initState() {
     super.initState();
     _productController = new ScrollController();
-    _serviceController = new ScrollController();
+    _serviceController = new ScrollController(initialScrollOffset: modelList.length +20.w);
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) {
@@ -109,17 +105,15 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   void _launchURL(String _url) async {
     if (_url.contains('fb')) {
-      Platform.isIOS
-          ? forIos(_url)
-          : forAndroid(_url);}else{
+      Platform.isIOS ? forIos(_url) : forAndroid(_url);
+    } else {
       await canLaunch(_url)
           ? await launch(
-        _url,
-        forceWebView: false,
-        forceSafariVC: false,
-      )
+              _url,
+              forceWebView: false,
+              forceSafariVC: false,
+            )
           : Fluttertoast.showToast(msg: 'Could not launch $_url');
-
     }
   }
 
@@ -162,7 +156,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       child: Container(
         color: Colors.black,
         child: Stack(
-          overflow: Overflow.visible,
           clipBehavior: Clip.hardEdge,
           children: <Widget>[
             Container(
@@ -632,9 +625,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-
                                 VsScrollbar(
-
                                   controller: _serviceController,
                                   style: VsScrollbarStyle(thickness: 3.5),
                                   isAlwaysShown: true,
@@ -642,27 +633,30 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                     controller: _serviceController,
                                     scrollDirection: Axis.horizontal,
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal:
-                                      5.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6.0),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: modelList
                                             .map((e) => InkWell(
-                                                  onTap: () =>
-                                                      e.url.trim() != ''
-                                                          ? Navigator.push(
-                                                              context,
-                                                              CupertinoPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        TopicPage(
-                                                                  paymentUrl:
-                                                                      e.url,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : null,
+                                                  onTap: () => e.url.trim() !=
+                                                          ''
+                                                      ? Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    TopicPage(
+                                                              paymentUrl: e.url,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : null,
                                                   child: Padding(
-                                                    padding: const EdgeInsets.all(6.0),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -678,12 +672,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                                 DecorationImage(
                                                               image: CachedNetworkImageProvider(
                                                                   e.imagePath),
-                                                              fit: BoxFit
-                                                                  .fill,
+                                                              fit: BoxFit.fill,
                                                             ),
                                                           ),
-                                                          width: 45.w,
-                                                          height: 45.w,
+                                                          width:
+                                                              Adaptive.w(43.6),
+                                                          height:
+                                                              Adaptive.w(45),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -694,19 +689,16 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                           ),
                                                           child: Container(
                                                             width: 45.w,
-                                                            child:
-                                                                AutoSizeText(
+                                                            child: AutoSizeText(
                                                               e.textToDisplay,
                                                               maxLines: 1,
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
-                                                              style:
-                                                                  TextStyle(
-                                                                color: Colors
-                                                                    .grey,
-                                                                fontSize:
-                                                                    14,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 14,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
@@ -954,8 +946,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     getSearchSuggestions();
-    getTopicPage();
-    var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
+    getTopicPage()
+        .whenComplete(() => setState(() => _serviceController.jumpTo(60)));
+    // var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
@@ -964,7 +957,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     ));
     progressDialog.show();
     String url =
-        BuildConfig.base_url + BuildConfig.banners + '?apiToken=' + '$value';
+        BuildConfig.base_url + BuildConfig.banners ;
 
     print('home_url $url');
 
@@ -1305,7 +1298,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     }
   }
 
-  void getTopicPage() async {
+  Future getTopicPage() async {
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetAppTopics');
     try {
       var response = await http.get(uri);
@@ -1313,49 +1306,48 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         jsonDecode(response.body),
       );
       modelList = result.responseData;
+
       setState(() {});
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
     }
   }
 
-  forIos(String _url) async{
+  forIos(String _url) async {
     await canLaunch(_url)
         ? await launch(
-      _url,
-      forceWebView: false,
-      forceSafariVC: false,
-    )
+            _url,
+            forceWebView: false,
+            forceSafariVC: false,
+          )
         : await launch(
-    'fb://profile/10150150309565478',
-    forceWebView: false,
-    forceSafariVC: false,
-    );
+            'fb://profile/10150150309565478',
+            forceWebView: false,
+            forceSafariVC: false,
+          );
   }
 
-  forAndroid(String _url) async{
+  forAndroid(String _url) async {
     await canLaunch(_url)
         ? await launch(
-      _url,
-      forceWebView: false,
-      forceSafariVC: false,
-    )
+            _url,
+            forceWebView: false,
+            forceSafariVC: false,
+          )
         : Fluttertoast.showToast(msg: 'Could not launch $_url');
-
   }
 
-final itemSize = 45.w;
-  _moveUp() {
-    _serviceController.animateTo(_serviceController.offset - itemSize,
-        curve: Curves.linear, duration: Duration(milliseconds: 500));
-  }
-  _moveDown() {
-    _serviceController.animateTo(_serviceController.offset + itemSize,
-        curve: Curves.linear, duration: Duration(milliseconds: 500));
-  }
+  final itemSize = 45.w;
 
-
-
+  // _moveUp() {
+  //   _serviceController.animateTo(_serviceController.offset - itemSize,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 500));
+  // }
+  //
+  // _moveDown() {
+  //   _serviceController.animateTo(_serviceController.offset + itemSize,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 500));
+  // }
 }
 //Please wait for few seconds
 

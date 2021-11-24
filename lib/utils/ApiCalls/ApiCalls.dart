@@ -272,37 +272,18 @@ class ApiCalls {
     }
   }
 
-  // static Future getHomeScreenCategory() async {
-  //   final uri = Uri.parse(BuildConfig.base_url +
-  //       'apis/GetTopLevelCategories'
-  //           '?apiToken=${ConstantsVar.apiTokken}');
-  //   try {
-  //     var response = await http.get(
-  //       uri,
-  //     );
-  //     switch (response.statusCode) {
-  //       case 200:
-  //         var result = jsonDecode(response.body);
-  //         print(result);
-  //         return result;
-  //       case 400:
-  //         return Fluttertoast.showToast(msg: 'Bad Request to the server');
-  //       case 401:
-  //         break;
-  //       default:
-  //     }
-  //   } on Exception catch (e) {
-  //     ConstantsVar.excecptionMessage(e);
-  //   }
-  // }
 
-  static Future getProductData(String productId) async {
-    final url = BuildConfig.base_url + 'apis/GetProductModelById?id=$productId';
+
+  static Future getProductData(String productId,BuildContext ctx,[String? customerid]) async {
+    final url = BuildConfig.base_url + 'apis/GetProductModelById?id=$productId&customerid=$customerid';
     print(url);
+
     try {
       final response = await http.get(Uri.parse(url), headers: header);
 
       print(jsonDecode(response.body));
+
+
       return jsonDecode(response.body);
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -1028,47 +1009,52 @@ class ApiCalls {
       if (_status.contains('Failed')) {
         if (_message.contains('No Customer Found with Id: $customerId')) {
           Fluttertoast.showToast(msg: 'Customer Id does not exist.');
-          _message = 'Subscribe';
+          _message = 'Notify Me\!';
           return _message;
         } else if (_message
             .contains('No product found with the specified id')) {
           Fluttertoast.showToast(
               msg: 'No product available with this product id: $productId',
               toastLength: Toast.LENGTH_LONG);
-          _message = 'Subscribe';
+          _message = 'Notify Me\!';
           return _message;
         } else if (_message.contains('Invalid API token: $apiToken')) {
           Fluttertoast.showToast(
               msg:
               'Api Token has been expired. Please log out or reinstall the app.',
               toastLength: Toast.LENGTH_LONG);
-          _message = 'Subscribe';
+          _message = 'Notify Me\!';
           return _message;
         } else if (_message
             .contains('Only registered customers can use this feature')) {
           Fluttertoast.showToast(
               msg: 'Only registered customers can use this feature.',
               toastLength: Toast.LENGTH_LONG);
-          _message = 'Subscribe';
+          _message = 'Notify Me\!';
           return _message;
         }
-        _message = 'Subscribe';
+        _message = 'Notify Me\!';
         return _message;
       } else {
         if (_message.contains('Subscribed')) {
           Fluttertoast.showToast(
               msg: 'You will be notify soon when product available.',
               toastLength: Toast.LENGTH_LONG);
+          _message = 'UnSubscribe';
+          return _message;
         } else {
           Fluttertoast.showToast(
               msg:
               'Please Click on Notify Me\! to get e-mail when this product is available for ordering again.',
               toastLength: Toast.LENGTH_LONG);
+          _message = 'Notify Me\!';
+          return _message;
         }
         return _message;
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
+
     }
   }
 }

@@ -12,8 +12,11 @@ import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/Contacts
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
+import 'package:untitled2/AppPages/New%20Splash%20Screen/NewSplashScrreen.dart';
 import 'package:untitled2/AppPages/NotificationxxScreen/Notification_Screen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/ReturnScreen/OrderReturnStatus/OrderReturnScreen.dart';
+import 'package:untitled2/AppPages/ReturnScreen/ReturnScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/NewSearchPage.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -688,6 +691,57 @@ class _MenuPageState extends State<MenuPage> {
                                     // color: Colors.white,
                                     child: AutoSizeText(
                                       'New Search Page'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: true,
+                      child: DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => OrderReturnDetailScreen()));
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      Icons.search,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'Order Return Screen'.toUpperCase(),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 5.w,

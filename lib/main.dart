@@ -96,13 +96,6 @@ Future<void> _messageHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
-  Workmanager().initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
-  Workmanager().registerPeriodicTask("1", simplePeriodicTask,
-      frequency: Duration(seconds: 10));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

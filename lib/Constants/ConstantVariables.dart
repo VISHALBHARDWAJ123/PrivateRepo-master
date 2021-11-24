@@ -102,7 +102,7 @@ class ConstantsVar {
   }
 
   static String stripHtmlIfNeeded(String text) {
-    return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
+    return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '\n');
   }
 
   static void excecptionMessage(Exception e) {

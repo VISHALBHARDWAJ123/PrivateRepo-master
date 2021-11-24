@@ -27,6 +27,7 @@ import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 enum AniProps { color }
 
@@ -38,7 +39,7 @@ class SearchPage extends StatefulWidget {
   }) : super(key: key);
   String keyword;
   final bool isScreen;
-  double _maxPrice = 25000, _minPrice = 0;
+  double? _maxPrice, _minPrice;
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -62,6 +63,7 @@ class _SearchPageState extends State<SearchPage>
   late AnimationController _animationController;
   final colorizeTextStyle =
       TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold);
+  bool isAlreadySet = false;
   var _range;
   var color1 = ConstantsVar.appColor;
   var color2 = Colors.black54;
@@ -102,8 +104,9 @@ class _SearchPageState extends State<SearchPage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  double _minPRICE = 0, _maxPRICE = 25000;
+  double? _minPRICE, _maxPRICE;
 
+  double tempMin = 0, tempMax = 25000;
   double _width = 0;
   double _height = 0;
   List<Specificationoption> _colorList = [];
@@ -120,6 +123,8 @@ class _SearchPageState extends State<SearchPage>
   var _hintText = 'Search Here';
 
   List<String> searchSuggestions = [];
+
+  var itemSize = 75.h;
 
   _scrollListener() {
     if (searchedProducts.length == 0) {
@@ -144,24 +149,24 @@ class _SearchPageState extends State<SearchPage>
       if (_scrollListController.position.pixels ==
           _scrollListController.position.maxScrollExtent) {
         print('Hi There I Am Triggered');
-        if (searchedProducts.length <= totalCount) {
-          _onLoading();
-        } else {
+        if (searchedProducts.length == totalCount) {
           Fluttertoast.showToast(msg: 'No more product available');
+        } else {
+          _onLoading();
         }
       }
     });
     scrollControllerFunct();
     _animationController =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
-    _maxPRICE = widget._maxPrice.toStringAsFixed(0).toDouble();
+    // _maxPRICE = widget._maxPrice.toStringAsFixed(0).toDouble();
 
     noMore = false;
     guestCustomerId = ConstantsVar.prefs.getString('guestCustomerID');
     Future.delayed(Duration.zero).then(
       (value) => setState(
         () {
-          _range = RangeValues(widget._minPrice, widget._maxPrice);
+          _range = RangeValues(widget._minPrice! + 1, widget._maxPrice! - 1);
         },
       ),
     );
@@ -189,6 +194,17 @@ class _SearchPageState extends State<SearchPage>
         bottom: true,
         maintainBottomViewPadding: true,
         child: Scaffold(
+          floatingActionButton: Visibility(
+            visible:
+                searchedProducts.length == 0 || searchedProducts.length < 10
+                    ? false
+                    : true,
+            child: FloatingActionButton.small(
+              backgroundColor: ConstantsVar.appColor,
+              onPressed: _moveDown,
+              child: Icon(Icons.arrow_downward),
+            ),
+          ),
           key: _scaffoldKey,
           resizeToAvoidBottomInset: false,
           appBar: new AppBar(
@@ -285,21 +301,13 @@ class _SearchPageState extends State<SearchPage>
                                               isVisible = false;
                                               noMore = false;
                                               _catId = '';
-                                              widget._minPrice = 0;
                                               pageIndex = 0;
-                                              widget._maxPrice = 25000;
+                                              isAlreadySet = false;
 
-                                              _range = RangeValues(
-                                                  widget._minPrice.toDouble(),
-                                                  widget._maxPrice.toDouble());
+                                              _maxPRICE = null;
+                                              _minPRICE = null;
                                             });
-                                            searchProducts(
-                                                    val,
-                                                    0,
-                                                    widget._minPrice
-                                                        .toStringAsFixed(2),
-                                                    widget._maxPrice
-                                                        .toStringAsFixed(2))
+                                            searchProducts(val, 0, '', '')
                                                 .then((value) => print(value));
 
                                             print('Pressed via keypad');
@@ -352,24 +360,17 @@ class _SearchPageState extends State<SearchPage>
                                                   _height = 0.h;
                                                   noMore = false;
                                                   _catId = '';
-                                                  widget._minPrice = 0;
-                                                  widget._maxPrice = 25000;
-                                                  _range = RangeValues(
-                                                      widget._minPrice
-                                                          .toDouble(),
-                                                      widget._maxPrice
-                                                          .toDouble());
+                                                  isAlreadySet = false;
+                                                  _maxPRICE = null;
+                                                  _minPRICE = null;
                                                   pageIndex = 0;
                                                 });
 
-
                                                 searchProducts(
-                                                        _searchController.text
-                                                            .toString(),
-                                                        pageIndex,
-                                                        '',
-                                                        '')
-                                                    .then((value) => null);
+                                                  _searchController.text
+                                                      .toString(),
+                                                  pageIndex,
+                                                ).then((value) => null);
                                               },
                                               child: Icon(Icons.search_sharp),
                                             ),
@@ -467,34 +468,15 @@ class _SearchPageState extends State<SearchPage>
                                                                 _height = 0.h;
                                                                 noMore = false;
                                                                 _catId = '';
-                                                                widget._minPrice =
-                                                                    0;
-                                                                widget._maxPrice =
-                                                                    25000;
-                                                                _range = RangeValues(
-                                                                    widget
-                                                                        ._minPrice
-                                                                        .toDouble(),
-                                                                    widget
-                                                                        ._maxPrice
-                                                                        .toDouble());
+
                                                                 pageIndex = 0;
                                                               });
                                                               searchProducts(
-                                                                      option
-                                                                          .toString(),
-                                                                      pageIndex,
-                                                                      widget
-                                                                          ._minPrice
-                                                                          .toStringAsFixed(
-                                                                              2),
-                                                                      widget
-                                                                          ._maxPrice
-                                                                          .toStringAsFixed(
-                                                                              2))
-                                                                  .then(
-                                                                      (value) =>
-                                                                          null);
+                                                                option
+                                                                    .toString(),
+                                                                pageIndex,
+                                                              ).then((value) =>
+                                                                  null);
                                                             },
                                                             child: Container(
                                                               height: 5.2.h,
@@ -604,10 +586,12 @@ class _SearchPageState extends State<SearchPage>
                         visible: isListVisible,
                         child: Container(
                           // height:82.5.h,
-                          child: Scrollbar(
+                          child: VsScrollbar(
+                            style: VsScrollbarStyle(
+                              thickness: 12,
+                            ),
                             isAlwaysShown: true,
                             controller: _scrollListController,
-                            thickness: 10,
                             child: GridView.count(
                               controller: _scrollListController,
                               // physics: AlwaysScrollableScrollPhysics(),
@@ -917,9 +901,9 @@ class _SearchPageState extends State<SearchPage>
 
   List<GetProductsByCategoryIdClass> searchedProducts = [];
 
-  Future searchProducts(String productName, int pageNumber, String minPrice,
-      String maxPrice) async {
-    _refreshController.refreshToIdle();
+  Future searchProducts(String productName, int pageNumber,
+      [String? minPrice, String? maxPrice]) async {
+    print('Hi There');
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
@@ -970,15 +954,17 @@ class _SearchPageState extends State<SearchPage>
         } else {
           if (mounted)
             setState(() {
-              widget._maxPrice =
-                  mySearchResponse.responseData.priceRange.maxPrice;
-              widget._minPrice =
-                  mySearchResponse.responseData.priceRange.minPrice;
-              _range = RangeValues(widget._minPrice, widget._maxPrice);
-              print("minPrice >>>>>>>>" +widget._maxPrice.toString());
+              if (isAlreadySet == false) {
+                widget._maxPrice =
+                    mySearchResponse.responseData.priceRange.maxPrice;
+                widget._minPrice =
+                    mySearchResponse.responseData.priceRange.minPrice;
+                _range = RangeValues(widget._minPrice!, widget._maxPrice!);
+                print("minPrice >>>>>>>>" + widget._maxPrice.toString());
 
-              _minPRICE = widget._minPrice;
-              _maxPRICE = widget._maxPrice;
+                tempMin = widget._minPrice!;
+                tempMax = widget._maxPrice!;
+              }
 
               isLoadVisible = false;
               isFilterVisible = true;
@@ -1039,7 +1025,7 @@ class _SearchPageState extends State<SearchPage>
     Fluttertoast.showToast(msg: 'Loading please wait');
     var prodName;
     CustomProgressDialog progressDialog =
-        CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: true);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
@@ -1052,11 +1038,11 @@ class _SearchPageState extends State<SearchPage>
       widget.isScreen == true
           ? prodName = widget.keyword
           : prodName = _searchController.text.toString();
-      pageIndex ++;
+      pageIndex++;
       print(pageIndex);
     });
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=${_minPRICE.toStringAsFixed(2)}&maxPrice=${_maxPRICE.toStringAsFixed(2)}&specId = $_mainString');
+        'apis/GetSearch?keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
@@ -1069,6 +1055,17 @@ class _SearchPageState extends State<SearchPage>
       setState(() {
         searchedProducts.addAll(
             mySearchResponse.responseData.getProductsByCategoryIdClasses);
+        if (isAlreadySet == false) {
+          widget._maxPrice =
+              mySearchResponse.responseData.priceRange.maxPrice;
+          widget._minPrice =
+              mySearchResponse.responseData.priceRange.minPrice;
+          _range = RangeValues(widget._minPrice!, widget._maxPrice!);
+          print("minPrice >>>>>>>>" + widget._maxPrice.toString());
+
+          tempMin = widget._minPrice!;
+          tempMax = widget._maxPrice!;
+        }
         _refreshController.loadComplete();
       });
 
@@ -1108,14 +1105,14 @@ class _SearchPageState extends State<SearchPage>
         width: _width,
         child: PageView.builder(
           physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) => ListView(
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(4),
+          itemBuilder: (context, index) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Visibility(
                 visible: _numberOfSeatList.isEmpty ? false : true,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(children: [
                     Container(
                       width: 25.w,
@@ -1151,13 +1148,14 @@ class _SearchPageState extends State<SearchPage>
                         showSelectedItemOnList: true,
                         onItemSelected: (value)
                             // wait mam
-                            {
+                          async  {
                           setState(() {
                             _isChecked = true;
                             _selectedSeats = value.name;
-
+                            pageIndex = 0;
                             _selectedSeatsId = '';
                             _selectedSeatsId = value.id + ',';
+                            searchProducts(_searchController.text, pageIndex);
                           });
                         },
                         child: normalChildButton(_selectedSeats),
@@ -1165,15 +1163,21 @@ class _SearchPageState extends State<SearchPage>
                         // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedSeats = '';
+                    Visibility(
+                      visible:_selectedSeatsId .isEmpty?false:true,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedSeats = '';
 
-                          _selectedSeatsId = '';
-                        });
-                      },
-                      icon: Icon(Icons.remove),
+                            _selectedSeatsId = '';
+                            pageIndex = 0;
+                              searchProducts(_searchController.text, pageIndex);
+
+                          });
+                        },
+                        icon: Icon(Icons.remove),
+                      ),
                     ),
                   ]),
                 ),
@@ -1181,8 +1185,7 @@ class _SearchPageState extends State<SearchPage>
               Visibility(
                 visible: _colorList.isEmpty ? false : true,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
-                  child: Row(children: [
+                  padding: EdgeInsets.symmetric(horizontal: 10),                  child: Row(children: [
                     Container(
                       width: 25.w,
                       child: AutoSizeText(
@@ -1217,22 +1220,29 @@ class _SearchPageState extends State<SearchPage>
                             _selectedColorsId = '';
 
                             _selectedColorsId = value.id + ',';
-
+                            pageIndex = 0;
                             _selectedColors = value.name;
                           });
+                          searchProducts(_searchController.text, pageIndex);
                         },
                         child: normalChildButton(_selectedColors),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedColors = '';
+                    Visibility(
+                      visible:_selectedColorsId.isEmpty?false:true,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedColors = '';
 
-                          _selectedColorsId = '';
-                        });
-                      },
-                      icon: Icon(Icons.remove),
+                            _selectedColorsId = '';
+                            pageIndex = 0;
+                              searchProducts(_searchController.text, pageIndex);
+
+                          });
+                        },
+                        icon: Icon(Icons.remove),
+                      ),
                     ),
                   ]),
                 ),
@@ -1240,8 +1250,7 @@ class _SearchPageState extends State<SearchPage>
               Visibility(
                 visible: _familyList.isEmpty ? false : true,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
-                  child: Row(children: [
+                  padding: EdgeInsets.symmetric(horizontal: 10),                  child: Row(children: [
                     Container(
                       width: 25.w,
                       child: AutoSizeText(
@@ -1276,6 +1285,8 @@ class _SearchPageState extends State<SearchPage>
                             _selectedFaimly = value.name;
                             _selectedFaimlyId = '';
                             _selectedFaimlyId = value.id + ',';
+                            pageIndex = 0;
+                            searchProducts(_searchController.text, pageIndex);
                           });
                         },
                         child: normalChildButton(_selectedFaimly),
@@ -1283,110 +1294,129 @@ class _SearchPageState extends State<SearchPage>
                         // label: Text(_selectedKey,style: TextStyle(fontSize: 18),),
                       ),
                     ),
-                    IconButton(
-                      splashColor: Colors.red,
-                      onPressed: () {
-                        setState(() {
-                          _selectedFaimly = '';
+                    Visibility(
+                      visible:   _selectedFaimlyId.isEmpty?false:true,
+                      child: IconButton(
+                        splashColor: Colors.red,
+                        onPressed: () {
+                          setState(() {
+                            _selectedFaimly = '';
 
-                          _selectedFaimlyId = '';
-                        });
-                      },
-                      icon: Icon(Icons.remove),
+                            _selectedFaimlyId = '';
+                            pageIndex = 0;
+                              searchProducts(_searchController.text, pageIndex);
+
+                          });
+                        },
+                        icon: Icon(Icons.remove),
+                      ),
                     ),
                   ]),
                 ),
               ),
               SizedBox(
-                height: 6,
+                height: 12,
               ),
-              AutoSizeText(
-                'Price Range: ',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 3.5.w,
-                ),
-              ),
-              Container(
-                width: 100.w,
-                child: SliderTheme(
-                  data: SliderThemeData(
-                    thumbColor: ConstantsVar.appColor,
-                    overlayColor: ConstantsVar.appColor,
-                    overlayShape: RoundSliderOverlayShape(
-                      overlayRadius: 16,
-                    ),
-                    trackHeight: 2,
-                    thumbShape: RoundSliderThumbShape(
-                      enabledThumbRadius: 3.0,
-                      disabledThumbRadius: 3.0,
-                    ),
-                  ),
-                  child: RangeSlider(
-                    activeColor: Colors.red,
-                    inactiveColor: Colors.black,
-                    min: widget._minPrice,
-                    max: widget._maxPrice,
-                    values: _range,
-                    onChanged: (value) {
-                      print('$value');
-                      setState(() {
-                        _range = value;
-                        _minPRICE = double.parse(_range.start.toString())
-                            .toStringAsFixed(2)
-                            .toDouble();
-                        _maxPRICE = double.parse(_range.end.toString())
-                            .toStringAsFixed(2)
-                            .toDouble();
-                      });
-                    },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: AutoSizeText(
+                  'Price Range: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 3.5.w,
                   ),
                 ),
               ),
-              Container(
-                width: 100.w,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Min Price: $_minPRICE'),
-                    Text('Max Price: $_maxPRICE'),
-                  ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  width: 100.w,
+                  child: SliderTheme(
+                    data: SliderThemeData(
+                      thumbColor: ConstantsVar.appColor,
+                      overlayColor: ConstantsVar.appColor,
+                      overlayShape: RoundSliderOverlayShape(
+                        overlayRadius: 16,
+                      ),
+                      trackHeight: 2,
+                      thumbShape: RoundSliderThumbShape(
+                        enabledThumbRadius: 3.0,
+                        disabledThumbRadius: 3.0,
+                      ),
+                    ),
+                    child: RangeSlider(
+                      activeColor: Colors.red,
+                      inactiveColor: Colors.black,
+                      min: widget._minPrice!,
+                      max: widget._maxPrice!,
+                      values: _range,
+                      onChanged: (value) {
+                        print('$value');
+                        setState(() {
+                          _range = value;
+                          _minPRICE = double.parse(_range.start.toString())
+                              .toStringAsFixed(2)
+                              .toDouble();
+                          _maxPRICE = double.parse(_range.end.toString())
+                              .toStringAsFixed(2)
+                              .toDouble();
+                          tempMin = _minPRICE!;
+                          tempMax = _maxPRICE!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  width: 100.w,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Min Price: $tempMin'),
+                      Text('Max Price: $tempMax'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
                 height: 6,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: AppButton(
-                  textStyle: TextStyle(color: Colors.white),
-                  height: 4.w,
-                  text: 'Apply Filters',
-                  color: ConstantsVar.appColor,
-                  splashColor: Colors.white,
-                  onTap: () async {
-                    // _minPrice = _minPriceController.text;
-                    // _maxPrice = _maxPriceController.text;
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AppButton(
+                    textStyle: TextStyle(color: Colors.white),
+                    height: 4.w,
+                    text: 'Apply Filters',
+                    color: ConstantsVar.appColor,
+                    splashColor: Colors.white,
+                    onTap: () {
+                      // Fluttertoast.showToast(msg: 'Hello There');
 
-                    setState(() {
-                      noMore = false;
-                      _height = 0;
-                    });
+                      setState(() {
+                        noMore = false;
+                        _height = 0;
+                        isAlreadySet = true;
+                        pageIndex = 0;
+                        setState(() => isVisible = false);
+                      });
 
-                    Future.delayed(
-                        Duration(
-                          seconds: 1,
-                        ),
-                        () => setState(() => isVisible = false));
-
-                    await searchProducts(
-                            _searchController.text.toString(),
-                            0,
-                            widget._minPrice.toStringAsFixed(2),
-                            _maxPRICE.toStringAsFixed(2))
-                        .then((value) => print(value));
-                  },
-                  width: 100.w,
+                      searchProducts(
+                              _searchController.text.toString(),
+                              0,
+                              _minPRICE.toString() == null
+                                  ? ''
+                                  : _minPRICE.toString(),
+                              _maxPRICE.toString() == null
+                                  ? ''
+                                  : _maxPRICE.toString())
+                          .then((value) => print(value));
+                    },
+                    width: 100.w,
+                  ),
                 ),
               ),
             ],
@@ -1467,7 +1497,10 @@ class _SearchPageState extends State<SearchPage>
   }
 
   void getInitSearch() async {
-    await searchProducts(widget.keyword, 0, _minPRICE.toString(), '25000');
+    await searchProducts(
+      widget.keyword,
+      0,
+    );
   }
 
   void initSharedPrefs() async {
@@ -1480,5 +1513,15 @@ class _SearchPageState extends State<SearchPage>
         searchSuggestions = testingList.cast<String>();
         print(searchSuggestions.length.toString());
       });
+  }
+
+  _moveDown() {
+    _scrollListController.animateTo(_scrollListController.offset + itemSize,
+        curve: Curves.linear, duration: Duration(milliseconds: 500));
+  }
+
+  _moveUp() {
+    _scrollListController.animateTo(_scrollListController.offset - itemSize,
+        curve: Curves.linear, duration: Duration(milliseconds: 500));
   }
 }
