@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
@@ -13,6 +14,7 @@ import 'package:roundcheckbox/roundcheckbox.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
+import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
@@ -66,8 +68,25 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
       maintainBottomViewPadding: true,
       child: Scaffold(
         // backgroundColor: Page.background,
-        appBar: AppBar(
+        appBar: new AppBar(
           backgroundColor: ConstantsVar.appColor,
+          title: InkWell(
+            onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MyHomePage(
+                    pageIndex: 0,
+                  ),
+                ),
+                    (route) => false),
+            child: Image.asset(
+              'MyAssets/logo.png',
+              width: 15.w,
+              height: 15.w,
+            ),
+          ),
+          centerTitle: true,
+          toolbarHeight: 18.w,
         ),
 
         body: GestureDetector(
@@ -390,7 +409,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage(
-                        'MyAssets/imagebackground.png',
+                        'MyAssets/imagebackground.jpeg',
                       ))),
               height: 25.h,
               child: Column(
@@ -448,7 +467,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage(
-                        'MyAssets/imagebackground.png',
+                        'MyAssets/imagebackground.jpeg',
                       ))),
               height: 25.h,
               child: Column(

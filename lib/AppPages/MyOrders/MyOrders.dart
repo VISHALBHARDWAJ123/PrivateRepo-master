@@ -488,13 +488,18 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                               ),
                                                               onTap: () async {
                                                                 print(
-                                                                    '${orders['customerorders']['Orders'][index]['CustomOrderNumber'].toString()}');
+                                                                    '${orders['customerorders']['Orders'][index]['Id'].toString()}');
                                                                 Navigator.push(
                                                                   context,
                                                                   CupertinoPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            ReturnScreen(),
+                                                                            ReturnScreen(
+                                                                      orderId: orders['customerorders']['Orders'][index]
+                                                                              [
+                                                                              'Id']
+                                                                          .toString(),
+                                                                    ),
                                                                   ),
                                                                 );
                                                               },

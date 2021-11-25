@@ -246,8 +246,8 @@ class _OrderDetailsState extends State<OrderDetails>
         subTotal = widget.resultas!['orderdetail']['orderDetailsModel']
             ['OrderSubtotal'];
         isRetryPayment = widget.resultas!['orderdetail']['RetryButton'];
-        isReturnAvail =
-            widget.resultas!['orderdetail']['orderDetailsModel']['IsReturnRequestAllowed'];
+        isReturnAvail = widget.resultas!['orderdetail']['orderDetailsModel']
+            ['IsReturnRequestAllowed'];
         if (isPickUpStore == true) {
         } else {
           sFirstName = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -462,7 +462,9 @@ class _OrderDetailsState extends State<OrderDetails>
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => ReturnScreen(),
+                                    builder: (context) => ReturnScreen(
+                                      orderId: widget.orderId.toString(),
+                                    ),
                                   ),
                                 );
                               },
