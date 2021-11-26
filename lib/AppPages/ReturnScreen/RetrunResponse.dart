@@ -132,7 +132,7 @@ class ReturnableItem {
     required this.unitPrice,
     required this.quantity,
     required this.id,
-    required this.customProperties,
+
   });
 
   int productId;
@@ -142,7 +142,6 @@ class ReturnableItem {
   String unitPrice;
   int quantity;
   int id;
-  CustomProperties customProperties;
 
   factory ReturnableItem.fromJson(Map<String, dynamic> json) => ReturnableItem(
     productId: json["ProductId"],
@@ -152,7 +151,7 @@ class ReturnableItem {
     unitPrice: json["UnitPrice"],
     quantity: json["Quantity"],
     id: json["Id"],
-    customProperties: CustomProperties.fromJson(json["CustomProperties"]),
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -163,6 +162,5 @@ class ReturnableItem {
     "UnitPrice": unitPrice,
     "Quantity": quantity,
     "Id": id,
-    "CustomProperties": customProperties.toJson(),
   };
 }

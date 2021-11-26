@@ -161,7 +161,8 @@ class _MenuPageState extends State<MenuPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(
@@ -269,7 +270,8 @@ class _MenuPageState extends State<MenuPage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Icon(Icons.phone,
-                                                    color: ConstantsVar.appColor),
+                                                    color:
+                                                        ConstantsVar.appColor),
                                                 SizedBox(
                                                   width: 10,
                                                 ),
@@ -358,9 +360,11 @@ class _MenuPageState extends State<MenuPage> {
                                       )));
                           if (result == true) {
                             setState(() {
-                              customerId = ConstantsVar.prefs.getString('userId');
+                              customerId =
+                                  ConstantsVar.prefs.getString('userId');
                               email = ConstantsVar.prefs.getString('email');
-                              userName = ConstantsVar.prefs.getString('userName');
+                              userName =
+                                  ConstantsVar.prefs.getString('userName');
                               phnNumber = ConstantsVar.prefs.getString('phone');
                               isPhoneNumberVisible = true;
                               isUserNameVisible = true;
@@ -512,10 +516,16 @@ class _MenuPageState extends State<MenuPage> {
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) =>
-                                      ContactUS(id: '', name: '', desc: '')));
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => ContactUS(
+                                id: '',
+                                name: '',
+                                desc: '',
+                                boolValue: false,
+                              ),
+                            ),
+                          );
                         },
                         child: Card(
                           color: Colors.white,
@@ -559,7 +569,8 @@ class _MenuPageState extends State<MenuPage> {
                         milliseconds: 70,
                       ),
                       child: InkWell(
-                        onTap: () async =>_launchURL( 'https://www.theone.com/privacy-policy-uae'),
+                        onTap: () async => _launchURL(
+                            'https://www.theone.com/privacy-policy-uae'),
                         child: Card(
                           color: Colors.white,
                           child: Padding(
@@ -705,57 +716,6 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: true,
-                      child: DelayedDisplay(
-                        delay: Duration(
-                          milliseconds: 70,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => OrderReturnDetailScreen()));
-                          },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.w,
-                                horizontal: 8.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    child: Icon(
-                                      Icons.search,
-                                      color: ConstantsVar.appColor,
-                                      size: 34,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    // color: Colors.white,
-                                    child: AutoSizeText(
-                                      'Order Return Screen'.toUpperCase(),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -811,46 +771,3 @@ class _MenuPageState extends State<MenuPage> {
     ConstantsVar.prefs.clear();
   }
 }
-
-// DelayedDisplay(
-//   delay: Duration(
-//     seconds: 1,
-//     microseconds: 100,
-//   ),
-//   child: Card(
-//     color: Colors.white,
-//
-//     // color: Colors.white,
-//     child: Padding(
-//       padding: EdgeInsets.symmetric(
-//         vertical: 6.w,
-//         horizontal: 8.w,
-//       ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Card(
-//             child: Icon(
-//               HeartIcon.user,
-//               color: ConstantsVar.appColor,
-//               size: 34,
-//             ),
-//           ),
-//           SizedBox(
-//             width: 20,
-//           ),
-//           Container(
-//             child: Text(
-//               'My Account'.toUpperCase(),
-//               style: TextStyle(
-//                 color: Colors.black,
-//                 fontSize: 5.w,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   ),
-// ),

@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
@@ -73,7 +74,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 height: 6,
               ),
               AutoSizeText(
-                widget.text,
+                widget.text.contains('Not Go') ? '' : widget.text,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -87,11 +88,15 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                   child: FlatButton(
                       color: Colors.black,
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => MyHomePage(pageIndex: 0,)),
-                            (route) => false);
+                        widget.text == 'Not Go'
+                            ? Navigator.pop(context)
+                            : Navigator.pushAndRemoveUntil(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => MyHomePage(
+                                          pageIndex: 0,
+                                        )),
+                                (route) => false);
                       },
                       child: Container(
                         color: Colors.black,

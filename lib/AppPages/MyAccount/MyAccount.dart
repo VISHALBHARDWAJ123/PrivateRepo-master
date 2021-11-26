@@ -15,6 +15,7 @@ import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/ReturnScreen/OrderReturnStatus/OrderReturnScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 
@@ -96,476 +97,628 @@ class _MyAccountState extends State<MyAccount> {
                 ),
               )),
           body: Container(
-              width: 100.w,
-              height: 100.h,
-              child: Column(
-                children: [
-                  Container(
-                    width: 100.w,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(
-                        child: AutoSizeText(
-                          'my account'.toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 8.5.w,
-                            fontWeight: FontWeight.bold,
-                          ),
+            width: 100.w,
+            height: 100.h,
+            child: Column(
+              children: [
+                Container(
+                  width: 100.w,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: AutoSizeText(
+                        'my account'.toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 8.5.w,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        DelayedDisplay(
-                          delay: Duration(
-                            milliseconds: 70,
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              ConstantsVar.prefs =
-                                  await SharedPreferences.getInstance();
-                              var customerId =
-                                  ConstantsVar.prefs.getString('userId');
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
 
-                              if (customerId == null || customerId == '') {
-                                showModalBottomSheet<void>(
-                                  // context and builder are
-                                  // required properties in this widget
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // we set up a container inside which
-                                    // we create center column and display text
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                'MyAssets/banner.jpg',
-                                              ))),
-                                      height: 40.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in with THE One account.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 5.w,
-                                                color: Colors.white),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Login',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        LoginScreen(
-                                                      screenKey: 'My Account',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Register',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        RegstrationPage(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => MyAddresses()));
-
-                                // Fluttertoast.showToast(msg: 'In Progress');
-                              }
-                            },
-                            // Navigator.push(
-                            //     context,
-                            //     CupertinoPageRoute(
-                            //         builder: (context) => CartScreen2())),
-                            child: Card(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 6.w,
-                                  horizontal: 8.w,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Card(
-                                      child: Icon(
-                                        HeartIcon.address,
-                                        color: ConstantsVar.appColor,
-                                        size: 34,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      // color: Colors.white,
-                                      child: AutoSizeText(
-                                        'my Addresses'.toUpperCase(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold,
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          'You are not logged in with THE One account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
                                         ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(
+                                                    screenKey: 'My Account',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => MyAddresses()));
+
+                              // Fluttertoast.showToast(msg: 'In Progress');
+                            }
+                          },
+                          // Navigator.push(
+                          //     context,
+                          //     CupertinoPageRoute(
+                          //         builder: (context) => CartScreen2())),
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      HeartIcon.address,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'my Addresses'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        DelayedDisplay(
-                          delay: Duration(
-                            milliseconds: 70,
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              ConstantsVar.prefs =
-                                  await SharedPreferences.getInstance();
-                              var customerId =
-                                  ConstantsVar.prefs.getString('userId');
+                      ),
+                      DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
 
-                              if (customerId == null || customerId == '') {
-                                showModalBottomSheet<void>(
-                                  // context and builder are
-                                  // required properties in this widget
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // we set up a container inside which
-                                    // we create center column and display text
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                'MyAssets/banner.jpg',
-                                              ))),
-                                      height: 40.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in with THE One account.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 5.w,
-                                                color: Colors.white),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Login',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        LoginScreen(
-                                                      screenKey: 'My Account',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Register',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        RegstrationPage(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => MyOrders(isFromWeb: false,),
-                                    ));
-                              }
-                            },
-                            child: Card(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 6.w,
-                                  horizontal: 8.w,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Card(
-                                      child: Icon(
-                                        HeartIcon.order,
-                                        color: ConstantsVar.appColor,
-                                        size: 34,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      // color: Colors.white,
-                                      child: AutoSizeText(
-                                        'my orders'.toUpperCase(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold,
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          'You are not logged in with THE One account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
                                         ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(
+                                                    screenKey: 'My Account',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => MyOrders(
+                                      isFromWeb: false,
+                                    ),
+                                  ));
+                            }
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      HeartIcon.order,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'my orders'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        DelayedDisplay(
-                          delay: Duration(
-                            milliseconds: 70,
-                          ),
-                          child: InkWell(
-                            // Fluttertoast.showToast(msg:'In Progress'),
+                      ),
+                      DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          // Fluttertoast.showToast(msg:'In Progress'),
 
-                            onTap: () async {
-                              ConstantsVar.prefs =
-                                  await SharedPreferences.getInstance();
-                              var customerId =
-                                  ConstantsVar.prefs.getString('userId');
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
 
-                              if (customerId == null || customerId == '') {
-                                showModalBottomSheet<void>(
-                                  // context and builder are
-                                  // required properties in this widget
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // we set up a container inside which
-                                    // we create center column and display text
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                'MyAssets/banner.jpg',
-                                              ))),
-                                      height: 40.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in with THE One account.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 5.w,
-                                                color: Colors.white),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Login',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        LoginScreen(
-                                                      screenKey: 'My Account',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              AppButton(
-                                                color: Colors.black,
-                                                child: Container(
-                                                  width: 30.w,
-                                                  child: Center(
-                                                    child: AutoSizeText(
-                                                      'Register',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    Navigator.pushReplacement(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        RegstrationPage(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => ChangePassword(),
-                                    ));
-                              }
-                            },
-                            child: Card(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 6.w,
-                                  horizontal: 8.w,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Card(
-                                      child: Icon(
-                                        Icons.password,
-                                        color: ConstantsVar.appColor,
-                                        size: 34,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      // color: Colors.white,
-                                      child: AutoSizeText(
-                                        'change password'.toUpperCase(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold,
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          'You are not logged in with THE One account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
                                         ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(
+                                                    screenKey: 'My Account',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => ChangePassword(),
+                                  ));
+                            }
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      Icons.password,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'change password'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      DelayedDisplay(
+                        delay: Duration(
+                          milliseconds: 70,
+                        ),
+                        child: InkWell(
+                          // Fluttertoast.showToast(msg:'In Progress'),
+
+                          onTap: () async {
+                            ConstantsVar.prefs =
+                                await SharedPreferences.getInstance();
+                            var customerId =
+                                ConstantsVar.prefs.getString('userId');
+
+                            if (customerId == null || customerId == '') {
+                              showModalBottomSheet<void>(
+                                // context and builder are
+                                // required properties in this widget
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // we set up a container inside which
+                                  // we create center column and display text
+                                  return Container(
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ))),
+                                    height: 40.h,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          'You are not logged in with THE One account.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 5.w,
+                                              color: Colors.white),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(
+                                                    screenKey: 'My Account',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppButton(
+                                              color: Colors.black,
+                                              child: Container(
+                                                width: 30.w,
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    'Register',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  Navigator.pushReplacement(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      RegstrationPage(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      OrderReturnDetailScreen(),
+                                ),
+                              );
+                            }
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.w,
+                                horizontal: 8.w,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Card(
+                                    child: Icon(
+                                      HeartIcon.order,
+                                      color: ConstantsVar.appColor,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    child: AutoSizeText(
+                                      'Return Request(s)'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

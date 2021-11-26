@@ -59,6 +59,8 @@ class HeartIcon {
 
   static const IconData instagram1 = IconData(0xf16d, fontFamily: _kFontFamInstagram, );
 
+  static const _kFontFamReturnRequest = 'ReturnRequest';
+  static const IconData returnRequest = IconData(0xe801, fontFamily: _kFontFamReturnRequest, );
 
 
   // static const IconData instagramNew = IconData(0xf16d, fontFamily: _kFontFamInsta, );

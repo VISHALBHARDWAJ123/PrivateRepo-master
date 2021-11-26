@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
@@ -26,6 +27,7 @@ class ContactUS extends StatefulWidget {
   final id;
   final name;
   final desc;
+  final bool boolValue;
 
   // final Route route;
 
@@ -34,6 +36,7 @@ class ContactUS extends StatefulWidget {
     required this.id,
     required this.name,
     required this.desc,
+    required this.boolValue,
   }) : super(key: key);
 
   @override
@@ -49,6 +52,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
   var apiToken;
 
   bool selected = true;
+  var _subject;
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -57,6 +61,9 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     // TODO: implement initState
     init();
     super.initState();
+    widget.boolValue == true
+        ? setState(() => _subject == 'THE One UAE Product Enquiry')
+        : setState(() => _subject == 'THE One UAE Contact us');
     getUserCreds().then((value) => setState(() {
           name.text = _userName;
           email.text = _email;
@@ -82,19 +89,20 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
 
   @override
   Widget build(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
     return GestureDetector(
       onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
         if (currentFocus.hasFocus) {
           setState(() {
             currentFocus.unfocus();
           });
         }
-      },      child: SafeArea(
+      },
+      child: SafeArea(
         top: true,
         bottom: true,
-        maintainBottomViewPadding: true,
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: new AppBar(
             toolbarHeight: 18.w,
             backgroundColor: ConstantsVar.appColor,
@@ -115,169 +123,181 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
           ),
           body: Form(
             key: _formKey,
-            child: contentBox(context),
+            child: Container(
+              width: 100.w,
+              height: 100.h,
+              // padding: EdgeInsets.only(top: 30),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 8,
+                            ),
+                            child: Container(
+                              width: 100.w,
+                              child: Center(
+                                child: AutoSizeText(
+                                  'Contact Us'.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 6.w,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView(
+                            // padding: EdgeInsets.all(10),
+                            shrinkWrap: true,
+                            children: [
+                              ListTile(
+                                title: AutoSizeText(
+                                  'YOUR NAME:',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 4.w,
+                                  ),
+                                ),
+                                subtitle: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (firstName) {
+                                    if (isFirstName(firstName!))
+                                      return null;
+                                    else
+                                      return 'Enter your Name.';
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  maxLines: 1,
+                                  controller: name,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              addVerticalSpace(10),
+                              ListTile(
+                                title: AutoSizeText(
+                                  'YOUR EMAIL:',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 4.w,
+                                  ),
+                                ),
+                                subtitle: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (email) {
+                                    if (isEmailValid(email!))
+                                      return null;
+                                    else
+                                      return 'Enter a valid email address';
+                                  },
+
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  maxLines: 1,
+                                  // maxLength: 20,
+                                  controller: email,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              addVerticalSpace(10),
+                              ListTile(
+                                title: AutoSizeText(
+                                  'ENQUIRY:',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 4.w,
+                                  ),
+                                ),
+                                subtitle: TextFormField(
+                                  textInputAction: TextInputAction.newline,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  maxLines: 10,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: (val) {
+                                    if (emailBody.text.length < 5) {
+                                      return 'Please enter proper information ';
+                                    }
+                                    return null;
+                                  },
+                                  controller: emailBody,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              // Container(height: 2,child: Divider(color: Colors.black,))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 100.w,
+                    color: ConstantsVar.appColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: LoadingButton(
+                        loadingWidget: SpinKitCircle(
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () async {
+                          if (currentFocus.hasFocus) {
+                            if (mounted)
+                              setState(() {
+                                currentFocus.unfocus();
+                              });
+                          }
+                          if (mounted) if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            await sendEnquiry();
+                            setState(() {});
+                          } else {}
+                        },
+                        defaultWidget: Text(
+                          'SUBMIT',
+                        ),
+                        color: ConstantsVar.appColor,
+                        type: LoadingButtonType.Raised,
+                        borderRadius: 0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget contentBox(context) {
-    return Container(
-      width: 100.w,
-      height: 100.h,
-      // padding: EdgeInsets.only(top: 30),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 8,
-              ),
-              child: Container(
-                width: 100.w,
-                child: Center(
-                  child: AutoSizeText(
-                    'Contact Us'.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 6.w,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                // padding: EdgeInsets.all(10),
-                shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: AutoSizeText(
-                      'YOUR NAME:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (firstName) {
-                        if (isFirstName(firstName!))
-                          return null;
-                        else
-                          return 'Enter your Name.';
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 1,
-                      controller: name,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  ListTile(
-                    title: AutoSizeText(
-                      'YOUR EMAIL:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (email) {
-                        if (isEmailValid(email!))
-                          return null;
-                        else
-                          return 'Enter a valid email address';
-                      },
-
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 1,
-                      // maxLength: 20,
-                      controller: email,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  ListTile(
-                    title: AutoSizeText(
-                      'ENQUIRY:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                      ),
-                    ),
-                    subtitle: TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      maxLines: 10,
-                      decoration: InputDecoration(
-
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (val){
-                        if(emailBody.text.length<5){
-                          return 'Please enter proper information ';
-                        }
-                        return null;
-                      },
-                      controller: emailBody,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  // Container(height: 2,child: Divider(color: Colors.black,))
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-              onTap: () async {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  sendEnquiry();
-                } else {}
-              },
-              child: Container(
-                color: ConstantsVar.appColor,
-                height: 15.w,
-                width: 100.w,
-                child: Center(
-                  child: AutoSizeText(
-                    'SUBMIT',
-                    style: TextStyle(
-                      fontSize: 5.4.w,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Future  sendEnquiry() async {
+  Future sendEnquiry() async {
     CustomProgressDialog progressDialog =
-    CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
@@ -287,12 +307,15 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     // var apiToken;
     setState(() {
       // apiToken = '${ConstantsVar.apiTokken}';
-      print(apiToken);
+      print(_subject);
       final contactUsBody = {
         'Email': email.text.toString(),
-        'Subject': emailBody.text.toString(),
-        'SubjectEnabled': false,
+        'Subject': widget.boolValue == true
+            ? 'THE One UAE Product Enquiry'
+            : 'THE One UAE Contact us',
+        'SubjectEnabled': true,
         'FullName': name.text.toString(),
+        'Enquiry': emailBody.text.toString(),
         'SuccessfullySent': false,
         'Result': null,
         'DisplayCaptcha': false,
@@ -314,12 +337,12 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
       var response = await post(uri, body: body);
 
       print('${jsonDecode(response.body)}');
-    Fluttertoast.showToast(msg: jsonDecode(response.body));
-      } on Exception catch (e) {
+      showSucessDialog(jsonDecode(response.body));
+      // Fluttertoast.showToast(msg: jsonDecode(response.body));
+    } on Exception catch (e) {
       print(e.toString());
       ConstantsVar.excecptionMessage(e);
       context.loaderOverlay.hide();
-
     }
   }
 
@@ -336,5 +359,18 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
         ? ConstantsVar.prefs.getString('email')
         : '';
     apiToken = ConstantsVar.apiTokken;
+  }
+
+  void showSucessDialog(String _message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CustomDialogBox(
+            descriptions: _message,
+            text: 'Not Go',
+            img: 'MyAssets/logo.png',
+            isOkay: true,
+          );
+        });
   }
 }

@@ -82,7 +82,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
   bool isScroll = true;
   var assemblyCharges;
   FocusNode yourfoucs = FocusNode();
-   ProductResponse? initialDatas;
+  ProductResponse? initialDatas;
   bool showSubBtn = false;
 
   String subBtnName = '';
@@ -140,81 +140,89 @@ class _NewProductDetailsState extends State<NewProductDetails>
       apiToken = ConstantsVar.prefs.getString('apiTokken');
     });
 
-    ApiCalls.readCounter(customerGuid: customerGuid)
-        .then((value) => setState(() {
-              context.read<cartCounter>().changeCounter(value);
-            }));
+    ApiCalls.readCounter(customerGuid: customerGuid).then((value) => mounted
+        ? setState(() {
+            context.read<cartCounter>().changeCounter(value);
+          })
+        : null);
 
-    ApiCalls.getProductData('$productID',context, guestCustomerID).then((value) {
+    ApiCalls.getProductData('$productID', context, guestCustomerID)
+        .then((value) {
       ProductResponse myResponse = ProductResponse.fromJson(value);
-      setState(() {
-        initialDatas = myResponse;
+      mounted
+          ? setState(() {
+              initialDatas = myResponse;
 
-        showSubBtn = initialDatas!.displayBackInStockSubscription;
-        print('Subscribe btn >>>>>>>>>>>>>>>>' +
-            initialDatas!.subscribedToBackInStockSubscription.toString());
-        initialDatas!.subscribedToBackInStockSubscription == false
-            ? setState(() => subBtnName = 'Notify Me\!')
-            : setState(() => subBtnName = 'Unsubscribe');
-        // List<Value> value=[] ;
-        for (int i = 0; i <= initialDatas!.pictureModels.length - 1; i++) {
-          image1 = initialDatas!.pictureModels[i].imageUrl;
-          image2 = initialDatas!.pictureModels[i].fullSizeImageUrl;
-          imageList.add(image1);
-          largeImage.add(image2);
-          // setState((){value.addAll(initialData.productAttributes[i].values);});
-        }
+              showSubBtn = initialDatas!.displayBackInStockSubscription;
+              print('Subscribe btn >>>>>>>>>>>>>>>>' +
+                  initialDatas!.subscribedToBackInStockSubscription.toString());
+              initialDatas!.subscribedToBackInStockSubscription == false
+                  ? setState(() => subBtnName = 'Notify Me\!')
+                  : setState(() => subBtnName = 'Unsubscribe');
+              // List<Value> value=[] ;
+              for (int i = 0;
+                  i <= initialDatas!.pictureModels.length - 1;
+                  i++) {
+                image1 = initialDatas!.pictureModels[i].imageUrl;
+                image2 = initialDatas!.pictureModels[i].fullSizeImageUrl;
+                imageList.add(image1);
+                largeImage.add(image2);
+                // setState((){value.addAll(initialData.productAttributes[i].values);});
+              }
 
-        // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
-        discountedPrice = initialDatas!.productPrice.priceWithDiscount;
-        discountedPrice != null
-            ? isDiscountAvail = true
-            : isDiscountAvail = false;
-        id = initialDatas!.id;
-        name = initialDatas!.name;
-        description = initialDatas!.shortDescription;
-        price = initialDatas!.productPrice.price;
-        priceValue =
-            double.parse(initialDatas!.productPrice.priceValue.toString());
-        sku = initialDatas!.sku;
-        stockAvailabilty = initialDatas!.stockAvailability;
-        discountPercentage = initialDatas!.discountPercentage;
-        _isGiftCard = initialDatas!.giftCard.isGiftCard;
-        if (initialDatas!.productAttributes!.length != 0) {
-          setState(() {
-            isExtra = true;
-            productAttributeName = initialDatas!.productAttributes![0].name;
-          });
-          for (int i = 0;
-              i < initialDatas!.productAttributes![0].values.length;
-              i++) {
-            setState(() {
-              _giftCardPriceList.add(
-                new GiftCardModel(
-                  name: initialDatas!.productAttributes![0].values[i].name +
-                      '\[${initialDatas!.productAttributes![0].values[i].priceAdjustment}\]',
-                  id: initialDatas!.productAttributes![0].values[i].id
-                      .toString(),
-                ),
-              );
-              print(_giftCardPriceList[i].name);
-            });
-          }
+              // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
+              discountedPrice = initialDatas!.productPrice.priceWithDiscount;
+              discountedPrice != null
+                  ? isDiscountAvail = true
+                  : isDiscountAvail = false;
+              id = initialDatas!.id;
+              name = initialDatas!.name;
+              description = initialDatas!.shortDescription;
+              price = initialDatas!.productPrice.price;
+              priceValue = double.parse(
+                  initialDatas!.productPrice.priceValue.toString());
+              sku = initialDatas!.sku;
+              stockAvailabilty = initialDatas!.stockAvailability;
+              discountPercentage = initialDatas!.discountPercentage;
+              _isGiftCard = initialDatas!.giftCard.isGiftCard;
+              if (initialDatas!.productAttributes!.length != 0) {
+                setState(() {
+                  isExtra = true;
+                  productAttributeName =
+                      initialDatas!.productAttributes![0].name;
+                });
+                for (int i = 0;
+                    i < initialDatas!.productAttributes![0].values.length;
+                    i++) {
+                  setState(() {
+                    _giftCardPriceList.add(
+                      new GiftCardModel(
+                        name: initialDatas!
+                                .productAttributes![0].values[i].name +
+                            '\[${initialDatas!.productAttributes![0].values[i].priceAdjustment}\]',
+                        id: initialDatas!.productAttributes![0].values[i].id
+                            .toString(),
+                      ),
+                    );
+                    print(_giftCardPriceList[i].name);
+                  });
+                }
 
-          if (initialDatas!.giftCard.isGiftCard == true) {
-            // setState(() {
-            //   isExtra = true;
-            //   productAttributeName =
-            //       initialData.productAttributes![0].name.toString();
-            // });
-          }
-        } else {
-          setState(() {
-            _isVisibility = true;
-            assemblyCharges = '';
-          });
-        }
-      });
+                if (initialDatas!.giftCard.isGiftCard == true) {
+                  // setState(() {
+                  //   isExtra = true;
+                  //   productAttributeName =
+                  //       initialData.productAttributes![0].name.toString();
+                  // });
+                }
+              } else {
+                setState(() {
+                  _isVisibility = true;
+                  assemblyCharges = '';
+                });
+              }
+            })
+          : null;
     });
   }
 
@@ -1143,8 +1151,9 @@ class _NewProductDetailsState extends State<NewProductDetails>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                child:
-                    HtmlWidget(initialDatas!.fullDescription,)
+                child: HtmlWidget(
+                  initialDatas!.fullDescription,
+                )
                 // AutoSizeText(
                 //   ConstantsVar.stripHtmlIfNeeded(
                 //       '''${initialDatas!.fullDescription}'''),
@@ -1164,8 +1173,13 @@ class _NewProductDetailsState extends State<NewProductDetails>
           onTap: () => Navigator.push(
               context,
               CupertinoPageRoute(
-                  builder: (context) =>
-                      ContactUS(id: sku, name: name, desc: descritption))),
+                builder: (context) => ContactUS(
+                  id: sku,
+                  name: name,
+                  desc: descritption,
+                  boolValue: true,
+                ),
+              )),
           child: Container(
             decoration: BoxDecoration(
                 border: Border.symmetric(

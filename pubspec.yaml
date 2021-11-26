@@ -242,6 +242,9 @@ flutter:
     - family: PrivacyClass
       fonts:
         - asset: MyAssets/icons/PrivacyClass.ttf
+    - family: ReturnRequest
+      fonts:
+        - asset: MyAssets/icons/ReturnRequest.ttf
 
   #    - family: Monstserrat
   #      fonts:

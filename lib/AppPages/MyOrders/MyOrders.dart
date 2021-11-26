@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
@@ -374,32 +375,38 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                       SizedBox(
                                                         height: 15,
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Center(
-                                                          child: AppButton(
+                                                      Container(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                        width: 100.w,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 4.0,
+                                                            vertical: 4.0,
+                                                          ),
+                                                          child: LoadingButton(
+                                                            loadingWidget:
+                                                                SpinKitCircle(
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 30,
+                                                            ),
                                                             color: ConstantsVar
                                                                 .appColor,
-                                                            child: Container(
-                                                              width: 100.w,
-                                                              height: 2.7.h,
-                                                              child: Center(
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  'Details',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        4.4.w,
-                                                                  ),
-                                                                ),
+                                                            defaultWidget:
+                                                                AutoSizeText(
+                                                              'Details'
+                                                                  .toUpperCase(),
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 4.4.w,
                                                               ),
                                                             ),
-                                                            onTap: () async {
+                                                            onPressed:
+                                                                () async {
                                                               print(
                                                                   '${orders['customerorders']['Orders'][index]['CustomOrderNumber'].toString()}');
                                                               await getOderDetails(

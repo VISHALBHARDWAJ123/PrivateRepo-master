@@ -21,6 +21,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+
 // import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
@@ -59,6 +60,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   var _suggestController = ScrollController();
 
   String _titleName = '';
+
   // ScrollController _scrollController = ScrollController();
   String listString = '';
   var cokkie;
@@ -83,7 +85,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void initState() {
     super.initState();
     _productController = new ScrollController();
-    _serviceController = new ScrollController(initialScrollOffset: modelList.length +20.w);
+    _serviceController =
+        new ScrollController(initialScrollOffset: modelList.length + 20.w);
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) {
@@ -187,10 +190,14 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                             width: 100.w,
                             child: Align(
                               alignment: Alignment.topRight,
-                              child: Image.asset('MyAssets/logo.png',
-                                  fit: BoxFit.fill,
-                                  width: Adaptive.w(14),
-                                  height: Adaptive.w(14)),
+                              child: Hero(
+                                tag: 'HomeImage',
+                                transitionOnUserGestures: true,
+                                child: Image.asset('MyAssets/logo.png',
+                                    fit: BoxFit.fill,
+                                    width: Adaptive.w(14),
+                                    height: Adaptive.w(14)),
+                              ),
                             ),
                           ),
                         ),
@@ -956,8 +963,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       size: 90,
     ));
     progressDialog.show();
-    String url =
-        BuildConfig.base_url + BuildConfig.banners ;
+    String url = BuildConfig.base_url + BuildConfig.banners;
 
     print('home_url $url');
 
@@ -1339,15 +1345,15 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   final itemSize = 45.w;
 
-  // _moveUp() {
-  //   _serviceController.animateTo(_serviceController.offset - itemSize,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 500));
-  // }
-  //
-  // _moveDown() {
-  //   _serviceController.animateTo(_serviceController.offset + itemSize,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 500));
-  // }
+// _moveUp() {
+//   _serviceController.animateTo(_serviceController.offset - itemSize,
+//       curve: Curves.linear, duration: Duration(milliseconds: 500));
+// }
+//
+// _moveDown() {
+//   _serviceController.animateTo(_serviceController.offset + itemSize,
+//       curve: Curves.linear, duration: Duration(milliseconds: 500));
+// }
 }
 //Please wait for few seconds
 

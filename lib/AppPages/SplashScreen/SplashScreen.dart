@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 5));
     animation =
-    new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+        new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
     animation.addListener(() => this.setState(() {}));
     animationController.forward();
@@ -70,9 +70,7 @@ class _SplashScreenState extends State<SplashScreen>
       print('$_guestCustomerID');
       if (_guestCustomerID == null ||
           _guestCustomerID == '' ||
-          _guestCustomerID
-              .toString()
-              .isEmpty) {
+          _guestCustomerID.toString().isEmpty) {
         print('guestCustomerID is null');
         ApiCalls.getApiTokken(context).then((value) {
           TokenResponse myResponse = TokenResponse.fromJson(value);
@@ -83,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen>
           ConstantsVar.prefs.setString('sepGuid', _guestGUID!);
           int val = 0;
           ApiCalls.readCounter(
-              customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+                  customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
               .then((value) {
             setState(() {
               val = value;
@@ -96,22 +94,20 @@ class _SplashScreenState extends State<SplashScreen>
                 ));
           });
         }
-          // },
-        );
+            // },
+            );
       } else {
         // int val = 0;
         getCartBagdge().then(
-              (value) =>
-              Future.delayed(
-                Duration(seconds: 6),
-                    () =>
-                    Navigator.pushReplacement(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => MyApp(),
-                      ),
-                    ),
+          (value) => Future.delayed(
+            Duration(seconds: 6),
+            () => Navigator.pushReplacement(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MyApp(),
               ),
+            ),
+          ),
         );
       }
     }).then((value) => null);
@@ -139,11 +135,21 @@ class _SplashScreenState extends State<SplashScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-
                   Container(
                     width: animation.value * width,
                     height: animation.value * height,
-                    child: Image.asset(name),
+                    child: Hero(
+                      tag: 'HomeImage',
+                      child: Image.asset(name),
+                      transitionOnUserGestures: true,
+                      placeholderBuilder: (context,_,widget) {
+                        return Container(
+                          height: 15.w,
+                          width: 15.w,
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    ),
                   ),
                   SpinKitRipple(
                     color: Colors.red,
@@ -171,9 +177,8 @@ class _SplashScreenState extends State<SplashScreen>
     int val = 0;
     Future.delayed(
         Duration(seconds: 3),
-            () =>
-            ApiCalls.readCounter(
-                customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+        () => ApiCalls.readCounter(
+                    customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
                 .then((value) {
               if (mounted)
                 setState(() {

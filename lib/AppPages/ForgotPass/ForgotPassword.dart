@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
@@ -104,15 +106,13 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                     suffixText: '*',
                                     counterText: '',
                                     border: OutlineInputBorder(gapPadding: 2),
-                                    errorText:
-                                        emailController.text.length == 0
-                                            ? 'Please Enter Your Email'
-                                            : null,
+                                    errorText: emailController.text.length == 0
+                                        ? 'Please Enter Your Email'
+                                        : null,
                                     focusColor: Colors.black,
                                     hintText: "E-Mail Address",
                                     hintStyle: TextStyle(color: Colors.black),
-                                    errorStyle:
-                                        TextStyle(color: Colors.black)),
+                                    errorStyle: TextStyle(color: Colors.black)),
                               ),
                             ),
                           ),
@@ -154,41 +154,30 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                 )),
                           ),
                           Expanded(
-                            child: RaisedButton(
-                                onPressed: () {
-                                  if (_forgotState.currentState!.validate()) {
-                                    _forgotState.currentState!.save();
-                                    ApiCalls.forgotPass(
-                                            context, emailController.text)
-                                        .whenComplete(() {
-                                      context.loaderOverlay.hide();
-                                      return showDialog(
-                                        context: context,
-                                        builder: (_) => loginCheck(),
-                                      );
-                                    });
-                                  } else {}
-                                },
-                                color: ConstantsVar.appColor,
-                                shape: RoundedRectangleBorder(),
-                                child: SizedBox(
-                                  height: 60,
-                                  width:
-                                      MediaQuery.of(context).size.width / 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        'CONFIRM',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0),
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                          ),
+                              child: LoadingButton(
+                            onPressed: () async {
+                              if (_forgotState.currentState!.validate()) {
+                                _forgotState.currentState!.save();
+                                await ApiCalls.forgotPass(
+                                        context, emailController.text)
+                                    .whenComplete(() {
+                                  context.loaderOverlay.hide();
+                                  return showDialog(
+                                    context: context,
+                                    builder: (_) => loginCheck(),
+                                  );
+                                });
+                              } else {}
+                            },
+                            color: ConstantsVar.appColor,
+                            loadingWidget: SpinKitCircle(
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            defaultWidget: AutoSizeText(
+                              'CONFIRM',
+                            ),
+                          )),
                         ],
                       ),
                     ),
