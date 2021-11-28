@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:ui';
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -36,7 +37,7 @@ class HomeScreenMain extends StatefulWidget {
 }
 
 class _HomeScreenMainState extends State<HomeScreenMain>
-    with WidgetsBindingObserver {
+     {
   String bannerImage = '';
   List<TopicItems> modelList = [];
   List<Bannerxx> banners = [];
@@ -66,20 +67,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   var cokkie;
 
   late ScrollController _productController, _serviceController;
+  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  SharedAxisTransitionType? _transitionType1 =
+      SharedAxisTransitionType.horizontal;
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.detached:
-        ConstantsVar.prefs.setString('searchList', '');
 
-        Fluttertoast.showToast(msg: 'Hi There. I am Detached now ');
-        print('Hi There. I am Detached now');
-
-        break;
-      default:
-    }
-  }
 
   @override
   void initState() {
@@ -96,7 +88,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       });
       apiCallToHomeScreen(value);
     });
-    WidgetsBinding.instance!.addObserver(this);
+
   }
 
   @override
@@ -120,10 +112,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     }
   }
 
-  // @override
-  // void didUpdateWidget (
-  //     )
-  //
   @override
   void dispose() {
     // TODO: implement dispose
@@ -646,75 +634,85 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: modelList
-                                            .map((e) => InkWell(
-                                                  onTap: () => e.url.trim() !=
-                                                          ''
-                                                      ? Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    TopicPage(
-                                                              paymentUrl: e.url,
+                                            .map((e) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: OpenContainer(
+                                                    transitionType:
+                                                        _transitionType,
+                                                    transitionDuration:
+                                                        Duration(
+                                                      seconds: 1,
+                                                    ),
+                                                    openBuilder: (BuildContext
+                                                            context,
+                                                        void Function(
+                                                                {Object?
+                                                                    returnValue})
+                                                            action) {
+                                                      return TopicPage(
+                                                        paymentUrl: e.url,
+                                                      );
+                                                    },
+                                                    closedBuilder:
+                                                        (BuildContext context,
+                                                            void Function()
+                                                                action) {
+                                                      return Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: CachedNetworkImageProvider(
+                                                                    e.imagePath),
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
                                                             ),
+                                                            width: Adaptive.w(
+                                                                43.6),
+                                                            height:
+                                                                Adaptive.w(45),
                                                           ),
-                                                        )
-                                                      : null,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            image:
-                                                                DecorationImage(
-                                                              image: CachedNetworkImageProvider(
-                                                                  e.imagePath),
-                                                              fit: BoxFit.fill,
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 2.0,
+                                                              vertical: 11,
                                                             ),
-                                                          ),
-                                                          width:
-                                                              Adaptive.w(43.6),
-                                                          height:
-                                                              Adaptive.w(45),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 2.0,
-                                                            vertical: 11,
-                                                          ),
-                                                          child: Container(
-                                                            width: 45.w,
-                                                            child: AutoSizeText(
-                                                              e.textToDisplay,
-                                                              maxLines: 1,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                            child: Container(
+                                                              width: 45.w,
+                                                              child:
+                                                                  AutoSizeText(
+                                                                e.textToDisplay,
+                                                                maxLines: 1,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                        ],
+                                                      );
+                                                    },
                                                   ),
                                                 ))
                                             .toList(),
@@ -889,9 +887,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                     height: 33.w,
                     // width: Adaptive.w(32),
                     // height: Adaptive.w(40),
-                    child: CachedNetworkImage(
-                      imageUrl: list.imageUrl[0],
-                      fit: BoxFit.fill,
+                    child: Hero(
+                      tag: 'ProductImage${list.id}',
+                      transitionOnUserGestures: true,
+                      child: CachedNetworkImage(
+                        imageUrl: list.imageUrl[0],
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
@@ -975,12 +977,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     if (response.statusCode == 200) {
       const start = "samesite=lax,";
       const end = "; expires";
-      final startIndex = response.headers.toString().indexOf(start);
-      final endIndex =
-          response.headers.toString().indexOf(end, startIndex + start.length);
-      print(response.headers
-          .toString()
-          .substring(startIndex + start.length, endIndex));
+
       mounted
           ? setState(() {
               showLoading = false;
@@ -1006,24 +1003,32 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
                   for (var i = 0; i < categoryList.length; i++) {
                     if (i % 2 == 0) {
-                      viewsList.add(categroryLeftView(
-                          categoryList[i].name,
-                          categoryList[i].imageUrl,
-                          categoryList[i].id,
-                          categoryList[i].isSubCategory));
+                      viewsList.add(
+                        categroryLeftView(
+                            categoryList[i].name,
+                            categoryList[i].imageUrl,
+                            categoryList[i].id,
+                            categoryList[i].isSubCategory),
+                      );
                     } else {
-                      viewsList.add(categoryRightView(
-                          categoryList[i].name,
-                          categoryList[i].imageUrl,
-                          categoryList[i].id,
-                          categoryList[i].isSubCategory));
+                      viewsList.add(
+                        categoryRightView(
+                            categoryList[i].name,
+                            categoryList[i].imageUrl,
+                            categoryList[i].id,
+                            categoryList[i].isSubCategory),
+                      );
                     }
 
                     progressDialog.dismiss();
                   }
                 }
               })
-            : null;
+            : viewsList.add(
+                Container(
+                  child: Text('Something Went Wrong'),
+                ),
+              );
       }
       progressDialog.dismiss();
     } else {
@@ -1049,103 +1054,108 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            InkWell(
-              onTap: () {
-                if (type == true) {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) =>
-                              SubCatNew(catId: '$categoryId', title: name)));
-                } else {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) {
-                    return ProductList(
-                      categoryId: '$categoryId',
-                      title: name,
-                    );
-                  }));
-                }
-              },
-              child: Container(
+            OpenContainer(
+              tappable: true,
+
+              transitionType: _transitionType,
+              closedBuilder: (BuildContext context, void Function() action) {
+                return Container(
                   width: Adaptive.w(45),
                   height: Adaptive.w(45),
                   child:
-                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
-            ),
-            InkWell(
-              onTap: () {
+                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill),
+                );
+              },
+              openBuilder: (BuildContext context,
+                  void Function({Object? returnValue}) action) {
                 if (type == true) {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) =>
-                              SubCatNew(catId: '$categoryId', title: name)));
+                  return SubCatNew(
+                    catId: '$categoryId',
+                    title: name,
+                  );
                 } else {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) {
-                    return ProductList(
-                      categoryId: '$categoryId',
-                      title: name,
-                    );
-                  }));
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
                 }
               },
-              child: Container(
-                width: Adaptive.w(48),
-                height: Adaptive.w(45),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        width: Adaptive.w(48),
-                        height: Adaptive.w(45),
-                        color: Colors.black,
-                        // height: 12.h,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.w, horizontal: 5.w),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              AutoSizeText(
-                                name.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+            ),
+            OpenContainer(
+              tappable: true,
+
+              transitionType: _transitionType,
+              openBuilder: (BuildContext context,
+                  void Function({Object? returnValue}) action) {
+                if (type == true) {
+                  return SubCatNew(
+                    catId: '$categoryId',
+                    title: name,
+                  );
+                } else {
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
+                }
+              },
+              closedBuilder: (BuildContext context, void Function() action) {
+                return Container(
+                  width: Adaptive.w(48),
+                  height: Adaptive.w(45),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Container(
+                          width: Adaptive.w(48),
+                          height: Adaptive.w(45),
+                          color: Colors.black,
+                          // height: 12.h,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.w, horizontal: 5.w),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                AutoSizeText(
+                                  name.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Container(
-                                  width: 15.w,
-                                  child:
-                                      Divider(height: 2, color: Colors.white),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Container(
+                                    width: 15.w,
+                                    child:
+                                        Divider(height: 2, color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: AutoSizeText('Shop Now',
-                                    style: TextStyle(color: Colors.grey),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: AutoSizeText('Shop Now',
+                                      style: TextStyle(color: Colors.grey),
+                                      textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                          width: 5.w,
-                          height: 5.w,
-                          child: Image.asset('MyAssets/icon.png')),
-                    )
-                  ],
-                ),
-              ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                            width: 5.w,
+                            height: 5.w,
+                            child: Image.asset('MyAssets/icon.png')),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -1164,106 +1174,110 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            InkWell(
-              onTap: () {
+            OpenContainer(
+              tappable: true,
+
+              transitionType: _transitionType,
+              openBuilder: (BuildContext context,
+                  void Function({Object? returnValue}) action) {
                 if (type == true) {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) =>
-                              SubCatNew(catId: '$categoryId', title: name)));
+                  return SubCatNew(
+                    catId: '$categoryId',
+                    title: name,
+                  );
                 } else {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) {
-                    return ProductList(
-                      categoryId: '$categoryId',
-                      title: name,
-                    );
-                  }));
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
                 }
               },
-              child: Container(
-                width: Adaptive.w(48),
-                height: Adaptive.w(45),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 11.0),
-                      child: Container(
-                        width: Adaptive.w(48),
-                        height: Adaptive.w(45),
-                        color: Colors.black,
-                        // height: 12.h,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.w, horizontal: 8.w),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              AutoSizeText(
-                                name.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+              closedBuilder: (BuildContext context, void Function() action) {
+                return Container(
+                  width: Adaptive.w(48),
+                  height: Adaptive.w(45),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 11.0),
+                        child: Container(
+                          width: Adaptive.w(48),
+                          height: Adaptive.w(45),
+                          color: Colors.black,
+                          // height: 12.h,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.w, horizontal: 8.w),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                AutoSizeText(
+                                  name.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Container(
-                                  width: 15.w,
-                                  child:
-                                      Divider(height: 2, color: Colors.white),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Container(
+                                    width: 15.w,
+                                    child:
+                                        Divider(height: 2, color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: AutoSizeText('Shop Now',
-                                    style: TextStyle(color: Colors.grey),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: AutoSizeText('Shop Now',
+                                      style: TextStyle(color: Colors.grey),
+                                      textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                          width: 10.w,
-                          height: 10.w,
-                          child: Image.asset(
-                            'MyAssets/icon1.png',
-                            fit: BoxFit.fill,
-                          )),
-                    )
-                  ],
-                ),
-              ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                            width: 10.w,
+                            height: 10.w,
+                            child: Image.asset(
+                              'MyAssets/icon1.png',
+                              fit: BoxFit.fill,
+                            )),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
-            InkWell(
-              onTap: () {
+            OpenContainer(
+              tappable: true,
+             
+              transitionType: _transitionType,
+              closedBuilder: (BuildContext context, void Function() action) {
+                return Container(
+                    width: Adaptive.w(45),
+                    height: Adaptive.w(45),
+                    child: CachedNetworkImage(
+                        imageUrl: imageUrl, fit: BoxFit.fill));
+              },
+              openBuilder: (BuildContext context,
+                  void Function({Object? returnValue}) action) {
                 if (type == true) {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) =>
-                              SubCatNew(catId: '$categoryId', title: name)));
+                  return SubCatNew(
+                    catId: '$categoryId',
+                    title: name,
+                  );
                 } else {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) {
-                    return ProductList(
-                      categoryId: '$categoryId',
-                      title: name,
-                    );
-                  }));
+                  return ProductList(
+                    categoryId: '$categoryId',
+                    title: name,
+                  );
                 }
               },
-              child: Container(
-                  width: Adaptive.w(45),
-                  height: Adaptive.w(45),
-                  child:
-                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill)),
             ),
           ],
         ),
@@ -1344,18 +1358,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   }
 
   final itemSize = 45.w;
-
-// _moveUp() {
-//   _serviceController.animateTo(_serviceController.offset - itemSize,
-//       curve: Curves.linear, duration: Duration(milliseconds: 500));
-// }
-//
-// _moveDown() {
-//   _serviceController.animateTo(_serviceController.offset + itemSize,
-//       curve: Curves.linear, duration: Duration(milliseconds: 500));
-// }
 }
-//Please wait for few seconds
 
 class ServicesModel {
   String desc;

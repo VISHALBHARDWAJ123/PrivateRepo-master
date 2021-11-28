@@ -7,7 +7,7 @@ import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 Widget SliderImages(List<String> images, List<String> largeImage,
-    BuildContext context, String discountPercentage) {
+    BuildContext context, String discountPercentage,String productId) {
   return Container(
     height: 52.h,
     width: 85.w,
@@ -24,11 +24,15 @@ Widget SliderImages(List<String> images, List<String> largeImage,
                 slideBuilder: (index) {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 4.w),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: images[index],
-                      placeholder: (context, reason) => Center(
-                        child: CircularProgressIndicator(),
+                    child: Hero(
+                      tag: 'ProductImage$productId',
+                      transitionOnUserGestures: true,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        imageUrl: images[index],
+                        placeholder: (context, reason) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   );

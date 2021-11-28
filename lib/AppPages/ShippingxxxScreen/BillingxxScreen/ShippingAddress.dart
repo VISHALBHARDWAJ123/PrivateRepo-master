@@ -137,10 +137,16 @@ class _ShippingAddressState extends State<ShippingAddress> {
     if (orderSummaryResponse == null) {
       return Scaffold(
         body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          // child: Center(child: Text('No Orders')),
-        ),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: SpinKitRipple(
+                color: Colors.red,
+                size: 90,
+              ),
+            )
+            // child: Center(child: Text('No Orders')),
+            ),
       );
     } else {
       return WillPopScope(

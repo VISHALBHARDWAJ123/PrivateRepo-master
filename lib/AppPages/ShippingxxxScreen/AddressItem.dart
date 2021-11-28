@@ -7,6 +7,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/ShippingxxMethodxx.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/SelectBillingAddressModel/SelectBillAdd.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -154,142 +155,138 @@ class _AddressItemState extends State<AddressItem> {
                         ),
                       ),
                       Container(
-                          child: AutoSizeText('Phone -' + ' ' + widget.phoneNumber)),
+                          child: AutoSizeText(
+                              'Phone -' + ' ' + widget.phoneNumber)),
                       Container(
-                          child: AutoSizeText('Country -' + ' ' + widget.countryName)),
+                          child: AutoSizeText(
+                              'Country -' + ' ' + widget.countryName)),
                       addVerticalSpace(12),
-                      GestureDetector(
-                        onTap: () async {
-                          print('button bill clicked');
-                          if (widget.buttonName.contains('Bill')) {
-                            context.loaderOverlay.show(
-                              widget: SpinKitRipple(
-                                color: Colors.red,
-                                size: 90,
-                              ),
-                            );
+                      Container(
+                        color: ConstantsVar.appColor,
+                        width: 100.w,
+                        child: Center(
+                          child: LoadingButton(
+                            width: 100.w,
+                            loadingWidget: SpinKitCircle(
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: () async {
+                              print('button bill clicked');
+                              if (widget.buttonName.contains('Bill')) {
+                                await ApiCalls.selectBillingAddress(
+                                        ConstantsVar.apiTokken.toString(),
+                                        '${guestId}',
+                                        widget.id.toString())
+                                    .then((value) {
+                                  ConstantsVar.prefs
+                                      .setString('addressJsonString', '');
+                                  // Fluttertoast.showToast(msg: '$value');
+                                  SelectBillingAddress map =
+                                      SelectBillingAddress.fromJson(value);
+                                  // String
+                                  if (map.error == null) {
+                                    //means no error..
+                                    context.loaderOverlay.hide();
 
-                            ApiCalls.selectBillingAddress(
-                                    ConstantsVar.apiTokken.toString(),
-                                    '${guestId}',
-                                    widget.id.toString())
-                                .then((value) {
-                              ConstantsVar.prefs
-                                  .setString('addressJsonString', '');
-                              // Fluttertoast.showToast(msg: '$value');
-                              SelectBillingAddress map =
-                                  SelectBillingAddress.fromJson(value);
-                              // String
-                              if (map.error == null) {
-                                //means no error..
-                                context.loaderOverlay.hide();
+                                    var fName = map.selectedaddress.firstName
+                                        .toString();
+                                    var lName =
+                                        map.selectedaddress.lastName.toString();
+                                    var email =
+                                        map.selectedaddress.email.toString();
+                                    var company =
+                                        map.selectedaddress.company.toString();
+                                    var countryId = map
+                                        .selectedaddress.countryId
+                                        .toString();
+                                    var city =
+                                        map.selectedaddress.city.toString();
+                                    var stateProvincId = 12;
+                                    var address1 =
+                                        map.selectedaddress.address1.toString();
+                                    var address2 =
+                                        map.selectedaddress.address2.toString();
+                                    var postalCode = map
+                                        .selectedaddress.zipPostalCode
+                                        .toString();
+                                    var phoneNumner = map
+                                        .selectedaddress.phoneNumber
+                                        .toString();
+                                    var faxNumber = map
+                                        .selectedaddress.faxNumber
+                                        .toString();
 
-                                var fName =
-                                    map.selectedaddress.firstName.toString();
-                                var lName =
-                                    map.selectedaddress.lastName.toString();
-                                var email =
-                                    map.selectedaddress.email.toString();
-                                var company =
-                                    map.selectedaddress.company.toString();
-                                var countryId =
-                                    map.selectedaddress.countryId.toString();
-                                var city = map.selectedaddress.city.toString();
-                                var stateProvincId = 12;
-                                var address1 =
-                                    map.selectedaddress.address1.toString();
-                                var address2 =
-                                    map.selectedaddress.address2.toString();
-                                var postalCode = map
-                                    .selectedaddress.zipPostalCode
-                                    .toString();
-                                var phoneNumner =
-                                    map.selectedaddress.phoneNumber.toString();
-                                var faxNumber =
-                                    map.selectedaddress.faxNumber.toString();
+                                    Map<String, dynamic> addressBody = {
+                                      'FirstName': fName,
+                                      'LastName': lName,
+                                      'Email': email,
+                                      'Company': company,
+                                      'CountryId': countryId,
+                                      'StateProvinceId': stateProvincId,
+                                      'City': city,
+                                      'Address1': address1,
+                                      'Address2': address2,
+                                      'ZipPostalCode': postalCode,
+                                      'PhoneNumber': phoneNumner,
+                                      'FaxNumber': faxNumber,
+                                    };
 
-                                Map<String, dynamic> addressBody = {
-                                  'FirstName': fName,
-                                  'LastName': lName,
-                                  'Email': email,
-                                  'Company': company,
-                                  'CountryId': countryId,
-                                  'StateProvinceId': stateProvincId,
-                                  'City': city,
-                                  'Address1': address1,
-                                  'Address2': address2,
-                                  'ZipPostalCode': postalCode,
-                                  'PhoneNumber': phoneNumner,
-                                  'FaxNumber': faxNumber,
-                                };
-
-                                addressJsonString = jsonEncode(addressBody);
-                                ConstantsVar.prefs
-                                    .setString(
-                                        'addressJsonString', addressJsonString)
-                                    .whenComplete(
-                                      () => Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) {
-                                            return ShippingAddress();
-                                          },
-                                        ),
-                                      ),
-                                    );
+                                    addressJsonString = jsonEncode(addressBody);
+                                    ConstantsVar.prefs
+                                        .setString('addressJsonString',
+                                            addressJsonString)
+                                        .whenComplete(
+                                          () => Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) {
+                                                return ShippingAddress();
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: map.error.toString());
+                                  }
+                                });
                               } else {
-                                Fluttertoast.showToast(
-                                    msg: map.error.toString());
+                                //Means shipping button is clicked on shipping screen
+
+                                await ApiCalls.selectShippingAddress(
+                                        ConstantsVar.apiTokken.toString(),
+                                        widget.guestId,
+                                        widget.id.toString())
+                                    .then((value) {
+                                  print('$value');
+
+                                  String paymentUrl = BuildConfig.base_url +
+                                      'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
+
+                                  Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) => ShippingMethod(
+                                          customerId: widget.guestId,
+                                          paymentUrl: paymentUrl,
+                                          // paymentUrl: paymentUrl),
+                                        ),
+                                      ));
+                                });
                               }
-                            });
-                          } else {
-                            //Means shipping button is clicked on shipping screen
-
-                            context.loaderOverlay.show(
-                                widget: SpinKitRipple(
-                              color: Colors.red,
-                              size: 90,
-                            ));
-
-                            ApiCalls.selectShippingAddress(
-                                    ConstantsVar.apiTokken.toString(),
-                                    widget.guestId,
-                                    widget.id.toString())
-                                .then((value) {
-                              print('$value');
-
-                              String paymentUrl = BuildConfig.base_url +
-                                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
-
-                              Navigator.pushReplacement(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => ShippingMethod(
-                                      customerId: widget.guestId,
-                                      paymentUrl: paymentUrl,
-                                      // paymentUrl: paymentUrl),
-                                    ),
-                                  ));
-                              context.loaderOverlay.hide();
-                            });
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                              child: AutoSizeText(
-                            widget.buttonName,
-                            style: TextStyle(
-                                fontSize: 4.w,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          )),
-                          decoration: BoxDecoration(
-                              color: ConstantsVar.appColor,
-                              borderRadius: BorderRadius.circular(4.0)),
+                            },
+                            defaultWidget: AutoSizeText(
+                              widget.buttonName,
+                              style: TextStyle(
+                                  fontSize: 4.w,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            color: ConstantsVar.appColor,
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

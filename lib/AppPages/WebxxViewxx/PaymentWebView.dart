@@ -32,16 +32,7 @@ class _PaymentPageState extends State<PaymentPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (Platform.isAndroid) {
-      WebView.platform = SurfaceAndroidWebView();
-      context.loaderOverlay.show(
-          widget: SpinKitRipple(
-        color: Colors.red,
-        size: 90,
-      ));
-    } else {
-      context.loaderOverlay.show(widget: CupertinoActivityIndicator());
-    }
+
   }
 
   @override
@@ -151,15 +142,12 @@ setState((){
                       _willGo = false;
                       isLoading = true;
                     });
-                    context.loaderOverlay.show(
-                      widget: CupertinoActivityIndicator(),
-                    );
+
                     print('Page started loading: $url');
                   },
                   onPageFinished: (String url) {
                     print('Page finished loading: $url');
                     setState(() {
-                      context.loaderOverlay.hide();
                       _willGo = true;
                       isLoading = false;
                     });

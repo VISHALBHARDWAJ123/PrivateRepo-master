@@ -638,7 +638,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
           padding: const EdgeInsets.all(6.0),
           child: Container(
               child: SliderImages(
-                  imageList, largeImage, context, discountPercentage)),
+                  imageList, largeImage, context, discountPercentage,widget.productId.toString())),
         ),
         Container(
           height: 30.h,

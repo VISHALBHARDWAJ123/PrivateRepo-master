@@ -1,6 +1,6 @@
 class BuildConfig {
-  static final String base_url = 'https://dev.theone.com/';
-  static final String base_url_for_apis = 'dev.theone.com';
+  static final String base_url = 'https://www.theone.com/';
+  static final String base_url_for_apis = 'www.theone.com';
 
   static final String banners = 'apis/GetBanners';
   static final String token_url = 'token/GetToken';

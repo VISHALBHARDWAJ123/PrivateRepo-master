@@ -47,8 +47,8 @@ class _BillingDetailsState extends State<BillingDetails>
     ));
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    getCustomerId().then((value) =>
-        ApiCalls.getBillingAddress(ConstantsVar.apiTokken.toString(), value, context)
+    getCustomerId().then((value) => ApiCalls.getBillingAddress(
+                ConstantsVar.apiTokken.toString(), value, context)
             .then((value) {
           print(value);
           setState(() {
@@ -138,11 +138,16 @@ class _BillingDetailsState extends State<BillingDetails>
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
+          child: Center(
+            child: SpinKitRipple(
+              color: Colors.red,
+              size: 90,
+            ),
+          ),
         ),
       );
     } else {
       return SafeArea(
-
         top: true,
         bottom: true,
         maintainBottomViewPadding: true,
@@ -155,7 +160,9 @@ class _BillingDetailsState extends State<BillingDetails>
                   Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => MyHomePage(pageIndex: 0,),
+                        builder: (context) => MyHomePage(
+                          pageIndex: 0,
+                        ),
                       ),
                       (route) => false);
                 },
@@ -311,7 +318,9 @@ class _BillingDetailsState extends State<BillingDetails>
                                 phoneNumber: '',
                                 id: 0,
                                 faxNumber: '',
-                                company: '', title: 'billing address', btnTitle: 'Continue',
+                                company: '',
+                                title: 'billing address',
+                                btnTitle: 'Continue',
                               );
                             }));
                           },
@@ -417,8 +426,8 @@ class _BillingDetailsState extends State<BillingDetails>
                                   ),
                                   AutoSizeText(
                                     orderSummaryResponse!
-                                        .ordertotals.shipping
-                                         == null
+                                                .ordertotals.shipping ==
+                                            null
                                         ? 'During Checkout '
                                         : orderSummaryResponse!
                                             .ordertotals.shipping
@@ -518,11 +527,12 @@ class _BillingDetailsState extends State<BillingDetails>
                                     ),
                                     AutoSizeText(
                                       orderSummaryResponse!
-                                          .ordertotals.orderTotal
-                                           == null ?'During Checkout':
-                                      orderSummaryResponse!
-                                          .ordertotals.orderTotal
-                                          .toString(),
+                                                  .ordertotals.orderTotal ==
+                                              null
+                                          ? 'During Checkout'
+                                          : orderSummaryResponse!
+                                              .ordertotals.orderTotal
+                                              .toString(),
                                       style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 15,
