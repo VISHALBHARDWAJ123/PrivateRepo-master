@@ -93,6 +93,10 @@ class _OrderDetailsState extends State<OrderDetails>
   var shipping = '';
   bool isReturnAvail = false;
 
+  bool isError = false;
+
+  String _errorMessage = '';
+
   Widget orderItem({
     required String productId,
     required String imageUrl,
@@ -216,10 +220,15 @@ class _OrderDetailsState extends State<OrderDetails>
       setState(() => widget.color = Colors.green);
     }
 
-    setState(() {
-      if (mounted) {
+    if (widget.resultas!['orderdetail'] != null) {
+      setState(() {
+        isError = false;
         firstName = widget.resultas!['orderdetail']['orderDetailsModel']
-            ['BillingAddress']['FirstName'];
+                    ['BillingAddress']['FirstName'] ==
+                null
+            ? ''
+            : widget.resultas!['orderdetail']['orderDetailsModel']
+                ['BillingAddress']['FirstName'];
         lastName = widget.resultas!['orderdetail']['orderDetailsModel']
             ['BillingAddress']['LastName'];
         address1 = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -265,8 +274,13 @@ class _OrderDetailsState extends State<OrderDetails>
           sCity = widget.resultas!['orderdetail']['orderDetailsModel']
               ['ShippingAddress']['City'];
         }
-      }
-    });
+      });
+    } else {
+      setState(() {
+        isError = true;
+        _errorMessage = widget.resultas['error'].toString();
+      });
+    }
     super.initState();
   }
 
@@ -292,713 +306,789 @@ class _OrderDetailsState extends State<OrderDetails>
             ), (route) => false),
           ),
         ),
-        body: Container(
-          width: 100.w,
-          height: 100.h,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                color: Colors.white60,
-                width: 100.w,
+        body: isError
+            ? Container(
+                height: 60.h,
                 child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(4.5.w),
-                    child: AutoSizeText(
-                      'My Order Details'.toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 6.5.w,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Visibility(
-                  visible: widget
-                              .resultas!['orderdetail']['orderDetailsModel']
-                                  ['Items']
-                              .length ==
-                          0
-                      ? false
-                      : true,
-                  child: ListView(
+
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
-                        width: 100.w,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Center(
-                                  child: AutoSizeText(
-                                    widget.orderNumber,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: CustomTextStyle.textFormFieldBold
-                                        .copyWith(fontSize: 5.5.w),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 3.0, vertical: 20),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    height: 25.w,
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          child: RichText(
-                                            text: TextSpan(
-                                                text: 'Order Status: ',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 5.w,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                      text: widget.orderProgress
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color: widget.color,
-                                                          fontSize: 5.w,
-                                                          fontWeight:
-                                                              FontWeight.bold))
-                                                ]),
-                                          ),
-                                        ),
-                                        Utils.getSizedBox(null, 3),
-                                        Container(
-                                          width: 100.w,
-                                          child: AutoSizeText(
-                                            widget.orderDate,
-                                            style: TextStyle(
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        width: 30.w,
+                        height: 30.w,
+                        child: ClipOval(
+                          child: Image.asset(
+                            'MyAssets/logo.png',
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: AppButton(
-                            color: ConstantsVar.appColor,
-                            child: Container(
-                              width: 100.w,
-                              height: 2.7.h,
-                              child: Center(
-                                child: AutoSizeText(
-                                  widget.orderProgress.contains('Pending')
-                                      ? 'Retry Payment'.toUpperCase()
-                                      : 're-order'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 4.4.w,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () async {
-                              widget.orderProgress.contains('Pending')
-                                  ? repayment()
-                                  : reorder();
-                            },
+                      Text.rich(
+                        TextSpan(
+                          text: 'Something went wrong\!.\n',
+                          style: TextStyle(
+                            fontSize: 4.5.w,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: isReturnAvail,
-                        child: SizedBox(
-                          height: 15,
-                        ),
-                      ),
-                      Visibility(
-                        visible: isReturnAvail,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: AppButton(
-                              color: ConstantsVar.appColor,
-                              child: Container(
-                                width: 100.w,
-                                height: 2.7.h,
-                                child: Center(
-                                  child: AutoSizeText(
-                                    'Return'.toUpperCase(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 4.4.w,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => ReturnScreen(
-                                      orderId: widget.orderId.toString(),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(8.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFEEEEEE),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: AutoSizeText(
-                                'Price Details',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 5.w,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    'Sub-Total:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 5.w,
-                                    ),
-                                  ),
-                                  AutoSizeText(
-                                    subTotal,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    'Shipping:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 5.w,
-                                    ),
-                                  ),
-                                  AutoSizeText(
-                                    shipping == null
-                                        ? 'No Shipping Available for now '
-                                        : shipping,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 5.w,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 4.0, right: 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    'Tax 5%:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 5.w,
-                                    ),
-                                  ),
-                                  AutoSizeText(
-                                    taxPrice,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 4.0, right: 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    'Order Total:',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 5.w,
-                                    ),
-                                  ),
-                                  AutoSizeText(
-                                    totalPrice,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
+                          children: <InlineSpan>[
+                            // TextSpan(
+                            //   text: 'Possible cause:',
+                            //
+                            //   style: TextStyle(
+                            //     fontSize: 12,
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
+                            // TextSpan(
+                            //   text: _errorMessage,
+                            //   style: TextStyle(
+                            //     fontSize: 12,
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // )
                           ],
                         ),
                       ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(3.5.w),
-                              child: AutoSizeText(
-                                'PRODUCT(S)'.toUpperCase(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 5.5.w,
-                                ),
-                              ),
+                    ],
+                  ),
+                ),
+              )
+            : Container(
+                width: 100.w,
+                height: 100.h,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.white60,
+                      width: 100.w,
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(4.5.w),
+                          child: AutoSizeText(
+                            'My Order Details'.toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 6.5.w,
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        color: Colors.white60,
+                    ),
+                    Expanded(
+                      child: Visibility(
+                        visible: widget
+                                    .resultas!['orderdetail']
+                                        ['orderDetailsModel']['Items']
+                                    .length ==
+                                0
+                            ? false
+                            : true,
                         child: ListView(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          children: List.generate(
-                              widget
-                                          .resultas!['orderdetail']
-                                              ['orderDetailsModel']['Items']
-                                          .length ==
-                                      0
-                                  ? 0
-                                  : widget
-                                      .resultas!['orderdetail']
-                                          ['orderDetailsModel']['Items']
-                                      .length, (index) {
-                            var title = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                ['ProductName'];
-                            String productId = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                    ['ProductId']
-                                .toString();
-
-                            String sku = widget.resultas!['orderdetail']
-                                ['orderDetailsModel']['Items'][index]['Sku'];
-                            String unitPrice = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                ['UnitPrice'];
-                            String price = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                ['SubTotal'];
-                            String quantity = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                    ['Quantity']
-                                .toString();
-                            String id = widget.resultas!['orderdetail']
-                                    ['orderDetailsModel']['Items'][index]
-                                    ['ProductId']
-                                .toString();
-
-                            String imageUrl = widget.resultas!['orderdetail']
-                                ['PictureList'][id];
-                            print(imageUrl);
-                            setState(() {});
-                            return orderItem(
-                                productId: productId,
-                                title: title,
-                                sku: sku,
-                                unitPrice: unitPrice,
-                                price: price,
-                                quantity: quantity,
-                                imageUrl: imageUrl);
-                          }),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(3.5.w),
-                              child: AutoSizeText(
-                                'Billing address'.toUpperCase(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 5.5.w,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 6.0, bottom: 6.0),
-                        child: Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Colors.white,
-                          child: Container(
-                            height: 25.h,
-                            margin: EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              bottom: 3.2,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          padding:
-                                              EdgeInsets.only(right: 8, top: 4),
-                                          child: AutoSizeText(
-                                            firstName + ' ' + lastName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: true,
-                                            style: CustomTextStyle
-                                                .textFormFieldBold
-                                                .copyWith(
-                                              fontSize: 4.w,
+                          children: [
+                            Container(
+                              width: 100.w,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: Colors.white,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Center(
+                                        child: AutoSizeText(
+                                          widget.orderNumber,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
+                                          style: CustomTextStyle
+                                              .textFormFieldBold
+                                              .copyWith(fontSize: 5.5.w),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 3.0, vertical: 20),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          height: 25.w,
+                                          width: 100.w,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.black,
                                             ),
                                           ),
-                                        ),
-                                        Utils.getSizedBox(null, 6),
-                                        Container(
-                                            child: AutoSizeText(
-                                          'Email - ' + email,
-                                          style: TextStyle(
-                                            fontSize: 4.w,
-                                          ),
-                                        )),
-                                        Container(
-                                          child: Row(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Flexible(
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                      text: 'Order Status: ',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 5.w,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      children: <TextSpan>[
+                                                        TextSpan(
+                                                            text: widget
+                                                                .orderProgress
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                                color: widget
+                                                                    .color,
+                                                                fontSize: 5.w,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold))
+                                                      ]),
+                                                ),
+                                              ),
+                                              Utils.getSizedBox(null, 3),
+                                              Container(
+                                                width: 100.w,
                                                 child: AutoSizeText(
-                                                  'Address -' + address1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  widget.orderDate,
                                                   style: TextStyle(
-                                                    fontSize: 4.w,
+                                                    fontSize: 5.w,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                            child: AutoSizeText(
-                                          'Phone -' + ' ' + phoneNumber,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: AppButton(
+                                  color: ConstantsVar.appColor,
+                                  child: Container(
+                                    width: 100.w,
+                                    height: 2.7.h,
+                                    child: Center(
+                                      child: AutoSizeText(
+                                        widget.orderProgress.contains('Pending')
+                                            ? 'Retry Payment'.toUpperCase()
+                                            : 're-order'.toUpperCase(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 4.4.w,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () async {
+                                    widget.orderProgress.contains('Pending')
+                                        ? repayment()
+                                        : reorder();
+                                  },
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: isReturnAvail,
+                              child: SizedBox(
+                                height: 15,
+                              ),
+                            ),
+                            Visibility(
+                              visible: isReturnAvail,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: AppButton(
+                                    color: ConstantsVar.appColor,
+                                    child: Container(
+                                      width: 100.w,
+                                      height: 2.7.h,
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'Return'.toUpperCase(),
                                           style: TextStyle(
-                                            fontSize: 4.w,
-                                          ),
-                                        )),
-                                        Container(
-                                          child: AutoSizeText(
-                                            'Country -' + ' ' + countryName,
-                                            style: TextStyle(
-                                              fontSize: 4.w,
-                                            ),
+                                            color: Colors.white,
+                                            fontSize: 4.4.w,
                                           ),
                                         ),
-                                        Container(
-                                          child: AutoSizeText(
-                                            'City -' + ' ' + city,
-                                            style: TextStyle(
-                                              fontSize: 4.w,
-                                            ),
+                                      ),
+                                    ),
+                                    onTap: () async {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => ReturnScreen(
+                                            orderId: widget.orderId.toString(),
                                           ),
                                         ),
-                                        addVerticalSpace(12),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFEEEEEE),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: AutoSizeText(
+                                      'Price Details',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        AutoSizeText(
+                                          'Sub-Total:',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 5.w,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          subTotal,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
+                                        )
                                       ],
                                     ),
                                   ),
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        AutoSizeText(
+                                          'Shipping:',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 5.w,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          shipping == null
+                                              ? 'No Shipping Available for now '
+                                              : shipping,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 5.w,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 4.0, right: 4.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        AutoSizeText(
+                                          'Tax 5%:',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 5.w,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          taxPrice,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 4.0, right: 4.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        AutoSizeText(
+                                          'Order Total:',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 5.w,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          totalPrice,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: !isPickUpStore,
-                        child: Card(
-                          child: Container(
-                            color: Colors.white60,
-                            width: 100.w,
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(3.5.w),
-                                child: AutoSizeText(
-                                  'Shipping address'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 5.5.w,
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(3.5.w),
+                                    child: AutoSizeText(
+                                      'PRODUCT(S)'.toUpperCase(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 5.5.w,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: !isPickUpStore,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: 10.0, right: 10.0, top: 6.0, bottom: 6.0),
-                          child: Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            color: Colors.white,
-                            child: Container(
-                              height: 24.h,
-                              margin: EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                                bottom: 3.2,
+                            Container(
+                              color: Colors.white60,
+                              child: ListView(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                children: List.generate(
+                                    widget
+                                                .resultas!['orderdetail']
+                                                    ['orderDetailsModel']
+                                                    ['Items']
+                                                .length ==
+                                            0
+                                        ? 0
+                                        : widget
+                                            .resultas!['orderdetail']
+                                                ['orderDetailsModel']['Items']
+                                            .length, (index) {
+                                  var title = widget.resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                      ['ProductName'];
+                                  String productId = widget
+                                      .resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                          ['ProductId']
+                                      .toString();
+
+                                  String sku = widget.resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                      ['Sku'];
+                                  String unitPrice =
+                                      widget.resultas!['orderdetail']
+                                              ['orderDetailsModel']['Items']
+                                          [index]['UnitPrice'];
+                                  String price = widget.resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                      ['SubTotal'];
+                                  String quantity = widget
+                                      .resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                          ['Quantity']
+                                      .toString();
+                                  String id = widget.resultas!['orderdetail']
+                                          ['orderDetailsModel']['Items'][index]
+                                          ['ProductId']
+                                      .toString();
+
+                                  String imageUrl =
+                                      widget.resultas!['orderdetail']
+                                          ['PictureList'][id];
+                                  print(imageUrl);
+                                  setState(() {});
+                                  return orderItem(
+                                      productId: productId,
+                                      title: title,
+                                      sku: sku,
+                                      unitPrice: unitPrice,
+                                      price: price,
+                                      quantity: quantity,
+                                      imageUrl: imageUrl);
+                                }),
                               ),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Container(
-                                            padding: EdgeInsets.only(
-                                                right: 8, top: 4),
-                                            child: AutoSizeText(
-                                              sFirstName + ' ' + sLastName,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                              style: CustomTextStyle
-                                                  .textFormFieldBold
-                                                  .copyWith(fontSize: 4.w),
-                                            ),
-                                          ),
-                                          Utils.getSizedBox(null, 6),
-                                          Container(
-                                              child: AutoSizeText(
-                                            'Email - ' + sEmail,
-                                            style: TextStyle(
-                                              fontSize: 4.w,
-                                            ),
-                                          )),
-                                          Container(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Flexible(
-                                                  child: AutoSizeText(
-                                                    'Address -' + sAddress1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 4.w),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(3.5.w),
+                                    child: AutoSizeText(
+                                      'Billing address'.toUpperCase(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 5.5.w,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: 10.0,
+                                  right: 10.0,
+                                  top: 6.0,
+                                  bottom: 6.0),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: Colors.white,
+                                child: Container(
+                                  height: 25.h,
+                                  margin: EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    bottom: 3.2,
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 8, top: 4),
+                                                child: AutoSizeText(
+                                                  firstName + ' ' + lastName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  style: CustomTextStyle
+                                                      .textFormFieldBold
+                                                      .copyWith(
+                                                    fontSize: 4.w,
                                                   ),
                                                 ),
+                                              ),
+                                              Utils.getSizedBox(null, 6),
+                                              Container(
+                                                  child: AutoSizeText(
+                                                'Email - ' + email,
+                                                style: TextStyle(
+                                                  fontSize: 4.w,
+                                                ),
+                                              )),
+                                              Container(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Flexible(
+                                                      child: AutoSizeText(
+                                                        'Address -' + address1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: 4.w,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                  child: AutoSizeText(
+                                                'Phone -' + ' ' + phoneNumber,
+                                                style: TextStyle(
+                                                  fontSize: 4.w,
+                                                ),
+                                              )),
+                                              Container(
+                                                child: AutoSizeText(
+                                                  'Country -' +
+                                                      ' ' +
+                                                      countryName,
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                child: AutoSizeText(
+                                                  'City -' + ' ' + city,
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
+                                                ),
+                                              ),
+                                              addVerticalSpace(12),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: !isPickUpStore,
+                              child: Card(
+                                child: Container(
+                                  color: Colors.white60,
+                                  width: 100.w,
+                                  child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(3.5.w),
+                                      child: AutoSizeText(
+                                        'Shipping address'.toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 5.5.w,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: !isPickUpStore,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                    top: 6.0,
+                                    bottom: 6.0),
+                                child: Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  color: Colors.white,
+                                  child: Container(
+                                    height: 24.h,
+                                    margin: EdgeInsets.only(
+                                      left: 10,
+                                      right: 10,
+                                      bottom: 3.2,
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: 8, top: 4),
+                                                  child: AutoSizeText(
+                                                    sFirstName +
+                                                        ' ' +
+                                                        sLastName,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: CustomTextStyle
+                                                        .textFormFieldBold
+                                                        .copyWith(
+                                                            fontSize: 4.w),
+                                                  ),
+                                                ),
+                                                Utils.getSizedBox(null, 6),
+                                                Container(
+                                                    child: AutoSizeText(
+                                                  'Email - ' + sEmail,
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
+                                                )),
+                                                Container(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Flexible(
+                                                        child: AutoSizeText(
+                                                          'Address -' +
+                                                              sAddress1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                              fontSize: 4.w),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: AutoSizeText(
+                                                    'Phone -' + ' ' + sPhone,
+                                                    style: TextStyle(
+                                                      fontSize: 4.w,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    child: AutoSizeText(
+                                                  'Country -' +
+                                                      ' ' +
+                                                      sCountryName,
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
+                                                )),
+                                                Container(
+                                                    child: AutoSizeText(
+                                                  'City -' + ' ' + sCity,
+                                                  style: TextStyle(
+                                                    fontSize: 4.w,
+                                                  ),
+                                                )),
+                                                addVerticalSpace(12),
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            child: AutoSizeText(
-                                              'Phone -' + ' ' + sPhone,
-                                              style: TextStyle(
-                                                fontSize: 4.w,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                              child: AutoSizeText(
-                                            'Country -' + ' ' + sCountryName,
-                                            style: TextStyle(
-                                              fontSize: 4.w,
-                                            ),
-                                          )),
-                                          Container(
-                                              child: AutoSizeText(
-                                            'City -' + ' ' + sCity,
-                                            style: TextStyle(
-                                              fontSize: 4.w,
-                                            ),
-                                          )),
-                                          addVerticalSpace(12),
-                                        ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(3.8.w),
+                                    child: AutoSizeText(
+                                      'Shipping Method'.toUpperCase(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 5.5.w,
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(3.8.w),
-                              child: AutoSizeText(
-                                'Shipping Method'.toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 5.5.w,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Padding(
-                            padding: EdgeInsets.all(3.5.w),
-                            child: Center(
-                              child: AutoSizeText(
-                                shippingMethod,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 4.w,
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Padding(
+                                  padding: EdgeInsets.all(3.5.w),
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      shippingMethod,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 4.w,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(3.8.w),
-                              child: AutoSizeText(
-                                'Shipping Status'.toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 5.5.w,
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(3.8.w),
+                                    child: AutoSizeText(
+                                      'Shipping Status'.toUpperCase(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 5.5.w,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Colors.white60,
-                          width: 100.w,
-                          child: Padding(
-                            padding: EdgeInsets.all(3.5.w),
-                            child: Center(
-                              child: AutoSizeText(
-                                shippingStatus,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 4.w,
+                            Card(
+                              child: Container(
+                                color: Colors.white60,
+                                width: 100.w,
+                                child: Padding(
+                                  padding: EdgeInsets.all(3.5.w),
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      shippingStatus,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 4.w,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

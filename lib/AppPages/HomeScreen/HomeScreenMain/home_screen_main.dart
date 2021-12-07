@@ -22,6 +22,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 
 // import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/NewIcons.dart';
@@ -36,8 +37,7 @@ class HomeScreenMain extends StatefulWidget {
   HomeScreenMain({Key? key}) : super(key: key);
 }
 
-class _HomeScreenMainState extends State<HomeScreenMain>
-     {
+class _HomeScreenMainState extends State<HomeScreenMain> {
   String bannerImage = '';
   List<TopicItems> modelList = [];
   List<Bannerxx> banners = [];
@@ -71,8 +71,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   SharedAxisTransitionType? _transitionType1 =
       SharedAxisTransitionType.horizontal;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -82,13 +80,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) {
-      setState(() {
-        cokkie = ConstantsVar.prefs.getString('cokkie');
-        print(cokkie);
-      });
+      setState(() {});
       apiCallToHomeScreen(value);
     });
-
+    setState((){});
   }
 
   @override
@@ -638,12 +633,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                   padding:
                                                       const EdgeInsets.all(5.0),
                                                   child: OpenContainer(
+                                                    closedElevation: 0,
+                                                    openElevation: 0,
                                                     transitionType:
                                                         _transitionType,
-                                                    transitionDuration:
-                                                        Duration(
-                                                      seconds: 1,
-                                                    ),
                                                     openBuilder: (BuildContext
                                                             context,
                                                         void Function(
@@ -1056,7 +1049,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           children: [
             OpenContainer(
               tappable: true,
-
+              closedElevation: 0,
+              openElevation: 0,
               transitionType: _transitionType,
               closedBuilder: (BuildContext context, void Function() action) {
                 return Container(
@@ -1083,7 +1077,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             ),
             OpenContainer(
               tappable: true,
-
+              closedElevation: 0,
+              openElevation: 0,
               transitionType: _transitionType,
               openBuilder: (BuildContext context,
                   void Function({Object? returnValue}) action) {
@@ -1176,7 +1171,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           children: [
             OpenContainer(
               tappable: true,
-
+              closedElevation: 0,
+              openElevation: 0,
               transitionType: _transitionType,
               openBuilder: (BuildContext context,
                   void Function({Object? returnValue}) action) {
@@ -1255,7 +1251,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             ),
             OpenContainer(
               tappable: true,
-             
+              closedElevation: 0,
+              openElevation: 0,
               transitionType: _transitionType,
               closedBuilder: (BuildContext context, void Function() action) {
                 return Container(
@@ -1299,7 +1296,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
     var response = await http.get(
       uri,
-      headers: {'Cookie': cokkie},
+      headers: ApiCalls.header,
     );
     try {
       var result = jsonDecode(response.body);
@@ -1321,7 +1318,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   Future getTopicPage() async {
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetAppTopics');
     try {
-      var response = await http.get(uri);
+      var response = await http.get(uri, headers: ApiCalls.header);
       TopicPageResponse result = TopicPageResponse.fromJson(
         jsonDecode(response.body),
       );

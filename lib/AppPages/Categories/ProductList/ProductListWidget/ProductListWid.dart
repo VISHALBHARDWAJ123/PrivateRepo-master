@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -181,16 +182,18 @@ class _prodListWidgetState extends State<prodListWidget> {
                         if (mounted)
                           setState(() {
                             var value = _searchController.text;
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (context) => SearchPage(
-                                  isScreen: true,
-                                  keyword: value,
-                                ),
-                              ),
-                            ).then((value) => setState((){
-                              _searchController.clear();
-                            }));
+                            Navigator.of(context)
+                                .push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => SearchPage(
+                                      isScreen: true,
+                                      keyword: value,
+                                    ),
+                                  ),
+                                )
+                                .then((value) => setState(() {
+                                      _searchController.clear();
+                                    }));
                           });
 
                         print('Pressed via keypad');
@@ -417,35 +420,25 @@ class _prodListWidgetState extends State<prodListWidget> {
                       children: List.generate(
                         widget.products.length,
                         (index) {
-                          String name = widget.products[index].stockQuantity;
-                          return InkWell(
-                            onTap: () {
-                              print(widget.products[index].id.toString());
-
-                              //
-                              SchedulerBinding.instance!
-                                  .addPostFrameCallback((timeStamp) {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) {
-                                      return NewProductDetails(
-                                        productId: widget.products[index].id
-                                            .toString(),
-                                        screenName: 'Product List',
-                                        // customerId: ConstantsVar.customerID,
-                                      );
-                                    },
-                                  ),
-                                );
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Card(
-                                  // elevation: 2,
-                                  child: Container(
-                                    child: Column(
+                          return Stack(
+                            children: [
+                              Card(
+                                // elevation: 2,
+                                child: OpenContainer(
+                                  closedElevation: 2,
+                                  openBuilder: (BuildContext context,
+                                      void Function({Object? returnValue})
+                                          action) {
+                                    return NewProductDetails(
+                                      productId:
+                                          widget.products[index].id.toString(),
+                                      screenName: 'Product List',
+                                      // customerId: ConstantsVar.customerID,
+                                    );
+                                  },
+                                  closedBuilder: (BuildContext context,
+                                      void Function() action) {
+                                    return Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
@@ -577,50 +570,50 @@ class _prodListWidgetState extends State<prodListWidget> {
                                           // fontSize: 12,
                                         )
                                       ],
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                                Visibility(
-                                  visible: widget.products[index]
-                                              .discountPercentage
-                                              .trim()
-                                              .length !=
-                                          0
-                                      ? true
-                                      : false,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                          width: 14.w,
-                                          height: 14.w,
-                                          child: Stack(
-                                            children: [
-                                              Image.asset(
-                                                'MyAssets/plaincircle.png',
-                                                width: 15.w,
-                                                height: 15.w,
-                                              ),
-                                              Align(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  widget.products[index]
-                                                      .discountPercentage,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 4.8.w,
-                                                    color: Colors.white,
-                                                  ),
+                              ),
+                              Visibility(
+                                visible: widget
+                                            .products[index].discountPercentage
+                                            .trim()
+                                            .length !=
+                                        0
+                                    ? true
+                                    : false,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 14.w,
+                                        height: 14.w,
+                                        child: Stack(
+                                          children: [
+                                            Image.asset(
+                                              'MyAssets/plaincircle.png',
+                                              width: 15.w,
+                                              height: 15.w,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                widget.products[index]
+                                                    .discountPercentage,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 4.8.w,
+                                                  color: Colors.white,
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        )),
-                                  ),
-                                )
-                              ],
-                            ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              )
+                            ],
                           );
                         },
                       ),

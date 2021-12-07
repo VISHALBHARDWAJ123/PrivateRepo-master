@@ -15,6 +15,7 @@ import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'WebController.dart';
@@ -41,7 +42,7 @@ class _TopicPageState extends State<TopicPage> {
     // TODO: implement initState
     super.initState();
     _webViewControllerFuture = _controller.future;
-
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -157,7 +158,6 @@ class _TopicPageState extends State<TopicPage> {
                       initialUrl: widget.paymentUrl,
                       javascriptMode: JavascriptMode.unrestricted,
                       onWebViewCreated: (WebViewController webViewController) {
-
                         _controller.complete(webViewController);
                       },
                       onProgress: (int progress) {
@@ -170,6 +170,11 @@ class _TopicPageState extends State<TopicPage> {
                         _toasterJavascriptChannel(context),
                       },
                       navigationDelegate: (NavigationRequest request) {
+                        if (request.url.contains('customercare@theone.com')) {
+                          ApiCalls.launchUrl(request.url);
+                          return NavigationDecision.prevent;
+
+                        }
                         if (request.url
                             .startsWith('https://www.youtube.com/')) {
                           print('blocking navigation to $request}');
@@ -230,10 +235,10 @@ class _TopicPageState extends State<TopicPage> {
               ),
               isLoading
                   ? Center(
-                  child: SpinKitRipple(
-                    color: Colors.red,
-                    size: 90,
-                  ))
+                      child: SpinKitRipple(
+                      color: Colors.red,
+                      size: 90,
+                    ))
                   : Stack(),
             ],
           ),

@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
@@ -17,6 +18,7 @@ import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 
@@ -25,7 +27,8 @@ class ChangePassword extends StatefulWidget {
   State<ChangePassword> createState() => _ChangePasswordState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> with InputValidationMixin {
+class _ChangePasswordState extends State<ChangePassword>
+    with InputValidationMixin {
   FocusNode myFocusNode = new FocusNode();
 
   GlobalKey<FormState> myGlobalKey = new GlobalKey<FormState>();
@@ -56,8 +59,8 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
   @override
   void initState() {
     // TODO: implement initState
-    initSharedPrefs();
     super.initState();
+    initSharedPrefs();
   }
 
   @override
@@ -78,7 +81,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                     pageIndex: 0,
                   ),
                 ),
-                    (route) => false),
+                (route) => false),
             child: Image.asset(
               'MyAssets/logo.png',
               width: 15.w,
@@ -325,33 +328,41 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: AppButton(
+                    child: Container(
                       color: ConstantsVar.appColor,
-                      child: Container(
-                        width: 100.w,
-                        child: Center(
-                          child: AutoSizeText(
-                            'Reset Password'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 5.4.w,
-                              color: Colors.white,
+                      width: 100.w,
+                      height: 50,
+                      child: LoadingButton(
+                        color: ConstantsVar.appColor,
+                        defaultWidget: Container(
+                          width: 100.w,
+                          child: Center(
+                            child: AutoSizeText(
+                              'Reset Password'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
+                        loadingWidget: SpinKitCircle(
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () async {
+                          if (myGlobalKey.currentState!.validate()) {
+                            myGlobalKey.currentState!.save();
+                            await changePassword();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter correct password.'),
+                              ),
+                            );
+                          }
+                        },
                       ),
-                      text: '',
-
-                      // add your on tap handler here
-                      onTap: () async {
-                        if (myGlobalKey.currentState!.validate()) {
-                          myGlobalKey.currentState!.save();
-                          changePassword();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Please enter correct password.')));
-                        }
-                      },
                     ),
                   ),
                 ],
@@ -364,8 +375,6 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
   }
 
   Future<void> changePassword() async {
-    context.loaderOverlay
-        .show(widget: SpinKitRipple(color: Colors.red, size: 90));
     // var client = Client();
     final dynamic body = {
       'apiToken': _apiToken,
@@ -382,78 +391,26 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
     };
     final uri =
         Uri.parse(BuildConfig.base_url + 'customer/ChangeCustomerPassword?');
-    var resp = await post(uri, body: body);
+    var resp = await post(uri, body: body,headers:ApiCalls.header);
 
     try {
       var result = jsonDecode(resp.body);
+      print(resp.body);
 
       var status;
       var message;
+      var errorMessage;
       setState(() {
         status = result['Status'];
         message = result['Message'][0].toString();
       });
-
-      if (status.toString().contains('Failed')) {
-        context.loaderOverlay.hide();
-        showModalBottomSheet<void>(
-          // context and builder are
-          // required properties in this widget
-          context: context,
-          builder: (BuildContext context) {
-            // we set up a container inside which
-            // we create center column and display text
-            return Container(
-              width: 100.w,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        'MyAssets/imagebackground.jpeg',
-                      ))),
-              height: 25.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(
-                    'Changing password failed.\n\n' + message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 4.w,
-                        color: Colors.white),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      AppButton(
-                        color: Colors.black,
-                        child: Container(
-                          width: 30.w,
-                          child: Center(
-                            child: Text(
-                              'Okay',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        onTap: () => Navigator.pop(
-                          context,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+      if (status == false ) {
+        setState((){errorMessage =   result['errorMessage'][0].toString();;});
+        showErrorDialog(message);
+      }
+      if (status.toString().contains('Failed') ) {
+        showErrorDialog(message);
       } else {
-        context.loaderOverlay.hide();
         showModalBottomSheet<void>(
           // context and builder are
           // required properties in this widget
@@ -508,7 +465,6 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
       print(result);
     } on Exception catch (e) {
       print(e.toString());
-      context.loaderOverlay.hide();
     }
   }
 
@@ -533,7 +489,7 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
         builder: (context) {
           return CustomDialogBox1(
             descriptions: 'Changing password failed',
-            text: 'Okay'.toUpperCase(),
+            text: 'Not Go'.toUpperCase(),
             img: 'MyAssets/logo.png',
             reason: reason,
           );
@@ -556,4 +512,5 @@ class _ChangePasswordState extends State<ChangePassword> with InputValidationMix
   Future clearUserDetails() async {
     ConstantsVar.prefs.clear();
   }
+
 }

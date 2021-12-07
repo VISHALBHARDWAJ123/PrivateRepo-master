@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 
 class loginCheck extends StatefulWidget {
+  final message;
+
+  loginCheck({required this.message});
+
   @override
   State<StatefulWidget> createState() => loginCheckState();
 }
@@ -51,7 +56,7 @@ class loginCheckState extends State<loginCheck>
                     padding: const EdgeInsets.only(
                         top: 30.0, left: 20.0, right: 20.0),
                     child: Text(
-                      "Email with instructions has been sent to you.",
+                      widget.message.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 16.0),
                     ),
@@ -67,7 +72,7 @@ class loginCheckState extends State<loginCheck>
                               borderRadius: BorderRadius.circular(5.0)),
                           splashColor: Colors.white.withAlpha(40),
                           child: Text(
-                            'okay',
+                            'Okay',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
@@ -77,7 +82,9 @@ class loginCheckState extends State<loginCheck>
                           onPressed: () {
                             setState(() {
                               Route route = MaterialPageRoute(
-                                  builder: (context) => LoginScreen(screenKey: '',));
+                                  builder: (context) => LoginScreen(
+                                        screenKey: '',
+                                      ));
                               Navigator.pop(context, route);
                             });
                           },

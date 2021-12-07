@@ -111,186 +111,177 @@ class _AddressItemState extends State<AddressItem> {
         ),
         color: Colors.white,
         child: Container(
-          height: 25.h,
+          // height: 30.h,
           margin: EdgeInsets.only(
             left: 10,
             right: 10,
             bottom: 3.2,
           ),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  // padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(right: 8, top: 4),
-                        child: AutoSizeText(
-                          widget.firstName + ' ' + widget.lastName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: CustomTextStyle.textFormFieldBold
-                              .copyWith(fontSize: 16),
-                        ),
-                      ),
-                      Utils.getSizedBox(null, 6),
-                      Container(child: AutoSizeText('Email - ' + widget.email)),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: AutoSizeText(
-                                'Address -' + widget.address1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                          child: AutoSizeText(
-                              'Phone -' + ' ' + widget.phoneNumber)),
-                      Container(
-                          child: AutoSizeText(
-                              'Country -' + ' ' + widget.countryName)),
-                      addVerticalSpace(12),
-                      Container(
-                        color: ConstantsVar.appColor,
-                        width: 100.w,
-                        child: Center(
-                          child: LoadingButton(
-                            width: 100.w,
-                            loadingWidget: SpinKitCircle(
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: () async {
-                              print('button bill clicked');
-                              if (widget.buttonName.contains('Bill')) {
-                                await ApiCalls.selectBillingAddress(
-                                        ConstantsVar.apiTokken.toString(),
-                                        '${guestId}',
-                                        widget.id.toString())
-                                    .then((value) {
-                                  ConstantsVar.prefs
-                                      .setString('addressJsonString', '');
-                                  // Fluttertoast.showToast(msg: '$value');
-                                  SelectBillingAddress map =
-                                      SelectBillingAddress.fromJson(value);
-                                  // String
-                                  if (map.error == null) {
-                                    //means no error..
-                                    context.loaderOverlay.hide();
+              Container(
+                padding: EdgeInsets.only(right: 8, top: 4),
+                child: AutoSizeText(
+                  widget.firstName + ' ' + widget.lastName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  style: CustomTextStyle.textFormFieldBold
+                      .copyWith(fontSize: 16),
+                ),
+              ),
+              Utils.getSizedBox(null, 6),
+              Container(child: AutoSizeText('Email - ' + widget.email)),
+              Utils.getSizedBox(null, 6),
 
-                                    var fName = map.selectedaddress.firstName
-                                        .toString();
-                                    var lName =
-                                        map.selectedaddress.lastName.toString();
-                                    var email =
-                                        map.selectedaddress.email.toString();
-                                    var company =
-                                        map.selectedaddress.company.toString();
-                                    var countryId = map
-                                        .selectedaddress.countryId
-                                        .toString();
-                                    var city =
-                                        map.selectedaddress.city.toString();
-                                    var stateProvincId = 12;
-                                    var address1 =
-                                        map.selectedaddress.address1.toString();
-                                    var address2 =
-                                        map.selectedaddress.address2.toString();
-                                    var postalCode = map
-                                        .selectedaddress.zipPostalCode
-                                        .toString();
-                                    var phoneNumner = map
-                                        .selectedaddress.phoneNumber
-                                        .toString();
-                                    var faxNumber = map
-                                        .selectedaddress.faxNumber
-                                        .toString();
+              Container(
+                child: AutoSizeText(
+                  'Address -' + widget.address1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+              Utils.getSizedBox(null, 6),
 
-                                    Map<String, dynamic> addressBody = {
-                                      'FirstName': fName,
-                                      'LastName': lName,
-                                      'Email': email,
-                                      'Company': company,
-                                      'CountryId': countryId,
-                                      'StateProvinceId': stateProvincId,
-                                      'City': city,
-                                      'Address1': address1,
-                                      'Address2': address2,
-                                      'ZipPostalCode': postalCode,
-                                      'PhoneNumber': phoneNumner,
-                                      'FaxNumber': faxNumber,
-                                    };
+              Container(
+                  child: AutoSizeText(
+                      'Phone -' + ' ' + widget.phoneNumber)),
+              Utils.getSizedBox(null, 6),
 
-                                    addressJsonString = jsonEncode(addressBody);
-                                    ConstantsVar.prefs
-                                        .setString('addressJsonString',
-                                            addressJsonString)
-                                        .whenComplete(
-                                          () => Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) {
-                                                return ShippingAddress();
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg: map.error.toString());
-                                  }
-                                });
-                              } else {
-                                //Means shipping button is clicked on shipping screen
+              Container(
+                  child: AutoSizeText(
+                      'Country -' + ' ' + widget.countryName)),
+              addVerticalSpace(12),
+              Container(
+                color: ConstantsVar.appColor,
+                width: 100.w,
+                child: Center(
+                  child: LoadingButton(
+                    width: 100.w,
+                    loadingWidget: SpinKitCircle(
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () async {
+                      print('button bill clicked');
+                      if (widget.buttonName.contains('Bill')) {
+                        await ApiCalls.selectBillingAddress(
+                                ConstantsVar.apiTokken.toString(),
+                                '${guestId}',
+                                widget.id.toString())
+                            .then((value) {
+                          ConstantsVar.prefs
+                              .setString('addressJsonString', '');
+                          SelectBillingAddress map =
+                              SelectBillingAddress.fromJson(value);
+                          // String
+                          if (map.error == null) {
+                            //means no error..
+                            context.loaderOverlay.hide();
 
-                                await ApiCalls.selectShippingAddress(
-                                        ConstantsVar.apiTokken.toString(),
-                                        widget.guestId,
-                                        widget.id.toString())
-                                    .then((value) {
-                                  print('$value');
+                            var fName = map.selectedaddress.firstName
+                                .toString();
+                            var lName =
+                                map.selectedaddress.lastName.toString();
+                            var email =
+                                map.selectedaddress.email.toString();
+                            var company =
+                                map.selectedaddress.company.toString();
+                            var countryId = map
+                                .selectedaddress.countryId
+                                .toString();
+                            var city =
+                                map.selectedaddress.city.toString();
+                            var stateProvincId = 12;
+                            var address1 =
+                                map.selectedaddress.address1.toString();
+                            var address2 =
+                                map.selectedaddress.address2.toString();
+                            var postalCode = map
+                                .selectedaddress.zipPostalCode
+                                .toString();
+                            var phoneNumner = map
+                                .selectedaddress.phoneNumber
+                                .toString();
+                            var faxNumber = map
+                                .selectedaddress.faxNumber
+                                .toString();
 
-                                  String paymentUrl = BuildConfig.base_url +
-                                      'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
+                            Map<String, dynamic> addressBody = {
+                              'FirstName': fName,
+                              'LastName': lName,
+                              'Email': email,
+                              'Company': company,
+                              'CountryId': countryId,
+                              'StateProvinceId': stateProvincId,
+                              'City': city,
+                              'Address1': address1,
+                              'Address2': address2,
+                              'ZipPostalCode': postalCode,
+                              'PhoneNumber': phoneNumner,
+                              'FaxNumber': faxNumber,
+                            };
 
-                                  Navigator.pushReplacement(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => ShippingMethod(
-                                          customerId: widget.guestId,
-                                          paymentUrl: paymentUrl,
-                                          // paymentUrl: paymentUrl),
-                                        ),
-                                      ));
-                                });
-                              }
-                            },
-                            defaultWidget: AutoSizeText(
-                              widget.buttonName,
-                              style: TextStyle(
-                                  fontSize: 4.w,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            color: ConstantsVar.appColor,
-                          ),
-                        ),
-                      ),
-                    ],
+                            addressJsonString = jsonEncode(addressBody);
+                            ConstantsVar.prefs
+                                .setString('addressJsonString',
+                                    addressJsonString)
+                                .whenComplete(
+                                  () => Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) {
+                                        return ShippingAddress();
+                                      },
+                                    ),
+                                  ),
+                                );
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: map.error.toString());
+                          }
+                        });
+                      } else {
+                        //Means shipping button is clicked on shipping screen
+
+                        await ApiCalls.selectShippingAddress(
+                                ConstantsVar.apiTokken.toString(),
+                                widget.guestId,
+                                widget.id.toString())
+                            .then((value) {
+                          print('$value');
+
+                          String paymentUrl = BuildConfig.base_url +
+                              'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
+
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ShippingMethod(
+                                  customerId: widget.guestId,
+                                  paymentUrl: paymentUrl,
+                                  // paymentUrl: paymentUrl),
+                                ),
+                              ));
+                        });
+                      }
+                    },
+                    defaultWidget: AutoSizeText(
+                      widget.buttonName,
+                      style: TextStyle(
+                          fontSize: 4.w,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    color: ConstantsVar.appColor,
                   ),
                 ),
-              )
+              ),
+              Utils.getSizedBox(null, 6),
+
             ],
           ),
         ),

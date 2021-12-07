@@ -12,6 +12,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ReturnScreen/OrderReturnStatus/OrderReturStatusResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
@@ -116,14 +117,14 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                         ),
                         Expanded(
                           child: VsScrollbar(
-                            controller:_scrollController,
+                            controller: _scrollController,
                             isAlwaysShown: true,
                             child: ListView.builder(
-                              controller:_scrollController,
-
+                              controller: _scrollController,
                               itemCount: mList.length,
                               itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
                                 child: Card(
                                   shape: RoundedRectangleBorder(
                                       // borderRadius:
@@ -137,7 +138,8 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Center(
                                             child: AutoSizeText(
@@ -157,7 +159,8 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                               overflow: TextOverflow.ellipsis,
                                               softWrap: true,
                                               // textAlign: TextAlign.center,
-                                              style: CustomTextStyle.textFormFieldBold
+                                              style: CustomTextStyle
+                                                  .textFormFieldBold
                                                   .copyWith(fontSize: 5.5.w),
                                             ),
                                           ),
@@ -165,8 +168,8 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                             height: 15,
                                           ),
                                           Container(
-                                            padding:
-                                                EdgeInsets.symmetric(horizontal: 10),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
                                             // height: 40.w,
                                             width: 100.w,
                                             decoration: BoxDecoration(
@@ -182,7 +185,6 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Utils.getSizedBox(null, 3),
-
                                                 Container(
                                                   child: RichText(
                                                     text: TextSpan(
@@ -202,7 +204,8 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                                           style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 3.5.w,
-                                                            fontWeight: FontWeight.bold,
+                                                            fontWeight:
+                                                                FontWeight.bold,
 
                                                             // fontWeight:
                                                             //     FontWeight
@@ -268,8 +271,9 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                                 Container(
                                                   child: AutoSizeText(
                                                     'Your Comments:\n' +
-                                                        '${mList[index].comments==null ? '' : mList[index].comments.toString()}',
-                                                    overflow: TextOverflow.ellipsis,
+                                                        '${mList[index].comments == null ? '' : mList[index].comments.toString()}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 4.w,
 
@@ -279,7 +283,6 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
                                                   ),
                                                 ),
                                                 Utils.getSizedBox(null, 10),
-
                                               ],
                                             ),
                                           ),
@@ -308,7 +311,10 @@ class _OrderReturnDetailScreenState extends State<OrderReturnDetailScreen> {
         'apis/GetReturnRequests?apiToken=$apiToken&customerid=$customerId');
     print(url);
     try {
-      var response = await get(url);
+      var response = await get(
+        url,
+        headers: ApiCalls.header,
+      );
       String jsonResult = response.body;
       print(jsonResult);
       if (mounted) {

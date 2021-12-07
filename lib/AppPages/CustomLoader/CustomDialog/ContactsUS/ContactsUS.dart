@@ -20,6 +20,7 @@ import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
@@ -334,7 +335,7 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
         Uri.parse(BuildConfig.base_url + 'customer/SendContactUsEnquiry');
     print(uri);
     try {
-      var response = await post(uri, body: body);
+      var response = await post(uri, body: body,headers: ApiCalls.header);
 
       print('${jsonDecode(response.body)}');
       showSucessDialog(jsonDecode(response.body));

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'package:animations/animations.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -151,43 +152,19 @@ class _MyHomePageState extends State<MyHomePage>
         child: Scaffold(
           // transitionBackgroundColor: Colors.black54,
           key: _scaffoldKey,
-          body: OfflineBuilder(
-            debounceDuration: Duration.zero,
-            connectivityBuilder: (BuildContext context,
-                ConnectivityResult connectivity, Widget child) {
-              bool connected = connectivity != ConnectivityResult.none;
-              return new Stack(
-                fit: StackFit.expand,
-                children: [
-                  getBodies(activeIndex),
-                  Positioned(
-                    left: 0.0,
-                    right: 0.0,
-                    child: Visibility(
-                      visible: false,
-                      child: Container(
-                        width: 100.w,
-                        color: Color(0xFFEE4400),
-                        child: Center(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SpinKitCircle(
-                                size: 24,
-                                color: Colors.white,
-                              ),
-                              Text("OFFLINE"),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          body: PageTransitionSwitcher(
+            transitionBuilder: (
+              Widget child,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
               );
             },
-            child: Container(),
+            child: getBodies(activeIndex),
           ),
           bottomNavigationBar: Container(
             color: Colors.black,

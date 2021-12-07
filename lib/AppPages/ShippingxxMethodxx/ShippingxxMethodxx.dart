@@ -16,6 +16,7 @@ import 'package:untitled2/AppPages/ShippingxxMethodxx/Responsexx/ShippingxxMetho
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/PaymentWebView.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 class ShippingMethod extends StatefulWidget {
@@ -233,7 +234,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
         'apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
     try {
       print('Shipping method Apis >>>>>> $uri');
-      var response = await http.get(uri);
+      var response = await http.get(uri,headers: ApiCalls.header);
       print(jsonDecode(response.body));
       ShippingMethodResponse methodResponse =
           ShippingMethodResponse.fromJson(jsonDecode(response.body));

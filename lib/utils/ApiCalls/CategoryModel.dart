@@ -1114,7 +1114,8 @@ class VendorModel {
       };
 }
 
-class SubCategory {
+class
+SubCategory {
   SubCategory({
     required this.name,
     required this.seName,

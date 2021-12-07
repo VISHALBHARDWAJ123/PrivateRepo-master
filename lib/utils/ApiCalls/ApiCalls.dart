@@ -22,7 +22,6 @@ import 'package:untitled2/utils/utils/ApiParams.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class ApiCalls {
   static var customerGuid = ConstantsVar.prefs.getString('guestGUID');
   static final String cookie = '.Nop.Customer=' + customerGuid!;
@@ -78,23 +77,13 @@ class ApiCalls {
   }
 
   static Future login(
-      BuildContext context,
-      String email,
-      String password,
-      String screenName,
-      ) async {
+    BuildContext context,
+    String email,
+    String password,
+    String screenName,
+  ) async {
     print(password);
 
-    CustomProgressDialog progressDialog = CustomProgressDialog(
-      context,
-      blur: 2,
-      dismissable: true,
-    );
-    progressDialog.setLoadingWidget(SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
-    progressDialog.show();
 
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
@@ -121,11 +110,10 @@ class ApiCalls {
         print(responseData);
 
         if (responseData
-            .toString()
-            .contains('The credentials provided are incorrect') ||
+                .toString()
+                .contains('The credentials provided are incorrect') ||
             responseData.toString().contains('No customer account found')) {
           print('Wrong account');
-          progressDialog.dismiss();
           Fluttertoast.showToast(
             msg: 'Wrong Details',
             gravity: ToastGravity.CENTER,
@@ -135,11 +123,11 @@ class ApiCalls {
           return false;
         } else if (responseData.toString().contains('Account is not active')) {
           Fluttertoast.showToast(msg: 'Account is not active yet.');
-          progressDialog.dismiss();
+
           return false;
         } else if (responseData.toString().contains('Customer is deleted')) {
           Fluttertoast.showToast(msg: 'Customer is deleted');
-          progressDialog.dismiss();
+
         } else {
           Fluttertoast.showToast(
             msg: 'Successfully Logged In',
@@ -165,12 +153,11 @@ class ApiCalls {
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
 
-          progressDialog.dismiss();
 
           print('Success ');
 
           readCounter(customerGuid: gUId).then(
-                  (value) => context.read<cartCounter>().changeCounter(value));
+              (value) => context.read<cartCounter>().changeCounter(value));
 
           switch (screenName) {
             case 'Cart Screen':
@@ -178,9 +165,9 @@ class ApiCalls {
                   context,
                   CupertinoPageRoute(
                       builder: (context) => MyHomePage(
-                        pageIndex: 3,
-                      )),
-                      (route) => false);
+                            pageIndex: 3,
+                          )),
+                  (route) => false);
               break;
 
             case 'Menu Page':
@@ -191,7 +178,7 @@ class ApiCalls {
                       pageIndex: 4,
                     ),
                   ),
-                      (route) => false);
+                  (route) => false);
               break;
             case 'My Account':
               Navigator.pushReplacement(context,
@@ -213,7 +200,7 @@ class ApiCalls {
                   context,
                   CupertinoPageRoute(
                       builder: (context) => MyHomePage(pageIndex: 0)),
-                      (route) => false);
+                  (route) => false);
               break;
           }
 
@@ -223,12 +210,11 @@ class ApiCalls {
         // Fluttertoast.showToast(msg: responseData.toString().substring(0, 20));
 
       } else {
-        progressDialog.dismiss();
+
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
         return false;
       }
     } on Exception catch (e) {
-      progressDialog.dismiss();
 
       ConstantsVar.excecptionMessage(e);
       return false;
@@ -236,15 +222,10 @@ class ApiCalls {
   }
 
   static Future forgotPass(
-      BuildContext context,
-      String email,
-      ) async {
-    context.loaderOverlay.show(
-      widget: SpinKitRipple(
-        color: Colors.red,
-        size: 90,
-      ),
-    );
+    BuildContext context,
+    String email,
+  ) async {
+    String message = '';
     bool? boolean;
     final uri = Uri.parse(BuildConfig.base_url +
         'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
@@ -252,11 +233,13 @@ class ApiCalls {
     try {
       var response = await http.get(uri, headers: header);
       print('${jsonDecode(response.body)}');
-      context.loaderOverlay.hide();
+      message = jsonDecode(response.body)['Result'];
+      return message;
     } on Exception catch (e) {
       boolean = false;
       ConstantsVar.excecptionMessage(e);
-      return boolean;
+      message = e.toString();
+      return message;
     }
   }
 
@@ -272,17 +255,16 @@ class ApiCalls {
     }
   }
 
-
-
-  static Future getProductData(String productId,BuildContext ctx,[String? customerid]) async {
-    final url = BuildConfig.base_url + 'apis/GetProductModelById?id=$productId&customerid=$customerid';
+  static Future getProductData(String productId, BuildContext ctx,
+      [String? customerid]) async {
+    final url = BuildConfig.base_url +
+        'apis/GetProductModelById?id=$productId&customerid=$customerid';
     print(url);
 
     try {
       final response = await http.get(Uri.parse(url), headers: header);
 
       print(jsonDecode(response.body));
-
 
       return jsonDecode(response.body);
     } on Exception catch (e) {
@@ -291,16 +273,16 @@ class ApiCalls {
   }
 
   static Future addToCart(
-      String customerId,
-      String productId,
-      BuildContext context,
-      String attributeId,
-      String name,
-      String recipName,
-      String email,
-      String recipEmail,
-      String message,
-      ) async {
+    String customerId,
+    String productId,
+    BuildContext context,
+    String attributeId,
+    String name,
+    String recipName,
+    String email,
+    String recipEmail,
+    String message,
+  ) async {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1&' +
         'selectedAttributeId=$attributeId&recipientName=$recipName&recipientEmail=$recipEmail&senderName=$name&senderEmail=$email&giftCardMessage=$message');
@@ -375,9 +357,9 @@ class ApiCalls {
       String customerId, int itemID, BuildContext ctx) async {
     ctx.loaderOverlay.show(
         widget: SpinKitRipple(
-          color: Colors.red,
-          size: 90,
-        ));
+      color: Colors.red,
+      size: 90,
+    ));
     final queryParameters = {
       'apiToken': ConstantsVar.apiTokken,
       'CustomerId': customerId,
@@ -534,7 +516,7 @@ class ApiCalls {
       String giftcard, RefreshController refreshController) async {
     String success = '';
     final uri =
-    Uri.parse(BuildConfig.base_url + BuildConfig.remove_gift_card_url);
+        Uri.parse(BuildConfig.base_url + BuildConfig.remove_gift_card_url);
 
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
@@ -716,9 +698,9 @@ class ApiCalls {
       String customerId, String quantity, int itemId, BuildContext ctx) async {
     ctx.loaderOverlay.show(
         widget: SpinKitRipple(
-          size: 90,
-          color: Colors.red,
-        ));
+      size: 90,
+      color: Colors.red,
+    ));
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/UpdateCart?ShoppingCartItemIds=$itemId&Qty=$quantity&CustomerId=$customerId');
     // String success = 'false';
@@ -773,7 +755,7 @@ class ApiCalls {
     };
 
     final uri =
-    Uri.parse(BuildConfig.base_url + 'customer/AddCustomerAddress?');
+        Uri.parse(BuildConfig.base_url + 'customer/AddCustomerAddress?');
     print(uri);
     try {
       var response = await http.post(uri, body: body, headers: header);
@@ -800,7 +782,7 @@ class ApiCalls {
     };
 
     final uri =
-    Uri.parse(BuildConfig.base_url + 'apis/AddSelectNewBillingAddress?');
+        Uri.parse(BuildConfig.base_url + 'apis/AddSelectNewBillingAddress?');
     print(uri);
     try {
       var response = await http.post(uri, body: body, headers: header);
@@ -815,9 +797,9 @@ class ApiCalls {
             context,
             CupertinoPageRoute(
                 builder: (context) => ShippingAddress(
-                  // tokken: apiToken,
-                  // customerId: customerId,
-                )));
+                    // tokken: apiToken,
+                    // customerId: customerId,
+                    )));
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -858,14 +840,10 @@ class ApiCalls {
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     // var response = await http.get(uri, headers: header);
 
-    var response = await http.get(uri);
+    var response = await http.get(uri,headers: header);
 
     try {
-      const start = "samesite=lax,";
-      const end = "; expires";
-      final startIndex = response.headers.toString().indexOf(start);
-      final endIndex = response.headers.toString().indexOf(end, startIndex + start.length);
-      print(response.headers.toString().substring(startIndex+start.length,endIndex));
+
       // print(cookie);
       dynamic result = jsonDecode(response.body);
       print(result);
@@ -907,7 +885,7 @@ class ApiCalls {
     };
 
     final uri =
-    Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
+        Uri.parse(BuildConfig.base_url + BuildConfig.edit_address + "?");
     print(uri);
     try {
       context.loaderOverlay.hide();
@@ -992,8 +970,8 @@ class ApiCalls {
 
   static Future subscribeProdcut(
       {required String productId,
-        required String customerId,
-        required String apiToken}) async {
+      required String customerId,
+      required String apiToken}) async {
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/SubscribeBackInStockNotification?');
     var response = await http.post(uri, body: {
@@ -1021,7 +999,7 @@ class ApiCalls {
         } else if (_message.contains('Invalid API token: $apiToken')) {
           Fluttertoast.showToast(
               msg:
-              'Api Token has been expired. Please log out or reinstall the app.',
+                  'Api Token has been expired. Please log out or reinstall the app.',
               toastLength: Toast.LENGTH_LONG);
           _message = 'Notify Me\!';
           return _message;
@@ -1040,12 +1018,12 @@ class ApiCalls {
           Fluttertoast.showToast(
               msg: 'You will be notify soon when product available.',
               toastLength: Toast.LENGTH_LONG);
-          _message = 'UnSubscribe';
+          _message = 'Unsubscribe';
           return _message;
         } else {
           Fluttertoast.showToast(
               msg:
-              'Please Click on Notify Me\! to get e-mail when this product is available for ordering again.',
+                  'Please Click on Notify Me\! to get e-mail when this product is available for ordering again.',
               toastLength: Toast.LENGTH_LONG);
           _message = 'Notify Me\!';
           return _message;
@@ -1054,7 +1032,6 @@ class ApiCalls {
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
-
     }
   }
 }

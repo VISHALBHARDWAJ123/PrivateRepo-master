@@ -56,7 +56,10 @@ class _ShippingAddressState extends State<ShippingAddress> {
     final pickUri = Uri.parse(BuildConfig.base_url +
         'apis/GetPickupPoints?apiToken=${ConstantsVar.apiTokken}&address=${addressString!}&CustomerId=$ID');
     try {
-      var pickPointResponse = await http.get(pickUri);
+      var pickPointResponse = await http.get(
+        pickUri,
+        headers: ApiCalls.header,
+      );
       print('${pickPointResponse.body}');
       PickUpPointResponse myPickResponse =
           PickUpPointResponse.fromJson(jsonDecode(pickPointResponse.body));
@@ -80,12 +83,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
     super.initState();
     setState(() => _willGo = false);
     // _list = ["Abc", "DEF", "GHI", "JKL", "MNO", "PQR"];
-    context.loaderOverlay.show(
-      widget: SpinKitRipple(
-        color: Colors.red,
-        size: 90,
-      ),
-    );
+
     getId().then(
       (id) =>
           ApiCalls.getShippingAddresses(ConstantsVar.apiTokken.toString(), id)
@@ -292,12 +290,10 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                         myPickPoint[index].id)
                                     .then(
                                   (value) {
-                                    context.loaderOverlay.hide();
                                     showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         content: Container(
-                                          height: 4.h,
                                           child: RichText(
                                             textAlign: TextAlign.center,
                                             text: TextSpan(

@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
@@ -28,11 +30,21 @@ class _PaymentPageState extends State<PaymentPage> {
   bool isLoading = true;
   bool _willGo = true;
 
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    secureScreen();
+  }
 
+  @override
+  void dispose() {
+    disposeSecureScreen();
+
+    super.dispose();
   }
 
   @override
@@ -45,9 +57,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     isFromWeb: true,
                   )),
           (route) => false);
-setState((){
-  _willGo = true;
-});
+      setState(() {
+        _willGo = true;
+      });
       return _willGo;
     }
 
@@ -61,7 +73,6 @@ setState((){
         }
       },
       child: SafeArea(
-
         top: true,
         bottom: true,
         maintainBottomViewPadding: true,
@@ -191,5 +202,9 @@ setState((){
             SnackBar(content: Text(message.message)),
           );
         });
+  }
+
+  Future<void> disposeSecureScreen() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 }

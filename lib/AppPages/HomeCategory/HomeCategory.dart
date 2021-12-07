@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +27,7 @@ class _HomeCategoryState extends State<HomeCategory> {
   var _focusNode = FocusNode();
 
   var isVisible = false;
-
+  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
   Color btnColor = Colors.black;
 
   var _suggestController = ScrollController();
@@ -77,9 +78,9 @@ class _HomeCategoryState extends State<HomeCategory> {
               ),
             ),
             body: ListView(
-                padding: EdgeInsets.only(
-                  bottom: 16.h,
-                ),
+              padding: EdgeInsets.only(
+                bottom: 16.h,
+              ),
               physics: NeverScrollableScrollPhysics(),
               children: [
                 Container(
@@ -301,7 +302,6 @@ class _HomeCategoryState extends State<HomeCategory> {
                 ),
                 Container(
                   height: 100.h,
-
                   child: FutureBuilder<dynamic>(
                     future: ApiCalls.getCategory(context),
                     builder: (BuildContext context,
@@ -337,13 +337,14 @@ class _HomeCategoryState extends State<HomeCategory> {
                                     child: ListView.builder(
                                   keyboardDismissBehavior:
                                       ScrollViewKeyboardDismissBehavior.onDrag,
-                                  itemCount: resultList.length+1,
+                                  itemCount: resultList.length + 1,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    if(index>=resultList.length){
-                                      return Container(height: 35.h,);
-
-                                    }else {
+                                    if (index >= resultList.length) {
+                                      return Container(
+                                        height: 35.h,
+                                      );
+                                    } else {
                                       return Padding(
                                         padding: EdgeInsets.fromLTRB(
                                             1.h, 0, 1.h, 2.h),
@@ -384,7 +385,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                     child: Center(
                                                       child: AutoSizeText(
                                                           resultList[index]
-                                                              ['name'].toUpperCase(),
+                                                                  ['name']
+                                                              .toUpperCase(),
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -421,141 +423,139 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       resultList[index]['sbc']
                                                               [minindex]
                                                           ['IsSubCategory'];
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      if (isSubCategory ==
-                                                          true) {
-                                                        var id =
-                                                            '${resultList[index]['sbc'][minindex]['Id']}';
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                      vertical: 8.0,
+                                                      horizontal: 12.0,
+                                                    ),
+                                                    child: OpenContainer(
+                                                      // padding: EdgeInsets.all(8.0),
+                                                      openBuilder: (BuildContext
+                                                              context,
+                                                          void Function(
+                                                                  {Object?
+                                                                      returnValue})
+                                                              action) {
+                                                        if (isSubCategory ==
+                                                            true) {
+                                                          var id =
+                                                              '${resultList[index]['sbc'][minindex]['Id']}';
 
-                                                        print(id);
+                                                          print(id);
 
-                                                        var title =
-                                                            resultList[index]
-                                                                        ['sbc']
-                                                                    [minindex]
-                                                                ['Name'];
-                                                        Navigator.push(context,
-                                                            CupertinoPageRoute(
-                                                                builder:
-                                                                    (context) {
+                                                          var title = resultList[
+                                                                      index]
+                                                                  ['sbc'][
+                                                              minindex]['Name'];
+
                                                           return SubCatNew(
                                                               catId: id,
                                                               title: title);
-                                                        }));
-                                                      } else {
-                                                        var id =
-                                                            '${resultList[index]['sbc'][minindex]['Id']}';
-                                                        var title =
-                                                            resultList[index]
-                                                                        ['sbc']
-                                                                    [minindex]
-                                                                ['Name'];
-                                                        Navigator.push(context,
-                                                            CupertinoPageRoute(
-                                                                builder:
-                                                                    (context) {
+                                                        } else {
+                                                          var id =
+                                                              '${resultList[index]['sbc'][minindex]['Id']}';
+                                                          var title = resultList[
+                                                                      index]
+                                                                  ['sbc'][
+                                                              minindex]['Name'];
+
                                                           return ProductList(
-                                                              categoryId: id,
+                                                              categoryId:
+                                                                  id,
                                                               title: title);
-                                                        }));
-                                                      }
-                                                    },
-                                                    child: Card(
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 8.0,
-                                                          horizontal: 12.0,
-                                                        ),
-                                                        child: Container(
-                                                          // padding: EdgeInsets.all(8.0),
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Container(
-                                                                  child:
-                                                                      ClipRRect(
-                                                                          borderRadius: BorderRadius.circular(
-                                                                              8),
-                                                                          child:
-                                                                              Card(
-                                                                            elevation:
-                                                                                12,
-                                                                            shadowColor:
-                                                                                Colors.grey,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
-                                                                              child: CachedNetworkImage(
-                                                                                imageUrl: imageUrl,
-                                                                                fit: BoxFit.cover,
-                                                                                width: 33.w,
-                                                                                height: 16.h,
-                                                                                placeholder: (context, reason) {
-                                                                                  return Center(
-                                                                                    child: SpinKitRipple(
-                                                                                      color: Colors.red,
-                                                                                      size: 90,
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                          ))),
-                                                              Expanded(
-                                                                child:
-                                                                    Container(
-                                                                  width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(2
-                                                                              .w),
-                                                                  height: 18.h,
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Padding(
+                                                        }
+                                                      },
+                                                      closedBuilder:
+                                                          (BuildContext
+                                                                  context,
+                                                              void Function()
+                                                                  action) {
+                                                        return Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                                child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                    child: Card(
+                                                                      elevation:
+                                                                          12,
+                                                                      shadowColor:
+                                                                          Colors.grey,
+                                                                      child:
+                                                                          Padding(
                                                                         padding:
-                                                                            const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                            const EdgeInsets.all(8.0),
                                                                         child:
-                                                                            AutoSizeText(
-                                                                          name.toString().toUpperCase(),
-                                                                          maxLines:
-                                                                              2,
-                                                                          textAlign:
-                                                                              TextAlign.start,
-                                                                          style: TextStyle(
-                                                                              height: 1.1,
-                                                                              fontSize: 5.w,
-                                                                              fontWeight: FontWeight.w600),
+                                                                            CachedNetworkImage(
+                                                                          imageUrl: imageUrl,
+                                                                          fit: BoxFit.cover,
+                                                                          width: 33.w,
+                                                                          height: 16.h,
+                                                                          placeholder: (context, reason) {
+                                                                            return Center(
+                                                                              child: SpinKitRipple(
+                                                                                color: Colors.red,
+                                                                                size: 90,
+                                                                              ),
+                                                                            );
+                                                                          },
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  ),
+                                                                    ))),
+                                                            Expanded(
+                                                              child:
+                                                                  Container(
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                padding: EdgeInsets
+                                                                    .all(2
+                                                                        .w),
+                                                                height:
+                                                                    18.h,
+                                                                child:
+                                                                    Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                      child:
+                                                                          AutoSizeText(
+                                                                        name.toString().toUpperCase(),
+                                                                        maxLines:
+                                                                            2,
+                                                                        textAlign:
+                                                                            TextAlign.start,
+                                                                        style: TextStyle(
+                                                                            height: 1.1,
+                                                                            fontSize: 5.w,
+                                                                            fontWeight: FontWeight.w600),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
                                                     ),
                                                   );
                                                 },

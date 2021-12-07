@@ -4,6 +4,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
+import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
@@ -136,46 +137,57 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                                 color: ConstantsVar.appColor,
                                 shape: RoundedRectangleBorder(),
                                 child: SizedBox(
-                                  height: 60,
+                                  height: 50,
                                   width: ConstantsVar.width / 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        "CANCEL",
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      "CANCEL",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
                                 )),
                           ),
                           Expanded(
-                              child: LoadingButton(
-                            onPressed: () async {
-                              if (_forgotState.currentState!.validate()) {
-                                _forgotState.currentState!.save();
-                                await ApiCalls.forgotPass(
-                                        context, emailController.text)
-                                    .whenComplete(() {
-                                  context.loaderOverlay.hide();
-                                  return showDialog(
-                                    context: context,
-                                    builder: (_) => loginCheck(),
-                                  );
-                                });
-                              } else {}
-                            },
+                              child: Container(
                             color: ConstantsVar.appColor,
-                            loadingWidget: SpinKitCircle(
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            defaultWidget: AutoSizeText(
-                              'CONFIRM',
+                            child: LoadingButton(
+                              height: 50,
+                              onPressed: () async {
+                                if (_forgotState.currentState!.validate()) {
+                                  _forgotState.currentState!.save();
+                                  await ApiCalls.forgotPass(
+                                          context, emailController.text)
+                                      .then((val) {
+                                    context.loaderOverlay.hide();
+                                    return showDialog(
+                                      context: context,
+                                      builder: (_) => CustomDialogBox(
+                                        descriptions: val,
+                                        text: 'Not Go',
+                                        isOkay: true,
+                                        img: 'MyAssets/logo.png',
+                                      ),
+                                    );
+                                  });
+                                } else {}
+                              },
+                              color: ConstantsVar.appColor,
+                              loadingWidget: SpinKitCircle(
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              defaultWidget: AutoSizeText(
+                                'CONFIRM',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           )),
                         ],

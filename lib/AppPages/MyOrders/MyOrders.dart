@@ -19,6 +19,7 @@ import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/ReturnScreen/ReturnScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 import 'OrderDetails.dart';
@@ -47,7 +48,10 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
         'apis/GetCustomerOrderList?apiToken=$apiToken&customerid=$customerId');
     print(uri);
 
-    var response = await get(uri);
+    var response = await get(
+      uri,
+      headers: ApiCalls.header,
+    );
     try {
       var result = jsonDecode(response.body);
       context.loaderOverlay.hide();
@@ -482,7 +486,8 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                                 child: Center(
                                                                   child:
                                                                       AutoSizeText(
-                                                                    'Return',
+                                                                    'Return'
+                                                                        .toUpperCase(),
                                                                     style:
                                                                         TextStyle(
                                                                       color: Colors
@@ -542,15 +547,11 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
     required String customerId,
   }) async {
     print('Order Id =====>>>>>>> ' + orderid);
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+
     final uri = Uri.parse(BuildConfig.base_url +
         "apis/GetCustomerOrderDetail?apiToken=${apiToken}&customerId=${customerId}&orderid=${orderid}");
     print(uri);
-    var response = await get(uri);
+    var response = await get(uri, headers: ApiCalls.header);
 
     try {
       var result = jsonDecode(response.body);

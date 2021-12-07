@@ -5,9 +5,14 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:play_kit/play_kit.dart';
 
 Widget SliderImages(List<String> images, List<String> largeImage,
-    BuildContext context, String discountPercentage,String productId) {
+    BuildContext context, String discountPercentage, String productId) {
+  double _scale = 1.0;
+  double _previousScale = 0;
   return Container(
     height: 52.h,
     width: 85.w,
@@ -27,11 +32,23 @@ Widget SliderImages(List<String> images, List<String> largeImage,
                     child: Hero(
                       tag: 'ProductImage$productId',
                       transitionOnUserGestures: true,
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: images[index],
-                        placeholder: (context, reason) => Center(
-                          child: CircularProgressIndicator(),
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => ImageDialog(
+                              imageUrl: images[index],
+                            ),
+                          );
+                        },
+                        child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          imageUrl: images[index],
+                          placeholder: (context, reason) => Center(
+                            child: SpinKitRipple(
+                              color: Colors.red,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -87,17 +104,15 @@ class ImageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Padding(
-        padding: EdgeInsets.all(6),
-        child: AspectRatio(
-          aspectRatio: 4 / 4,
-          child: Container(
-            // width: double.infinity,
-            // height: 200,
-            decoration: BoxDecoration(
-                // color: Colors.transparent,
-                image: DecorationImage(
-                    image: NetworkImage(imageUrl), fit: BoxFit.fill)),
+      insetPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+      child: PlayContainer(
+        blur: 20,
+        width: 105.w,
+        height: 100.h,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: PhotoView(
+            imageProvider: NetworkImage(imageUrl),
           ),
         ),
       ),

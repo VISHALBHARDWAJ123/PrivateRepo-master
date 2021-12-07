@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 
 // import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
 class SubCatNew extends StatefulWidget {
@@ -151,16 +153,18 @@ class _SubCatNewState extends State<SubCatNew> {
                             if (mounted)
                               setState(() {
                                 var value = _searchController.text;
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute(
-                                    builder: (context) => SearchPage(
-                                      isScreen: true,
-                                      keyword: value,
-                                    ),
-                                  ),
-                                ).then((value) => setState((){
-                                  _searchController.clear();
-                                }));
+                                Navigator.of(context)
+                                    .push(
+                                      CupertinoPageRoute(
+                                        builder: (context) => SearchPage(
+                                          isScreen: true,
+                                          keyword: value,
+                                        ),
+                                      ),
+                                    )
+                                    .then((value) => setState(() {
+                                          _searchController.clear();
+                                        }));
                               });
 
                             print('Pressed via keypad');
@@ -193,16 +197,18 @@ class _SubCatNewState extends State<SubCatNew> {
                                 if (mounted)
                                   setState(() {
                                     var value = _searchController.text;
-                                    Navigator.of(context).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => SearchPage(
-                                          isScreen: true,
-                                          keyword: value,
-                                        ),
-                                      ),
-                                    ).then((value) => setState((){
-                                      _searchController.clear();
-                                    }));
+                                    Navigator.of(context)
+                                        .push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => SearchPage(
+                                              isScreen: true,
+                                              keyword: value,
+                                            ),
+                                          ),
+                                        )
+                                        .then((value) => setState(() {
+                                              _searchController.clear();
+                                            }));
                                   });
                               },
                               child: Icon(Icons.search_sharp),
@@ -266,9 +272,9 @@ class _SubCatNewState extends State<SubCatNew> {
                                                     isScreen: true,
                                                   ),
                                                 ),
-                                              ).then((value) => setState((){
-                                                _searchController.clear();
-                                              }));
+                                              ).then((value) => setState(() {
+                                                    _searchController.clear();
+                                                  }));
                                             },
                                             child: Container(
                                               height: 5.2.h,
@@ -350,7 +356,10 @@ class _SubCatNewState extends State<SubCatNew> {
                           } else {
                             myList = snapshot.data;
 
-                            return  SubCatWidget(title: widget.title, myList: myList,);
+                            return SubCatWidget(
+                              title: widget.title,
+                              myList: myList,
+                            );
                           }
                       }
                     }),
@@ -365,8 +374,12 @@ class _SubCatNewState extends State<SubCatNew> {
   Future getSubCategories(String catId) async {
     final uri = Uri.parse(
         BuildConfig.base_url + 'apis/GetSubCategories?categoryid=$catId');
+    print(uri);
     try {
-      var response = await http.get(uri);
+      var response = await http.get(
+        uri,
+        headers: ApiCalls.header,
+      );
       print(json.decode(response.body));
       return json.decode(response.body)['ResponseData'];
     } on Exception catch (e) {
@@ -391,6 +404,8 @@ class SubCatWidget extends StatefulWidget {
 class _SubCatWidgetState extends State<SubCatWidget> {
   late bool isSubCategory;
 
+  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -410,7 +425,6 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           ),
         ),
         Expanded(
-
             child: ListView.builder(
           itemCount: widget.myList.length,
           shrinkWrap: false,
@@ -419,7 +433,6 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           itemBuilder: (context, int index) {
             isSubCategory = widget.myList[index]['IsSubcategory'];
             return InkWell(
-
               onTap: () {
                 print('${widget.myList[index]['Id']}');
                 String id = widget.myList[index]['Id'].toString();
@@ -437,15 +450,29 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                         );
                       }));
               },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 12.0,
-                  ),
-                  child: Container(
-                    // padding: EdgeInsets.all(8.0),
-                    child: Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 12.0,
+                ),
+                child: OpenContainer(
+                  transitionType: _transitionType,
+                  openBuilder: (BuildContext context,
+                      void Function({Object? returnValue}) action) {
+                    print('${widget.myList[index]['Id']}');
+                    String id = widget.myList[index]['Id'].toString();
+                    if (isSubCategory == true) {
+                      return SubCatNew(
+                          catId: id, title: widget.myList[index]['Name']);
+                    } else
+                      return ProductList(
+                        categoryId: widget.myList[index]['Id'],
+                        title: widget.myList[index]['Name'],
+                      );
+                  },
+                  closedBuilder:
+                      (BuildContext context, void Function() action) {
+                    return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -457,7 +484,8 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: widget.myList[index]['PictureUrl'],
+                                      imageUrl: widget.myList[index]
+                                          ['PictureUrl'],
                                       fit: BoxFit.fill,
                                       width: 33.w,
                                       height: 16.h,
@@ -486,7 +514,9 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: AutoSizeText(
-                                    widget.myList[index]['Name'].toString().toUpperCase(),
+                                    widget.myList[index]['Name']
+                                        .toString()
+                                        .toUpperCase(),
                                     maxLines: 2,
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
@@ -500,8 +530,8 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                           ),
                         )
                       ],
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             );

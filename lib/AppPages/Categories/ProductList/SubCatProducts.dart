@@ -282,6 +282,7 @@ class _AddCartBtnState extends State<AddCartBtn> {
             ? Icon(
                 Icons.shopping_cart,
                 size: 18,
+                color: widget.color,
               )
             : Container(color: Colors.black),
         text: AutoSizeText(
@@ -291,24 +292,22 @@ class _AddCartBtnState extends State<AddCartBtn> {
           ),
         ),
         check: widget.checkIcon,
-        onPressed: (id) => checkStateId(stateId,currentFocus),
+        onPressed: (id) => checkStateId(stateId, currentFocus),
       ),
     );
   }
 
-  void checkStateId(AddToCartButtonStateId id,  FocusScopeNode currentFocus ) async {
+  void checkStateId(
+      AddToCartButtonStateId id, FocusScopeNode currentFocus) async {
     // bool giftCardAvail = false;
 
-
-      if (!currentFocus.hasPrimaryFocus) {
-        currentFocus.unfocus();
-      }
-
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
 
     if (id == AddToCartButtonStateId.idle) {
       //handle logic when pressed on idle state button.
       if (widget.guestCustomerId != null || widget.guestCustomerId != '') {
-
         if (widget.isGiftCard == true &&
             widget.recipEmail.trim().length == 0 &&
             widget.recipName.trim().length == 0 &&
@@ -316,9 +315,9 @@ class _AddCartBtnState extends State<AddCartBtn> {
             widget.email.trim().length == 0) {
           Fluttertoast.showToast(
               msg:
-              'Please Provide following Fields:\nRecipient\'s Name,\nRecipient\'s Email,\nSender Name,\nSender Email.');
-        }else
-        if (widget.isGiftCard == true && widget.recipName.trim().length == 0) {
+                  'Please Provide following Fields:\nRecipient\'s Name,\nRecipient\'s Email,\nSender Name,\nSender Email.');
+        } else if (widget.isGiftCard == true &&
+            widget.recipName.trim().length == 0) {
           Fluttertoast.showToast(msg: 'Please Provide Recipient\'s Name.');
           // setState(()=>giftCardAvail =)
         } else if (widget.isGiftCard == true &&
@@ -331,7 +330,7 @@ class _AddCartBtnState extends State<AddCartBtn> {
         } else if (widget.isGiftCard == true &&
             widget.email.trim().length == 0) {
           Fluttertoast.showToast(msg: 'Please Provide Sender Email.');
-        }  else if (widget.isGiftCard == true &&
+        } else if (widget.isGiftCard == true &&
             widget.recipEmail.trim().length != 0 &&
             widget.recipName.trim().length != 0 &&
             widget.name.trim().length != 0 &&

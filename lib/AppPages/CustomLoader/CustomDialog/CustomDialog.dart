@@ -43,11 +43,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: contentBox(context),
+      child: contentBox(context,widget.descriptions,widget.text,widget.isOkay),
     );
   }
 
-  contentBox(context) {
+ static contentBox(context,String descriptions, String text, bool isOkay) {
     return Stack(
       children: <Widget>[
         Container(
@@ -66,7 +66,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               AutoSizeText(
-                widget.descriptions,
+                descriptions,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -74,7 +74,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 height: 6,
               ),
               AutoSizeText(
-                widget.text.contains('Not Go') ? '' : widget.text,
+                text.contains('Not Go') ? '' : text,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
@@ -84,11 +84,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               Align(
                 alignment: Alignment.center,
                 child: Visibility(
-                  visible: widget.isOkay,
+                  visible: isOkay,
                   child: FlatButton(
                       color: Colors.black,
                       onPressed: () {
-                        widget.text == 'Not Go'
+                        text == 'Not Go'
                             ? Navigator.pop(context)
                             : Navigator.pushAndRemoveUntil(
                                 context,
@@ -202,7 +202,7 @@ class _CustomDialogBoxState1 extends State<CustomDialogBox1> {
                       Navigator.of(context).pop();
                     },
                     child: AutoSizeText(
-                      widget.text,
+                      'Okay',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
