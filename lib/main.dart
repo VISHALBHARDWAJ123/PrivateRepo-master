@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -20,6 +21,7 @@ import 'package:untitled2/utils/CartBadgeCounter/SearchModel/SearchNotifier.dart
 import 'package:workmanager/workmanager.dart';
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
+
 const simpleTaskKey = "simpleTask";
 const rescheduledTaskKey = "rescheduledTask";
 const failedTaskKey = "failedTask";
@@ -62,7 +64,7 @@ void callbackDispatcher() {
         break;
       case Workmanager.iOSBackgroundTask:
         print("The iOS background fetch was triggered");
-        Directory? tempDir =  Directory.systemTemp;
+        Directory? tempDir = Directory.systemTemp;
         String? tempPath = tempDir.path;
         print(
             "You can access other plugins in the background, for example Directory.getTemporaryDirectory(): $tempPath");
@@ -72,7 +74,6 @@ void callbackDispatcher() {
     return Future.value(true);
   });
 }
-
 
 Future<void> setFireStoreData(
   RemoteMessage message,
@@ -95,54 +96,70 @@ Future<void> _messageHandler(RemoteMessage message) async {
   print('background message message got ');
 }
 
+const _kShouldTestAsyncErrorOnInit = false;
+
+// Toggle this for testing Crashlytics in your app locally.
+const _kTestingCrashlytics = true;
+
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled == true) {
+        FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      } else {
+        FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      }
+      GestureBinding.instance!.resamplingEnabled = true;
 
-  GestureBinding.instance!.resamplingEnabled = true;
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) async {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
-        .then((_) async {
-      ConstantsVar.prefs = await SharedPreferences.getInstance();
-      FirebaseMessaging.instance;
-      FirebaseMessaging.onBackgroundMessage(_messageHandler);
-      FirebaseMessaging.onMessage.listen((event) {
-        _messageHandler(event);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+          .then((_) async {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
+            .then((_) async {
+          ConstantsVar.prefs = await SharedPreferences.getInstance();
+          FirebaseMessaging.instance;
+          FirebaseMessaging.onBackgroundMessage(_messageHandler);
+          FirebaseMessaging.onMessage.listen((event) {
+            _messageHandler(event);
+          });
+          // FirebaseMessaging.onMessage.;
+          runApp(MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => cartCounter(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => SearchModel(),
+              ),
+            ],
+            child: Phoenix(
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'The One',
+                home: SplashScreen(),
+                theme: ThemeData(
+                    pageTransitionsTheme: PageTransitionsTheme(
+                      builders: {
+                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                        TargetPlatform.iOS:
+                            CupertinoWillPopScopePageTransionsBuilder(),
+                      },
+                    ),
+                    fontFamily: 'Arial',
+                    primarySwatch: MaterialColor(0xFF800E4F, color),
+                    primaryColor: ConstantsVar.appColor),
+              ),
+            ),
+          ));
+        });
       });
-      // FirebaseMessaging.onMessage.;
-      runApp(MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) => cartCounter(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => SearchModel(),
-          ),
-        ],
-        child: Phoenix(
-          child: MaterialApp(
-
-            debugShowCheckedModeBanner: false,
-            title: 'The One',
-            home: SplashScreen(),
-            theme: ThemeData(
-
-                pageTransitionsTheme: PageTransitionsTheme(
-                  builders: {
-                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                    TargetPlatform.iOS:
-                        CupertinoWillPopScopePageTransionsBuilder(),
-                  },
-                ),
-                fontFamily: 'Arial',
-                primarySwatch: MaterialColor(0xFF800E4F, color),
-                primaryColor: ConstantsVar.appColor),
-          ),
-        ),
-      ));
-    });
-  });
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    },
+  );
 }
 
 Map<int, Color> color = {

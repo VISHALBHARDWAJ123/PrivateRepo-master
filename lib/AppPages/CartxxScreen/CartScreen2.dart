@@ -238,8 +238,18 @@ class _CartScreen2State extends State<CartScreen2>
                             child: Center(
                               child: AutoSizeText(
                                 'My Cart'.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 6.w, fontWeight: FontWeight.w900),
+                                style: TextStyle(shadows: <Shadow>[
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 3.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 8.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ], fontSize: 5.w, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

@@ -169,10 +169,18 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                   child: Center(
                                     child: AutoSizeText(
                                       'MY ORDERS',
-                                      style: TextStyle(
-                                        fontSize: 8.5.w,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: TextStyle(shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(1.0, 1.2),
+                                          blurRadius: 3.0,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        Shadow(
+                                          offset: Offset(1.0, 1.2),
+                                          blurRadius: 8.0,
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),

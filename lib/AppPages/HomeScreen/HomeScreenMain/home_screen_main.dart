@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -68,22 +69,21 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   late ScrollController _productController, _serviceController;
   ContainerTransitionType _transitionType = ContainerTransitionType.fade;
-  SharedAxisTransitionType? _transitionType1 =
-      SharedAxisTransitionType.horizontal;
+
 
   @override
   void initState() {
     super.initState();
     _productController = new ScrollController();
     _serviceController =
-        new ScrollController(initialScrollOffset: modelList.length + 20.w);
+        new ScrollController(initialScrollOffset: modelList.length + 30.w);
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
     getApiToken().then((value) {
-      setState(() {});
+      if (mounted) setState(() {});
       apiCallToHomeScreen(value);
     });
-    setState((){});
+    setState(() {});
   }
 
   @override
@@ -948,8 +948,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     getSearchSuggestions();
-    getTopicPage()
-        .whenComplete(() => setState(() => _serviceController.jumpTo(60)));
+    getTopicPage();
     // var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);

@@ -13,6 +13,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 
 class HomeCategory extends StatefulWidget {
@@ -327,8 +328,20 @@ class _HomeCategoryState extends State<HomeCategory> {
                                     child: AutoSizeText(
                                       'SHOP BY CATEGORY',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 6.w),
+                                          shadows: <Shadow>[
+                                            Shadow(
+                                              offset: Offset(1.0, 1.2),
+                                              blurRadius: 3.0,
+                                              color: Colors.grey.shade300,
+                                            ),
+                                            Shadow(
+                                              offset: Offset(1.0, 1.2),
+                                              blurRadius: 8.0,
+                                              color: Colors.grey.shade300,
+                                            ),
+                                          ],
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                       softWrap: true,
                                     ),
                                   ),
@@ -384,18 +397,31 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                     )),
                                                     child: Center(
                                                       child: AutoSizeText(
-                                                          resultList[index]
-                                                                  ['name']
-                                                              .toUpperCase(),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  .06)),
+                                                        resultList[index]
+                                                                ['name']
+                                                            .toUpperCase(),
+                                                        style: TextStyle(
+                                                          shadows: <Shadow>[
+                                                            Shadow(
+                                                              offset: Offset(
+                                                                  1.0, 1.2),
+                                                              blurRadius: 3.0,
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                            ),
+                                                            Shadow(
+                                                              offset: Offset(
+                                                                  1.0, 1.2),
+                                                              blurRadius: 8.0,
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                            ),
+                                                          ],
+                                                          fontSize: 5.w,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -424,9 +450,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                               [minindex]
                                                           ['IsSubCategory'];
                                                   return Padding(
-                                                    padding:
-                                                        const EdgeInsets
-                                                            .symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       vertical: 8.0,
                                                       horizontal: 12.0,
                                                     ),
@@ -443,12 +468,15 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                           var id =
                                                               '${resultList[index]['sbc'][minindex]['Id']}';
 
-                                                          print(id);
+                                                          print(
+                                                              'SubCategory id>>>>>>' +
+                                                                  id.toString());
 
-                                                          var title = resultList[
-                                                                      index]
-                                                                  ['sbc'][
-                                                              minindex]['Name'];
+                                                          var title =
+                                                              resultList[index][
+                                                                          'sbc']
+                                                                      [minindex]
+                                                                  ['Name'];
 
                                                           return SubCatNew(
                                                               catId: id,
@@ -456,20 +484,19 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                         } else {
                                                           var id =
                                                               '${resultList[index]['sbc'][minindex]['Id']}';
-                                                          var title = resultList[
-                                                                      index]
-                                                                  ['sbc'][
-                                                              minindex]['Name'];
+                                                          var title =
+                                                              resultList[index][
+                                                                          'sbc']
+                                                                      [minindex]
+                                                                  ['Name'];
 
                                                           return ProductList(
-                                                              categoryId:
-                                                                  id,
+                                                              categoryId: id,
                                                               title: title);
                                                         }
                                                       },
                                                       closedBuilder:
-                                                          (BuildContext
-                                                                  context,
+                                                          (BuildContext context,
                                                               void Function()
                                                                   action) {
                                                         return Row(
@@ -481,48 +508,62 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Container(
-                                                                child: ClipRRect(
-                                                                    borderRadius: BorderRadius.circular(8),
-                                                                    child: Card(
-                                                                      elevation:
-                                                                          12,
-                                                                      shadowColor:
-                                                                          Colors.grey,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(8.0),
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl: imageUrl,
-                                                                          fit: BoxFit.cover,
-                                                                          width: 33.w,
-                                                                          height: 16.h,
-                                                                          placeholder: (context, reason) {
-                                                                            return Center(
-                                                                              child: SpinKitRipple(
-                                                                                color: Colors.red,
-                                                                                size: 90,
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ),
+                                                                decoration: BoxDecoration(
+                                                                    //color: const Color(0xFF66BB6A),
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade400,
+                                                                        blurRadius:
+                                                                            0,
+                                                                        offset: Offset(
+                                                                           1,
+                                                                            1),
                                                                       ),
-                                                                    ))),
+
+                                                                    ]),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          2.0),
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl:
+                                                                        imageUrl,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: 33.w,
+                                                                    height:
+                                                                        33.w,
+                                                                    placeholder:
+                                                                        (context,
+                                                                            reason) {
+                                                                      return Center(
+                                                                        child:
+                                                                            SpinKitRipple(
+                                                                          color:
+                                                                              Colors.red,
+                                                                          size:
+                                                                              90,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                )),
                                                             Expanded(
-                                                              child:
-                                                                  Container(
+                                                              child: Container(
                                                                 width: MediaQuery.of(
                                                                         context)
                                                                     .size
                                                                     .width,
-                                                                padding: EdgeInsets
-                                                                    .all(2
-                                                                        .w),
-                                                                height:
-                                                                    18.h,
-                                                                child:
-                                                                    Column(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(2
+                                                                            .w),
+                                                                height: 18.h,
+                                                                child: Column(
                                                                   mainAxisSize:
                                                                       MainAxisSize
                                                                           .max,
@@ -534,18 +575,24 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                           .center,
                                                                   children: [
                                                                     Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              8.0),
                                                                       child:
                                                                           AutoSizeText(
-                                                                        name.toString().toUpperCase(),
+                                                                        name
+                                                                            .toString()
+                                                                            .toUpperCase(),
                                                                         maxLines:
                                                                             2,
                                                                         textAlign:
                                                                             TextAlign.start,
                                                                         style: TextStyle(
-                                                                            height: 1.1,
-                                                                            fontSize: 5.w,
+                                                                            height:
+                                                                                1.1,
+                                                                            fontSize:
+                                                                                5.w,
                                                                             fontWeight: FontWeight.w600),
                                                                       ),
                                                                     ),

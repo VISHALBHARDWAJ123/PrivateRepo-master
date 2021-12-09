@@ -519,4 +519,4 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
 }
 
 const String loginString =
-    'Login or register to save,update or access your shopping list from our app on any other android/iOS device or our website.';
+    'Login or register to access our affordable home fashion furniture & accessories in THE One Shopping app or on our website.';

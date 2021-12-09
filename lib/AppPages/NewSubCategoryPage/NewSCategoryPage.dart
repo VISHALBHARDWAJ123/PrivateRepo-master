@@ -62,7 +62,7 @@ class _SubCatNewState extends State<SubCatNew> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("SubCatNew");
+    print("SubCatNew Screen is Here");
     initSharedPrefs();
     print('${widget.catId}');
     getSubCategories(widget.catId);
@@ -402,7 +402,7 @@ class SubCatWidget extends StatefulWidget {
 }
 
 class _SubCatWidgetState extends State<SubCatWidget> {
-  late bool isSubCategory;
+  bool? isSubCategory;
 
   ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
@@ -419,7 +419,18 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           child: Center(
             child: AutoSizeText(
               widget.title.toString().toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 6.w),
+              style: TextStyle(shadows: <Shadow>[
+                Shadow(
+                  offset: Offset(1.0, 1.2),
+                  blurRadius: 3.0,
+                  color: Colors.grey.shade300,
+                ),
+                Shadow(
+                  offset: Offset(1.0, 1.2),
+                  blurRadius: 8.0,
+                  color: Colors.grey.shade300,
+                ),
+              ], fontSize: 5.w, fontWeight: FontWeight.bold),
               softWrap: true,
             ),
           ),
@@ -431,108 +442,90 @@ class _SubCatWidgetState extends State<SubCatWidget> {
           padding: EdgeInsets.only(bottom: 220),
           scrollDirection: Axis.vertical,
           itemBuilder: (context, int index) {
-            isSubCategory = widget.myList[index]['IsSubcategory'];
-            return InkWell(
-              onTap: () {
-                print('${widget.myList[index]['Id']}');
-                String id = widget.myList[index]['Id'].toString();
-                isSubCategory == true
-                    ? Navigator.push(context,
-                        CupertinoPageRoute(builder: (context) {
-                        return SubCatNew(
-                            catId: id, title: widget.myList[index]['Name']);
-                      }))
-                    : Navigator.push(context,
-                        CupertinoPageRoute(builder: (context) {
-                        return ProductList(
-                          categoryId: widget.myList[index]['Id'],
-                          title: widget.myList[index]['Name'],
-                        );
-                      }));
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 12.0,
-                ),
-                child: OpenContainer(
-                  transitionType: _transitionType,
-                  openBuilder: (BuildContext context,
-                      void Function({Object? returnValue}) action) {
-                    print('${widget.myList[index]['Id']}');
-                    String id = widget.myList[index]['Id'].toString();
-                    if (isSubCategory == true) {
-                      return SubCatNew(
-                          catId: id, title: widget.myList[index]['Name']);
-                    } else
-                      return ProductList(
-                        categoryId: widget.myList[index]['Id'],
-                        title: widget.myList[index]['Name'],
-                      );
-                  },
-                  closedBuilder:
-                      (BuildContext context, void Function() action) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Card(
-                                  elevation: 8,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl: widget.myList[index]
-                                          ['PictureUrl'],
-                                      fit: BoxFit.fill,
-                                      width: 33.w,
-                                      height: 16.h,
-                                      placeholder: (context, reason) {
-                                        return Center(
-                                          child: SpinKitRipple(
-                                            color: Colors.red,
-                                            size: 90,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ))),
-                        Expanded(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(2.w),
-                            height: 18.h,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: AutoSizeText(
-                                    widget.myList[index]['Name']
-                                        .toString()
-                                        .toUpperCase(),
-                                    maxLines: 2,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        height: 1.1,
-                                        fontSize: 5.w,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 12.0,
+              ),
+              child: OpenContainer(
+                middleColor: Colors.white,
+                transitionType: _transitionType,
+                openBuilder: (BuildContext context,
+                    void Function({Object? returnValue}) action) {
+                  isSubCategory = widget.myList[index]['IsSubcategory'] as bool;
+
+                  String id = widget.myList[index]['Id'].toString();
+                  print(isSubCategory);
+                  print('isSubCategory id' + id);
+                  print('${widget.myList[index]['Id']}');
+                  if (isSubCategory == true) {
+                    return SubCatNew(
+                        catId: id, title: widget.myList[index]['Name']);
+                  } else
+                    return ProductList(
+                      categoryId: widget.myList[index]['Id'],
+                      title: widget.myList[index]['Name'],
                     );
-                  },
-                ),
+                },
+                closedBuilder: (BuildContext context, void Function() action) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              elevation: 2,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.myList[index]['PictureUrl'],
+                                fit: BoxFit.fill,
+                                width: 33.w,
+                                height: 33.w,
+                                placeholder: (context, reason) {
+                                  return Center(
+                                    child: SpinKitRipple(
+                                      color: Colors.red,
+                                      size: 90,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(2.w),
+                          height: 18.h,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: AutoSizeText(
+                                  widget.myList[index]['Name']
+                                      .toString()
+                                      .toUpperCase(),
+                                  maxLines: 2,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      height: 1.1,
+                                      fontSize: 5.w,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
             );
           },

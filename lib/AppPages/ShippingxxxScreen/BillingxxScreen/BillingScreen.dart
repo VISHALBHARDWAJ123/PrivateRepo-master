@@ -187,8 +187,18 @@ class _BillingDetailsState extends State<BillingDetails>
                             padding: EdgeInsets.symmetric(vertical: 20),
                             child: AutoSizeText(
                               'Billing Details'.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 6.w, fontWeight: FontWeight.bold),
+                              style: TextStyle(shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 8.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ], fontSize: 5.w, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -207,9 +217,18 @@ class _BillingDetailsState extends State<BillingDetails>
                             child: Center(
                               child: AutoSizeText(
                                 'Select a Billing Address',
-                                style: TextStyle(
-                                    fontSize: 6.4.w,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(shadows: <Shadow>[
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 3.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 8.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ], fontSize: 5.w, fontWeight: FontWeight.bold),
                               ),
                             )),
                       ),
@@ -288,8 +307,18 @@ class _BillingDetailsState extends State<BillingDetails>
                           child: Center(
                             child: AutoSizeText(
                               'Or Add a New Billing Address',
-                              style: TextStyle(
-                                  fontSize: 6.4.w, fontWeight: FontWeight.bold),
+                              style: TextStyle(shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 8.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ], fontSize: 5.w, fontWeight: FontWeight.bold),
                             ),
                           )),
                     ),
@@ -353,9 +382,18 @@ class _BillingDetailsState extends State<BillingDetails>
                               child: Center(
                                 child: AutoSizeText(
                                   'Order Summary',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 6.4.w),
+                                  style: TextStyle(shadows: <Shadow>[
+                                    Shadow(
+                                      offset: Offset(1.0, 1.2),
+                                      blurRadius: 3.0,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                    Shadow(
+                                      offset: Offset(1.0, 1.2),
+                                      blurRadius: 8.0,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ], fontSize: 5.w, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),

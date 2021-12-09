@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -107,10 +108,18 @@ class _ShippingMethodState extends State<ShippingMethod> {
                           child: Center(
                             child: AutoSizeText(
                               'Select Shipping Method'.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: Adaptive.w(5)),
+                              style: TextStyle(shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 8.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ], fontSize: 5.w, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -182,32 +191,41 @@ class _ShippingMethodState extends State<ShippingMethod> {
                 hasScrollBody: false,
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: GestureDetector(
-                    onTap: () async {
-                      context.loaderOverlay.show(
-                          widget: SpinKitRipple(
-                        color: Colors.red,
-                        size: 90,
-                      ));
-                      if (isSelected == false) {
-                        Fluttertoast.showToast(
-                            msg: 'Please select a Shipping Method first');
-                        context.loaderOverlay.hide();
-                      } else {
-                        selectShippingMethod();
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      color: ConstantsVar.appColor,
-                      child: Center(
-                        child: AutoSizeText(
-                          'Confirm'.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.bold),
+                  child: Container(
+                    width: 100.w,
+                    height: 51,
+                    color: ConstantsVar.appColor,
+                    child: LoadingButton(
+                      onPressed: () async {
+                        context.loaderOverlay.show(
+                            widget: SpinKitRipple(
+                          color: Colors.red,
+                          size: 90,
+                        ));
+                        if (isSelected == false) {
+                          Fluttertoast.showToast(
+                              msg: 'Please select a Shipping Method first');
+                          context.loaderOverlay.hide();
+                        } else {
+                          await selectShippingMethod();
+                        }
+                      },
+                      loadingWidget: SpinKitCircle(
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      defaultWidget: Container(
+                        width: double.infinity,
+                        height: 50,
+                        color: ConstantsVar.appColor,
+                        child: Center(
+                          child: AutoSizeText(
+                            'Confirm'.toUpperCase(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -234,7 +252,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
         'apis/GetShippingMethod?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId');
     try {
       print('Shipping method Apis >>>>>> $uri');
-      var response = await http.get(uri,headers: ApiCalls.header);
+      var response = await http.get(uri, headers: ApiCalls.header);
       print(jsonDecode(response.body));
       ShippingMethodResponse methodResponse =
           ShippingMethodResponse.fromJson(jsonDecode(response.body));

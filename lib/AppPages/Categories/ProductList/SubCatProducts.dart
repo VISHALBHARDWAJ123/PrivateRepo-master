@@ -43,6 +43,7 @@ class _ProductListState extends State<ProductList> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('Hi Myself Product List Page');
     getId().whenComplete(() =>
         ApiCalls.getCategoryById('${widget.categoryId}', context, 0)
             .then((value) {

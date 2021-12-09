@@ -125,6 +125,7 @@ dependencies:
   flutter_offline: ^2.0.0
   flutter_widget_from_html_core: ^0.8.2
   animations: ^2.0.2
+  firebase_crashlytics: ^2.4.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

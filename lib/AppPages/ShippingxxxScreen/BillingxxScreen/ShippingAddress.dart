@@ -193,10 +193,18 @@ class _ShippingAddressState extends State<ShippingAddress> {
                 child: Center(
                     child: AutoSizeText(
                   'Shipping Details'.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 6.w,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(1.0, 1.2),
+                      blurRadius: 3.0,
+                      color: Colors.grey.shade300,
+                    ),
+                    Shadow(
+                      offset: Offset(1.0, 1.2),
+                      blurRadius: 8.0,
+                      color: Colors.grey.shade300,
+                    ),
+                  ], fontSize: 5.w, fontWeight: FontWeight.bold),
                 )),
               ),
             ),
@@ -240,11 +248,18 @@ class _ShippingAddressState extends State<ShippingAddress> {
                           padding: EdgeInsets.symmetric(horizontal: 3.w),
                           child: AutoSizeText(
                             'Click & Collect',
-                            style: TextStyle(
-                              fontSize: 5.7.w,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
-                            ),
+                            style: TextStyle(shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 3.0,
+                                color: Colors.grey.shade300,
+                              ),
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                            ], fontSize: 5.w, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -299,9 +314,23 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                             text: TextSpan(
                                               text: 'You have selected:\n',
                                               style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 3.5.w,
-                                                  fontWeight: FontWeight.bold),
+                                                  shadows: <Shadow>[
+                                                    Shadow(
+                                                      offset: Offset(1.0, 1.2),
+                                                      blurRadius: 3.0,
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ),
+                                                    Shadow(
+                                                      offset: Offset(1.0, 1.2),
+                                                      blurRadius: 8.0,
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ),
+                                                  ],
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
@@ -319,9 +348,20 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                           textAlign: TextAlign.center,
                                           softWrap: true,
                                           style: TextStyle(
-                                            fontSize: 5.w,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 3.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 8.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                              ],
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         actions: [
                                           TextButton(
@@ -372,15 +412,26 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
-                            margin: EdgeInsets.only(left: 10.0),
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: AutoSizeText(
-                                'Or Select a Shipping Address',
-                                style: TextStyle(
-                                    fontSize: 6.w, fontWeight: FontWeight.bold),
-                              ),
-                            )),
+                          margin: EdgeInsets.only(left: 10.0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: AutoSizeText(
+                              'Or Select a Shipping Address',
+                              style: TextStyle(shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 8.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -464,8 +515,18 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             'Or Add a New Shipping Address',
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 6.w, fontWeight: FontWeight.bold),
+                            style: TextStyle(shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 3.0,
+                                color: Colors.grey.shade300,
+                              ),
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                            ], fontSize: 5.w, fontWeight: FontWeight.bold),
                           ),
                         )),
                   ),
@@ -516,8 +577,18 @@ class _ShippingAddressState extends State<ShippingAddress> {
                           child: Center(
                             child: AutoSizeText(
                               'Order Summary',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 6.4.w),
+                              style: TextStyle(shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.2),
+                                  blurRadius: 8.0,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ], fontSize: 5.w, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
