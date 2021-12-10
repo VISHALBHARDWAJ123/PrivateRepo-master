@@ -456,6 +456,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       horizontal: 12.0,
                                                     ),
                                                     child: OpenContainer(
+                                                      closedElevation: 0,
+                                                      openElevation: 0,
                                                       // padding: EdgeInsets.all(8.0),
                                                       openBuilder: (BuildContext
                                                               context,
@@ -508,21 +510,23 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Container(
-                                                                decoration: BoxDecoration(
-                                                                    //color: const Color(0xFF66BB6A),
-                                                                    boxShadow: [
-                                                                      BoxShadow(
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade400,
-                                                                        blurRadius:
-                                                                            0,
-                                                                        offset: Offset(
-                                                                           1,
-                                                                            1),
-                                                                      ),
-
-                                                                    ]),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  //color: const Color(0xFF66BB6A),
+                                                                  // boxShadow: [
+                                                                  //   BoxShadow(
+                                                                  //     color: Colors
+                                                                  //         .grey
+                                                                  //         .shade400,
+                                                                  //     blurRadius:
+                                                                  //         0,
+                                                                  //     offset:
+                                                                  //         Offset(
+                                                                  //             1,
+                                                                  //             1),
+                                                                  //   ),
+                                                                  // ],
+                                                                ),
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets

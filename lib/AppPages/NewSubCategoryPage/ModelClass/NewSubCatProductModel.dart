@@ -21,16 +21,17 @@ class ProductListModel {
   String status;
   dynamic message;
   int productCount;
-  List<ResponseDatum> responseData;
-
   factory ProductListModel.fromJson(Map<String, dynamic> json) =>
       ProductListModel(
         status: json["Status"],
         message: json["Message"],
         productCount: json["ProductCount"],
         responseData: List<ResponseDatum>.from(
+            json["ResponseData"].map((x) => ResponseDatum.fromJson(x))).length == 0? []:List<ResponseDatum>.from(
             json["ResponseData"].map((x) => ResponseDatum.fromJson(x))),
       );
+
+  List<ResponseDatum> responseData;
 
   Map<String, dynamic> toJson() => {
         "Status": status,

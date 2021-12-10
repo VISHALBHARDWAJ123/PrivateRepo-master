@@ -34,10 +34,9 @@ class ApiCalls {
     final baseUrl = Uri.parse(BuildConfig.base_url +
         'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
 
-    print(baseUrl);
+    print('Product List Api>>>>'+baseUrl.toString());
 
     try {
-      ConstantsVar.isVisible = true;
       var response = await http.get(baseUrl, headers: header);
 
       print(jsonDecode(response.body)['ResponseData']);

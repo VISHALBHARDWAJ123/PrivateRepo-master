@@ -448,6 +448,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                 horizontal: 12.0,
               ),
               child: OpenContainer(
+                closedElevation: 0,openElevation: 0,
                 middleColor: Colors.white,
                 transitionType: _transitionType,
                 openBuilder: (BuildContext context,
@@ -459,13 +460,16 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                   print('isSubCategory id' + id);
                   print('${widget.myList[index]['Id']}');
                   if (isSubCategory == true) {
+                    print('I am going to Subcategory Page');
                     return SubCatNew(
                         catId: id, title: widget.myList[index]['Name']);
-                  } else
+                  } else {
+                    print('I am going to Product Page');
                     return ProductList(
                       categoryId: widget.myList[index]['Id'],
                       title: widget.myList[index]['Name'],
                     );
+                  }
                 },
                 closedBuilder: (BuildContext context, void Function() action) {
                   return Row(
@@ -476,22 +480,19 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                           color: Colors.white,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Material(
-                              elevation: 2,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.myList[index]['PictureUrl'],
-                                fit: BoxFit.fill,
-                                width: 33.w,
-                                height: 33.w,
-                                placeholder: (context, reason) {
-                                  return Center(
-                                    child: SpinKitRipple(
-                                      color: Colors.red,
-                                      size: 90,
-                                    ),
-                                  );
-                                },
-                              ),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.myList[index]['PictureUrl'],
+                              fit: BoxFit.fill,
+                              width: 33.w,
+                              height: 33.w,
+                              placeholder: (context, reason) {
+                                return Center(
+                                  child: SpinKitRipple(
+                                    color: Colors.red,
+                                    size: 90,
+                                  ),
+                                );
+                              },
                             ),
                           )),
                       Expanded(

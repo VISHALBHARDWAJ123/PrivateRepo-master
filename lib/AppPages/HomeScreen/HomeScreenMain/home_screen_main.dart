@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:ui';
@@ -12,6 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +23,8 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/TopicPageResponse/T
 import 'package:untitled2/AppPages/NewSubCategoryPage/NewSCategoryPage.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
+import 'package:untitled2/AppPages/THEOneAds/AdsResponse.dart';
+import 'package:untitled2/AppPages/THEOneAds/TheOneAdd.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -70,7 +74,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   late ScrollController _productController, _serviceController;
   ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
-
   @override
   void initState() {
     super.initState();
@@ -81,9 +84,36 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     getSocialMediaLink();
     getApiToken().then((value) {
       if (mounted) setState(() {});
-      apiCallToHomeScreen(value);
+      apiCallToHomeScreen(value).then(
+        (value) async  =>showAdDialog()
+      );
     });
     setState(() {});
+  }
+
+  void showAdDialog() async {
+    print('I am triggred ');
+    final url = Uri.parse('http://dev.theone.com/apis/GetHomeScreenPopup');
+    try {
+      var response = await get(url);
+      setState(() {
+        AdsResponse adsResponse = AdsResponse.fromJson(
+          jsonDecode(response.body),
+        );
+        if (adsResponse.active == true &&
+            adsResponse.status.contains('Success')) {
+          showDialog(
+              builder: (BuildContext context) {
+                return AdsDialog(
+                  responseHtml: adsResponse.responseData,
+                );
+              },
+              context: context);
+        }
+      });
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+    }
   }
 
   @override

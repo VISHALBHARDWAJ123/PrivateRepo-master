@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/cupertino.dart';
@@ -751,7 +753,16 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            FirebaseCrashlytics.instance.crash();
+                            if(Platform.isIOS){
+                              FirebaseCrashlytics.instance.setUserIdentifier('Android Crash');
+
+                              FirebaseCrashlytics.instance.crash();
+                            }else{
+                              FirebaseCrashlytics.instance.setUserIdentifier('iOS Crash');
+
+                              FirebaseCrashlytics.instance.crash();
+                            }
+                            // FirebaseCrashlytics.instance.crash();
 
                             // Navigator.push(
                             //     context,
