@@ -29,10 +29,9 @@ class _AdsDialogState extends State<AdsDialog> {
             Padding(
               padding: EdgeInsets.only(
                 top: 2.h,
-
               ),
-              child: Container(
-                color: Colors.white60,
+              child: Card(
+                elevation:2,
                 child: HtmlWidget(
                   widget.responseHtml.replaceAll('\\', ''),
                 ),
@@ -43,7 +42,7 @@ class _AdsDialogState extends State<AdsDialog> {
               right: .01,
               child: ClipOval(
                 child: Container(
-                  color: Colors.grey,
+                  color: Colors.white,
                   child: InkWell(
                     child: Icon(
                       Icons.close,

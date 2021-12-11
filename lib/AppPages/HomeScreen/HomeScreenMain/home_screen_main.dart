@@ -92,10 +92,10 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   }
 
   void showAdDialog() async {
-    print('I am triggred ');
-    final url = Uri.parse('http://dev.theone.com/apis/GetHomeScreenPopup');
+    print('I am triggered ');
+    final url = Uri.parse(BuildConfig.base_url+'apis/GetHomeScreenPopup');
     try {
-      var response = await get(url);
+      var response = await get(url,headers:ApiCalls.header);
       setState(() {
         AdsResponse adsResponse = AdsResponse.fromJson(
           jsonDecode(response.body),
@@ -103,6 +103,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         if (adsResponse.active == true &&
             adsResponse.status.contains('Success')) {
           showDialog(
+            barrierColor: Colors.transparent,
               builder: (BuildContext context) {
                 return AdsDialog(
                   responseHtml: adsResponse.responseData,
@@ -993,7 +994,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
     final response = await http.get(
       Uri.parse(url),
-      headers: {'Cookie': cokkie},
+      headers: ApiCalls.header,
     );
 // response.headers
     if (response.statusCode == 200) {
