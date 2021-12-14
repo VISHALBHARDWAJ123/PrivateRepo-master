@@ -55,7 +55,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   bool categoryVisible = false;
   List<SocialModel> socialLinks = [];
   List<String> searchSuggestions = [];
-
+  var userId ;
   TextEditingController _searchController = TextEditingController();
   var _focusNode = FocusNode();
 
@@ -74,6 +74,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   late ScrollController _productController, _serviceController;
   ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
+  var isVisibled = false;
+
   @override
   void initState() {
     super.initState();
@@ -84,44 +86,52 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     getSocialMediaLink();
     getApiToken().then((value) {
       if (mounted) setState(() {});
-      apiCallToHomeScreen(value).then(
-        (value) async  =>showAdDialog()
-      );
+
+      showAdDialog().whenComplete(() => apiCallToHomeScreen(value));
     });
     setState(() {});
   }
 
-  void showAdDialog() async {
+  Future showAdDialog() async {
+    userId = ConstantsVar.prefs.getString('userId')!;
+setState((){});
     print('I am triggered ');
-    final url = Uri.parse(BuildConfig.base_url+'apis/GetHomeScreenPopup');
+    CustomProgressDialog progressDialog =
+        CustomProgressDialog(context, blur: 2, dismissable: false);
+    progressDialog.setLoadingWidget(SpinKitRipple(
+      color: Colors.red,
+      size: 90,
+    ));
+    progressDialog.show();
+    final url = Uri.parse(BuildConfig.base_url + 'apis/GetHomeScreenPopup');
     try {
-      var response = await get(url,headers:ApiCalls.header);
+      var response = await get(url, headers: ApiCalls.header);
+      progressDialog.dismiss();
       setState(() {
         AdsResponse adsResponse = AdsResponse.fromJson(
           jsonDecode(response.body),
         );
         if (adsResponse.active == true &&
-            adsResponse.status.contains('Success')) {
+            adsResponse.status.contains('Success') &&
+            userId != null &&
+            userId != '') {
           showDialog(
-            barrierColor: Colors.transparent,
-              builder: (BuildContext context) {
-                return AdsDialog(
-                  responseHtml: adsResponse.responseData,
-                );
-              },
-              context: context);
+                  // barrierColor: Colors.transparent,
+                  builder: (BuildContext context) {
+                    return isVisibled
+                        ? Container()
+                        : AdsDialog(
+                            responseHtml: adsResponse.responseData,
+                          );
+                  },
+                  context: context)
+              .then((value) => progressDialog.dismiss());
         }
       });
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
+      progressDialog.dismiss();
     }
-  }
-
-  @override
-  void didUpdateWidget(covariant HomeScreenMain oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    buildSafeArea(context);
   }
 
   void _launchURL(String _url) async {
@@ -275,6 +285,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                         SearchPage(
                                                       isScreen: true,
                                                       keyword: value,
+                                                      enableCategory: false,
                                                     ),
                                                   ),
                                                 )
@@ -321,6 +332,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                         SearchPage(
                                                       isScreen: true,
                                                       keyword: value,
+                                                      enableCategory: false,
                                                     ),
                                                   ),
                                                 );
@@ -400,6 +412,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                                                       SearchPage(
                                                                 keyword: option,
                                                                 isScreen: true,
+                                                                enableCategory:
+                                                                    false,
                                                               ),
                                                             ),
                                                           ).then((value) =>
@@ -1021,6 +1035,11 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                 if (products.length > 0) {
                   productList = products;
                   categoryList = categories;
+                  String _categoryString = jsonEncode(categoryList);
+                  String _productString = jsonEncode(productList);
+                  ConstantsVar.prefs.setString('productString', _productString);
+                  ConstantsVar.prefs
+                      .setString('categoryString', _categoryString);
                   categoryVisible = true;
                   // getServiceList();
 
@@ -1314,6 +1333,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
 
   Future getApiToken() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
+    // setState(() {});
 
     return ConstantsVar.prefs.get('apiTokken');
   }

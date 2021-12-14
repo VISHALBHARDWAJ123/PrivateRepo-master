@@ -746,7 +746,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                     Visibility(
-                      visible: true,
+                      visible: false,
                       child: DelayedDisplay(
                         delay: Duration(
                           milliseconds: 70,

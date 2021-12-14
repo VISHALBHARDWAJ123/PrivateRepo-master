@@ -360,7 +360,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                   builder: (context) =>
                                                       SearchPage(
                                                     isScreen: true,
-                                                    keyword: value,
+                                                    keyword: value, enableCategory: false,
                                                   ),
                                                 ),
                                               )
@@ -407,7 +407,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                       builder: (context) =>
                                                           SearchPage(
                                                         isScreen: true,
-                                                        keyword: value,
+                                                        keyword: value, enableCategory: false,
                                                       ),
                                                     ),
                                                   )
@@ -483,7 +483,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                                           keyword:
                                                                               option,
                                                                           isScreen:
-                                                                              true,
+                                                                              true, enableCategory: false,
                                                                         ))).then(
                                                             (value) =>
                                                                 _searchController

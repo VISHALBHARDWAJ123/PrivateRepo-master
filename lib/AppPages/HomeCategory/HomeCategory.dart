@@ -134,7 +134,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                         CupertinoPageRoute(
                                           builder: (context) => SearchPage(
                                             isScreen: true,
-                                            keyword: value,
+                                            keyword: value, enableCategory: false,
                                           ),
                                         ),
                                       )
@@ -179,7 +179,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                             CupertinoPageRoute(
                                               builder: (context) => SearchPage(
                                                 isScreen: true,
-                                                keyword: value,
+                                                keyword: value, enableCategory: false,
                                               ),
                                             ),
                                           )
@@ -241,6 +241,18 @@ class _HomeCategoryState extends State<HomeCategory> {
                                           return GestureDetector(
                                               onTap: () {
                                                 onSelected(option);
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPage(
+                                                          keyword: option,
+                                                          isScreen: true, enableCategory: false,
+                                                        ),
+                                                  ),
+                                                ).then((value) => setState(() {
+                                                  _searchController.clear();
+                                                }));
                                               },
                                               child: Container(
                                                 height: 5.2.h,
@@ -456,7 +468,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       horizontal: 12.0,
                                                     ),
                                                     child: OpenContainer(
-                                                      closedElevation: 0,
+                                                      closedElevation: 2,
                                                       openElevation: 0,
                                                       // padding: EdgeInsets.all(8.0),
                                                       openBuilder: (BuildContext
@@ -531,7 +543,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                   padding:
                                                                       const EdgeInsets
                                                                               .all(
-                                                                          2.0),
+                                                                          4.0),
                                                                   child:
                                                                       CachedNetworkImage(
                                                                     imageUrl:

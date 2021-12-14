@@ -158,7 +158,7 @@ class _SubCatNewState extends State<SubCatNew> {
                                       CupertinoPageRoute(
                                         builder: (context) => SearchPage(
                                           isScreen: true,
-                                          keyword: value,
+                                          keyword: value, enableCategory: false,
                                         ),
                                       ),
                                     )
@@ -202,7 +202,7 @@ class _SubCatNewState extends State<SubCatNew> {
                                           CupertinoPageRoute(
                                             builder: (context) => SearchPage(
                                               isScreen: true,
-                                              keyword: value,
+                                              keyword: value, enableCategory: false,
                                             ),
                                           ),
                                         )
@@ -269,7 +269,7 @@ class _SubCatNewState extends State<SubCatNew> {
                                                   builder: (context) =>
                                                       SearchPage(
                                                     keyword: option,
-                                                    isScreen: true,
+                                                    isScreen: true, enableCategory: false,
                                                   ),
                                                 ),
                                               ).then((value) => setState(() {
@@ -448,7 +448,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                 horizontal: 12.0,
               ),
               child: OpenContainer(
-                closedElevation: 0,openElevation: 0,
+                closedElevation: 2,openElevation: 0,
                 middleColor: Colors.white,
                 transitionType: _transitionType,
                 openBuilder: (BuildContext context,

@@ -17,6 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:menu_button/menu_button.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
@@ -24,10 +25,14 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+
+// import 'package:untitled2/models/home_response.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
+import 'package:untitled2/utils/models/homeresponse.dart';
 
 enum AniProps { color }
 
@@ -36,9 +41,10 @@ class SearchPage extends StatefulWidget {
     Key? key,
     required this.keyword,
     required this.isScreen,
+    required this.enableCategory,
   }) : super(key: key);
   String keyword;
-  final bool isScreen;
+  bool isScreen, enableCategory;
   double? _maxPrice, _minPrice;
 
   @override
@@ -61,8 +67,10 @@ class _SearchPageState extends State<SearchPage>
   ];
   final _suggestController = ScrollController();
   late AnimationController _animationController;
-  final colorizeTextStyle =
-      TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold);
+  final colorizeTextStyle = TextStyle(
+    fontSize: 6.w,
+    fontWeight: FontWeight.bold,
+  );
   bool isAlreadySet = false;
   var _range;
   var color1 = ConstantsVar.appColor;
@@ -132,6 +140,9 @@ class _SearchPageState extends State<SearchPage>
           curve: Curves.linear, duration: Duration(milliseconds: 500));
     }
   }
+
+  List<HomePageProductImage> productList = [];
+  List<HomePageCategoriesImage> categoryList = [];
 
   @override
   void initState() {
@@ -867,6 +878,15 @@ class _SearchPageState extends State<SearchPage>
                   ],
                 ),
                 Visibility(
+                  visible: widget.enableCategory,
+                  child: Center(
+                    child: SearchCategories(
+                      productList: productList,
+                      categoryList: categoryList,
+                    ),
+                  ),
+                ),
+                Visibility(
                   visible: noMore,
                   child: Align(
                     alignment: Alignment(0, .3),
@@ -904,6 +924,7 @@ class _SearchPageState extends State<SearchPage>
   Future searchProducts(String productName, int pageNumber,
       [String? minPrice, String? maxPrice]) async {
     print('Hi There');
+    setState(() => widget.enableCategory = false);
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
@@ -1056,10 +1077,8 @@ class _SearchPageState extends State<SearchPage>
         searchedProducts.addAll(
             mySearchResponse.responseData.getProductsByCategoryIdClasses);
         if (isAlreadySet == false) {
-          widget._maxPrice =
-              mySearchResponse.responseData.priceRange.maxPrice;
-          widget._minPrice =
-              mySearchResponse.responseData.priceRange.minPrice;
+          widget._maxPrice = mySearchResponse.responseData.priceRange.maxPrice;
+          widget._minPrice = mySearchResponse.responseData.priceRange.minPrice;
           _range = RangeValues(widget._minPrice!, widget._maxPrice!);
           print("minPrice >>>>>>>>" + widget._maxPrice.toString());
 
@@ -1148,7 +1167,7 @@ class _SearchPageState extends State<SearchPage>
                         showSelectedItemOnList: true,
                         onItemSelected: (value)
                             // wait mam
-                          async  {
+                            async {
                           setState(() {
                             _isChecked = true;
                             _selectedSeats = value.name;
@@ -1164,7 +1183,7 @@ class _SearchPageState extends State<SearchPage>
                       ),
                     ),
                     Visibility(
-                      visible:_selectedSeatsId .isEmpty?false:true,
+                      visible: _selectedSeatsId.isEmpty ? false : true,
                       child: IconButton(
                         onPressed: () {
                           setState(() {
@@ -1172,8 +1191,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedSeatsId = '';
                             pageIndex = 0;
-                              searchProducts(_searchController.text, pageIndex);
-
+                            searchProducts(_searchController.text, pageIndex);
                           });
                         },
                         icon: Icon(Icons.remove),
@@ -1185,7 +1203,8 @@ class _SearchPageState extends State<SearchPage>
               Visibility(
                 visible: _colorList.isEmpty ? false : true,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),                  child: Row(children: [
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(children: [
                     Container(
                       width: 25.w,
                       child: AutoSizeText(
@@ -1229,7 +1248,7 @@ class _SearchPageState extends State<SearchPage>
                       ),
                     ),
                     Visibility(
-                      visible:_selectedColorsId.isEmpty?false:true,
+                      visible: _selectedColorsId.isEmpty ? false : true,
                       child: IconButton(
                         onPressed: () {
                           setState(() {
@@ -1237,8 +1256,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedColorsId = '';
                             pageIndex = 0;
-                              searchProducts(_searchController.text, pageIndex);
-
+                            searchProducts(_searchController.text, pageIndex);
                           });
                         },
                         icon: Icon(Icons.remove),
@@ -1250,7 +1268,8 @@ class _SearchPageState extends State<SearchPage>
               Visibility(
                 visible: _familyList.isEmpty ? false : true,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),                  child: Row(children: [
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(children: [
                     Container(
                       width: 25.w,
                       child: AutoSizeText(
@@ -1295,7 +1314,7 @@ class _SearchPageState extends State<SearchPage>
                       ),
                     ),
                     Visibility(
-                      visible:   _selectedFaimlyId.isEmpty?false:true,
+                      visible: _selectedFaimlyId.isEmpty ? false : true,
                       child: IconButton(
                         splashColor: Colors.red,
                         onPressed: () {
@@ -1304,8 +1323,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedFaimlyId = '';
                             pageIndex = 0;
-                              searchProducts(_searchController.text, pageIndex);
-
+                            searchProducts(_searchController.text, pageIndex);
                           });
                         },
                         icon: Icon(Icons.remove),
@@ -1385,7 +1403,8 @@ class _SearchPageState extends State<SearchPage>
                 height: 6,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),                child: Align(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Align(
                   alignment: Alignment.bottomCenter,
                   child: AppButton(
                     textStyle: TextStyle(color: Colors.white),
@@ -1509,9 +1528,18 @@ class _SearchPageState extends State<SearchPage>
       setState(() {
         String listString = ConstantsVar.prefs.getString('searchList')!;
         // print(listString);
+        String _categoryString =
+            ConstantsVar.prefs.getString('categoryString')!;
+        String _productString = ConstantsVar.prefs.getString('productString')!;
         List<dynamic> testingList = jsonDecode(listString);
+        List<dynamic> _catList = jsonDecode(_categoryString);
+        List<dynamic> _proList = jsonDecode(_productString);
+        categoryList = List<HomePageCategoriesImage>.from(
+            _catList.map((e) => HomePageCategoriesImage.fromJson(e)).toList());
+        productList = List<HomePageProductImage>.from(
+            _proList.map((e) => HomePageProductImage.fromJson(e)).toList());
         searchSuggestions = testingList.cast<String>();
-        print(searchSuggestions.length.toString());
+        print('Product List >>>>>' + '${_proList}');
       });
   }
 
@@ -1524,4 +1552,218 @@ class _SearchPageState extends State<SearchPage>
     _scrollListController.animateTo(_scrollListController.offset - itemSize,
         curve: Curves.linear, duration: Duration(milliseconds: 500));
   }
+}
+
+class SearchCategories extends StatefulWidget {
+  const SearchCategories(
+      {Key? key, required this.categoryList, required this.productList})
+      : super(key: key);
+  final List<HomePageProductImage> productList;
+
+  final List<HomePageCategoriesImage> categoryList;
+
+  @override
+  _SearchCategoriesState createState() => _SearchCategoriesState();
+}
+
+class _SearchCategoriesState extends State<SearchCategories> {
+  var _productController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final postMdl = Provider.of<cartCounter>(context, listen: false);
+    postMdl.getSearchCategory();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<cartCounter>(
+      builder: (context, model, _) {
+        return model.isVisible
+            ? Center(
+                child: SpinKitRipple(
+                  color: Colors.red,
+                  size: 60,
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 60.0,left: 5,right: 5,bottom: 2),
+                child: Container(
+                  color: Colors.white60,
+                  padding: EdgeInsets.all(1),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    childAspectRatio: 2 / 2,
+                    children: List.generate(
+                      model.searchCategoryList.length,
+                      (index) => InkWell(
+                        onTap: () {
+                          model.searchCategoryList[index].isSubCategory == false
+                              ? Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => ProductList(
+                                        categoryId:
+                                            model.searchCategoryList[index].id,
+                                        title: model
+                                            .searchCategoryList[index].name),
+                                  ),
+                                )
+                              : null;
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: model
+                                          .searchCategoryList[index].imageUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, reason) =>
+                                          new SpinKitRipple(
+                                        color: Colors.red,
+                                        size: 90,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 3.0),
+                                  child: AutoSizeText(
+                                    model.searchCategoryList[index].name,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: Colors.grey.shade700,
+                                        fontSize: 4.w,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+      },
+    );
+  }
+
+// InkWell listContainer(HomePageProductImage list) {
+//   return InkWell(
+//     onTap: () {
+//       print('${list.id}');
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) {
+//             return new NewProductDetails(
+//               // customerId: ConstantsVar.customerID,
+//               productId: list.id, screenName: 'Home Screen',
+//             );
+//           },
+//         ),
+//       );
+//     },
+//     child: Stack(
+//       children: [
+//         Container(
+//           padding: EdgeInsets.symmetric(vertical: 5),
+//           // height: Adaptive.w(50),
+//           color: Colors.white,
+//           width: Adaptive.w(34),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             mainAxisSize: MainAxisSize.max,
+//             // mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Flexible(
+//                 child: Container(
+//                   color: Colors.white,
+//                   width: 35.w,
+//                   padding: EdgeInsets.all(2.w),
+//                   height: 35.w,
+//                   // width: Adaptive.w(32),
+//                   // height: Adaptive.w(40),
+//                   child: Hero(
+//                     tag: 'ProductImage${list.id}',
+//                     transitionOnUserGestures: true,
+//                     child: CachedNetworkImage(
+//                       imageUrl: list.imageUrl[0],
+//                       fit: BoxFit.fill,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               Container(
+//                 width: 38.w,
+//                 child: Center(
+//                   child: AutoSizeText(
+//                     list.price.splitBefore('incl'),
+//                     textAlign: TextAlign.center,
+//                     style: TextStyle(
+//                       wordSpacing: 4,
+//                       color: Colors.grey,
+//                       fontSize: 4.1.w,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//         Visibility(
+//           visible: list.discountPercentage.trim().length != 0 ? true : false,
+//           child: Padding(
+//             padding: const EdgeInsets.all(4.0),
+//             child: Align(
+//               alignment: Alignment.topLeft,
+//               child: Container(
+//                 width: 10.w,
+//                 height: 10.w,
+//                 child: Stack(
+//                   children: [
+//                     Image.asset(
+//                       'MyAssets/plaincircle.png',
+//                       width: 10.w,
+//                       height: 10.w,
+//                     ),
+//                     Align(
+//                       alignment: Alignment.center,
+//                       child: Text(
+//                         list.discountPercentage,
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.w800,
+//                           fontSize: 3.w,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         )
+//       ],
+//     ),
+//   );
+// }
 }

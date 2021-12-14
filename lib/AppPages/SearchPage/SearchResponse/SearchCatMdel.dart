@@ -5,7 +5,8 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-SearchCatModel searchCatModelFromJson(String str) => SearchCatModel.fromJson(json.decode(str));
+SearchCatModel searchCatModelFromJson(String str) =>
+    SearchCatModel.fromJson(json.decode(str));
 
 String searchCatModelToJson(SearchCatModel data) => json.encode(data.toJson());
 
@@ -21,16 +22,17 @@ class SearchCatModel {
   List<SearchCatResponeData> responseData;
 
   factory SearchCatModel.fromJson(Map<String, dynamic> json) => SearchCatModel(
-    status: json["Status"],
-    message: json["Message"],
-    responseData: List<SearchCatResponeData>.from(json["ResponseData"].map((x) => SearchCatResponeData.fromJson(x))),
-  );
+        status: json["Status"],
+        message: json["Message"],
+        responseData: List<SearchCatResponeData>.from(
+            json["ResponseData"].map((x) => SearchCatResponeData.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "Status": status,
-    "Message": message,
-    "ResponseData": List<dynamic>.from(responseData.map((x) => x.toJson())),
-  };
+        "Status": status,
+        "Message": message,
+        "ResponseData": List<dynamic>.from(responseData.map((x) => x.toJson())),
+      };
 }
 
 class SearchCatResponeData {
@@ -44,15 +46,16 @@ class SearchCatResponeData {
   String name;
   int parentCategoryId;
 
-  factory SearchCatResponeData.fromJson(Map<String, dynamic> json) => SearchCatResponeData(
-    id: json["Id"],
-    name: json["Name"],
-    parentCategoryId: json["parentCategoryId"],
-  );
+  factory SearchCatResponeData.fromJson(Map<String, dynamic> json) =>
+      SearchCatResponeData(
+        id: json["Id"],
+        name: json["Name"],
+        parentCategoryId: json["parentCategoryId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "Id": id,
-    "Name": name,
-    "parentCategoryId": parentCategoryId,
-  };
+        "Id": id,
+        "Name": name,
+        "parentCategoryId": parentCategoryId,
+      };
 }

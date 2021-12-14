@@ -130,7 +130,7 @@ class HomePageProductImage {
         price: json["price"],
         id: json["Id"],
         name: json["Name"],
-        imageUrl: List<String>.from(json["ImageUrl"].map((x) => x)),
+        imageUrl: List<String>.from(json["ImageUrl"].map((x) => x)) ,
         discountPercentage:
             json['DiscountPercent'] == null ? '' : json['DiscountPercent'],
       );
@@ -139,7 +139,7 @@ class HomePageProductImage {
         "price": price,
         "Id": id,
         "Name": name,
-        "ImageUrl": List<dynamic>.from(imageUrl.map((x) => x)),
+        "ImageUrl": imageUrl,
         'DiscountPercent ': discountPercentage,
       };
 }

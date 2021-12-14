@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:play_kit/play_kit.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 
@@ -19,21 +21,30 @@ class _AdsDialogState extends State<AdsDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      elevation: 20,
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 5),
       child: Container(
         color: Colors.transparent,
-        width: 100.w,
+        // width: 100.w,
         child: Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: 2.h,
+                top: 1.h,
               ),
               child: Card(
-                elevation:2,
+                elevation: 2,
                 child: HtmlWidget(
                   widget.responseHtml.replaceAll('\\', ''),
+                  enableCaching: true,
+                  onLoadingBuilder: (context, element, size) => SpinKitRipple(
+                    color: Colors.red,
+                    size: 20,
+                  ),
+                  textStyle: TextStyle(
+                    fontSize: 3.w,
+                  ),
                 ),
               ),
             ),

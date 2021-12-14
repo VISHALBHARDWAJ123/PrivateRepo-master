@@ -13,6 +13,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginxResponse.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
 import 'package:untitled2/AppPages/MyAddresses/MyAddresses.dart';
+import 'package:untitled2/AppPages/SearchPage/SearchCategoryResponse/SearchCategoryResponse.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/ShippingAddress.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
@@ -34,7 +35,7 @@ class ApiCalls {
     final baseUrl = Uri.parse(BuildConfig.base_url +
         'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
 
-    print('Product List Api>>>>'+baseUrl.toString());
+    print('Product List Api>>>>' + baseUrl.toString());
 
     try {
       var response = await http.get(baseUrl, headers: header);
@@ -83,7 +84,6 @@ class ApiCalls {
   ) async {
     print(password);
 
-
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
     ConstantsVar.prefs.setString('sepGuid', guestUId!);
@@ -126,7 +126,6 @@ class ApiCalls {
           return false;
         } else if (responseData.toString().contains('Customer is deleted')) {
           Fluttertoast.showToast(msg: 'Customer is deleted');
-
         } else {
           Fluttertoast.showToast(
             msg: 'Successfully Logged In',
@@ -151,7 +150,6 @@ class ApiCalls {
               .setString('phone', phnNumber == null ? '' : phnNumber);
 
           print(ConstantsVar.prefs.getString('guestCustomerID'));
-
 
           print('Success ');
 
@@ -209,12 +207,10 @@ class ApiCalls {
         // Fluttertoast.showToast(msg: responseData.toString().substring(0, 20));
 
       } else {
-
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
         return false;
       }
     } on Exception catch (e) {
-
       ConstantsVar.excecptionMessage(e);
       return false;
     }
@@ -839,10 +835,9 @@ class ApiCalls {
         BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
     // var response = await http.get(uri, headers: header);
 
-    var response = await http.get(uri,headers: header);
+    var response = await http.get(uri, headers: header);
 
     try {
-
       // print(cookie);
       dynamic result = jsonDecode(response.body);
       print(result);
@@ -1031,6 +1026,24 @@ class ApiCalls {
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
+    }
+  }
+
+  static Future<List<ResponseDatum>> getSearchCategory() async {
+    List<ResponseDatum> _searchCategoryList = [];
+    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetSearchScreenCategories');
+    try {
+      var response = await http.get(uri, headers: header);
+      // List<dynamic> result = ;
+      SearchCategoryResponse _mList = SearchCategoryResponse.fromJson(json.decode(response.body));
+
+        _searchCategoryList = _mList.responseData;
+
+      return _searchCategoryList;
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+      _searchCategoryList = [];
+      return _searchCategoryList;
     }
   }
 }

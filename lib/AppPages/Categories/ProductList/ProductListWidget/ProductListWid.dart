@@ -188,6 +188,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                     builder: (context) => SearchPage(
                                       isScreen: true,
                                       keyword: value,
+                                      enableCategory: false,
                                     ),
                                   ),
                                 )
@@ -230,6 +231,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                         builder: (context) => SearchPage(
                                           isScreen: true,
                                           keyword: value,
+                                          enableCategory: false,
                                         ),
                                       ),
                                     )
@@ -293,16 +295,20 @@ class _prodListWidgetState extends State<prodListWidget> {
                                         onTap: () {
                                           onSelected(option);
                                           Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (context) =>
-                                                          SearchPage(
-                                                            keyword: option,
-                                                            isScreen: true,
-                                                          )))
-                                              .then((value) => setState(() {
-                                                    _searchController.clear();
-                                                  }));
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      SearchPage(
+                                                        keyword: option,
+                                                        isScreen: true,
+                                                        enableCategory: false,
+                                                      ))).then(
+                                            (value) => setState(
+                                              () {
+                                                _searchController.clear();
+                                              },
+                                            ),
+                                          );
                                         },
                                         child: Container(
                                           height: 5.2.h,

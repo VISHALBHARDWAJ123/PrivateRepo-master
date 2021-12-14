@@ -5,9 +5,11 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-SearchSuggestionResponseNew searchSuggestionResponseFromJson(String str) => SearchSuggestionResponseNew.fromJson(json.decode(str));
+SearchSuggestionResponseNew searchSuggestionResponseFromJson(String str) =>
+    SearchSuggestionResponseNew.fromJson(json.decode(str));
 
-String searchSuggestionResponseToJson(SearchSuggestionResponseNew data) => json.encode(data.toJson());
+String searchSuggestionResponseToJson(SearchSuggestionResponseNew data) =>
+    json.encode(data.toJson());
 
 class SearchSuggestionResponseNew {
   SearchSuggestionResponseNew({
@@ -20,15 +22,16 @@ class SearchSuggestionResponseNew {
   dynamic message;
   List<String> responseData;
 
-  factory SearchSuggestionResponseNew.fromJson(Map<String, dynamic> json) => SearchSuggestionResponseNew(
-    status: json["Status"],
-    message: json["Message"],
-    responseData: List<String>.from(json["ResponseData"].map((x) => x)),
-  );
+  factory SearchSuggestionResponseNew.fromJson(Map<String, dynamic> json) =>
+      SearchSuggestionResponseNew(
+        status: json["Status"],
+        message: json["Message"],
+        responseData: List<String>.from(json["ResponseData"].map((x) => x)),
+      );
 
   Map<String, dynamic> toJson() => {
-    "Status": status,
-    "Message": message,
-    "ResponseData": List<dynamic>.from(responseData.map((x) => x)),
-  };
+        "Status": status,
+        "Message": message,
+        "ResponseData": List<dynamic>.from(responseData.map((x) => x)),
+      };
 }

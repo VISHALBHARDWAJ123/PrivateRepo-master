@@ -42,7 +42,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
 
   var totalCount;
 
-  String _searchText='Search Here...';
+  String _searchText = 'Search Here...';
+
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     if (mounted) setState(() {});
@@ -79,7 +80,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
           onPressed: () async {
             // Random random = Random();
             Fluttertoast.showToast(msg: 'Hi There');
-            searchProducts(controller.query.toString(), 0, 0.toString(), '25000');
+            searchProducts(
+                controller.query.toString(), 0, 0.toString(), '25000');
           },
         ),
       ),
@@ -93,7 +95,6 @@ class _NewSearchPageState extends State<NewSearchPage> {
 
     return Consumer<SearchModel>(
       builder: (context, model, _) => FloatingSearchBar(
-
         toolbarOptions: ToolbarOptions(),
         onSubmitted: (val) {},
         automaticallyImplyBackButton: false,
@@ -169,7 +170,7 @@ class _NewSearchPageState extends State<NewSearchPage> {
             FloatingSearchBar.of(context)!.close();
             Future.delayed(
               const Duration(milliseconds: 500),
-              () => searchProducts(place,0,'0',25000.toString()),
+              () => searchProducts(place, 0, '0', 25000.toString()),
             );
           },
           child: Padding(
@@ -208,7 +209,7 @@ class _NewSearchPageState extends State<NewSearchPage> {
     return Visibility(
       visible: searchedProducts.length == 0 ? false : true,
       child: Padding(
-        padding: const EdgeInsets.only(top:60.0),
+        padding: const EdgeInsets.only(top: 60.0),
         child: Container(
           // height:82.5.h,
           child: Scrollbar(
@@ -236,7 +237,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
                           CupertinoPageRoute(
                             builder: (context) {
                               return NewProductDetails(
-                                productId: searchedProducts[index].id.toString(),
+                                productId:
+                                    searchedProducts[index].id.toString(),
                                 screenName: 'Product List',
                                 // customerId: ConstantsVar.customerID,
                               );
@@ -275,7 +277,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
                                   // color: Color(0xFFe0e1e0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -304,7 +307,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
                                               ),
                                               child: discountWidget(
                                                 actualPrice:
-                                                    searchedProducts[index].price,
+                                                    searchedProducts[index]
+                                                        .price,
                                                 fontSize: 2.4.w,
                                                 width: 25.w,
                                                 isSpace: searchedProducts[index]
@@ -318,7 +322,8 @@ class _NewSearchPageState extends State<NewSearchPage> {
                                               searchedProducts[index]
                                                           .discountedPrice ==
                                                       null
-                                                  ? searchedProducts[index].price
+                                                  ? searchedProducts[index]
+                                                      .price
                                                   : searchedProducts[index]
                                                       .discountedPrice,
                                               maxLines: 1,
@@ -382,11 +387,12 @@ class _NewSearchPageState extends State<NewSearchPage> {
                           top: 3,
                           left: 3,
                           child: Visibility(
-                            visible:
-                                searchedProducts[index].discountPercent.length !=
-                                        0
-                                    ? true
-                                    : false,
+                            visible: searchedProducts[index]
+                                        .discountPercent
+                                        .length !=
+                                    0
+                                ? true
+                                : false,
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Container(
@@ -427,6 +433,7 @@ class _NewSearchPageState extends State<NewSearchPage> {
       ),
     );
   }
+
   bool isListVisible = false, isFilterVisible = false;
   late bool noMore;
   List<SpecificationAttributeFilter> mList = [];
@@ -435,7 +442,7 @@ class _NewSearchPageState extends State<NewSearchPage> {
       String maxPrice) async {
     // _refreshController.refreshToIdle();
     CustomProgressDialog progressDialog =
-    CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
