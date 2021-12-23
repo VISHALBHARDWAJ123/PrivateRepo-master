@@ -512,12 +512,11 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                                   widget.myList[index]['Name']
                                       .toString()
                                       .toUpperCase(),
-                                  maxLines: 2,
+                                  // maxLines: 2,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                      height: 1.1,
-                                      fontSize: 5.w,
-                                      fontWeight: FontWeight.w600),
+
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],

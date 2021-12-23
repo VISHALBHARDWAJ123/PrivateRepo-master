@@ -106,7 +106,10 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
+      ConstantsVar.prefs = await SharedPreferences.getInstance();
+
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled == true) {
         FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       } else {
@@ -118,7 +121,6 @@ Future<void> main() async {
           .then((_) async {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
             .then((_) async {
-          ConstantsVar.prefs = await SharedPreferences.getInstance();
           FirebaseMessaging.instance;
           FirebaseMessaging.onBackgroundMessage(_messageHandler);
           FirebaseMessaging.onMessage.listen((event) {

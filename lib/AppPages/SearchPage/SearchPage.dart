@@ -687,19 +687,31 @@ class _SearchPageState extends State<SearchPage>
                                                             .spaceBetween,
                                                     children: [
                                                       // sorry mam nahi hua!
-                                                      AutoSizeText(
-                                                        searchedProducts[index]
-                                                            .name,
-                                                        maxLines: 2,
-                                                        style: TextStyle(
-                                                            height: 1,
-                                                            color: Colors.black,
-                                                            fontSize: 5.w,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        textAlign:
-                                                            TextAlign.start,
+                                                      Container(
+                                                        child: Text(
+                                                          searchedProducts[
+                                                                  index]
+                                                              .name,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 3,
+                                                          // minFontSize:.w,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 4.5.w,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                        ),
+                                                        constraints:
+                                                            BoxConstraints
+                                                                .tightFor(
+                                                                    width: 48.w,
+                                                                    height:
+                                                                        18.w),
                                                       ),
                                                       Padding(
                                                         padding:
@@ -1588,7 +1600,8 @@ class _SearchCategoriesState extends State<SearchCategories> {
                 ),
               )
             : Padding(
-                padding: const EdgeInsets.only(top: 60.0,left: 5,right: 5,bottom: 2),
+                padding: const EdgeInsets.only(
+                    top: 60.0, left: 5, right: 5, bottom: 2),
                 child: Container(
                   color: Colors.white60,
                   padding: EdgeInsets.all(1),

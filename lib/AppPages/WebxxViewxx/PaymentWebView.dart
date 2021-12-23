@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
+
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -130,10 +129,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     _controller.complete(webViewController);
                   },
                   onProgress: (int progress) {
-                    context.loaderOverlay.show(widget: Text('$progress'));
-
                     setState(() {
-                      isLoading = false;
+                      isLoading = true;
                       progressCount = progress;
                     });
                   },
@@ -167,10 +164,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 isLoading
                     ? Center(
-                        child: SpinKitRipple(
+                      child: SpinKitRipple(
                         color: Colors.red,
-                        size: 90,
-                      ))
+                        size: 80,
+                      ),
+                    )
                     : Stack()
               ],
             ),
@@ -180,18 +178,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Future<bool> _willPopUp() async {
-    context.loaderOverlay.hide();
 
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(
-            builder: (context) => MyHomePage(
-                  pageIndex: 0,
-                )),
-        (route) => false);
-    return true;
-  }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(

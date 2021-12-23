@@ -55,7 +55,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   bool categoryVisible = false;
   List<SocialModel> socialLinks = [];
   List<String> searchSuggestions = [];
-  var userId ;
+  var userId;
+
   TextEditingController _searchController = TextEditingController();
   var _focusNode = FocusNode();
 
@@ -93,8 +94,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   }
 
   Future showAdDialog() async {
-    userId = ConstantsVar.prefs.getString('userId')!;
-setState((){});
+    setState(() {
+      userId = ConstantsVar.prefs.getString('email');
+    });
     print('I am triggered ');
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
@@ -113,8 +115,7 @@ setState((){});
         );
         if (adsResponse.active == true &&
             adsResponse.status.contains('Success') &&
-            userId != null &&
-            userId != '') {
+            (userId == null || userId == '')) {
           showDialog(
                   // barrierColor: Colors.transparent,
                   builder: (BuildContext context) {
@@ -1158,33 +1159,37 @@ setState((){});
                           // height: 12.h,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                vertical: 10.w, horizontal: 5.w),
-                            child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText(
-                                  name.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                vertical: 10.w, horizontal: 4.w),
+                            child: Center(
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  AutoSizeText(
+                                    name.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Container(
-                                    width: 15.w,
-                                    child:
-                                        Divider(height: 2, color: Colors.white),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Container(
+                                      width: 15.w,
+                                      child: Divider(
+                                          height: 2, color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: AutoSizeText('Shop Now',
-                                      style: TextStyle(color: Colors.grey),
-                                      textAlign: TextAlign.center),
-                                ),
-                              ],
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: AutoSizeText('Shop Now',
+                                        style: TextStyle(color: Colors.grey),
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1252,33 +1257,37 @@ setState((){});
                           // height: 12.h,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                vertical: 10.w, horizontal: 8.w),
-                            child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                AutoSizeText(
-                                  name.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                vertical: 10.w, horizontal: 4.w),
+                            child: Center(
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  AutoSizeText(
+                                    name.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Container(
-                                    width: 15.w,
-                                    child:
-                                        Divider(height: 2, color: Colors.white),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Container(
+                                      width: 15.w,
+                                      child: Divider(
+                                          height: 2, color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: AutoSizeText('Shop Now',
-                                      style: TextStyle(color: Colors.grey),
-                                      textAlign: TextAlign.center),
-                                ),
-                              ],
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: AutoSizeText('Shop Now',
+                                        style: TextStyle(color: Colors.grey),
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1305,10 +1314,13 @@ setState((){});
               transitionType: _transitionType,
               closedBuilder: (BuildContext context, void Function() action) {
                 return Container(
-                    width: Adaptive.w(45),
-                    height: Adaptive.w(45),
-                    child: CachedNetworkImage(
-                        imageUrl: imageUrl, fit: BoxFit.fill));
+                  width: Adaptive.w(45),
+                  height: Adaptive.w(45),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.fill,
+                  ),
+                );
               },
               openBuilder: (BuildContext context,
                   void Function({Object? returnValue}) action) {

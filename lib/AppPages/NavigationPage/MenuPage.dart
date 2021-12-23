@@ -12,6 +12,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
+import 'package:untitled2/AppPages/DeviceInfo/DeviceInfo.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
 import 'package:untitled2/AppPages/MyAccount/MyAccount.dart';
@@ -191,136 +192,139 @@ class _MenuPageState extends State<MenuPage> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    width: 100.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 100.w,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Visibility(
-                                                visible: userName == null
-                                                    ? false
-                                                    : true,
-                                                child: Icon(
-                                                  Icons.person,
-                                                  color: ConstantsVar.appColor,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Visibility(
-                                                visible: userName == null
-                                                    ? false
-                                                    : true,
-                                                child: AutoSizeText(
-                                                  userName == null
-                                                      ? ''
-                                                      : userName,
-                                                  style: TextStyle(shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 3.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 8.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                  ], fontSize: 5.w, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Visibility(
-                                          visible: email == null ? false : true,
-                                          child: Container(
-                                            width: 100.w,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Icon(
-                                                  Icons.email,
-                                                  color: ConstantsVar.appColor,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                AutoSizeText(
-                                                  email == null ? '' : email,
-                                                  style: TextStyle(shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 3.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 8.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                  ], fontSize: 5.w, fontWeight: FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Visibility(
-                                          visible:
-                                              phnNumber == null ? false : true,
-                                          child: Container(
+                                  Visibility(
+                                    visible: userName == null?false:true,
+                                    child: Container(
+                                      width: 100.w,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
                                             width: 100.w,
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Icon(Icons.phone,
-                                                    color:
-                                                        ConstantsVar.appColor),
+                                                Visibility(
+                                                  visible: userName == null
+                                                      ? false
+                                                      : true,
+                                                  child: Icon(
+                                                    Icons.person,
+                                                    color: ConstantsVar.appColor,
+                                                  ),
+                                                ),
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                AutoSizeText(
-                                                  phnNumber == null
-                                                      ? ''
-                                                      : phnNumber,
-                                                  style: TextStyle(shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 3.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(1.0, 1.2),
-                                                      blurRadius: 8.0,
-                                                      color: Colors.grey.shade300,
-                                                    ),
-                                                  ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                Visibility(
+                                                  visible: userName == null
+                                                      ? false
+                                                      : true,
+                                                  child: AutoSizeText(
+                                                    userName == null
+                                                        ? ''
+                                                        : userName,
+                                                    style: TextStyle(shadows: <Shadow>[
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 3.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 8.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                  ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Visibility(
+                                            visible: email == null ? false : true,
+                                            child: Container(
+                                              width: 100.w,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  Icon(
+                                                    Icons.email,
+                                                    color: ConstantsVar.appColor,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  AutoSizeText(
+                                                    email == null ? '' : email,
+                                                    style: TextStyle(shadows: <Shadow>[
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 3.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 8.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Visibility(
+                                            visible:
+                                                phnNumber == null ? false : true,
+                                            child: Container(
+                                              width: 100.w,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.phone,
+                                                      color:
+                                                          ConstantsVar.appColor),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  AutoSizeText(
+                                                    phnNumber == null
+                                                        ? ''
+                                                        : phnNumber,
+                                                    style: TextStyle(shadows: <Shadow>[
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 3.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                      Shadow(
+                                                        offset: Offset(1.0, 1.2),
+                                                        blurRadius: 8.0,
+                                                        color: Colors.grey.shade300,
+                                                      ),
+                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -753,21 +757,13 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            if(Platform.isIOS){
-                              FirebaseCrashlytics.instance.setUserIdentifier('Android Crash');
 
-                              FirebaseCrashlytics.instance.crash();
-                            }else{
-                              FirebaseCrashlytics.instance.setUserIdentifier('iOS Crash');
-
-                              FirebaseCrashlytics.instance.crash();
-                            }
                             // FirebaseCrashlytics.instance.crash();
 
-                            // Navigator.push(
-                            //     context,
-                            //     CupertinoPageRoute(
-                            //         builder: (context) => NewSearchPage()));
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => DeviceInformation()));
                           },
                           child: Card(
                             color: Colors.white,
@@ -792,7 +788,7 @@ class _MenuPageState extends State<MenuPage> {
                                   Container(
                                     // color: Colors.white,
                                     child: AutoSizeText(
-                                      'New Search Page'.toUpperCase(),
+                                      'Device Information'.toUpperCase(),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 5.w,

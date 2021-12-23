@@ -129,21 +129,20 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding: EdgeInsets.symmetric(
                             vertical: 10,
-                            horizontal: 15,
+                            horizontal: 20,
                           ),
                           child: Center(
                             child: AutoSizeText(
                               loginString,
-                              maxLines:2,
+                              maxLines: 3,
                               wrapWords: true,
                               style: TextStyle(
-                                fontSize: 5.w,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -200,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                       controller: emailController,
                                       style: TextStyle(
                                         color: Colors.black,
+                                        fontSize: 14.0,
                                       ),
                                       decoration: editBoxDecoration(
                                           'E-mail Address',
@@ -236,7 +236,9 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                           AutovalidateMode.onUserInteraction,
                                       cursorColor: Colors.black,
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                      ),
                                       decoration: new InputDecoration(
                                         suffix: ClipOval(
                                           child: RoundCheckBox(
@@ -459,7 +461,10 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                     child: AutoSizeText(
                                       'Forgot Password?',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),

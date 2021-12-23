@@ -474,76 +474,81 @@ class _prodListWidgetState extends State<prodListWidget> {
                                         ),
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 8.0),
-                                          width:
-                                              MediaQuery.of(context).size.width,
+                                              vertical: 8.0,
+                                              horizontal: 8.0),
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
                                           // color: Color(0xFFe0e1e0),
                                           child: Column(
-                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisSize:
+                                            MainAxisSize.max,
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment
+                                                .start,
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment
+                                                .spaceBetween,
                                             children: [
-                                              AutoSizeText(
-                                                widget.products[index].name,
-                                                maxLines: 2,
-                                                style: TextStyle(
-                                                    height: 1,
-                                                    color: Colors.black,
-                                                    fontSize: 5.w,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.start,
+                                              // sorry mam nahi hua!
+                                              Container(
+                                                child: Text(
+                                                  widget
+                                                      .products[index].name,
+                                                  overflow: TextOverflow
+                                                      .ellipsis,
+                                                  maxLines: 3,
+                                                  // minFontSize:.w,
+                                                  style: TextStyle(
+                                                      color:
+                                                      Colors.black,
+                                                      fontSize: 4.5.w,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                  textAlign:
+                                                  TextAlign.start,
+                                                ),
+                                                constraints:
+                                                BoxConstraints
+                                                    .tightFor(
+                                                    width: 48.w,
+                                                    height:
+                                                    18.w),
                                               ),
                                               Padding(
                                                 padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 6.0),
+                                                const EdgeInsets
+                                                    .symmetric(
+                                                    vertical: 6.0),
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment
+                                                      .start,
                                                   children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                        top: 2.w,
-                                                        left: 2,
-                                                      ),
-                                                      child: discountWidget(
-                                                        actualPrice: widget
-                                                            .products[index]
-                                                            .price,
-                                                        fontSize: 2.4.w,
-                                                        width: 25.w,
-                                                        isSpace: widget
-                                                                    .products[
-                                                                        index]
-                                                                    .discountPrice ==
-                                                                null
-                                                            ? true
-                                                            : false,
-                                                      ),
-                                                    ),
+
                                                     AutoSizeText(
-                                                      widget.products[index]
-                                                                  .discountPrice ==
-                                                              null
+                                                      widget
+                                                          .products[index].discountPrice ==
+                                                          null
                                                           ? widget
-                                                              .products[index]
-                                                              .price
-                                                          : widget
-                                                              .products[index]
-                                                              .discountPrice,
+                                                          .products[index]
+                                                          .price
+                                                          :widget
+                                                          .products[index].discountPrice,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           height: 1,
                                                           color: Colors
-                                                              .grey.shade600,
+                                                              .grey
+                                                              .shade600,
                                                           fontSize: 4.w,
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                          FontWeight
+                                                              .bold),
                                                       textAlign:
-                                                          TextAlign.start,
+                                                      TextAlign
+                                                          .start,
                                                     ),
                                                   ],
                                                 ),
@@ -551,6 +556,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                             ],
                                           ),
                                         ),
+
                                         AddCartBtn(
                                           productId: widget.products[index].id,
                                           // width: 2.w,

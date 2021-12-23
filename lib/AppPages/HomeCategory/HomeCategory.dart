@@ -522,23 +522,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  //color: const Color(0xFF66BB6A),
-                                                                  // boxShadow: [
-                                                                  //   BoxShadow(
-                                                                  //     color: Colors
-                                                                  //         .grey
-                                                                  //         .shade400,
-                                                                  //     blurRadius:
-                                                                  //         0,
-                                                                  //     offset:
-                                                                  //         Offset(
-                                                                  //             1,
-                                                                  //             1),
-                                                                  //   ),
-                                                                  // ],
-                                                                ),
+
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets
@@ -600,16 +584,13 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                                         name
                                                                             .toString()
                                                                             .toUpperCase(),
-                                                                        maxLines:
-                                                                            2,
+
                                                                         textAlign:
                                                                             TextAlign.start,
                                                                         style: TextStyle(
-                                                                            height:
-                                                                                1.1,
-                                                                            fontSize:
-                                                                                5.w,
-                                                                            fontWeight: FontWeight.w600),
+
+
+                                                                            fontWeight: FontWeight.bold),
                                                                       ),
                                                                     ),
                                                                   ],

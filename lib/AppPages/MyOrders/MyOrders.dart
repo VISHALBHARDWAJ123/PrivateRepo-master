@@ -395,8 +395,8 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                           padding:
                                                               const EdgeInsets
                                                                   .symmetric(
-                                                            horizontal: 4.0,
-                                                            vertical: 4.0,
+                                                            horizontal: 8.0,
+                                                            vertical: 8.0,
                                                           ),
                                                           child: LoadingButton(
                                                             loadingWidget:
