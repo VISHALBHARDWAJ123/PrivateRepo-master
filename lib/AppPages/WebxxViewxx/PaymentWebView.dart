@@ -163,13 +163,20 @@ class _PaymentPageState extends State<PaymentPage> {
                   gestureNavigationEnabled: true,
                 ),
                 isLoading
-                    ? Center(
-                      child: SpinKitRipple(
-                        color: Colors.red,
-                        size: 80,
-                      ),
-                    )
-                    : Stack()
+                    ? Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        SpinKitRipple(
+                          color: Colors.red,
+                          size: 90,
+                        ),
+                        Text('Loading Please Wait!.........' +
+                            progressCount.toString() +
+                            '%'),
+                      ],
+                    ))
+                    : Stack(),
               ],
             ),
           ),
