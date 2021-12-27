@@ -727,14 +727,15 @@ class ApiCalls {
   static launchUrl(String myUrl) async {
     if (await canLaunch(myUrl)) {
       await launch(
-        myUrl,
+        myUrl, forceWebView: false,
+        forceSafariVC: false,
         // forceWebView: true,
       );
       await launch(
         myUrl,
         // forceSafariVC: true,
-        forceWebView: true,
-        enableDomStorage: true,
+        forceWebView: false,
+        forceSafariVC: false,
       );
     } else {
       Fluttertoast.showToast(msg: 'Cannot launch this $myUrl');

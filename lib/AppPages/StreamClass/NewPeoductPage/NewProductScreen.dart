@@ -19,6 +19,7 @@ import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Slider.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -360,7 +361,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                   builder: (context) =>
                                                       SearchPage(
                                                     isScreen: true,
-                                                    keyword: value, enableCategory: false,
+                                                    keyword: value,
+                                                    enableCategory: false,
                                                   ),
                                                 ),
                                               )
@@ -407,7 +409,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                       builder: (context) =>
                                                           SearchPage(
                                                         isScreen: true,
-                                                        keyword: value, enableCategory: false,
+                                                        keyword: value,
+                                                        enableCategory: false,
                                                       ),
                                                     ),
                                                   )
@@ -483,7 +486,9 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                                                           keyword:
                                                                               option,
                                                                           isScreen:
-                                                                              true, enableCategory: false,
+                                                                              true,
+                                                                          enableCategory:
+                                                                              false,
                                                                         ))).then(
                                                             (value) =>
                                                                 _searchController
@@ -637,8 +642,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
         Padding(
           padding: const EdgeInsets.all(6.0),
           child: Container(
-              child: SliderImages(
-                  imageList, largeImage, context, discountPercentage,widget.productId.toString())),
+              child: SliderImages(imageList, largeImage, context,
+                  discountPercentage, widget.productId.toString())),
         ),
         Container(
           height: 30.h,
@@ -833,8 +838,12 @@ class _NewProductDetailsState extends State<NewProductDetails>
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 4.0,
                                   ),
-                                  child:
-                                      Center(child: Text(productAttributeName)),
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      productAttributeName,
+                                      maxLines: 1,
+                                    ),
+                                  ),
                                 ),
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -1139,7 +1148,12 @@ class _NewProductDetailsState extends State<NewProductDetails>
         ExpandablePanel(
           header: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: AutoSizeText('OVERVIEW', style: TextStyle(fontSize: 4.w)),
+            child: AutoSizeText(
+              'OVERVIEW',
+              style: TextStyle(
+                fontSize: 4.w,
+              ),
+            ),
           ),
           collapsed: Text(
             '',
@@ -1153,18 +1167,21 @@ class _NewProductDetailsState extends State<NewProductDetails>
               child: Container(
                 child: HtmlWidget(
                   initialDatas!.fullDescription,
-                )
-                // AutoSizeText(
-                //   ConstantsVar.stripHtmlIfNeeded(
-                //       '''${initialDatas!.fullDescription}'''),
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     fontSize: 3.w,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey.shade700,
-                //   ),
-                // )
-                ,
+                  onTapUrl: (url) async {
+                    Fluttertoast.showToast(msg: url);
+                    if (url.contains('-care')) {
+                      ApiCalls.launchUrl(url);
+                      Fluttertoast.showToast(msg: 'open gmail');
+                    } else {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => TopicPage(
+                                  paymentUrl: 'https://theone.com/' + url)));
+                    }
+                    return true;
+                  },
+                ),
               ),
             ),
           ),

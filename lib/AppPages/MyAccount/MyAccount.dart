@@ -166,18 +166,10 @@ class _MyAccountState extends State<MyAccount> {
                                           child: AutoSizeText(
                                             'You are not logged in with THE One account.',
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(shadows: <Shadow>[
-                                              Shadow(
-                                                offset: Offset(1.0, 1.2),
-                                                blurRadius: 3.0,
-                                                color: Colors.grey.shade300,
-                                              ),
-                                              Shadow(
-                                                offset: Offset(1.0, 1.2),
-                                                blurRadius: 8.0,
-                                                color: Colors.grey.shade300,
-                                              ),
-                                            ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                         Row(
@@ -275,18 +267,9 @@ class _MyAccountState extends State<MyAccount> {
                                     // color: Colors.white,
                                     child: AutoSizeText(
                                       'my Addresses'.toUpperCase(),
-                                      style: TextStyle(shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 3.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 8.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -332,18 +315,10 @@ class _MyAccountState extends State<MyAccount> {
                                         AutoSizeText(
                                           'You are not logged in with THE One account.',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(shadows: <Shadow>[
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 3.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 8.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                          ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
@@ -437,18 +412,9 @@ class _MyAccountState extends State<MyAccount> {
                                     // color: Colors.white,
                                     child: AutoSizeText(
                                       'my orders'.toUpperCase(),
-                                      style: TextStyle(shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 3.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 8.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -496,18 +462,10 @@ class _MyAccountState extends State<MyAccount> {
                                         AutoSizeText(
                                           'You are not logged in with THE One account.',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(shadows: <Shadow>[
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 3.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 8.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                          ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
@@ -599,18 +557,9 @@ class _MyAccountState extends State<MyAccount> {
                                     // color: Colors.white,
                                     child: AutoSizeText(
                                       'change password'.toUpperCase(),
-                                      style: TextStyle(shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 3.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 8.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -658,18 +607,10 @@ class _MyAccountState extends State<MyAccount> {
                                         AutoSizeText(
                                           'You are not logged in with THE One account.',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(shadows: <Shadow>[
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 3.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 8.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                          ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
@@ -763,18 +704,9 @@ class _MyAccountState extends State<MyAccount> {
                                     // color: Colors.white,
                                     child: AutoSizeText(
                                       'Return Request(s)'.toUpperCase(),
-                                      style: TextStyle(shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 3.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 8.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],

@@ -140,6 +140,14 @@ Future<void> main() async {
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'The One',
+                builder: (context, child) {
+                  // final mediaQueryData = MediaQuery.of(context);
+                  // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
+                  return MediaQuery(
+                    child: child!,
+                      data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
+                  );
+                },
                 home: SplashScreen(),
                 theme: ThemeData(
                     pageTransitionsTheme: PageTransitionsTheme(

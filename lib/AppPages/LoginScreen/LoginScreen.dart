@@ -137,11 +137,12 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                           child: Center(
                             child: AutoSizeText(
                               loginString,
-                              maxLines: 3,
+                              // maxLines: 3,
                               wrapWords: true,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12.0,
+                                color: Colors.grey,
+                                fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -150,14 +151,23 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                         SizedBox(
                           height: 2.h,
                         ),
-                        Center(
-                          child: AutoSizeText(
-                            "CUSTOMER LOGIN",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 26.dp,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 2,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 8.w,
+                            right: 8.w,
+                          ),
+                          child: Container(
+                            width: 100.w,
+                            child: Center(
+                              child: AutoSizeText(
+                                "CUSTOMER LOGIN",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 26.dp,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 2,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -183,7 +193,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                   elevation: 8.0,
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: 4,
+                                      horizontal: 8,
+                                      vertical: 2,
                                     ),
                                     width: 90.w,
                                     child: TextFormField(
@@ -194,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                         if (isEmailValid(val!)) {
                                           return null;
                                         }
-                                        return 'Please enter a valid email address!.';
+                                        return 'Please enter a valid email address!';
                                       },
                                       controller: emailController,
                                       style: TextStyle(
@@ -223,8 +234,10 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                   elevation: 8.0,
                                   child: Container(
                                     width: 90.w,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 4),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 2,
+                                    ),
                                     child: TextFormField(
                                       enableInteractiveSelection: false,
                                       textInputAction: TextInputAction.done,
@@ -275,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                           color: ConstantsVar.appColor,
                                         ),
                                         labelStyle: TextStyle(
-                                          fontSize: 5.w,
+                                          fontSize: 14,
                                           color: Colors.grey,
                                         ),
                                         labelText: 'Password',
@@ -501,7 +514,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                 ),
               ),
         prefixIcon: icon,
-        labelStyle: TextStyle(fontSize: 5.w, color: Colors.grey),
+        labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
         labelText: name,
         border: InputBorder.none);
   }

@@ -169,18 +169,21 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                   child: Center(
                                     child: AutoSizeText(
                                       'MY ORDERS',
-                                      style: TextStyle(shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 3.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                        Shadow(
-                                          offset: Offset(1.0, 1.2),
-                                          blurRadius: 8.0,
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          shadows: <Shadow>[
+                                            Shadow(
+                                              offset: Offset(1.0, 1.2),
+                                              blurRadius: 3.0,
+                                              color: Colors.grey.shade300,
+                                            ),
+                                            Shadow(
+                                              offset: Offset(1.0, 1.2),
+                                              blurRadius: 8.0,
+                                              color: Colors.grey.shade300,
+                                            ),
+                                          ],
+                                          fontSize: 5.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
@@ -399,6 +402,9 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                             vertical: 8.0,
                                                           ),
                                                           child: LoadingButton(
+                                                            type:
+                                                                LoadingButtonType
+                                                                    .Flat,
                                                             loadingWidget:
                                                                 SpinKitCircle(
                                                               color:
@@ -479,36 +485,45 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                       ),
                                                       Visibility(
                                                         visible: isReturnAvail,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Center(
-                                                            child: AppButton(
+                                                        child: Container(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                          width: 100.w,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 8.0,
+                                                              vertical: 8.0,
+                                                            ),
+                                                            child:
+                                                                LoadingButton(
+                                                              type:
+                                                                  LoadingButtonType
+                                                                      .Flat,
+                                                              loadingWidget:
+                                                                  SpinKitCircle(
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 30,
+                                                              ),
                                                               color:
                                                                   ConstantsVar
                                                                       .appColor,
-                                                              child: Container(
-                                                                width: 100.w,
-                                                                height: 2.7.h,
-                                                                child: Center(
-                                                                  child:
-                                                                      AutoSizeText(
-                                                                    'Return'
-                                                                        .toUpperCase(),
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          4.4.w,
-                                                                    ),
-                                                                  ),
+                                                              defaultWidget:
+                                                                  AutoSizeText(
+                                                                'Return'
+                                                                    .toUpperCase(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      4.4.w,
                                                                 ),
                                                               ),
-                                                              onTap: () async {
-                                                                print(
-                                                                    '${orders['customerorders']['Orders'][index]['Id'].toString()}');
+                                                              onPressed:
+                                                                  () async {
                                                                 Navigator.push(
                                                                   context,
                                                                   CupertinoPageRoute(

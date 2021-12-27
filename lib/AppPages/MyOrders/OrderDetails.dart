@@ -97,6 +97,8 @@ class _OrderDetailsState extends State<OrderDetails>
 
   String _errorMessage = '';
 
+  var isAddressAvailable = true;
+
   Widget orderItem({
     required String productId,
     required String imageUrl,
@@ -211,6 +213,7 @@ class _OrderDetailsState extends State<OrderDetails>
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
+    print(widget.resultas);
 
     if (widget.orderProgress.contains('Pending')) {
       setState(() => widget.color = Colors.amberAccent);
@@ -261,8 +264,12 @@ class _OrderDetailsState extends State<OrderDetails>
         } else {
           sFirstName = widget.resultas!['orderdetail']['orderDetailsModel']
               ['ShippingAddress']['FirstName'];
+          sFirstName == null || sFirstName == ''
+              ? setState(() => sFirstName = '')
+              : setState(() => sFirstName = sFirstName);
           sLastName = widget.resultas!['orderdetail']['orderDetailsModel']
               ['ShippingAddress']['LastName'];
+
           sAddress1 = widget.resultas!['orderdetail']['orderDetailsModel']
               ['ShippingAddress']['Address1'];
           sPhone = widget.resultas!['orderdetail']['orderDetailsModel']
@@ -273,6 +280,37 @@ class _OrderDetailsState extends State<OrderDetails>
               ['ShippingAddress']['Email'];
           sCity = widget.resultas!['orderdetail']['orderDetailsModel']
               ['ShippingAddress']['City'];
+          sAddress1 == null || sAddress1 == ''
+              ? setState(() => sAddress1 = '')
+              : setState(() => sAddress1 = sAddress1);
+          sPhone == null || sPhone == ''
+              ? setState(() => sPhone = '')
+              : setState(() => sPhone = sPhone);
+          sCountryName == null || sCountryName == ''
+              ? setState(() => sCountryName = '')
+              : setState(() => sCountryName = sCountryName);
+          sEmail == null || sEmail == ''
+              ? setState(() => sEmail = '')
+              : setState(() => sEmail = sEmail);
+          sCity == null || sCity == ''
+              ? setState(() => sCity = '')
+              : setState(() => sCity = sCity);
+          sAddress1 == null ||
+                  sAddress1 == '' ||
+                  sCity == null ||
+                  sCity == '' ||
+                  sEmail == null ||
+                  sEmail == '' ||
+                  sCountryName == null ||
+                  sCountryName == '' ||
+                  sPhone == null ||
+                  sPhone == '' ||
+                  sAddress1 == null ||
+                  sAddress1 == '' ||
+                  sLastName == null ||
+                  sLastName == ''
+              ? setState(() => isAddressAvailable = false)
+              : setState(() => isAddressAvailable = true);
         }
       });
     } else {
@@ -310,9 +348,8 @@ class _OrderDetailsState extends State<OrderDetails>
             ? Container(
                 height: 60.h,
                 child: Center(
-
                   child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
                         width: 30.w,
@@ -636,7 +673,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                           ),
                                         ),
                                         AutoSizeText(
-                                          taxPrice == null?'AED ':taxPrice ,
+                                          taxPrice == null ? 'AED ' : taxPrice,
                                           style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 5.w,
@@ -661,7 +698,9 @@ class _OrderDetailsState extends State<OrderDetails>
                                           ),
                                         ),
                                         AutoSizeText(
-                                          totalPrice == null?'AED':totalPrice,
+                                          totalPrice == null
+                                              ? 'AED'
+                                              : totalPrice,
                                           style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 5.w,
@@ -681,7 +720,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                   child: Padding(
                                     padding: EdgeInsets.all(3.5.w),
                                     child: AutoSizeText(
-                                      'PRODUCT(S)'.toUpperCase(),
+                                      'PRODUCT\(S\)'.toUpperCase(),
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 5.5.w,
@@ -903,116 +942,157 @@ class _OrderDetailsState extends State<OrderDetails>
                                 ),
                               ),
                             ),
-                            Visibility(
-                              visible: !isPickUpStore,
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                    left: 10.0,
-                                    right: 10.0,
-                                    top: 6.0,
-                                    bottom: 6.0),
-                                child: Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  color: Colors.white,
-                                  child: Container(
-                                    height: 24.h,
-                                    margin: EdgeInsets.only(
-                                      left: 10,
-                                      right: 10,
-                                      bottom: 3.2,
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: 8, top: 4),
-                                                  child: AutoSizeText(
-                                                    sFirstName +
-                                                        ' ' +
-                                                        sLastName,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    softWrap: true,
-                                                    style: CustomTextStyle
-                                                        .textFormFieldBold
-                                                        .copyWith(
-                                                            fontSize: 4.w),
-                                                  ),
-                                                ),
-                                                Utils.getSizedBox(null, 6),
-                                                Container(
-                                                    child: AutoSizeText(
-                                                  'Email - ' + sEmail,
-                                                  style: TextStyle(
-                                                    fontSize: 4.w,
-                                                  ),
-                                                )),
-                                                Container(
-                                                  child: Row(
+                            Stack(
+                              children: [
+                                Visibility(
+                                  visible: !isPickUpStore,
+                                  child: Visibility(
+                                    visible: isAddressAvailable,
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          left: 10.0,
+                                          right: 10.0,
+                                          top: 6.0,
+                                          bottom: 6.0),
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        color: Colors.white,
+                                        child: Container(
+                                          height: 24.h,
+                                          margin: EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                            bottom: 3.2,
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
-                                                            .spaceBetween,
+                                                            .spaceEvenly,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: <Widget>[
-                                                      Flexible(
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 8,
+                                                                top: 4),
                                                         child: AutoSizeText(
-                                                          'Address -' +
-                                                              sAddress1,
+                                                          sFirstName +
+                                                              ' ' +
+                                                              '${sLastName == '' || sLastName == null ? '' : sLastName}',
+                                                          maxLines: 1,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          style: TextStyle(
-                                                              fontSize: 4.w),
+                                                          softWrap: true,
+                                                          style: CustomTextStyle
+                                                              .textFormFieldBold
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      4.w),
                                                         ),
                                                       ),
+                                                      Utils.getSizedBox(
+                                                          null, 6),
+                                                      Container(
+                                                          child: AutoSizeText(
+                                                        'Email - ' + sEmail,
+                                                        style: TextStyle(
+                                                          fontSize: 4.w,
+                                                        ),
+                                                      )),
+                                                      Container(
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Flexible(
+                                                              child:
+                                                                  AutoSizeText(
+                                                                'Address -' +
+                                                                    sAddress1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        4.w),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: AutoSizeText(
+                                                          'Phone -' +
+                                                              ' ' +
+                                                              sPhone,
+                                                          style: TextStyle(
+                                                            fontSize: 4.w,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          child: AutoSizeText(
+                                                        'Country -' +
+                                                            ' ' +
+                                                            sCountryName,
+                                                        style: TextStyle(
+                                                          fontSize: 4.w,
+                                                        ),
+                                                      )),
+                                                      Container(
+                                                          child: AutoSizeText(
+                                                        'City -' + ' ' + sCity,
+                                                        style: TextStyle(
+                                                          fontSize: 4.w,
+                                                        ),
+                                                      )),
+                                                      addVerticalSpace(12),
                                                     ],
                                                   ),
                                                 ),
-                                                Container(
-                                                  child: AutoSizeText(
-                                                    'Phone -' + ' ' + sPhone,
-                                                    style: TextStyle(
-                                                      fontSize: 4.w,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                    child: AutoSizeText(
-                                                  'Country -' +
-                                                      ' ' +
-                                                      sCountryName,
-                                                  style: TextStyle(
-                                                    fontSize: 4.w,
-                                                  ),
-                                                )),
-                                                Container(
-                                                    child: AutoSizeText(
-                                                  'City -' + ' ' + sCity,
-                                                  style: TextStyle(
-                                                    fontSize: 4.w,
-                                                  ),
-                                                )),
-                                                addVerticalSpace(12),
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                Visibility(
+                                  visible:!isAddressAvailable,
+                                  child: Card(
+                                    child: Container(
+                                      width: 100.w,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(3.8.w),
+                                        child: Center(
+                                          child: AutoSizeText(
+                                            'No Shipping Address',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 4.w,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             Card(
                               child: Container(
@@ -1041,7 +1121,10 @@ class _OrderDetailsState extends State<OrderDetails>
                                   padding: EdgeInsets.all(3.5.w),
                                   child: Center(
                                     child: AutoSizeText(
-                                      shippingMethod,
+                                      shippingMethod == null ||
+                                              shippingMethod == ''
+                                          ? 'No Shipping Method Used.'
+                                          : shippingMethod,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
