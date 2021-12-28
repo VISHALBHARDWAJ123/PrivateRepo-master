@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -107,7 +108,23 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       ConstantsVar.prefs = await SharedPreferences.getInstance();
-
+      AwesomeNotifications().initialize(
+        'resource://drawable/playstore', // icon for your app notification
+        [
+          NotificationChannel(
+            channelKey: 'Add to Cart Notification',
+            channelName: 'Add to Cart Notification',
+            channelDescription: "Add to Cart Notification",
+            defaultColor: Color(0XFF9050DD),
+            ledColor: Colors.white,
+            playSound: true,
+            enableLights: true,
+            enableVibration: true,
+            channelShowBadge: true,
+            icon: 'resource://drawable/playstore',
+          ),
+        ],
+      );
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled == true) {
@@ -145,21 +162,34 @@ Future<void> main() async {
                   // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
                   return MediaQuery(
                     child: child!,
-                      data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
+                    data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
                   );
                 },
                 home: SplashScreen(),
+                darkTheme: ThemeData(
+                  pageTransitionsTheme: PageTransitionsTheme(
+                    builders: {
+                      TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                      TargetPlatform.iOS:
+                          CupertinoWillPopScopePageTransionsBuilder(),
+                    },
+                  ),
+                  fontFamily: 'Arial',
+                  primarySwatch: MaterialColor(0xFF800E4F, color),
+                  primaryColor: ConstantsVar.appColor,
+                ),
                 theme: ThemeData(
-                    pageTransitionsTheme: PageTransitionsTheme(
-                      builders: {
-                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                        TargetPlatform.iOS:
-                            CupertinoWillPopScopePageTransionsBuilder(),
-                      },
-                    ),
-                    fontFamily: 'Arial',
-                    primarySwatch: MaterialColor(0xFF800E4F, color),
-                    primaryColor: ConstantsVar.appColor),
+                  pageTransitionsTheme: PageTransitionsTheme(
+                    builders: {
+                      TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                      TargetPlatform.iOS:
+                          CupertinoWillPopScopePageTransionsBuilder(),
+                    },
+                  ),
+                  fontFamily: 'Arial',
+                  primarySwatch: MaterialColor(0xFF800E4F, color),
+                  primaryColor: ConstantsVar.appColor,
+                ),
               ),
             ),
           ));

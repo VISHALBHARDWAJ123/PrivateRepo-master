@@ -474,81 +474,65 @@ class _prodListWidgetState extends State<prodListWidget> {
                                         ),
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                              vertical: 8.0,
-                                              horizontal: 8.0),
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
+                                              vertical: 8.0, horizontal: 8.0),
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           // color: Color(0xFFe0e1e0),
                                           child: Column(
-                                            mainAxisSize:
-                                            MainAxisSize.max,
+                                            mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               // sorry mam nahi hua!
                                               Container(
                                                 child: Text(
-                                                  widget
-                                                      .products[index].name,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  widget.products[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   maxLines: 3,
                                                   // minFontSize:.w,
                                                   style: TextStyle(
-                                                      color:
-                                                      Colors.black,
+                                                      color: Colors.black,
                                                       fontSize: 4.5.w,
                                                       fontWeight:
-                                                      FontWeight
-                                                          .bold),
-                                                  textAlign:
-                                                  TextAlign.start,
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.start,
                                                 ),
                                                 constraints:
-                                                BoxConstraints
-                                                    .tightFor(
-                                                    width: 48.w,
-                                                    height:
-                                                    18.w),
+                                                    BoxConstraints.tightFor(
+                                                        width: 48.w,
+                                                        height: 18.w),
                                               ),
                                               Padding(
                                                 padding:
-                                                const EdgeInsets
-                                                    .symmetric(
-                                                    vertical: 6.0),
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6.0),
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
-
                                                     AutoSizeText(
-                                                      widget
-                                                          .products[index].discountPrice ==
-                                                          null
+                                                      widget.products[index]
+                                                                  .discountPrice ==
+                                                              null
                                                           ? widget
-                                                          .products[index]
-                                                          .price
-                                                          :widget
-                                                          .products[index].discountPrice,
+                                                              .products[index]
+                                                              .price
+                                                          : widget
+                                                              .products[index]
+                                                              .discountPrice,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           height: 1,
                                                           color: Colors
-                                                              .grey
-                                                              .shade600,
+                                                              .grey.shade600,
                                                           fontSize: 4.w,
                                                           fontWeight:
-                                                          FontWeight
-                                                              .bold),
+                                                              FontWeight.bold),
                                                       textAlign:
-                                                      TextAlign
-                                                          .start,
+                                                          TextAlign.start,
                                                     ),
                                                   ],
                                                 ),
@@ -556,7 +540,6 @@ class _prodListWidgetState extends State<prodListWidget> {
                                             ],
                                           ),
                                         ),
-
                                         AddCartBtn(
                                           productId: widget.products[index].id,
                                           // width: 2.w,
@@ -587,6 +570,10 @@ class _prodListWidgetState extends State<prodListWidget> {
                                           message: '',
                                           name: '',
                                           recipName: '',
+                                          productImage: widget
+                                              .products[index].productPicture,
+                                          productName:
+                                              widget.products[index].name,
                                           // fontSize: 12,
                                         )
                                       ],

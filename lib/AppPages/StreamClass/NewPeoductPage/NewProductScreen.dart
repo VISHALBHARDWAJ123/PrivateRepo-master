@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -168,6 +169,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
                 image2 = initialDatas!.pictureModels[i].fullSizeImageUrl;
                 imageList.add(image1);
                 largeImage.add(image2);
+                print(image1);
+                setState(() {});
                 // setState((){value.addAll(initialData.productAttributes[i].values);});
               }
 
@@ -600,6 +603,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
                             attributeId: data,
                             recipName: _recNameController.text,
                             email: _yourEmailController.text,
+                            productImage: imageList[0],
+                            productName: initialDatas!.name,
                           ),
                         )
                       ],
@@ -617,6 +622,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
           ));
     }
   }
+
+  ScreenshotController screenshotController = ScreenshotController();
 
   ListView customList({
     required BuildContext context,
@@ -643,7 +650,9 @@ class _NewProductDetailsState extends State<NewProductDetails>
           padding: const EdgeInsets.all(6.0),
           child: Container(
               child: SliderImages(imageList, largeImage, context,
-                  discountPercentage, widget.productId.toString())),
+                  discountPercentage, widget.productId.toString(),
+                  myKey: screenshotController,
+                  overview: initialDatas!.fullDescription)),
         ),
         Container(
           height: 30.h,
@@ -1169,18 +1178,33 @@ class _NewProductDetailsState extends State<NewProductDetails>
                   initialDatas!.fullDescription,
                   onTapUrl: (url) async {
                     Fluttertoast.showToast(msg: url);
-                    if (url.contains('-care')) {
-                      ApiCalls.launchUrl(url);
-                      Fluttertoast.showToast(msg: 'open gmail');
-                    } else {
+                    print(url);
+                    if (url.contains(
+                        'terms-and-conditions-for-on-line-accessory-styling-service')) {
                       Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => TopicPage(
-                                  paymentUrl: 'https://theone.com/' + url)));
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => TopicPage(
+                              paymentUrl:
+                                  'https://www.theone.com/terms-and-conditions-for-online-accessory-styling-service-app'),
+                        ),
+                      );
+                    } else if (url.contains(
+                        'terms-and-conditions-for-online-furniture-styling-service-by-the-one-total-home-experience-llc')) {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => TopicPage(
+                              paymentUrl:
+                                  'https://www.theone.com/terms-and-conditions-for-online-furniture-styling-service-by-the-one-total-home-experience-llc-app'),
+                        ),
+                      );
+                    } else {
+                      ApiCalls.launchUrl(url);
                     }
                     return true;
                   },
+                  // textStyle: GoogleFonts.architectsDaughter(),
                 ),
               ),
             ),

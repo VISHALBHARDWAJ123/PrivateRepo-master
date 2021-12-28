@@ -26,7 +26,6 @@ class _NotificationClassState extends State<NotificationClass> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-
         top: true,
         bottom: true,
         maintainBottomViewPadding: true,
@@ -87,7 +86,11 @@ class _NotificationClassState extends State<NotificationClass> {
             children: [
               ListTile(
                 leading: CircleAvatar(
-                  child: Image.asset('MyAssets/logo.png'),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'MyAssets/logo.png',
+                    ),
+                  ),
                 ),
                 title: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -106,6 +109,7 @@ class _NotificationClassState extends State<NotificationClass> {
                     style: TextStyle(
                       color: Colors.black,
                     ),
+                    maxLines: 3,
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                 ),

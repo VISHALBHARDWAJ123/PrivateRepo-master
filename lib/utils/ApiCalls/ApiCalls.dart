@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -268,16 +269,17 @@ class ApiCalls {
   }
 
   static Future addToCart(
-    String customerId,
-    String productId,
-    BuildContext context,
-    String attributeId,
-    String name,
-    String recipName,
-    String email,
-    String recipEmail,
-    String message,
-  ) async {
+      String customerId,
+      String productId,
+      BuildContext context,
+      String attributeId,
+      String name,
+      String recipName,
+      String email,
+      String recipEmail,
+      String message,
+      {required String productName,
+      required String productImage}) async {
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/AddToCart?apiToken=${ConstantsVar.apiTokken}&customerid=$customerId&productid=$productId&itemquantity=1&' +
         'selectedAttributeId=$attributeId&recipientName=$recipName&recipientEmail=$recipEmail&senderName=$name&senderEmail=$email&giftCardMessage=$message');
@@ -287,6 +289,7 @@ class ApiCalls {
 
       var result1 = jsonDecode(response.body);
       print(result1);
+      print('Image Url>>>>>>>>>>>>'+ productImage+'\n'+'Product Name>>>>>>>>> $productName');
       AddToCartResponse resp = AddToCartResponse.fromJson(result1);
       print(resp.warning);
       if (resp.warning != null) {
@@ -301,6 +304,16 @@ class ApiCalls {
           ),
         );
       } else {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: int.parse(productId),
+              channelKey: 'Add to Cart Notification',
+              title: 'Item is added to Cart Successfully',
+              body: '$productName is added successfully.',
+              bigPicture: '$productImage',
+              notificationLayout: NotificationLayout.BigPicture,
+              displayOnForeground: true),
+        );
         // Constan
         // context.read<cartCounter>()
         print('noting');
@@ -1032,13 +1045,15 @@ class ApiCalls {
 
   static Future<List<ResponseDatum>> getSearchCategory() async {
     List<ResponseDatum> _searchCategoryList = [];
-    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetSearchScreenCategories');
+    final uri =
+        Uri.parse(BuildConfig.base_url + 'apis/GetSearchScreenCategories');
     try {
       var response = await http.get(uri, headers: header);
       // List<dynamic> result = ;
-      SearchCategoryResponse _mList = SearchCategoryResponse.fromJson(json.decode(response.body));
+      SearchCategoryResponse _mList =
+          SearchCategoryResponse.fromJson(json.decode(response.body));
 
-        _searchCategoryList = _mList.responseData;
+      _searchCategoryList = _mList.responseData;
 
       return _searchCategoryList;
     } on Exception catch (e) {

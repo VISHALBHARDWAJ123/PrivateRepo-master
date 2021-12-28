@@ -1,16 +1,33 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:path/path.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:play_kit/play_kit.dart';
+import 'package:share/share.dart';
+import 'package:screenshot/screenshot.dart';
 
-Widget SliderImages(List<String> images, List<String> largeImage,
-    BuildContext context, String discountPercentage, String productId) {
+import 'Constants/ConstantVariables.dart';
+
+Widget SliderImages(
+  List<String> images,
+  List<String> largeImage,
+  BuildContext context,
+  String discountPercentage,
+  String productId, {
+  required ScreenshotController myKey,
+  required String overview,
+
+}) {
   double _scale = 1.0;
   double _previousScale = 0;
   return Container(
@@ -41,12 +58,15 @@ Widget SliderImages(List<String> images, List<String> largeImage,
                             ),
                           );
                         },
-                        child: CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          imageUrl: images[index],
-                          placeholder: (context, reason) => Center(
-                            child: SpinKitRipple(
-                              color: Colors.red,
+                        child: Screenshot(
+                          controller: myKey,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.fill,
+                            imageUrl: images[index],
+                            placeholder: (context, reason) => Center(
+                              child: SpinKitRipple(
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
@@ -88,11 +108,37 @@ Widget SliderImages(List<String> images, List<String> largeImage,
                           color: Colors.white,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               )),
-        )
+        ),
+        Positioned(
+          top: 1,
+          right: .1,
+          child: GestureDetector(
+            onTap: () async {
+              await myKey
+                  .capture(delay: const Duration(milliseconds: 10))
+                  .then((image) async {
+                if (image != null) {
+                  final directory = await getApplicationDocumentsDirectory();
+                  final imagePath =
+                      await File('${directory.path}/image.png').create();
+                  await imagePath.writeAsBytes(image);
+
+                  /// Share Plugin
+                  await Share.shareFiles([imagePath.path],
+                      text: 'Hi There this is for testing purpose\n${ConstantsVar.stripHtmlIfNeeded(overview)}');
+                }
+              });
+            },
+            child: Icon(
+              Icons.share,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ],
     ),
   );

@@ -54,10 +54,10 @@ class _ProductListState extends State<ProductList> {
               inititalData = ProductListModel.fromJson(value);
               productCount = inititalData!.productCount;
               isException = false;
-              if(productCount == 0){
+              if (productCount == 0) {
                 products = [];
                 isException = false;
-              }else {
+              } else {
                 products = inititalData!.responseData;
                 isException = false;
               }
@@ -281,7 +281,7 @@ class _ProductListState extends State<ProductList> {
                   ),
                 ),
                 body: prodListWidget(
-                  products: products == null?[]:products,
+                  products: products == null ? [] : products,
                   title: widget.title.toString().toUpperCase(),
                   // result: result,
                   pageIndex: pageIndex,
@@ -306,6 +306,8 @@ class AddCartBtn extends StatefulWidget {
     Key? key,
     this.productId,
     required this.text,
+    required this.productName,
+    required this.productImage,
     required this.isTrue,
     required this.guestCustomerId,
     required this.checkIcon,
@@ -324,7 +326,14 @@ class AddCartBtn extends StatefulWidget {
   Icon checkIcon;
   String text;
   Color color;
-  String attributeId, name, recipName, email, recipEmail, message;
+  String attributeId,
+      name,
+      recipName,
+      email,
+      recipEmail,
+      message,
+      productName,
+      productImage;
 
   // double width;
   bool isTrue;
@@ -425,16 +434,18 @@ class _AddCartBtnState extends State<AddCartBtn> {
             stateId = AddToCartButtonStateId.loading;
             AddToCartResponse result;
             ApiCalls.addToCart(
-                    widget.guestCustomerId,
-                    '${widget.productId}',
-                    context,
-                    widget.attributeId,
-                    widget.name,
-                    widget.recipName,
-                    widget.email,
-                    widget.recipEmail,
-                    widget.message)
-                .then((response) {
+              widget.guestCustomerId,
+              '${widget.productId}',
+              context,
+              widget.attributeId,
+              widget.name,
+              widget.recipName,
+              widget.email,
+              widget.recipEmail,
+              widget.message,
+              productName: widget.productName,
+              productImage: widget.productImage,
+            ).then((response) {
               setState(() {
                 int val = 0;
                 ApiCalls.readCounter(
@@ -472,7 +483,9 @@ class _AddCartBtnState extends State<AddCartBtn> {
                     widget.recipName,
                     widget.email,
                     widget.recipEmail,
-                    widget.message)
+                    widget.message,
+              productName: widget.productName,
+              productImage: widget.productImage,)
                 .then((response) {
               setState(() {
                 int val = 0;

@@ -827,6 +827,12 @@ class _SearchPageState extends State<SearchPage>
                                                     attributeId: '',
                                                     name: '',
                                                     message: '',
+                                                    productName:
+                                                        searchedProducts[index]
+                                                            .name,
+                                                    productImage:
+                                                        searchedProducts[index]
+                                                            .productPicture,
                                                     // fontSize: 12,
                                                   ),
                                                 )
@@ -890,7 +896,7 @@ class _SearchPageState extends State<SearchPage>
                   ],
                 ),
                 Visibility(
-                  visible: widget.enableCategory ,
+                  visible: widget.enableCategory,
                   child: Center(
                     child: SearchCategories(
                       productList: productList,

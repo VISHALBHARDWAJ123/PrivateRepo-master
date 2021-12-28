@@ -815,7 +815,7 @@ class _CartScreen2State extends State<CartScreen2>
             body: Container(
               child: Center(
                 child: AutoSizeText(
-                  'NO ITEMS IN CART.\n \n \n WHOEVER SAID THAT MONEY CANNOT BUY HAPPINESS, DID NOT KNOW WHERE TO DO SHOPPING.\n\n\n ENJOY SHOPPING ON THE One!',
+                  'NO ITEMS IN CART.\n \n \n ENJOY SHOPPING ON THE One!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       letterSpacing: 1,

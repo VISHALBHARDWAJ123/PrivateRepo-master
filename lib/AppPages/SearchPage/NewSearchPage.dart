@@ -376,6 +376,9 @@ class _NewSearchPageState extends State<NewSearchPage> {
                                     attributeId: '',
                                     name: '',
                                     message: '',
+                                    productName: searchedProducts[index].name,
+                                    productImage:
+                                        searchedProducts[index].productPicture,
                                     // fontSize: 12,
                                   ),
                                 )
