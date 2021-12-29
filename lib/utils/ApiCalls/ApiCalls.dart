@@ -6,7 +6,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
@@ -222,7 +221,6 @@ class ApiCalls {
     String email,
   ) async {
     String message = '';
-    bool? boolean;
     final uri = Uri.parse(BuildConfig.base_url +
         'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
 
@@ -232,7 +230,6 @@ class ApiCalls {
       message = jsonDecode(response.body)['Result'];
       return message;
     } on Exception catch (e) {
-      boolean = false;
       ConstantsVar.excecptionMessage(e);
       message = e.toString();
       return message;
@@ -348,11 +345,7 @@ class ApiCalls {
       ConstantsVar.isCart = false;
       print(result);
       return result;
-      // } else {
-      //
-      //     msg: 'Something went wrong',
-      //   );
-      // }
+
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
 
@@ -559,10 +552,6 @@ class ApiCalls {
   static Future allAddresses(
       String apiToken, String customerId, BuildContext ctx) async {
     // bool apiresult = false;
-    final queryParameters = {
-      ApiParams.PARAM_API_TOKEN: apiToken,
-      ApiParams.PARAM_CUSTOMER_ID: customerId,
-    };
 
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetCustomerAddressList?apiToken=$apiToken&customerid=$customerId');
@@ -864,9 +853,10 @@ class ApiCalls {
         return count;
       }
     } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
       return count;
 
-      ConstantsVar.excecptionMessage(e);
+
     }
     return count;
   }
@@ -1036,7 +1026,6 @@ class ApiCalls {
           _message = 'Notify Me\!';
           return _message;
         }
-        return _message;
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
