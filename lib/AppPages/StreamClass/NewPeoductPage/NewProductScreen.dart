@@ -46,6 +46,8 @@ class NewProductDetails extends StatefulWidget {
 
 class _NewProductDetailsState extends State<NewProductDetails>
     with InputValidationMixin {
+  var isWishListed = false;
+
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     if (mounted)
@@ -173,7 +175,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                 setState(() {});
                 // setState((){value.addAll(initialData.productAttributes[i].values);});
               }
-
+              print(initialDatas!.isWishlisted);
               // image2 = initialData['PictureModels'][0]['FullSizeImageUrl'];
               discountedPrice = initialDatas!.productPrice.priceWithDiscount;
               discountedPrice != null
@@ -181,6 +183,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                   : isDiscountAvail = false;
               id = initialDatas!.id;
               name = initialDatas!.name;
+              isWishListed = initialDatas!.isWishlisted;
               description = initialDatas!.shortDescription;
               price = initialDatas!.productPrice.price;
               priceValue = double.parse(
@@ -649,10 +652,21 @@ class _NewProductDetailsState extends State<NewProductDetails>
         Padding(
           padding: const EdgeInsets.all(6.0),
           child: Container(
-              child: SliderImages(imageList, largeImage, context,
-                  discountPercentage, widget.productId.toString(),
-                  myKey: screenshotController,
-                  overview: initialDatas!.fullDescription)),
+              child: SliderClass(
+            myKey: screenshotController,
+            overview: initialDatas!.fullDescription,
+            productUrl: initialDatas!.productUrl,
+            apiToken: apiToken,
+            customerId: guestCustomerID,
+            isWishlisted: isWishListed,
+            productName: initialDatas!.name,
+            largeImage: largeImage,
+            images: imageList,
+            setState: () {},
+            context: context,
+            productId: widget.productId.toString(),
+            discountPercentage: initialDatas!.discountPercentage,
+          )),
         ),
         Container(
           height: 30.h,

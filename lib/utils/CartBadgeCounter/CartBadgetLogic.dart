@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:untitled2/AppPages/AppWishlist/WishlistResponse.dart';
 
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/MyOrders/Response/OrderResponse.dart';
@@ -18,9 +19,12 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
   String _categoryId = '';
   String _title = '';
   List<ResponseDatum> _searchCategoryList = [];
+  List<WishlistItem> _wishlistItems = [];
   bool _isVisible = true;
 
   int get badgeNumber => _bagdgeNumber;
+
+  List<WishlistItem> get wishlistItems => _wishlistItems;
 
   String get productID => _productID;
 
@@ -61,4 +65,15 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
     _isVisible = false;
     notifyListeners();
   }
+
+  void getWishlist(
+      {required String apiToken, required String customerId}) async {
+    _isVisible = true;
+    _wishlistItems =
+        await ApiCalls.getWishlist(apiToken: apiToken, customerId: customerId);
+    _isVisible = false;
+    notifyListeners();
+  }
+
+
 }

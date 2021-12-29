@@ -9,6 +9,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:untitled2/AppPages/AppWishlist/WishList.dart';
 
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/ContactsUS/ContactsUS.dart';
@@ -176,24 +177,27 @@ class _MenuPageState extends State<MenuPage> {
                                       child: Center(
                                         child: AutoSizeText(
                                           'Welcome',
-                                          style: TextStyle(shadows: <Shadow>[
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 3.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                            Shadow(
-                                              offset: Offset(1.0, 1.2),
-                                              blurRadius: 8.0,
-                                              color: Colors.grey.shade300,
-                                            ),
-                                          ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 3.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                                Shadow(
+                                                  offset: Offset(1.0, 1.2),
+                                                  blurRadius: 8.0,
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                              ],
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
                                   ),
                                   Visibility(
-                                    visible: userName == null?false:true,
+                                    visible: userName == null ? false : true,
                                     child: Container(
                                       width: 100.w,
                                       child: Column(
@@ -213,7 +217,8 @@ class _MenuPageState extends State<MenuPage> {
                                                       : true,
                                                   child: Icon(
                                                     Icons.person,
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -227,18 +232,26 @@ class _MenuPageState extends State<MenuPage> {
                                                     userName == null
                                                         ? ''
                                                         : userName,
-                                                    style: TextStyle(shadows: <Shadow>[
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 3.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 8.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(
+                                                        shadows: <Shadow>[
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 3.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 8.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                        ],
+                                                        fontSize: 5.w,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ],
@@ -248,7 +261,8 @@ class _MenuPageState extends State<MenuPage> {
                                             height: 20,
                                           ),
                                           Visibility(
-                                            visible: email == null ? false : true,
+                                            visible:
+                                                email == null ? false : true,
                                             child: Container(
                                               width: 100.w,
                                               child: Row(
@@ -259,25 +273,34 @@ class _MenuPageState extends State<MenuPage> {
                                                 children: [
                                                   Icon(
                                                     Icons.email,
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                   SizedBox(
                                                     width: 10,
                                                   ),
                                                   AutoSizeText(
                                                     email == null ? '' : email,
-                                                    style: TextStyle(shadows: <Shadow>[
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 3.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 8.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(
+                                                        shadows: <Shadow>[
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 3.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 8.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                        ],
+                                                        fontSize: 5.w,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
@@ -287,8 +310,9 @@ class _MenuPageState extends State<MenuPage> {
                                             height: 20,
                                           ),
                                           Visibility(
-                                            visible:
-                                                phnNumber == null ? false : true,
+                                            visible: phnNumber == null
+                                                ? false
+                                                : true,
                                             child: Container(
                                               width: 100.w,
                                               child: Row(
@@ -297,8 +321,8 @@ class _MenuPageState extends State<MenuPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Icon(Icons.phone,
-                                                      color:
-                                                          ConstantsVar.appColor),
+                                                      color: ConstantsVar
+                                                          .appColor),
                                                   SizedBox(
                                                     width: 10,
                                                   ),
@@ -306,18 +330,26 @@ class _MenuPageState extends State<MenuPage> {
                                                     phnNumber == null
                                                         ? ''
                                                         : phnNumber,
-                                                    style: TextStyle(shadows: <Shadow>[
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 3.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                      Shadow(
-                                                        offset: Offset(1.0, 1.2),
-                                                        blurRadius: 8.0,
-                                                        color: Colors.grey.shade300,
-                                                      ),
-                                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(
+                                                        shadows: <Shadow>[
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 3.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                          Shadow(
+                                                            offset: Offset(
+                                                                1.0, 1.2),
+                                                            blurRadius: 8.0,
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                          ),
+                                                        ],
+                                                        fontSize: 5.w,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
@@ -367,18 +399,21 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'My Account'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -438,18 +473,81 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'My Cart'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(
+                        milliseconds: 70,
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => WishlistScreen(),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6.w,
+                              horizontal: 8.w,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: Icon(
+                                    Icons.shopping_cart,
+                                    color: ConstantsVar.appColor,
+                                    size: 34,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  // color: Colors.white,
+                                  child: AutoSizeText(
+                                    'Wishlist'.toUpperCase(),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -491,18 +589,21 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'notifications'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -552,18 +653,21 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'Register'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -614,18 +718,21 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'Contact Us'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -665,18 +772,21 @@ class _MenuPageState extends State<MenuPage> {
                                   // color: Colors.white,
                                   child: AutoSizeText(
                                     'PRIVACY POLICY',
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -729,18 +839,21 @@ class _MenuPageState extends State<MenuPage> {
                                     customerId == '' || customerId == null
                                         ? 'login'.toUpperCase()
                                         : 'logout'.toUpperCase(),
-                                    style: TextStyle(shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 3.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      Shadow(
-                                        offset: Offset(1.0, 1.2),
-                                        blurRadius: 8.0,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        shadows: <Shadow>[
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 3.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.0, 1.2),
+                                            blurRadius: 8.0,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ],
+                                        fontSize: 5.w,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -757,7 +870,6 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         child: InkWell(
                           onTap: () {
-
                             // FirebaseCrashlytics.instance.crash();
 
                             Navigator.push(

@@ -123,6 +123,18 @@ Future<void> main() async {
             channelShowBadge: true,
             icon: 'resource://drawable/playstore',
           ),
+          NotificationChannel(
+            channelKey: 'Add to Wishlist Notification',
+            channelName: 'Add to Wishlist Notification',
+            channelDescription: "Add to Wishlist Notification",
+            defaultColor: Color(0XFF9050DD),
+            ledColor: Colors.white,
+            playSound: true,
+            enableLights: true,
+            enableVibration: true,
+            channelShowBadge: true,
+            icon: 'resource://drawable/playstore',
+          ),
         ],
       );
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;

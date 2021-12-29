@@ -1,6 +1,6 @@
+import 'dart:core';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:path/path.dart';
+import 'package:like_button/like_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,78 +15,139 @@ import 'package:photo_view/photo_view.dart';
 import 'package:play_kit/play_kit.dart';
 import 'package:share/share.dart';
 import 'package:screenshot/screenshot.dart';
-
+import 'package:favorite_button/favorite_button.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/HeartIcon.dart';
 import 'Constants/ConstantVariables.dart';
 
-Widget SliderImages(
-  List<String> images,
-  List<String> largeImage,
-  BuildContext context,
-  String discountPercentage,
-  String productId, {
-  required ScreenshotController myKey,
-  required String overview,
+class SliderClass extends StatefulWidget {
+  SliderClass({
+    Key? key,
+    required this.myKey,
+    required this.images,
+    required this.largeImage,
+    required this.context,
+    required this.productId,
+    required this.discountPercentage,
+    required this.overview,
+    required this.productUrl,
+    required this.apiToken,
+    required this.customerId,
+    required this.productName,
+    // required this.myKey,
+    required this.isWishlisted,
+    required VoidCallback setState,
+  }) : super(key: key);
+  List<String> images;
+  List<String> largeImage;
+  BuildContext context;
+  String discountPercentage;
+  String productId;
+  bool isWishlisted;
+  String productName, customerId, apiToken, productUrl, overview;
+  ScreenshotController myKey;
 
-}) {
-  double _scale = 1.0;
-  double _previousScale = 0;
-  return Container(
-    height: 52.h,
-    width: 85.w,
-    child: Stack(
-      children: [
-        Center(
-          child: Container(
-            // padding: EdgeInsets.all(0),
-            child: Center(
-              child: CarouselSlider.builder(
-                enableAutoSlider: images.length > 1 ? true : false,
-                unlimitedMode: true,
-                viewportFraction: 1,
-                slideBuilder: (index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.w),
-                    child: Hero(
-                      tag: 'ProductImage$productId',
-                      transitionOnUserGestures: true,
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => ImageDialog(
+  @override
+  _SliderClassState createState() => _SliderClassState();
+}
+
+class _SliderClassState extends State<SliderClass> {
+  Color? _color = ConstantsVar.appColor;
+  bool _isLiked = false;
+
+  @override
+  initState() {
+    setState(() => _isLiked = widget.isWishlisted);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliderImages(widget.images, widget.largeImage, widget.context,
+        widget.discountPercentage, widget.productId,
+        productUrl: widget.productUrl,
+        customerId: widget.customerId,
+        myKey: widget.myKey,
+        apiToken: widget.apiToken,
+        overview: widget.overview,
+        productName: widget.productName,
+        isWishlisted: widget.isWishlisted);
+  }
+
+  Widget SliderImages(
+    List<String> images,
+    List<String> largeImage,
+    BuildContext context,
+    String discountPercentage,
+    String productId, {
+    required ScreenshotController myKey,
+    required String overview,
+    required String productUrl,
+    required String apiToken,
+    required String customerId,
+    required String productName,
+    required bool isWishlisted,
+  }) {
+    double _scale = 1.0;
+    double _previousScale = 0;
+    return Container(
+      height: 52.h,
+      width: 85.w,
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              // padding: EdgeInsets.all(0),
+              child: Center(
+                child: CarouselSlider.builder(
+                  enableAutoSlider: images.length > 1 ? true : false,
+                  unlimitedMode: true,
+                  viewportFraction: 1,
+                  slideBuilder: (index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4.w),
+                      child: Hero(
+                        tag: 'ProductImage$productId',
+                        transitionOnUserGestures: true,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ImageDialog(
+                                imageUrl: images[index],
+                              ),
+                            );
+                          },
+                          child: Screenshot(
+                            controller: myKey,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
                               imageUrl: images[index],
-                            ),
-                          );
-                        },
-                        child: Screenshot(
-                          controller: myKey,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.fill,
-                            imageUrl: images[index],
-                            placeholder: (context, reason) => Center(
-                              child: SpinKitRipple(
-                                color: Colors.red,
+                              placeholder: (context, reason) => Center(
+                                child: SpinKitRipple(
+                                  color: Colors.red,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                slideTransform: DefaultTransform(),
-                slideIndicator: CircularSlideIndicator(
-                    padding: EdgeInsets.only(top: 4.w),
-                    alignment: Alignment.bottomCenter,
-                    currentIndicatorColor: Colors.black),
-                itemCount: images.length,
+                    );
+                  },
+                  slideTransform: DefaultTransform(),
+                  slideIndicator: CircularSlideIndicator(
+                      padding: EdgeInsets.only(top: 4.w),
+                      alignment: Alignment.bottomCenter,
+                      currentIndicatorColor: Colors.black),
+                  itemCount: images.length,
+                ),
               ),
             ),
           ),
-        ),
-        Visibility(
-          visible: discountPercentage.trim().length != 0 ? true : false,
-          child: Align(
+          Visibility(
+            visible: discountPercentage.trim().length != 0 ? true : false,
+            child: Align(
               alignment: Alignment.topLeft,
               child: Container(
                 width: 15.w,
@@ -111,37 +172,108 @@ Widget SliderImages(
                     ),
                   ],
                 ),
-              )),
-        ),
-        Positioned(
-          top: 1,
-          right: .1,
-          child: GestureDetector(
-            onTap: () async {
-              await myKey
-                  .capture(delay: const Duration(milliseconds: 10))
-                  .then((image) async {
-                if (image != null) {
-                  final directory = await getApplicationDocumentsDirectory();
-                  final imagePath =
-                      await File('${directory.path}/image.png').create();
-                  await imagePath.writeAsBytes(image);
-
-                  /// Share Plugin
-                  await Share.shareFiles([imagePath.path],
-                      text: 'Hi There this is for testing purpose\n${ConstantsVar.stripHtmlIfNeeded(overview)}');
-                }
-              });
-            },
-            child: Icon(
-              Icons.share,
-              color: Colors.black,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+          Visibility(
+            visible: true,
+            child: Positioned(
+              top: 1,
+              right: .1,
+              child: Row(
+                children: [
+                  Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: LikeButton(
+                        onTap: (isLiked) async {
+                          _isLiked == false
+                              ? await ApiCalls.addToWishlist(
+                                      apiToken: widget.apiToken,
+                                      customerId: widget.customerId,
+                                      productId: widget.productId,
+                                      imageUrl: widget.images[0],
+                                      productName: widget.productName)
+                                  .then((value) =>
+                                      setState(() => _isLiked = value))
+                              : await ApiCalls.removeFromWishlist(
+                                      apiToken: apiToken,
+                                      customerId: customerId,
+                                      productId: productId,
+                                      productName: productName,
+                                      imageUrl: images[0])
+                                  .then((value) =>
+                                      setState(() => _isLiked = value));
+
+                          return _isLiked;
+                        },
+                        size: IconTheme.of(context).size! + 4,
+                        circleColor: CircleColor(
+                          start: ConstantsVar.appColor,
+                          end: ConstantsVar.appColor,
+                        ),
+                        isLiked: _isLiked,
+                        bubblesColor: BubblesColor(
+                          dotPrimaryColor: ConstantsVar.appColor,
+                          dotSecondaryColor: ConstantsVar.appColor,
+                        ),
+                        // isLiked: isWishlisted,
+                        likeBuilder: (bool isLiked) {
+                          return Icon(
+                            HeartIcon.heart,
+                            color: isLiked ? _color : Colors.grey,
+                            size: IconTheme.of(context).size! + 2,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      await myKey
+                          .capture(delay: const Duration(milliseconds: 10))
+                          .then((image) async {
+                        if (image != null) {
+                          final directory =
+                              await getApplicationDocumentsDirectory();
+                          final imagePath =
+                              await File('${directory.path}/image.png')
+                                  .create();
+                          await imagePath.writeAsBytes(image);
+
+                          /// Share Plugin
+                          await Share.shareFiles([imagePath.path],
+                              text:
+                                  'Hi There this is for testing purpose\n${ConstantsVar.stripHtmlIfNeeded(overview)}\nView product: $productUrl');
+                        }
+                      });
+                    },
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(150),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Icon(
+                          Icons.share,
+                          color: ConstantsVar.appColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class ImageDialog extends StatelessWidget {
