@@ -307,16 +307,16 @@ class ApiCalls {
           ),
         );
       } else {
-        // AwesomeNotifications().createNotification(
-        //   content: NotificationContent(
-        //       id: int.parse(productId),
-        //       channelKey: 'Add to Cart Notification',
-        //       title: 'Item is added to Cart Successfully',
-        //       body: '$productName is added successfully.',
-        //       bigPicture: '$productImage',
-        //       notificationLayout: NotificationLayout.BigPicture,
-        //       displayOnForeground: true),
-        // );
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: int.parse(productId),
+              channelKey: 'Add to Cart Notification',
+              title: 'Item is added to Cart Successfully',
+              body: '$productName is added successfully.',
+              bigPicture: '$productImage',
+              notificationLayout: NotificationLayout.BigPicture,
+              displayOnForeground: true),
+        );
         // Constan
         // context.read<cartCounter>()
         print('noting');
@@ -1061,11 +1061,17 @@ class ApiCalls {
     required String productId,
     required String imageUrl,
     required String productName,
+    required BuildContext context,
+    required String senderName,
+    required String receiverName,
+    required String senderEmail,
+    required String receiverEmail,
+    required String msg,
   }) async {
     print('Api Token>>>>>>>>>>>$apiToken');
     print('Customer Id>>>>>>>>>>>$customerId');
     final url = Uri.parse(BuildConfig.base_url +
-        'apis/AddToWishlist?apiToken=$apiToken&customerid=$customerId&productid=$productId');
+        'apis/AddToWishlist?apiToken=$apiToken&customerid=$customerId&productid=$productId&itemquantity=1&recipientName=$receiverName&recipientEmail=$receiverEmail&senderName=&senderEmail=&giftCardMessage=');
     print('Url>>>>>>>>${url.toString()}');
 
     try {
@@ -1075,7 +1081,6 @@ class ApiCalls {
       AddToWishlist result = AddToWishlist.fromJson(jsonDecode(response.body));
 
       if ((result.result != '' || result.result != null) &&
-          result.result.length != 0 &&
           result.result !=
               'There was an error adding the product to your wishlist.') {
         AwesomeNotifications().createNotification(
@@ -1088,6 +1093,7 @@ class ApiCalls {
               notificationLayout: NotificationLayout.BigPicture,
               displayOnForeground: true),
         );
+
         return true;
       } else {
         Fluttertoast.showToast(msg: result.warning[0]);
@@ -1099,7 +1105,7 @@ class ApiCalls {
               body:
                   'Unable to add this $productName to wishlist because of\n${result.warning}\n ${result.error}',
               bigPicture: '$imageUrl',
-              notificationLayout: NotificationLayout.BigPicture,
+              notificationLayout: NotificationLayout.BigText,
               displayOnForeground: true),
         );
 
@@ -1121,7 +1127,7 @@ class ApiCalls {
     try {
       var jsonResponse = await http.get(url, headers: header);
       print(jsonResponse.body);
-      if(jsonDecode(jsonResponse.body)['status'].toString() == 'Success') {
+      if (jsonDecode(jsonResponse.body)['status'].toString() == 'Success') {
         try {
           response = WishlistResponse.fromJson(jsonDecode(jsonResponse.body));
         } on Exception catch (e) {
@@ -1136,7 +1142,7 @@ class ApiCalls {
           items = response.responseData!.items;
           return items;
         }
-      }else{
+      } else {
         items = [];
         return items;
       }
@@ -1152,7 +1158,8 @@ class ApiCalls {
       required String customerId,
       required String productId,
       required String productName,
-      required String imageUrl}) async {
+      required String imageUrl,
+      required BuildContext context}) async {
     final url = Uri.parse(BuildConfig.base_url +
         'customer/RemoveItemWishlist?apiToken=$apiToken&CustId=$customerId&productid=$productId');
     try {
@@ -1162,26 +1169,29 @@ class ApiCalls {
       if (_response.status.contains('Success')) {
         AwesomeNotifications().createNotification(
           content: NotificationContent(
-              id: int.parse(productId),
-              channelKey: 'Add to Wishlist Notification',
-              title: 'Removed from Wishlist Successfully',
-              body: '$productName is removed from Wishlist Successfully',
-              bigPicture: '$imageUrl',
-              notificationLayout: NotificationLayout.BigPicture,
-              displayOnForeground: true),
+            id: int.parse(productId),
+            channelKey: 'Remove from Wishlist Notification',
+            title: 'Removed from Wishlist Successfully',
+            body: '$productName is removed from Wishlist Successfully',
+            bigPicture: '$imageUrl',
+            notificationLayout: NotificationLayout.BigPicture,
+            displayOnForeground: true,
+          ),
         );
+
         return false;
       } else {
         Fluttertoast.showToast(msg: _response.message);
         AwesomeNotifications().createNotification(
           content: NotificationContent(
-              id: int.parse(productId),
-              channelKey: 'Add to Wishlist Notification',
-              title: 'Failed removed from Wishlist Successfully',
-              body: 'Unable to remove $productName from Wishlist.',
-              bigPicture: '$imageUrl',
-              notificationLayout: NotificationLayout.BigPicture,
-              displayOnForeground: true),
+            id: int.parse(productId),
+            channelKey: 'Remove from Wishlist Notification',
+            title: 'Failed removed from Wishlist Successfully',
+            body: 'Unable to remove $productName from Wishlist.',
+            bigPicture: '$imageUrl',
+            notificationLayout: NotificationLayout.BigText,
+            displayOnForeground: true,
+          ),
         );
         return true;
       }

@@ -16,7 +16,6 @@ import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
-import 'package:untitled2/utils/HeartIcon.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({Key? key}) : super(key: key);
@@ -191,7 +190,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 );
                               },
                               child: Container(
-                                height: 24.h,
+                                height: 20.h,
                                 child: Stack(
                                   children: <Widget>[
                                     Container(
@@ -256,9 +255,42 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                             fontSize: 15),
                                                   ),
                                                   // Utils.getSizedBox(null, 6),
+                                                  Visibility(
+                                                    visible: value
+                                                            .wishlistItems[
+                                                                index]
+                                                            .discount
+                                                            .toString()
+                                                            .contains('null')
+                                                        ? false
+                                                        : true,
+                                                    child: AutoSizeText(
+                                                      'Discount: ' +
+                                                          value
+                                                              .wishlistItems[
+                                                                  index]
+                                                              .discount
+                                                              .toString(),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
                                                   AutoSizeText(
-                                                    value.wishlistItems[index]
-                                                        .unitPrice,
+                                                    'Unit Price: ' +
+                                                        value
+                                                            .wishlistItems[
+                                                                index]
+                                                            .unitPrice,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  AutoSizeText(
+                                                    'Quantity: ' +
+                                                        value
+                                                            .wishlistItems[
+                                                                index]
+                                                            .quantity
+                                                            .toString(),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -275,6 +307,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                       right: 1,
                                       child: Card(
                                         elevation: 10,
+                                        shape: CircleBorder(),
                                         child: Padding(
                                           padding: const EdgeInsets.all(6.0),
                                           child: LikeButton(
@@ -292,7 +325,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                       imageUrl: value
                                                           .wishlistItems[index]
                                                           .picture
-                                                          .imageUrl)
+                                                          .imageUrl,
+                                                      context: context)
                                                   .then((value) =>
                                                       isLiked = value)
                                                   .then((value) =>
@@ -319,7 +353,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             // isLiked: isWishlisted,
                                             likeBuilder: (bool isLiked) {
                                               return Icon(
-                                                HeartIcon.cross,
+                                                Icons.close,
                                                 color: ConstantsVar.appColor,
                                                 size: IconTheme.of(context)
                                                         .size! -

@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:like_button/like_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,8 +35,14 @@ class SliderClass extends StatefulWidget {
     required this.apiToken,
     required this.customerId,
     required this.productName,
+    required this.senderName,
+    required this.recevierName,
+    required this.senderEmail,
+    required this.receiverEmail,
+    required this.message,
     // required this.myKey,
     required this.isWishlisted,
+    required this.isGiftCard,
     required VoidCallback setState,
   }) : super(key: key);
   List<String> images;
@@ -43,8 +50,17 @@ class SliderClass extends StatefulWidget {
   BuildContext context;
   String discountPercentage;
   String productId;
-  bool isWishlisted;
-  String productName, customerId, apiToken, productUrl, overview;
+  bool isWishlisted, isGiftCard;
+  String productName,
+      customerId,
+      apiToken,
+      productUrl,
+      overview,
+      senderName,
+      recevierName,
+      senderEmail,
+      receiverEmail,
+      message;
   ScreenshotController myKey;
 
   @override
@@ -184,30 +200,22 @@ class _SliderClassState extends State<SliderClass> {
                 children: [
                   Card(
                     elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                    shape: CircleBorder(),
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: LikeButton(
                         onTap: (isLiked) async {
                           _isLiked == false
-                              ? await ApiCalls.addToWishlist(
-                                      apiToken: widget.apiToken,
-                                      customerId: widget.customerId,
-                                      productId: widget.productId,
-                                      imageUrl: widget.images[0],
-                                      productName: widget.productName)
-                                  .then((value) =>
-                                      setState(() => _isLiked = value))
+                              ? checkGiftCard()
                               : await ApiCalls.removeFromWishlist(
-                                      apiToken: apiToken,
-                                      customerId: customerId,
-                                      productId: productId,
-                                      productName: productName,
-                                      imageUrl: images[0])
-                                  .then((value) =>
-                                      setState(() => _isLiked = value));
+                                  apiToken: apiToken,
+                                  customerId: customerId,
+                                  productId: productId,
+                                  productName: productName,
+                                  imageUrl: images[0],
+                                  context: context,
+                                ).then(
+                                  (value) => setState(() => _isLiked = value));
 
                           return _isLiked;
                         },
@@ -226,7 +234,7 @@ class _SliderClassState extends State<SliderClass> {
                           return Icon(
                             HeartIcon.heart,
                             color: isLiked ? _color : Colors.grey,
-                            size: IconTheme.of(context).size! + 2,
+                            size: IconTheme.of(context).size!,
                           );
                         },
                       ),
@@ -254,9 +262,7 @@ class _SliderClassState extends State<SliderClass> {
                     },
                     child: Card(
                       elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(150),
-                      ),
+                      shape: CircleBorder(),
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: Icon(
@@ -273,6 +279,51 @@ class _SliderClassState extends State<SliderClass> {
         ],
       ),
     );
+  }
+
+  void checkGiftCard() async {
+    if (widget.isGiftCard == true) {
+      if (widget.recevierName.isEmpty ||
+          widget.recevierName == '' ||
+          widget.receiverEmail.isEmpty ||
+          widget.receiverEmail == '' ||
+          widget.senderEmail.isEmpty ||
+          widget.senderEmail == '' ||
+          widget.senderName.isEmpty ||
+          widget.senderName == '') {
+        Fluttertoast.showToast(
+            msg:
+                'Please check following fields: Recipient Name, Recipient Email, Sender Name, Sender Email.');
+      } else {
+        await ApiCalls.addToWishlist(
+          apiToken: widget.apiToken,
+          customerId: widget.customerId,
+          productId: widget.productId,
+          imageUrl: widget.images[0],
+          productName: widget.productName,
+          context: context,
+          senderName: widget.senderName,
+          receiverEmail: widget.receiverEmail,
+          msg: widget.message,
+          receiverName: widget.recevierName,
+          senderEmail: widget.senderEmail,
+        ).then((value) => setState(() => _isLiked = value));
+      }
+    } else {
+      await ApiCalls.addToWishlist(
+        apiToken: widget.apiToken,
+        customerId: widget.customerId,
+        productId: widget.productId,
+        imageUrl: widget.images[0],
+        productName: widget.productName,
+        context: context,
+        senderName: '',
+        receiverEmail: '',
+        msg: '',
+        receiverName: '',
+        senderEmail: '',
+      ).then((value) => setState(() => _isLiked = value));
+    }
   }
 }
 

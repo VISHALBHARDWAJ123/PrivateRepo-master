@@ -97,10 +97,9 @@ Future<void> _messageHandler(RemoteMessage message) async {
   print('background message message got ');
 }
 
-const _kShouldTestAsyncErrorOnInit = false;
 
 // Toggle this for testing Crashlytics in your app locally.
-const _kTestingCrashlytics = true;
+
 
 Future<void> main() async {
   await runZonedGuarded(
@@ -135,8 +134,21 @@ Future<void> main() async {
             channelShowBadge: true,
             icon: 'resource://drawable/playstore',
           ),
+          NotificationChannel(
+            channelKey: 'Remove from Wishlist Notification',
+            channelName: 'Remove from Wishlist Notification',
+            channelDescription: "Remove from Wishlist Notification",
+            defaultColor: Color(0XFF9050DD),
+            ledColor: Colors.white,
+            playSound: true,
+            enableLights: true,
+            enableVibration: true,
+            channelShowBadge: true,
+            icon: 'resource://drawable/playstore',
+          ),
         ],
       );
+
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled == true) {

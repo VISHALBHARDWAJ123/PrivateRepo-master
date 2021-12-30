@@ -135,6 +135,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
     super.initState();
     // getInstance();
     initSharedPrefs();
+
     setState(() {
       _groupController = GroupController(
           isMultipleSelection: true, initSelectedItem: _selectedList);
@@ -666,6 +667,11 @@ class _NewProductDetailsState extends State<NewProductDetails>
             context: context,
             productId: widget.productId.toString(),
             discountPercentage: initialDatas!.discountPercentage,
+            senderEmail: _yourEmailController.text,
+            receiverEmail: recEmailController.text,
+            recevierName: _recNameController.text,
+            senderName: _yourNameController.text,
+            message: _messageController.text, isGiftCard: _isGiftCard,
           )),
         ),
         Container(

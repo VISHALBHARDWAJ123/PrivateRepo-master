@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:animations/animations.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -14,6 +16,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled2/AppPages/AppWishlist/WishList.dart';
 
 // import 'package:untitled2/AppPages/Cart%20Screen/CartScreen2.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
@@ -21,6 +24,7 @@ import 'package:untitled2/AppPages/HomeCategory/HomeCategory.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/home_screen_main.dart';
 import 'package:untitled2/AppPages/NavigationPage/MenuPage.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
+import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/GridViewModel.dart';
 import 'package:untitled2/PojoClass/itemGridModel.dart';
@@ -68,6 +72,37 @@ class _MyAppState extends State<MyApp> {
     Firebase.initializeApp().whenComplete(() {
       FirebaseMessaging.instance;
       FirebaseMessaging.onBackgroundMessage(_messageHandler);
+    });
+    AwesomeNotifications()
+        .actionStream
+        .listen((ReceivedNotification receivedNotification) {
+      if (receivedNotification.channelKey!
+          .contains('Remove from Wishlist Notification')) {
+        Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => NewProductDetails(
+                      productId: receivedNotification.id,
+                      screenName: 'Notification',
+                    )));
+      } else if (receivedNotification.channelKey!
+          .contains('Add to Cart Notification')) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => MyHomePage(
+                      pageIndex: 3,
+                    )),
+            (route) => false);
+      } else if (receivedNotification.channelKey!
+          .contains('Add to Wishlist Notification')) {
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => WishlistScreen(),
+          ),
+        );
+      }
     });
     getCartBagdge(0);
   }
@@ -258,7 +293,8 @@ class _MyHomePageState extends State<MyHomePage>
       case 2:
         return SearchPage(
           keyword: '',
-          isScreen: false, enableCategory: true,
+          isScreen: false,
+          enableCategory: true,
         );
       case 3:
         return CartScreen2(
