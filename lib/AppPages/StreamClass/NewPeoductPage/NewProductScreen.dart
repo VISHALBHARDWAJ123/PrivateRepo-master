@@ -135,7 +135,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
     super.initState();
     // getInstance();
     initSharedPrefs();
-
+    ApiCalls.saveRecentProduct(productId: widget.productId.toString());
     setState(() {
       _groupController = GroupController(
           isMultipleSelection: true, initSelectedItem: _selectedList);
@@ -671,7 +671,9 @@ class _NewProductDetailsState extends State<NewProductDetails>
             receiverEmail: recEmailController.text,
             recevierName: _recNameController.text,
             senderName: _yourNameController.text,
-            message: _messageController.text, isGiftCard: _isGiftCard,
+            message: _messageController.text,
+            isGiftCard: _isGiftCard,
+            attributeId: data,
           )),
         ),
         Container(

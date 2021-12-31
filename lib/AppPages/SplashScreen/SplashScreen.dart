@@ -48,6 +48,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
+    if(ConstantsVar.prefs.getStringList('RecentProducts') == null) {
+      ConstantsVar.prefs.setStringList('RecentProducts', []);
+    }
+    // setState(())
   }
 
   @override

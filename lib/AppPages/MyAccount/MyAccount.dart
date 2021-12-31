@@ -164,7 +164,7 @@ class _MyAccountState extends State<MyAccount> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: AutoSizeText(
-                                            'You are not logged in with THE One account.',
+                                            'You are not logged in.',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.white,
@@ -313,7 +313,7 @@ class _MyAccountState extends State<MyAccount> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         AutoSizeText(
-                                          'You are not logged in with THE One account.',
+                                          'You are not logged in.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -460,7 +460,7 @@ class _MyAccountState extends State<MyAccount> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         AutoSizeText(
-                                          'You are not logged in with THE One account.',
+                                          'You are not logged in.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,
@@ -605,7 +605,7 @@ class _MyAccountState extends State<MyAccount> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         AutoSizeText(
-                                          'You are not logged in with THE One account.',
+                                          'You are not logged in.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,

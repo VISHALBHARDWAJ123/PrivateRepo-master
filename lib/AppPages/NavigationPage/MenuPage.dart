@@ -625,7 +625,7 @@ class _MenuPageState extends State<MenuPage> {
                                       builder: (context) => RegstrationPage()))
                               : Fluttertoast.showToast(
                                   msg:
-                                      'You are already logged in with THE One account',
+                                      'You are already logged in.',
                                   toastLength: Toast.LENGTH_LONG,
                                 );
                         },

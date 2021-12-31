@@ -36,6 +36,8 @@ import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
+import 'RecentlyViewedProductResponse.dart';
+
 class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
 
@@ -56,6 +58,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   List<SocialModel> socialLinks = [];
   List<String> searchSuggestions = [];
   var userId;
+  List<Product> products = [];
 
   TextEditingController _searchController = TextEditingController();
   var _focusNode = FocusNode();
@@ -72,25 +75,44 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   String listString = '';
   var cokkie;
 
-  late ScrollController _productController, _serviceController;
+  late ScrollController _productController,
+      _serviceController,
+      _recentlyProductController;
   ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   var isVisibled = false;
 
+  var apiToken = '';
+  List<String> _productIds = [];
+
+  // var _recentlyProductController;
+
+  Future initSharedPrefs() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
+    _productIds = ConstantsVar.prefs.getStringList('RecentProducts')!;
+    // _productIds = List<String>.from(dynamicList).toList();
+    apiToken = ConstantsVar.prefs.getString('apiTokken')!;
+    print('Hello There' + _productIds.join(','));
+    setState(() {});
+  }
+
   @override
   void initState() {
-    super.initState();
+    initSharedPrefs().whenComplete(() => getRecentlyViewedProduct());
     _productController = new ScrollController();
+    _recentlyProductController = new ScrollController();
     _serviceController =
         new ScrollController(initialScrollOffset: modelList.length + 30.w);
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
+
     getApiToken().then((value) {
       if (mounted) setState(() {});
 
       showAdDialog().whenComplete(() => apiCallToHomeScreen(value));
     });
     setState(() {});
+    super.initState();
   }
 
   Future showAdDialog() async {
@@ -629,6 +651,72 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                 ),
                               ),
                             ),
+                            Visibility(
+                              visible: products.length == 0 ? false : true,
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 7.0),
+                                color: Colors.white,
+                                height: 60.w,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            AutoSizeText(
+                                              'Recently Viewed'
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(1.0, 1.2),
+                                                    blurRadius: 3.0,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                  Shadow(
+                                                    offset: Offset(1.0, 1.2),
+                                                    blurRadius: 8.0,
+                                                    color: Colors.grey.shade300,
+                                                  ),
+                                                ],
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: VsScrollbar(
+                                        style: VsScrollbarStyle(thickness: 3.5),
+                                        controller: _recentlyProductController,
+                                        isAlwaysShown: true,
+                                        child: ListView.builder(
+                                            controller:
+                                                _recentlyProductController,
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            // padding: EdgeInsets.symmetric(vertical:6),
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: products.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return _listContainer(
+                                                  products[index]);
+                                            }),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Visibility(
@@ -793,17 +881,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                AutoSizeText(
-                                  'Get news and inspiration and much more.',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 4.2.w,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 SizedBox(
@@ -991,10 +1068,139 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     );
   }
 
+  InkWell _listContainer(Product list) {
+    return InkWell(
+      onTap: () {
+        print('${list.id}');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return new NewProductDetails(
+            // customerId: ConstantsVar.customerID,
+            productId: list.id, screenName: 'Home Screen',
+          );
+        }));
+      },
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            // height: Adaptive.w(50),
+            color: Colors.white,
+            width: Adaptive.w(34),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Container(
+                    color: Colors.white,
+                    width: 33.w,
+                    padding: EdgeInsets.all(1.w),
+                    height: 33.w,
+                    // width: Adaptive.w(32),
+                    // height: Adaptive.w(40),
+                    child: Hero(
+                      tag: 'ProductImage${list.id}',
+                      transitionOnUserGestures: true,
+                      child: CachedNetworkImage(
+                        imageUrl: list.imageUrl[0],
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 36.w,
+                  child: Center(
+                    child: AutoSizeText(
+                      list.price.splitBefore('incl'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        wordSpacing: 4,
+                        color: Colors.grey,
+                        fontSize: 4.1.w,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: list.discountPercent != null ? true : false,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 10.w,
+                    height: 10.w,
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'MyAssets/plaincircle.png',
+                          width: 10.w,
+                          height: 10.w,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            list.discountPercent.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 3.w,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future getRecentlyViewedProduct() async {
+    final url =
+        Uri.parse(BuildConfig.base_url + 'apis/GetRecentlyViewedProducts');
+    print('.Nop.RecentlyViewedProducts=${_productIds.join(',')}');
+    try {
+      var jsonResponse = await http.get(
+        url,
+        headers: {
+          'Cookie': '.Nop.Customer=$apiToken',
+          "Cookie": '.Nop.RecentlyViewedProducts=${_productIds.join('%2C')}',
+        },
+      );
+      if (jsonDecode(jsonResponse.body)['status'].contains('Success')) {
+        RecentlyViewProductResponse _result =
+            RecentlyViewProductResponse.fromJson(
+          jsonDecode(jsonResponse.body),
+        );
+        products = _result.products;
+        setState(() {});
+      } else {
+        products = [];
+        setState(() {});
+      }
+      print('Recently Viewed Products>>>>>>>>>>>>>>>>>>>>' + jsonResponse.body);
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+      products = [];
+      setState(() {});
+    }
+  }
+
   /* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     getSearchSuggestions();
     getTopicPage();
+    // ApiCalls.getRecentlyViewedProduct();
     // var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);

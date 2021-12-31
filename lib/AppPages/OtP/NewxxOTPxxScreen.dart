@@ -354,7 +354,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
         Fluttertoast.showToast(msg: 'You will receive an otp shortly');
         context.loaderOverlay.hide();
       } else {
-        Fluttertoast.showToast(msg: 'Something went wrong!');
+        Fluttertoast.showToast(msg: 'Something went wrong! Please try again.');
         context.loaderOverlay.hide();
       }
     } on Exception catch (e) {
@@ -410,7 +410,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
 
       print(result);
       if (result['Status'].toString().contains('Failed')) {
-        Fluttertoast.showToast(msg: 'Verification failed');
+        Fluttertoast.showToast(msg: 'Verification failed. Please try again.');
       } else {
         register();
       }

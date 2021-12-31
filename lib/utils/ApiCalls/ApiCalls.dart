@@ -855,13 +855,15 @@ class ApiCalls {
 
         return count;
       } else {
+        count = 0;
         return count;
       }
     } on Exception catch (e) {
+      count = 0;
       ConstantsVar.excecptionMessage(e);
       return count;
     }
-    return count;
+    // return count;
   }
 
   /* Edit and save address */
@@ -1067,49 +1069,73 @@ class ApiCalls {
     required String senderEmail,
     required String receiverEmail,
     required String msg,
+    required String attributeId,
   }) async {
     print('Api Token>>>>>>>>>>>$apiToken');
     print('Customer Id>>>>>>>>>>>$customerId');
     final url = Uri.parse(BuildConfig.base_url +
-        'apis/AddToWishlist?apiToken=$apiToken&customerid=$customerId&productid=$productId&itemquantity=1&recipientName=$receiverName&recipientEmail=$receiverEmail&senderName=&senderEmail=&giftCardMessage=');
+        'apis/AddToWishlist?apiToken=$apiToken&customerid=$customerId&productid=$productId&itemquantity=1&recipientName=$receiverName&recipientEmail=$receiverEmail&senderName=$senderName&senderEmail=$senderEmail&giftCardMessage=$msg&selectedAttributeId=$attributeId');
     print('Url>>>>>>>>${url.toString()}');
 
     try {
       var response = await http.get(url, headers: header);
       print('Add to Wishlist>>>>>>>>>>>>>>>>>' + response.body);
-
-      AddToWishlist result = AddToWishlist.fromJson(jsonDecode(response.body));
-
-      if ((result.result != '' || result.result != null) &&
-          result.result !=
-              'There was an error adding the product to your wishlist.') {
+      if (jsonDecode(response.body)['status'].toString().contains('Failed')) {
+        Fluttertoast.showToast(
+          msg: List<String>.from(jsonDecode(response.body)['warnings'])
+              .toList()
+              .join("\n"),
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+        );
         AwesomeNotifications().createNotification(
           content: NotificationContent(
-              id: int.parse(productId),
-              channelKey: 'Add to Wishlist Notification',
-              title: 'Item is added to Wishlist Successfully',
-              body: '$productName was successfully added to the Wishlist.',
-              bigPicture: '$imageUrl',
-              notificationLayout: NotificationLayout.BigPicture,
-              displayOnForeground: true),
+            id: int.parse(productId),
+            channelKey: 'Add to Wishlist Notification',
+            title: 'Failed to add product in Wishlist',
+            body:
+                'Unable to add this $productName to wishlist\n Because of ${List<String>.from(jsonDecode(response.body)['warnings']).toList().join("\n")}',
+            // bigPicture: '$imageUrl',
+            notificationLayout: NotificationLayout.BigText,
+            displayOnForeground: true,
+          ),
         );
-
-        return true;
-      } else {
-        Fluttertoast.showToast(msg: result.warning[0]);
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: int.parse(productId),
-              channelKey: 'Add to Wishlist Notification',
-              title: 'Failed to add product in Wishlist',
-              body:
-                  'Unable to add this $productName to wishlist because of\n${result.warning}\n ${result.error}',
-              bigPicture: '$imageUrl',
-              notificationLayout: NotificationLayout.BigText,
-              displayOnForeground: true),
-        );
-
         return false;
+      } else {
+        AddToWishlist result =
+            AddToWishlist.fromJson(jsonDecode(response.body));
+
+        if ((result.result != '' || result.result != null) &&
+            result.result !=
+                'There was an error adding the product to your wishlist.') {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+                id: int.parse(productId),
+                channelKey: 'Add to Wishlist Notification',
+                title: 'Item is added to Wishlist Successfully',
+                body: '$productName was successfully added to the Wishlist.',
+                bigPicture: '$imageUrl',
+                notificationLayout: NotificationLayout.BigPicture,
+                displayOnForeground: true),
+          );
+
+          return true;
+        } else {
+          Fluttertoast.showToast(msg: result.warning[0]);
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+                id: int.parse(productId),
+                channelKey: 'Add to Wishlist Notification',
+                title: 'Failed to add product in Wishlist',
+                body:
+                    'Unable to add this $productName to wishlist because of\n${result.warning}\n ${result.error}',
+                // bigPicture: '$imageUrl',
+                notificationLayout: NotificationLayout.BigText,
+                displayOnForeground: true),
+          );
+
+          return false;
+        }
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -1199,5 +1225,35 @@ class ApiCalls {
       ConstantsVar.excecptionMessage(e);
       return true;
     }
+  }
+
+  static void saveRecentProduct({required String productId}) {
+    List<String> productIDs =
+        ConstantsVar.prefs.getStringList('RecentProducts')!;
+
+    print('ProductIDS>>>>>>>>>>>>>>>>>' + productIDs.join(','));
+    if ((productIDs.length == 0 || productIDs == null)) {
+      productIDs.add(productId);
+      ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
+    } else if (!productIDs.contains(productId)) {
+      if (productIDs.length < 11 && !productIDs.contains(productId)) {
+        productIDs.add(productId);
+        ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
+        print(productIDs.length.toString());
+      } else if (productIDs.length == 10) {
+        productIDs.removeLast();
+        List<String> _tempList = [productId];
+
+        _tempList.insertAll(1,productIDs);
+        ConstantsVar.prefs.setStringList('RecentProducts', _tempList);
+        print('Temp List>>>>>>>' + _tempList.join(','));
+      }
+    } else {
+
+    }
+    // } if (productIDs.contains(productId)) {
+    //   Fluttertoast.showToast(msg: 'Duplicate Key Found !$productId');
+    // }
+    print(productIDs.length.toString());
   }
 }

@@ -16,7 +16,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:play_kit/play_kit.dart';
 import 'package:share/share.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'Constants/ConstantVariables.dart';
@@ -40,6 +39,7 @@ class SliderClass extends StatefulWidget {
     required this.senderEmail,
     required this.receiverEmail,
     required this.message,
+    required this.attributeId,
     // required this.myKey,
     required this.isWishlisted,
     required this.isGiftCard,
@@ -60,7 +60,8 @@ class SliderClass extends StatefulWidget {
       recevierName,
       senderEmail,
       receiverEmail,
-      message;
+      message,
+      attributeId;
   ScreenshotController myKey;
 
   @override
@@ -290,10 +291,11 @@ class _SliderClassState extends State<SliderClass> {
           widget.senderEmail.isEmpty ||
           widget.senderEmail == '' ||
           widget.senderName.isEmpty ||
-          widget.senderName == '') {
+          widget.senderName == ''
+          ) {
         Fluttertoast.showToast(
             msg:
-                'Please check following fields: Recipient Name, Recipient Email, Sender Name, Sender Email.');
+                'Please check following fields: Recipient Name,\nRecipient Email,\nSender Name,\nSender Email,\nTHE Special On Gift Card UAE.');
       } else {
         await ApiCalls.addToWishlist(
           apiToken: widget.apiToken,
@@ -307,6 +309,7 @@ class _SliderClassState extends State<SliderClass> {
           msg: widget.message,
           receiverName: widget.recevierName,
           senderEmail: widget.senderEmail,
+          attributeId: widget.attributeId,
         ).then((value) => setState(() => _isLiked = value));
       }
     } else {
@@ -322,6 +325,7 @@ class _SliderClassState extends State<SliderClass> {
         msg: '',
         receiverName: '',
         senderEmail: '',
+        attributeId: '',
       ).then((value) => setState(() => _isLiked = value));
     }
   }
