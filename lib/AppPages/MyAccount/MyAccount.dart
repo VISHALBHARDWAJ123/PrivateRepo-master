@@ -605,7 +605,7 @@ class _MyAccountState extends State<MyAccount> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         AutoSizeText(
-                                          'You are not logged in.',
+                                          'You are not logged inA.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.white,

@@ -332,6 +332,8 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
   }
 
   Future getOtp() async {
+
+
     context.loaderOverlay.show(
       widget: SpinKitRipple(color: Colors.red, size: 90),
     );

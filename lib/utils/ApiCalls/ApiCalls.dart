@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/AppWishlist/AddToWishlistResponse.dart';
@@ -307,16 +308,20 @@ class ApiCalls {
           ),
         );
       } else {
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: int.parse(productId),
-              channelKey: 'Add to Cart Notification',
-              title: 'Item is added to Cart Successfully',
-              body: '$productName is added successfully.',
-              bigPicture: '$productImage',
-              notificationLayout: NotificationLayout.BigPicture,
-              displayOnForeground: true),
+        Fluttertoast.showToast(
+          msg: 'Product added in cart successfully.',
+          toastLength: Toast.LENGTH_LONG,
         );
+        // AwesomeNotifications().createNotification(
+        //   content: NotificationContent(
+        //       id: int.parse(productId),
+        //       channelKey: 'Add to Cart Notification',
+        //       title: 'Item is added to Cart Successfully',
+        //       body: '$productName is added successfully.',
+        //       bigPicture: '$productImage',
+        //       notificationLayout: NotificationLayout.BigPicture,
+        //       displayOnForeground: true),
+        // );
         // Constan
         // context.read<cartCounter>()
         print('noting');
@@ -361,11 +366,13 @@ class ApiCalls {
   /// Delete cart item id */
   static Future deleteCartItem(
       String customerId, int itemID, BuildContext ctx) async {
-    ctx.loaderOverlay.show(
-        widget: SpinKitRipple(
-      color: Colors.red,
-      size: 90,
-    ));
+    CustomProgressDialog progressDialog = CustomProgressDialog(ctx,
+        loadingWidget: SpinKitRipple(
+          color: Colors.red,
+          size: 40,
+        ),
+        dismissable: false);
+    progressDialog.show();
     final queryParameters = {
       'apiToken': ConstantsVar.apiTokken,
       'CustomerId': customerId,
@@ -379,16 +386,15 @@ class ApiCalls {
       var response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
-        ctx.loaderOverlay.hide();
+        progressDialog.dismiss();
         return result;
       } else {
-        ctx.loaderOverlay.hide();
+        progressDialog.dismiss();
         Fluttertoast.showToast(
           msg: 'Something went wrong',
         );
       }
     } on Exception catch (e) {
-      ctx.loaderOverlay.hide();
       ConstantsVar.excecptionMessage(e);
     }
   }
@@ -1088,18 +1094,7 @@ class ApiCalls {
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.CENTER,
         );
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: int.parse(productId),
-            channelKey: 'Add to Wishlist Notification',
-            title: 'Failed to add product in Wishlist',
-            body:
-                'Unable to add this $productName to wishlist\n Because of ${List<String>.from(jsonDecode(response.body)['warnings']).toList().join("\n")}',
-            // bigPicture: '$imageUrl',
-            notificationLayout: NotificationLayout.BigText,
-            displayOnForeground: true,
-          ),
-        );
+
         return false;
       } else {
         AddToWishlist result =
@@ -1108,30 +1103,16 @@ class ApiCalls {
         if ((result.result != '' || result.result != null) &&
             result.result !=
                 'There was an error adding the product to your wishlist.') {
-          AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: int.parse(productId),
-                channelKey: 'Add to Wishlist Notification',
-                title: 'Item is added to Wishlist Successfully',
-                body: '$productName was successfully added to the Wishlist.',
-                bigPicture: '$imageUrl',
-                notificationLayout: NotificationLayout.BigPicture,
-                displayOnForeground: true),
+          Fluttertoast.showToast(
+            msg: 'Product Wishlisted.',
+            toastLength: Toast.LENGTH_LONG,
           );
 
           return true;
         } else {
-          Fluttertoast.showToast(msg: result.warning[0]);
-          AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: int.parse(productId),
-                channelKey: 'Add to Wishlist Notification',
-                title: 'Failed to add product in Wishlist',
-                body:
-                    'Unable to add this $productName to wishlist because of\n${result.warning}\n ${result.error}',
-                // bigPicture: '$imageUrl',
-                notificationLayout: NotificationLayout.BigText,
-                displayOnForeground: true),
+          Fluttertoast.showToast(
+            msg: result.warning[0],
+            toastLength: Toast.LENGTH_LONG,
           );
 
           return false;
@@ -1190,36 +1171,34 @@ class ApiCalls {
         'customer/RemoveItemWishlist?apiToken=$apiToken&CustId=$customerId&productid=$productId');
     try {
       var jsonResponse = await http.get(url, headers: header);
-      RemoveItemWishlistResponse _response =
-          RemoveItemWishlistResponse.fromJson(jsonDecode(jsonResponse.body));
-      if (_response.status.contains('Success')) {
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: int.parse(productId),
-            channelKey: 'Remove from Wishlist Notification',
-            title: 'Removed from Wishlist Successfully',
-            body: '$productName is removed from Wishlist Successfully',
-            bigPicture: '$imageUrl',
-            notificationLayout: NotificationLayout.BigPicture,
-            displayOnForeground: true,
-          ),
+      if (jsonDecode(jsonResponse.body)['status'].toString() == 'Success') {
+        RemoveItemWishlistResponse _response =
+            RemoveItemWishlistResponse.fromJson(jsonDecode(jsonResponse.body));
+        if (_response.status.contains('Success')) {
+          Fluttertoast.showToast(
+            msg: 'Product Removed from Wishlist successfully.',
+            toastLength: Toast.LENGTH_LONG,
+          );
+
+          return false;
+        } else {
+          Fluttertoast.showToast(
+            msg: _response.message.toString(),
+            toastLength: Toast.LENGTH_LONG,
+          );
+
+          return true;
+        }
+      } else {
+        Fluttertoast.showToast(
+          msg: List<String>.from(jsonDecode(jsonResponse.body)['warnings'])
+              .toList()
+              .join("\n"),
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
         );
 
         return false;
-      } else {
-        Fluttertoast.showToast(msg: _response.message);
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: int.parse(productId),
-            channelKey: 'Remove from Wishlist Notification',
-            title: 'Failed removed from Wishlist Successfully',
-            body: 'Unable to remove $productName from Wishlist.',
-            bigPicture: '$imageUrl',
-            notificationLayout: NotificationLayout.BigText,
-            displayOnForeground: true,
-          ),
-        );
-        return true;
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -1228,32 +1207,41 @@ class ApiCalls {
   }
 
   static void saveRecentProduct({required String productId}) {
-    List<String> productIDs =
-        ConstantsVar.prefs.getStringList('RecentProducts')!;
+    List<String> productIDs = ConstantsVar.prefs
+        .getStringList('RecentProducts')!
+        .toList(growable: true);
 
     print('ProductIDS>>>>>>>>>>>>>>>>>' + productIDs.join(','));
     if ((productIDs.length == 0 || productIDs == null)) {
       productIDs.add(productId);
       ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
     } else if (!productIDs.contains(productId)) {
-      if (productIDs.length < 11 && !productIDs.contains(productId)) {
-        productIDs.add(productId);
-        ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
-        print(productIDs.length.toString());
-      } else if (productIDs.length == 10) {
-        productIDs.removeLast();
-        List<String> _tempList = [productId];
-
-        _tempList.insertAll(1,productIDs);
-        ConstantsVar.prefs.setStringList('RecentProducts', _tempList);
-        print('Temp List>>>>>>>' + _tempList.join(','));
-      }
-    } else {
-
+      if (productIDs.length <= 10 && !productIDs.contains(productId)) {
+        if (productIDs.length == 10 && !productIDs.contains(productId)) {
+          justRotate(productId: productId, someArray: productIDs);
+        } else {
+          productIDs.add(productId);
+          ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
+          print(productIDs.length.toString());
+        }
+      } else {}
+      // } if (productIDs.contains(productId)) {
+      //   Fluttertoast.showToast(msg: 'Duplicate Key Found !$productId');
+      // }
+      print(productIDs.length.toString());
     }
-    // } if (productIDs.contains(productId)) {
-    //   Fluttertoast.showToast(msg: 'Duplicate Key Found !$productId');
-    // }
-    print(productIDs.length.toString());
+  }
+
+  static void justRotate(
+      {required List<String> someArray, required String productId}) {
+    for (int i = (someArray.length - 1); i > 0; i--) {
+      someArray[i] = someArray[i - 1];
+    }
+
+    someArray[0] = productId;
+    for (String element in someArray) {
+      print('PrODUCTID>>>>>>' + element);
+    }
+    ConstantsVar.prefs.setStringList('RecentProducts', someArray);
   }
 }
