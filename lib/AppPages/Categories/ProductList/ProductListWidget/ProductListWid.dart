@@ -459,6 +459,12 @@ class _prodListWidgetState extends State<prodListWidget> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Container(
+                                          constraints:
+                                          BoxConstraints
+                                              .tightFor(
+                                            width: 42.w,
+                                            height: 42.w,
+                                          ),
                                           color: Colors.white,
                                           padding: EdgeInsets.all(4.0),
                                           child: CachedNetworkImage(

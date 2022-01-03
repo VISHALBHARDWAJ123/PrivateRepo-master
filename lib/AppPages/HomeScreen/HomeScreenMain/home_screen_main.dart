@@ -1360,6 +1360,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> with WidgetsBindingObse
           mainAxisSize: MainAxisSize.max,
           children: [
             OpenContainer(
+              onClosed: (context) async{
+             await   getRecentlyViewedProduct();
+              },
               tappable: true,
               closedElevation: 0,
               openElevation: 0,
@@ -1388,6 +1391,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> with WidgetsBindingObse
               },
             ),
             OpenContainer(
+              onClosed: (context) async {
+              await  getRecentlyViewedProduct();
+              },
               tappable: true,
               closedElevation: 0,
               openElevation: 0,
@@ -1486,6 +1492,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> with WidgetsBindingObse
           mainAxisSize: MainAxisSize.max,
           children: [
             OpenContainer(
+              onClosed: (context) async {
+                await getRecentlyViewedProduct();
+              },
               tappable: true,
               closedElevation: 0,
               openElevation: 0,
@@ -1570,6 +1579,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> with WidgetsBindingObse
               },
             ),
             OpenContainer(
+              onClosed: (context) async {
+              await  getRecentlyViewedProduct();
+              },
               tappable: true,
               closedElevation: 0,
               openElevation: 0,

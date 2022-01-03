@@ -924,22 +924,23 @@ class ApiCalls {
       ApiParams.PARAM_CUSTOMER_ID: customerId,
       ApiParams.PARAM_ADDRESS_ID2: addressId,
     };
-    context.loaderOverlay.show(
-      widget: SpinKitRipple(
-        color: Colors.red,
-        size: 90,
-      ),
-    );
+    CustomProgressDialog progressDialog = CustomProgressDialog(context,
+        loadingWidget: SpinKitRipple(
+          color: Colors.red,
+          size: 40,
+        ),
+        dismissable: false);
+    progressDialog.show();
     final uri = Uri.parse(BuildConfig.base_url + BuildConfig.delete_address);
     print(uri);
     try {
       var response = await http.post(uri, body: body, headers: header);
-      context.loaderOverlay.hide();
+      progressDialog.dismiss();
 
       print(jsonDecode(response.body));
       Fluttertoast.showToast(msg: 'Address deleted');
     } on Exception catch (e) {
-      context.loaderOverlay.hide();
+      progressDialog.dismiss();
 
       ConstantsVar.excecptionMessage(e);
     }
@@ -1220,15 +1221,19 @@ class ApiCalls {
         if (productIDs.length == 10 && !productIDs.contains(productId)) {
           justRotate(productId: productId, someArray: productIDs);
         } else {
-          productIDs.add(productId);
+          productIDs.insert(0, productId);
           ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
+          print('New Joined Id>>>>' + productId);
+          print('New Joined Id>>>>' + productIDs.join(','));
           print(productIDs.length.toString());
         }
-      } else {}
-      // } if (productIDs.contains(productId)) {
-      //   Fluttertoast.showToast(msg: 'Duplicate Key Found !$productId');
-      // }
+      }
+
       print(productIDs.length.toString());
+    }else{
+      productIDs.remove(productId);
+      productIDs.insert(0, productId);
+      ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
     }
   }
 

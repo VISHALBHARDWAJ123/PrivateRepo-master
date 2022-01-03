@@ -73,37 +73,37 @@ class _MyAppState extends State<MyApp> {
       FirebaseMessaging.instance;
       FirebaseMessaging.onBackgroundMessage(_messageHandler);
     });
-    AwesomeNotifications()
-        .actionStream
-        .listen((ReceivedNotification receivedNotification) {
-      if (receivedNotification.channelKey!
-          .contains('Remove from Wishlist Notification')) {
-        Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => NewProductDetails(
-                      productId: receivedNotification.id,
-                      screenName: 'Notification',
-                    )));
-      } else if (receivedNotification.channelKey!
-          .contains('Add to Cart Notification')) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => MyHomePage(
-                      pageIndex: 3,
-                    )),
-            (route) => false);
-      } else if (receivedNotification.channelKey!
-          .contains('Add to Wishlist Notification')) {
-        Navigator.pushReplacement(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => WishlistScreen(),
-          ),
-        );
-      }
-    });
+    // AwesomeNotifications()
+    //     .actionStream
+    //     .listen((ReceivedNotification receivedNotification) {
+    //   if (receivedNotification.channelKey!
+    //       .contains('Remove from Wishlist Notification')) {
+    //     Navigator.pushReplacement(
+    //         context,
+    //         CupertinoPageRoute(
+    //             builder: (context) => NewProductDetails(
+    //                   productId: receivedNotification.id,
+    //                   screenName: 'Notification',
+    //                 )));
+    //   } else if (receivedNotification.channelKey!
+    //       .contains('Add to Cart Notification')) {
+    //     Navigator.pushAndRemoveUntil(
+    //         context,
+    //         CupertinoPageRoute(
+    //             builder: (context) => MyHomePage(
+    //                   pageIndex: 3,
+    //                 )),
+    //         (route) => false);
+    //   } else if (receivedNotification.channelKey!
+    //       .contains('Add to Wishlist Notification')) {
+    //     Navigator.pushReplacement(
+    //       context,
+    //       CupertinoPageRoute(
+    //         builder: (context) => WishlistScreen(),
+    //       ),
+    //     );
+    //   }
+    // });
     getCartBagdge(0);
   }
 

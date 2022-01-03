@@ -257,7 +257,7 @@ class _SliderClassState extends State<SliderClass> {
                           /// Share Plugin
                           await Share.shareFiles([imagePath.path],
                               text:
-                                  'Hi There this is for testing purpose\n${ConstantsVar.stripHtmlIfNeeded(overview)}\nView product: $productUrl');
+                                  'View product: $productUrl');
                         }
                       });
                     },
