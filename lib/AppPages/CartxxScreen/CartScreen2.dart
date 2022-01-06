@@ -849,7 +849,7 @@ class _CartScreen2State extends State<CartScreen2>
       onTap: () async {
         print(customerId);
 
-        if (guestCustomerID != '${customerId}' || customerId == null) {
+        if (guestCustomerID != '$customerId' || customerId == null) {
           print('Merging process ');
           // setState((){
           //   cartItems.clear();

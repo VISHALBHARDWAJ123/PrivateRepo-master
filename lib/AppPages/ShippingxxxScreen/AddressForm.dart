@@ -626,7 +626,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 ApiCalls.addNewAddress(
                                         context,
                                         widget.uri.toString(),
-                                        '${apiToken}',
+                                        '$apiToken',
                                         guestId,
                                         jsonEncode(body))
                                     .then(
@@ -636,7 +636,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 ApiCalls.addBillingORShippingAddress(
                                         context,
                                         widget.uri.toString(),
-                                        '${apiToken}',
+                                        '$apiToken',
                                         guestId,
                                         jsonEncode(body))
                                     .then(
@@ -648,7 +648,7 @@ class _AddressScreenState extends State<AddressScreen>
                               // Fluttertoast.showToast(msg: 'Save Address');
                               ApiCalls.editAndSaveAddress(
                                   context,
-                                  '${apiToken}',
+                                  '$apiToken',
                                   guestId,
                                   widget.id.toString(),
                                   jsonEncode(body),

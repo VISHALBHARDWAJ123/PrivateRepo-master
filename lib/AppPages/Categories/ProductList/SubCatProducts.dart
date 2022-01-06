@@ -280,7 +280,7 @@ class _ProductListState extends State<ProductList> {
                     ),
                   ),
                 ),
-                body: prodListWidget(
+                body: ProdListWidget(
                   products: products == null ? [] : products,
                   title: widget.title.toString().toUpperCase(),
                   // result: result,

@@ -263,7 +263,13 @@ class _NewProductDetailsState extends State<NewProductDetails>
       return SafeArea(
         child: Scaffold(
           body: Container(
-              child: Center(child: SpinKitRipple(color: Colors.red, size: 90))),
+            child: Center(
+              child: SpinKitRipple(
+                color: Colors.red,
+                size: 90,
+              ),
+            ),
+          ),
         ),
       );
     } else {

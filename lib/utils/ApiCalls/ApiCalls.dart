@@ -11,6 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/AppWishlist/AddToWishlistResponse.dart';
 import 'package:untitled2/AppPages/AppWishlist/RemoveItemWishListReposnse.dart';
+import 'package:untitled2/AppPages/AppWishlist/ShareResponse.dart';
 import 'package:untitled2/AppPages/AppWishlist/WishlistResponse.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -1230,15 +1231,17 @@ class ApiCalls {
       }
 
       print(productIDs.length.toString());
-    }else{
+    } else {
       productIDs.remove(productId);
       productIDs.insert(0, productId);
       ConstantsVar.prefs.setStringList('RecentProducts', productIDs);
     }
   }
 
-  static void justRotate(
-      {required List<String> someArray, required String productId}) {
+  static void justRotate({
+    required List<String> someArray,
+    required String productId,
+  }) {
     for (int i = (someArray.length - 1); i > 0; i--) {
       someArray[i] = someArray[i - 1];
     }
@@ -1248,5 +1251,51 @@ class ApiCalls {
       print('PrODUCTID>>>>>>' + element);
     }
     ConstantsVar.prefs.setStringList('RecentProducts', someArray);
+  }
+
+  static Future<String> shareWishlist({
+    required String customerEmail,
+    required String friendEmail,
+    required String apiToken,
+    required String customerId,
+    required String message,
+  }) async {
+    String result = '';
+    final url = Uri.parse(BuildConfig.base_url + 'Customer/ShareWishlist?');
+    try {
+      var response = await http.post(url, body: {
+        'apiToken': apiToken,
+        'customerid': customerId,
+        'personalMessage': message,
+        'customerEmail': customerEmail,
+        'friendsEmail': friendEmail,
+      },headers:header );
+      result = response.body;
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+      result = 'Nothing Here';
+    }
+    return result;
+  }
+static Future<String> deleteWishlist({
+
+    required String apiToken,
+    required String customerId,
+
+  }) async {
+    String result = '';
+    final url = Uri.parse(BuildConfig.base_url + 'Customer/DeleteWishlist');
+    try {
+      var response = await http.post(url, body: {
+        'apiToken': apiToken,
+        'customerid': customerId,
+
+      },headers:header );
+      result = response.body;
+    } on Exception catch (e) {
+      ConstantsVar.excecptionMessage(e);
+      result = 'Nothing Here';
+    }
+    return result;
   }
 }

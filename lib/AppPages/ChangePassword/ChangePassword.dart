@@ -405,7 +405,7 @@ class _ChangePasswordState extends State<ChangePassword>
         message = result['Message'][0].toString();
       });
       if (status == false ) {
-        setState((){errorMessage =   result['errorMessage'][0].toString();;});
+        setState((){errorMessage =   result['errorMessage'][0].toString();});
         showErrorDialog(message);
       }
       if (status.toString().contains('Failed') ) {

@@ -8,7 +8,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' show Platform;
 
-// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/ChangePassword/ChangePassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/LoginScreen/LoginScreen.dart';
@@ -140,12 +139,8 @@ class _MyAccountState extends State<MyAccount> {
 
                             if (customerId == null || customerId == '') {
                               showModalBottomSheet<void>(
-                                // context and builder are
-                                // required properties in this widget
                                 context: context,
                                 builder: (BuildContext context) {
-                                  // we set up a container inside which
-                                  // we create center column and display text
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
@@ -235,14 +230,8 @@ class _MyAccountState extends State<MyAccount> {
                                   context,
                                   CupertinoPageRoute(
                                       builder: (context) => MyAddresses()));
-
-                              // Fluttertoast.showToast(msg: 'In Progress');
                             }
                           },
-                          // Navigator.push(
-                          //     context,
-                          //     CupertinoPageRoute(
-                          //         builder: (context) => CartScreen2())),
                           child: Card(
                             color: Colors.white,
                             child: Padding(
@@ -264,7 +253,6 @@ class _MyAccountState extends State<MyAccount> {
                                     width: 20,
                                   ),
                                   Container(
-                                    // color: Colors.white,
                                     child: AutoSizeText(
                                       'my Addresses'.toUpperCase(),
                                       style: TextStyle(
@@ -291,12 +279,8 @@ class _MyAccountState extends State<MyAccount> {
 
                             if (customerId == null || customerId == '') {
                               showModalBottomSheet<void>(
-                                // context and builder are
-                                // required properties in this widget
                                 context: context,
                                 builder: (BuildContext context) {
-                                  // we set up a container inside which
-                                  // we create center column and display text
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
@@ -409,7 +393,6 @@ class _MyAccountState extends State<MyAccount> {
                                     width: 20,
                                   ),
                                   Container(
-                                    // color: Colors.white,
                                     child: AutoSizeText(
                                       'my orders'.toUpperCase(),
                                       style: TextStyle(
@@ -428,8 +411,6 @@ class _MyAccountState extends State<MyAccount> {
                           milliseconds: 70,
                         ),
                         child: InkWell(
-                          // Fluttertoast.showToast(msg:'In Progress'),
-
                           onTap: () async {
                             ConstantsVar.prefs =
                                 await SharedPreferences.getInstance();
@@ -438,12 +419,8 @@ class _MyAccountState extends State<MyAccount> {
 
                             if (customerId == null || customerId == '') {
                               showModalBottomSheet<void>(
-                                // context and builder are
-                                // required properties in this widget
                                 context: context,
                                 builder: (BuildContext context) {
-                                  // we set up a container inside which
-                                  // we create center column and display text
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
@@ -554,7 +531,6 @@ class _MyAccountState extends State<MyAccount> {
                                     width: 20,
                                   ),
                                   Container(
-                                    // color: Colors.white,
                                     child: AutoSizeText(
                                       'change password'.toUpperCase(),
                                       style: TextStyle(
@@ -573,8 +549,6 @@ class _MyAccountState extends State<MyAccount> {
                           milliseconds: 70,
                         ),
                         child: InkWell(
-                          // Fluttertoast.showToast(msg:'In Progress'),
-
                           onTap: () async {
                             ConstantsVar.prefs =
                                 await SharedPreferences.getInstance();
@@ -583,12 +557,8 @@ class _MyAccountState extends State<MyAccount> {
 
                             if (customerId == null || customerId == '') {
                               showModalBottomSheet<void>(
-                                // context and builder are
-                                // required properties in this widget
                                 context: context,
                                 builder: (BuildContext context) {
-                                  // we set up a container inside which
-                                  // we create center column and display text
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
@@ -701,7 +671,6 @@ class _MyAccountState extends State<MyAccount> {
                                     width: 20,
                                   ),
                                   Container(
-                                    // color: Colors.white,
                                     child: AutoSizeText(
                                       'Return Request(s)'.toUpperCase(),
                                       style: TextStyle(

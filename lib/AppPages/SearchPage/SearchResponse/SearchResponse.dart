@@ -109,7 +109,7 @@ class GetProductsByCategoryIdClass {
         productPicture: json["ProductPicture"],
         price: json["Price"],
         discountedPrice:
-            json["DiscountedPrice"] == null ? '' : json["DiscountPrice"],
+            json["DiscountedPrice"] == null ? '' : json["DiscountedPrice"],
         discountPercent:
             json["DiscountPercent"] == null ? '' : json["DiscountPercent"],
         priceValue: json["PriceValue"].toDouble(),

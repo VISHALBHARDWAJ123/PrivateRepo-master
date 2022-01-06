@@ -11,11 +11,22 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+
+
+import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
+
+
+import 'package:untitled2/utils/HeartIcon.dart';
+import 'package:bottom_sheet/bottom_sheet.dart';
+import 'package:untitled2/utils/utils/colors.dart';
+import 'package:untitled2/utils/utils/general_functions.dart';
+
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({Key? key}) : super(key: key);
@@ -24,17 +35,35 @@ class WishlistScreen extends StatefulWidget {
   _WishlistScreenState createState() => _WishlistScreenState();
 }
 
+
 class _WishlistScreenState extends State<WishlistScreen> {
   var wishlistProvider;
 
   @override
   initState() {
     initSharedPrefs();
+
+class _WishlistScreenState extends State<WishlistScreen>
+    with InputValidationMixin {
+  var wishlistProvider;
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  initState() {
+    initSharedPrefs();
+
+
     super.initState();
   }
 
   String apiToken = '';
   String customerId = '';
+
+
+  String _customerEmail = '';
+  TextEditingController? _customerEmailCtrl, _friendEmailCtrl, _messageCtrl;
+
 
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance().whenComplete(
@@ -42,6 +71,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
         () {
           customerId = ConstantsVar.prefs.getString('guestCustomerID')!;
           apiToken = ConstantsVar.prefs.getString('apiTokken')!;
+
+
+          _customerEmail = ConstantsVar.prefs.getString('email') ?? '';
+          _customerEmailCtrl = TextEditingController(text: _customerEmail);
+          _friendEmailCtrl = TextEditingController();
+          _messageCtrl = TextEditingController();
+
         },
       ),
     );
@@ -58,6 +94,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
       top: true,
       bottom: true,
       child: Scaffold(
+
+
+        resizeToAvoidBottomInset: false,
+
         appBar: new AppBar(
           // backgroundColor: ConstantsVar.appColor,
           actions: [
@@ -111,6 +151,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             ),
           ),
         ),
+
         body: Column(
           children: [
             Card(
@@ -166,6 +207,128 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   );
                 } else {
                   return Expanded(
+
+        body: Consumer<cartCounter>(builder: (context, value, _) {
+          if (value.isVisible == true) {
+            return Container(
+              width: 100.w,
+              height: 70.h,
+              child: Center(
+                child: SpinKitRipple(
+                  color: Colors.red,
+                  size: 60,
+                ),
+              ),
+            );
+          } else {
+            if (value.wishlistItems.length == 0) {
+              return Container(
+                height: 100.h,
+                child: Column(
+                  children: [
+                    Card(
+                      child: ListTile(
+                        title: Center(
+                          child: AutoSizeText(
+                            'Wishlist'.toUpperCase(),
+                            style: TextStyle(shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 3.0,
+                                color: Colors.grey.shade300,
+                              ),
+                              Shadow(
+                                offset: Offset(1.0, 1.2),
+                                blurRadius: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                            ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 100.w,
+                      height: 70.h,
+                      child: Center(
+                        child: AnimatedTextKit(
+                          repeatForever: true,
+                          animatedTexts: [
+                            ColorizeAnimatedText(
+                              'No Data Available',
+                              textStyle: colorizeTextStyle,
+                              colors: colorizeColors,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Column(
+                children: [
+                  Container(
+                    width: 100.w,
+                    child: Stack(
+                      children: [
+                        Card(
+                          child: ListTile(
+                            title: Center(
+                              child: AutoSizeText(
+                                'Wishlist'.toUpperCase(),
+                                style: TextStyle(shadows: <Shadow>[
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 3.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(1.0, 1.2),
+                                    blurRadius: 8.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: .1,
+                          top: 8,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete_sweep,
+                                  color: ConstantsVar.appColor,
+                                ),
+                                iconSize: 22,
+                                onPressed: () {
+                                  final _formProvider =
+                                      Provider.of<cartCounter>(context,
+                                          listen: false);
+                                  _formProvider.deleteWishlist(apiToken: apiToken, customerId: customerId, ctx: context);
+
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  HeartIcon.share,
+                                  color: ConstantsVar.appColor,
+                                ),
+                                iconSize: 22,
+                                onPressed: _showModelSheet,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+
                     child: ListView(
                       // physics: NeverScrollableScrollPhysics(),
 
@@ -372,15 +535,225 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         ),
                       ),
                     ),
+
                   );
                 }
               }
             })
           ],
         ),
+
+                  ),
+                ],
+              );
+            }
+          }
+        }),
+
       ),
     );
   }
+
+
+
+  void _showModelSheet() {
+    // showDialog(
+    //   useSafeArea: false,
+    //     context: context,
+    //     builder: (context) {
+    //       return Dialog(
+    //         elevation: 20,
+    //         backgroundColor: Colors.transparent,
+    //         insetPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 5),
+    //         child: ,
+    //       );
+    //     });
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Form(
+          key: _formKey,
+          child: Container(
+            width: 100.w,
+            height: MediaQuery.of(context).size.height * 0.68,
+
+            // height: 60.h,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6.0),
+                  child: AutoSizeText(
+                    'SHARE YOUR WISHLIST',
+                    maxLines: 1,
+                    maxFontSize: 18,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 54.h,
+                  child: Scaffold(
+                    resizeToAvoidBottomInset: true,
+                    body: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        ListTile(
+                          title: AutoSizeText(
+                            'YOUR EMAIL:',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 4.w,
+                            ),
+                          ),
+                          subtitle: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (email) {
+                              if (isEmailValid(email!))
+                                return null;
+                              else
+                                return 'Enter a valid email address';
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            maxLines: 1,
+                            controller: _customerEmailCtrl,
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        addVerticalSpace(10),
+                        ListTile(
+                          title: AutoSizeText(
+                            'FRIEND\'S EMAIL:',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 4.w,
+                            ),
+                          ),
+                          subtitle: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (email) {
+                              if (isEmailValid(email!))
+                                return null;
+                              else
+                                return 'Enter a valid email address';
+                            },
+
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            maxLines: 1,
+                            // maxLength: 20,
+                            controller: _friendEmailCtrl,
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        addVerticalSpace(10),
+                        ListTile(
+                          title: AutoSizeText(
+                            'MESSAGE:',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 4.w,
+                            ),
+                          ),
+                          subtitle: TextFormField(
+                            textInputAction: TextInputAction.newline,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (val) {
+                              if (_messageCtrl!.text.length < 5) {
+                                return 'Please enter proper message ';
+                              }
+                              return null;
+                            },
+                            controller: _messageCtrl,
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 62.0.w),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 4.w,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          'Share',
+                          style: TextStyle(
+                            fontSize: 4.w,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            final _formProvider = Provider.of<cartCounter>(
+                                context,
+                                listen: false);
+                            _formProvider.shareMyWishlist(
+                              customerId: customerId,
+                              friendEmail: _friendEmailCtrl!.text,
+                              customerEmail: _customerEmailCtrl!.text,
+                              ctx: context,
+                              apiToken: apiToken,
+                              message: _messageCtrl!.text,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   final colorizeTextStyle =
       TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold);

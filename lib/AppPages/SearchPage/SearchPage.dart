@@ -680,6 +680,8 @@ class _SearchPageState extends State<SearchPage>
                                   children: List.generate(
                                     searchedProducts.length,
                                     (index) {
+                                      print(searchedProducts[index]
+                                          .discountedPrice);
                                       // var name = searchedProducts[index].stockQuantity.contains('In stock');
                                       return Stack(
                                         children: [
@@ -690,6 +692,8 @@ class _SearchPageState extends State<SearchPage>
                                               openBuilder: (BuildContext context,
                                                   void Function({Object? returnValue})
                                                   action) {
+                                                print(searchedProducts[index]
+                                                    .discountedPrice);
                                                 return NewProductDetails(
                                                   productId:
                                                   searchedProducts[index].id.toString(),
@@ -766,9 +770,8 @@ class _SearchPageState extends State<SearchPage>
                                                               CrossAxisAlignment.start,
                                                               children: [
                                                                 AutoSizeText(
-                                                                  searchedProducts[index]
-                                                                      .discountedPrice ==
-                                                                      null
+                                                                 searchedProducts[index]
+                                                                      .discountedPrice ==''
                                                                       ? searchedProducts[index]
                                                                       .price
                                                                       : searchedProducts[index]
@@ -1625,7 +1628,7 @@ class _SearchPageState extends State<SearchPage>
         productList = List<HomePageProductImage>.from(
             _proList.map((e) => HomePageProductImage.fromJson(e)).toList());
         searchSuggestions = testingList.cast<String>();
-        print('Product List >>>>>' + '${_proList}');
+        print('Product List >>>>>' + '$_proList');
       });
   }
 

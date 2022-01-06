@@ -244,7 +244,7 @@ class _SliderClassState extends State<SliderClass> {
                   GestureDetector(
                     onTap: () async {
                       await myKey
-                          .capture(delay: const Duration(milliseconds: 10))
+                          .capture()
                           .then((image) async {
                         if (image != null) {
                           final directory =
@@ -252,12 +252,12 @@ class _SliderClassState extends State<SliderClass> {
                           final imagePath =
                               await File('${directory.path}/image.png')
                                   .create();
-                          await imagePath.writeAsBytes(image);
-
-                          /// Share Plugin
-                          await Share.shareFiles([imagePath.path],
+                          await imagePath.writeAsBytes(image).whenComplete(() async=> await Share.shareFiles([imagePath.path],
                               text:
-                                  'View product: $productUrl');
+                              'View product: $productUrl'));
+print(image);
+                          /// Share Plugin
+
                         }
                       });
                     },

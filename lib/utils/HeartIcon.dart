@@ -61,6 +61,14 @@ class HeartIcon {
 
   static const _kFontFamReturnRequest = 'ReturnRequest';
   static const IconData returnRequest = IconData(0xe801, fontFamily: _kFontFamReturnRequest, );
+  static const _kFontFamShare = 'Share';
+
+
+  static const IconData share = IconData(0xe801, fontFamily: _kFontFamShare, );
+  static const _kFontFamDelete = 'Delete';
+
+
+  static const IconData delete_sweep = IconData(0xe800, fontFamily: _kFontFamDelete, );
 
 
   // static const IconData instagramNew = IconData(0xf16d, fontFamily: _kFontFamInsta, );

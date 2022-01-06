@@ -22,11 +22,10 @@ import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 
-import '../../DiscountxxWidget.dart';
 import '../SubCatProducts.dart';
 
-class prodListWidget extends StatefulWidget {
-  prodListWidget({
+class ProdListWidget extends StatefulWidget {
+  ProdListWidget({
     Key? key,
     required this.products,
     required this.title,
@@ -49,10 +48,10 @@ class prodListWidget extends StatefulWidget {
   bool isShown;
 
   @override
-  _prodListWidgetState createState() => _prodListWidgetState();
+  _ProdListWidgetState createState() => _ProdListWidgetState();
 }
 
-class _prodListWidgetState extends State<prodListWidget> {
+class _ProdListWidgetState extends State<ProdListWidget> {
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     if (mounted)
@@ -459,9 +458,7 @@ class _prodListWidgetState extends State<prodListWidget> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Container(
-                                          constraints:
-                                          BoxConstraints
-                                              .tightFor(
+                                          constraints: BoxConstraints.tightFor(
                                             width: 42.w,
                                             height: 42.w,
                                           ),
@@ -522,10 +519,10 @@ class _prodListWidgetState extends State<prodListWidget> {
                                                     AutoSizeText(
                                                       widget.products[index]
                                                                   .discountPrice ==
-                                                              null
-                                                          ? widget
-                                                              .products[index]
-                                                              .price
+                                                              null ||        widget.products[index]
+                                                          .discountPrice ==''
+                                                          ? widget.products[index]
+                                                          .price
                                                           : widget
                                                               .products[index]
                                                               .discountPrice,
@@ -536,7 +533,8 @@ class _prodListWidgetState extends State<prodListWidget> {
                                                               .grey.shade600,
                                                           fontSize: 4.w,
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                              FontWeight
+                                                                  .bold),
                                                       textAlign:
                                                           TextAlign.start,
                                                     ),

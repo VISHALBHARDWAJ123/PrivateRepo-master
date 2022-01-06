@@ -572,7 +572,7 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
     print('Order Id =====>>>>>>> ' + orderid);
 
     final uri = Uri.parse(BuildConfig.base_url +
-        "apis/GetCustomerOrderDetail?apiToken=${apiToken}&customerId=${customerId}&orderid=${orderid}");
+        "apis/GetCustomerOrderDetail?apiToken=$apiToken&customerId=$customerId&orderid=$orderid");
     print(uri);
     var response = await get(uri, headers: ApiCalls.header);
 
