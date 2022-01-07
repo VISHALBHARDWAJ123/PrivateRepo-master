@@ -815,7 +815,7 @@ class _CartScreen2State extends State<CartScreen2>
             body: Container(
               child: Center(
                 child: AutoSizeText(
-                  'NO ITEMS IN CART.\n \n \n ENJOY SHOPPING ON THE One!',
+                  'No Item\(s\) in cart.\n\n\nAn empty home is an empty heart, fill your heart with LOVE from THE One\.Home is where the Heart is\.\.\.\.\.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       letterSpacing: 1,
