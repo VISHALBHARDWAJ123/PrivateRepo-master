@@ -11,22 +11,16 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
-
-
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
-
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
-
-
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
-
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({Key? key}) : super(key: key);
@@ -34,14 +28,6 @@ class WishlistScreen extends StatefulWidget {
   @override
   _WishlistScreenState createState() => _WishlistScreenState();
 }
-
-
-class _WishlistScreenState extends State<WishlistScreen> {
-  var wishlistProvider;
-
-  @override
-  initState() {
-    initSharedPrefs();
 
 class _WishlistScreenState extends State<WishlistScreen>
     with InputValidationMixin {
@@ -53,17 +39,13 @@ class _WishlistScreenState extends State<WishlistScreen>
   initState() {
     initSharedPrefs();
 
-
     super.initState();
   }
 
   String apiToken = '';
   String customerId = '';
-
-
   String _customerEmail = '';
   TextEditingController? _customerEmailCtrl, _friendEmailCtrl, _messageCtrl;
-
 
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance().whenComplete(
@@ -71,13 +53,10 @@ class _WishlistScreenState extends State<WishlistScreen>
         () {
           customerId = ConstantsVar.prefs.getString('guestCustomerID')!;
           apiToken = ConstantsVar.prefs.getString('apiTokken')!;
-
-
           _customerEmail = ConstantsVar.prefs.getString('email') ?? '';
           _customerEmailCtrl = TextEditingController(text: _customerEmail);
           _friendEmailCtrl = TextEditingController();
           _messageCtrl = TextEditingController();
-
         },
       ),
     );
@@ -94,10 +73,7 @@ class _WishlistScreenState extends State<WishlistScreen>
       top: true,
       bottom: true,
       child: Scaffold(
-
-
         resizeToAvoidBottomInset: false,
-
         appBar: new AppBar(
           // backgroundColor: ConstantsVar.appColor,
           actions: [
@@ -151,63 +127,6 @@ class _WishlistScreenState extends State<WishlistScreen>
             ),
           ),
         ),
-
-        body: Column(
-          children: [
-            Card(
-              child: ListTile(
-                title: Center(
-                  child: AutoSizeText(
-                    'Wishlist'.toUpperCase(),
-                    style: TextStyle(shadows: <Shadow>[
-                      Shadow(
-                        offset: Offset(1.0, 1.2),
-                        blurRadius: 3.0,
-                        color: Colors.grey.shade300,
-                      ),
-                      Shadow(
-                        offset: Offset(1.0, 1.2),
-                        blurRadius: 8.0,
-                        color: Colors.grey.shade300,
-                      ),
-                    ], fontSize: 5.w, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-            Consumer<cartCounter>(builder: (context, value, _) {
-              if (value.isVisible == true) {
-                return Container(
-                  width: 100.w,
-                  height: 70.h,
-                  child: Center(
-                    child: SpinKitRipple(
-                      color: Colors.red,
-                      size: 60,
-                    ),
-                  ),
-                );
-              } else {
-                if (value.wishlistItems.length == 0) {
-                  return Container(
-                    width: 100.w,
-                    height: 70.h,
-                    child: Center(
-                      child: AnimatedTextKit(
-                        repeatForever: true,
-                        animatedTexts: [
-                          ColorizeAnimatedText(
-                            'No Data Available',
-                            textStyle: colorizeTextStyle,
-                            colors: colorizeColors,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  return Expanded(
-
         body: Consumer<cartCounter>(builder: (context, value, _) {
           if (value.isVisible == true) {
             return Container(
@@ -328,7 +247,6 @@ class _WishlistScreenState extends State<WishlistScreen>
                     ),
                   ),
                   Expanded(
-
                     child: ListView(
                       // physics: NeverScrollableScrollPhysics(),
 
@@ -535,26 +453,15 @@ class _WishlistScreenState extends State<WishlistScreen>
                         ),
                       ),
                     ),
-
-                  );
-                }
-              }
-            })
-          ],
-        ),
-
                   ),
                 ],
               );
             }
           }
         }),
-
       ),
     );
   }
-
-
 
   void _showModelSheet() {
     // showDialog(
@@ -753,7 +660,6 @@ class _WishlistScreenState extends State<WishlistScreen>
       },
     );
   }
-
 
   final colorizeTextStyle =
       TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold);
