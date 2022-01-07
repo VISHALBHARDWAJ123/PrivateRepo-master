@@ -201,11 +201,14 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                       ),
                                       width: 90.w,
                                       child: TextFormField(
-                                        autofillHints: <String>[AutofillHints.email,AutofillHints.username],
+                                        autofillHints: <String>[
+                                          AutofillHints.email,
+                                          AutofillHints.username
+                                        ],
                                         autofocus: true,
-
                                         textInputAction: TextInputAction.next,
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         validator: (val) {
                                           if (isEmailValid(val!)) {
                                             return null;
@@ -221,7 +224,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                             'E-mail Address',
                                             Icon(
                                               Icons.email,
-                                              color: AppColor.PrimaryAccentColor,
+                                              color:
+                                                  AppColor.PrimaryAccentColor,
                                             ),
                                             false),
                                       ),
@@ -244,11 +248,14 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                         vertical: 2,
                                       ),
                                       child: TextFormField(
-                                        autofillHints: <String>[AutofillHints.newPassword],
+                                        autofillHints: <String>[
+                                          AutofillHints.password
+                                        ],
                                         textInputAction: TextInputAction.done,
                                         obscureText: passError,
 
-keyboardType: TextInputType.visiblePassword,
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
                                         // validator: (inputz) =>
                                         //     input!.isValidPass() ? null : "Check your Password",
                                         controller: passController,
@@ -331,16 +338,20 @@ keyboardType: TextInputType.visiblePassword,
                                                 color: ConstantsVar.appColor,
                                                 border: Border(
                                                   top: BorderSide(
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                   bottom: BorderSide(
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                   left: BorderSide(
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                   right: BorderSide(
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                   ),
                                                 ),
                                               ),
@@ -357,8 +368,8 @@ keyboardType: TextInputType.visiblePassword,
                                                         .validate()) {
                                                       _loginKey.currentState!
                                                           .save();
-                                                      setState(
-                                                          () => _willGo = false);
+                                                      setState(() =>
+                                                          _willGo = false);
                                                       await ApiCalls.login(
                                                         context,
                                                         emailController.text
@@ -393,7 +404,8 @@ keyboardType: TextInputType.visiblePassword,
                                                     "LOGIN",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 14.0,
                                                     ),
                                                   ),
@@ -427,8 +439,8 @@ keyboardType: TextInputType.visiblePassword,
                                                           BorderRadius.circular(
                                                               10.0),
                                                       side: BorderSide(
-                                                        color:
-                                                            ConstantsVar.appColor,
+                                                        color: ConstantsVar
+                                                            .appColor,
                                                       ),
                                                     ),
                                                   ),
@@ -454,7 +466,8 @@ keyboardType: TextInputType.visiblePassword,
                                                   "REGISTER",
                                                   style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 14.0),
                                                 ),
                                               ),

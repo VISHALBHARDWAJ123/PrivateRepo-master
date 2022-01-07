@@ -119,7 +119,7 @@ class ApiCalls {
             responseData.toString().contains('No customer account found')) {
           print('Wrong account');
           Fluttertoast.showToast(
-            msg: 'Wrong Details',
+            msg: loginFailedMessage,
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG,
           );
@@ -130,10 +130,10 @@ class ApiCalls {
 
           return false;
         } else if (responseData.toString().contains('Customer is deleted')) {
-          Fluttertoast.showToast(msg: 'Customer is deleted');
+          Fluttertoast.showToast(msg: customerDeleteMessage);
         } else {
           Fluttertoast.showToast(
-            msg: 'Successfully Logged In',
+            msg: successfullyLoginMessage,
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG,
           );
@@ -195,6 +195,9 @@ class ApiCalls {
 
               break;
             case 'Cart Screen2':
+              Navigator.pop(context, true);
+              break;
+            case 'Wishlist':
               Navigator.pop(context, true);
               break;
             default:
@@ -310,7 +313,7 @@ class ApiCalls {
         );
       } else {
         Fluttertoast.showToast(
-          msg: 'Product added in cart successfully.',
+          msg: addToCartMessage,
           toastLength: Toast.LENGTH_LONG,
         );
         // AwesomeNotifications().createNotification(
@@ -851,7 +854,7 @@ class ApiCalls {
     // var response = await http.get(uri, headers: header);
 
     var response = await http.get(uri, headers: header);
-
+    print('Read Count Api>>>>>>>>>>>>>>>>>>>>>>>' + uri.toString());
     try {
       // print(cookie);
       dynamic result = jsonDecode(response.body);
@@ -1027,15 +1030,12 @@ class ApiCalls {
       } else {
         if (_message.contains('Subscribed')) {
           Fluttertoast.showToast(
-              msg: 'You will be notify soon when product available.',
-              toastLength: Toast.LENGTH_LONG);
+              msg: subscribeMessage, toastLength: Toast.LENGTH_LONG);
           _message = 'Unsubscribe';
           return _message;
         } else {
           Fluttertoast.showToast(
-              msg:
-                  'Please Click on Notify Me\! to get e-mail when this product is available for ordering again.',
-              toastLength: Toast.LENGTH_LONG);
+              msg: notifyMessage, toastLength: Toast.LENGTH_LONG);
           _message = 'Notify Me\!';
           return _message;
         }
@@ -1263,13 +1263,15 @@ class ApiCalls {
     String result = '';
     final url = Uri.parse(BuildConfig.base_url + 'Customer/ShareWishlist?');
     try {
-      var response = await http.post(url, body: {
-        'apiToken': apiToken,
-        'customerid': customerId,
-        'personalMessage': message,
-        'customerEmail': customerEmail,
-        'friendsEmail': friendEmail,
-      },headers:header );
+      var response = await http.post(url,
+          body: {
+            'apiToken': apiToken,
+            'customerid': customerId,
+            'personalMessage': message,
+            'customerEmail': customerEmail,
+            'friendsEmail': friendEmail,
+          },
+          headers: header);
       result = response.body;
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -1277,20 +1279,20 @@ class ApiCalls {
     }
     return result;
   }
-static Future<String> deleteWishlist({
 
+  static Future<String> deleteWishlist({
     required String apiToken,
     required String customerId,
-
   }) async {
     String result = '';
     final url = Uri.parse(BuildConfig.base_url + 'Customer/DeleteWishlist');
     try {
-      var response = await http.post(url, body: {
-        'apiToken': apiToken,
-        'customerid': customerId,
-
-      },headers:header );
+      var response = await http.post(url,
+          body: {
+            'apiToken': apiToken,
+            'customerid': customerId,
+          },
+          headers: header);
       result = response.body;
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);

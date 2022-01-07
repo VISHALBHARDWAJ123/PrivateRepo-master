@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -120,6 +121,8 @@ class VerificationScreen2 extends StatefulWidget {
 class _VerificationScreen2State extends State<VerificationScreen2> {
   late List<TextStyle?> otpTextStyles;
 
+  // CustomProgressDialog? _progressDialog;
+
   String? apiToken;
 
   String? guid;
@@ -140,6 +143,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     // TODO: implement initState
 
     initSharedPrefs().then((val) => getOtp());
+    setState(() {});
     // TODO: implement initState
     super.initState();
 
@@ -163,7 +167,6 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       createStyle(accentPurpleColor),
     ];
     return SafeArea(
-
       top: true,
       bottom: true,
       maintainBottomViewPadding: true,
@@ -332,11 +335,15 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
   }
 
   Future getOtp() async {
-
-
-    context.loaderOverlay.show(
-      widget: SpinKitRipple(color: Colors.red, size: 90),
+    CustomProgressDialog _progressDialog = CustomProgressDialog(
+      context,
+      loadingWidget: SpinKitRipple(
+        color: Colors.red,
+        size: 30,
+      ),
+      dismissable: false,
     );
+    _progressDialog.show();
     // await SmsAutoFill().listenForCode;
     // final uri = Uri.parse(
     //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
@@ -344,26 +351,32 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     final uri = Uri.parse(BuildConfig.base_url + 'customer/SendOTP');
     print(uri);
     final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
-    var response = await post(uri, body: body);
 
     try {
-      context.loaderOverlay.hide();
-      OtpResponse otpResponse = OtpResponse.fromJson(jsonDecode(response.body));
-      if (otpResponse.status.contains('Success')) {
-        setState(() {
-          otpRefs = otpResponse.responseData.otpReference;
-        });
-        Fluttertoast.showToast(msg: 'You will receive an otp shortly');
-        context.loaderOverlay.hide();
+      var response = await post(uri, body: body);
+      print(response.body);
+      if (jsonDecode(response.body)['Status'].toString() != 'Failed') {
+        _progressDialog.dismiss();
+
+        OtpResponse otpResponse =
+            OtpResponse.fromJson(jsonDecode(response.body));
+        if (otpResponse.status.contains('Success')) {
+          setState(() {
+            otpRefs = otpResponse.responseData.otpReference;
+          });
+          Fluttertoast.showToast(msg: otpMessage);
+        }
       } else {
-        Fluttertoast.showToast(msg: 'Something went wrong! Please try again.');
-        context.loaderOverlay.hide();
+        Fluttertoast.showToast(
+          msg: otpWrongMessage,
+          toastLength: Toast.LENGTH_LONG,
+        );
+        _progressDialog.dismiss();
       }
+      _progressDialog.dismiss();
     } on Exception catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-      );
-      context.loaderOverlay.hide();
+      ConstantsVar.excecptionMessage(e);
+      _progressDialog.dismiss();
     }
   }
 
@@ -385,7 +398,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
         context: context,
         builder: (context) {
           return CustomDialogBox(
-            descriptions: 'Registration Successful!',
+            descriptions: registrationCompleteMessage,
             text: 'Okay',
             img: 'MyAssets/logo.png',
             isOkay: true,
@@ -394,6 +407,16 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
   }
 
   Future verifyOTP(int otp) async {
+    CustomProgressDialog _progressDialog = CustomProgressDialog(
+      context,
+      loadingWidget: SpinKitRipple(
+        color: Colors.red,
+        size: 30,
+      ),
+      dismissable: true,
+    );
+    _progressDialog.show();
+
     final body = {
       'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber,
       'otp': Uri.encodeComponent(otp.toString()),
@@ -402,24 +425,30 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     print(body);
     String url2 = BuildConfig.base_url + 'customer/VerifyOTP';
     final url = Uri.parse(url2);
-    print(url);
+    print('OTP Verification Url>>>>>>>>>>>>>>>>>' + url.toString());
 
     try {
       var response = await post(url, body: body);
 
-      dynamic result = jsonDecode(response.body);
-      context.loaderOverlay.hide();
+      // final result = jsonDecode(response.body);
+      _progressDialog.dismiss();
 
-      print(result);
-      if (result['Status'].toString().contains('Failed')) {
-        Fluttertoast.showToast(msg: 'Verification failed. Please try again.');
+      print(response.body);
+      if (jsonDecode(response.body)['Status'].toString() == 'Failed') {
+        Fluttertoast.showToast(
+          msg: otpVerificationFailedMessage,
+          toastLength: Toast.LENGTH_LONG,
+        );
+        _progressDialog.dismiss();
       } else {
         register();
       }
+      _progressDialog.dismiss();
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      context.loaderOverlay.hide();
+      ConstantsVar.excecptionMessage(e);
+      _progressDialog.dismiss();
     }
+    _progressDialog.dismiss();
   }
 
   Future initSharedPrefs() async {
@@ -427,15 +456,21 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
   }
 
   Future register() async {
+    CustomProgressDialog _progressDialog = CustomProgressDialog(
+      context,
+      loadingWidget: SpinKitRipple(
+        color: Colors.red,
+        size: 30,
+      ),
+      dismissable: false,
+    );
+    _progressDialog.show();
+
     String dataBody = ConstantsVar.prefs.getString('regBody')!;
     print(dataBody);
 
     String urL = BuildConfig.base_url + 'Customer/CustomerRegister';
-    context.loaderOverlay.show(
-        widget: SpinKitRipple(
-      size: 90,
-      color: Colors.red,
-    ));
+
     final body = {'apiToken': apiToken, 'CustomerGuid': guid, 'data': dataBody};
     final url = Uri.parse(urL);
 
@@ -447,19 +482,21 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       if (status.contains(statusSus)) {
         ApiCalls.login(context, widget.email, widget.password, 'OTP Screen')
             .then((value) {
-          context.loaderOverlay.hide();
+          _progressDialog.dismiss();
+
           showSucessDialog();
         });
       } else if (status.contains(failed)) {
-        context.loaderOverlay.hide();
+        _progressDialog.dismiss();
 
         setState(() => reason = result['Message']);
         showErrorDialog(reason);
         print(result);
       }
     } on Exception catch (e) {
-      context.loaderOverlay.hide();
-      Fluttertoast.showToast(msg: e.toString());
+      _progressDialog.dismiss();
+
+      ConstantsVar.excecptionMessage(e);
       print(e.toString());
     }
   }

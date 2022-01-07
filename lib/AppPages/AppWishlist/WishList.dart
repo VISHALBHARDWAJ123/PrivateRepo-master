@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:like_button/like_button.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
@@ -18,9 +20,8 @@ import 'package:untitled2/Widgets/CustomButton.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
-import 'package:bottom_sheet/bottom_sheet.dart';
-import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({Key? key}) : super(key: key);
@@ -35,6 +36,8 @@ class _WishlistScreenState extends State<WishlistScreen>
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  var _scrollController = ScrollController();
+
   @override
   initState() {
     initSharedPrefs();
@@ -42,6 +45,7 @@ class _WishlistScreenState extends State<WishlistScreen>
     super.initState();
   }
 
+  String _loginId = '';
   String apiToken = '';
   String customerId = '';
   String _customerEmail = '';
@@ -51,6 +55,7 @@ class _WishlistScreenState extends State<WishlistScreen>
     ConstantsVar.prefs = await SharedPreferences.getInstance().whenComplete(
       () => setState(
         () {
+          _loginId = ConstantsVar.prefs.getString('userId') ?? '';
           customerId = ConstantsVar.prefs.getString('guestCustomerID')!;
           apiToken = ConstantsVar.prefs.getString('apiTokken')!;
           _customerEmail = ConstantsVar.prefs.getString('email') ?? '';
@@ -228,8 +233,10 @@ class _WishlistScreenState extends State<WishlistScreen>
                                   final _formProvider =
                                       Provider.of<cartCounter>(context,
                                           listen: false);
-                                  _formProvider.deleteWishlist(apiToken: apiToken, customerId: customerId, ctx: context);
-
+                                  _formProvider.deleteWishlist(
+                                      apiToken: apiToken,
+                                      customerId: customerId,
+                                      ctx: context);
                                 },
                               ),
                               IconButton(
@@ -253,23 +260,17 @@ class _WishlistScreenState extends State<WishlistScreen>
                       shrinkWrap: true,
                       children: List.generate(
                         value.wishlistItems.length,
-                        (index) => Card(
-                          child: Container(
-                            width: 100.w,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => NewProductDetails(
-                                      productId: value
-                                          .wishlistItems[index].productId
-                                          .toString(),
-                                      screenName: 'Wishlist Screen',
-                                    ),
-                                  ),
-                                );
-                              },
+                        (index) => OpenContainer(
+                          onClosed: (_) {
+                            wishlistProvider.getWishlist(
+                              apiToken: apiToken,
+                              customerId: customerId,
+                            );
+                          },
+                          closedBuilder:
+                              (BuildContext context, void Function() action) {
+                            return Container(
+                              width: 100.w,
                               child: Container(
                                 height: 20.h,
                                 child: Stack(
@@ -448,8 +449,14 @@ class _WishlistScreenState extends State<WishlistScreen>
                                   ],
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
+                          openBuilder: (BuildContext context,
+                              void Function({Object? returnValue}) action) {
+                            return NewProductDetails(
+                                productId: value.wishlistItems[index].productId,
+                                screenName: 'Wishlist');
+                          },
                         ),
                       ),
                     ),
@@ -475,190 +482,251 @@ class _WishlistScreenState extends State<WishlistScreen>
     //         child: ,
     //       );
     //     });
-    showModalBottomSheet<void>(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-      backgroundColor: Colors.white,
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return Form(
-          key: _formKey,
-          child: Container(
-            width: 100.w,
-            height: MediaQuery.of(context).size.height * 0.68,
 
-            // height: 60.h,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6.0),
-                  child: AutoSizeText(
-                    'SHARE YOUR WISHLIST',
-                    maxLines: 1,
-                    maxFontSize: 18,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 54.h,
+    _loginId != '' || _loginId.length != 0
+        ? showModalBottomSheet<void>(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+            backgroundColor: Colors.white,
+            context: context,
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return Form(
+                key: _formKey,
+                child: Container(
+                  width: 100.w,
+                  height: MediaQuery.of(context).size.height * 0.65,
+
+                  // height: 60.h,
                   child: Scaffold(
                     resizeToAvoidBottomInset: true,
-                    body: ListView(
-                      shrinkWrap: true,
+                    body: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        ListTile(
-                          title: AutoSizeText(
-                            'YOUR EMAIL:',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 4.w,
-                            ),
-                          ),
-                          subtitle: TextFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (email) {
-                              if (isEmailValid(email!))
-                                return null;
-                              else
-                                return 'Enter a valid email address';
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 6.0),
+                          child: AutoSizeText(
+                            'SHARE YOUR WISHLIST',
                             maxLines: 1,
-                            controller: _customerEmailCtrl,
+                            maxFontSize: 18,
                             style: TextStyle(
-                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        addVerticalSpace(10),
-                        ListTile(
-                          title: AutoSizeText(
-                            'FRIEND\'S EMAIL:',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 4.w,
-                            ),
-                          ),
-                          subtitle: TextFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (email) {
-                              if (isEmailValid(email!))
-                                return null;
-                              else
-                                return 'Enter a valid email address';
-                            },
+                        Flexible(
+                          child: VsScrollbar(
+                            controller: _scrollController,
+                            isAlwaysShown: true,
+                            child: ListView(
+                              controller: _scrollController,
+                              children: [
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                ListTile(
+                                  title: AutoSizeText(
+                                    'YOUR EMAIL:',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 4.w,
+                                    ),
+                                  ),
+                                  subtitle: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (email) {
+                                      if (isEmailValid(email!))
+                                        return null;
+                                      else
+                                        return 'Enter a valid email address';
+                                    },
+                                    decoration: InputDecoration(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                    ),
+                                    maxLines: 1,
+                                    controller: _customerEmailCtrl,
+                                    textInputAction: TextInputAction.next,
 
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                            maxLines: 1,
-                            // maxLength: 20,
-                            controller: _friendEmailCtrl,
-                            style: TextStyle(
-                              color: Colors.black,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                addVerticalSpace(10),
+                                ListTile(
+                                  title: AutoSizeText(
+                                    'FRIEND\'S EMAIL:',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 4.w,
+                                    ),
+                                  ),
+                                  subtitle: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (email) {
+                                      if (isEmailValid(email!))
+                                        return null;
+                                      else
+                                        return 'Enter a valid email address';
+                                    },
+
+                                    decoration: InputDecoration(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                    ),
+                                    textInputAction: TextInputAction.next,
+
+                                    maxLines: 1,
+                                    // maxLength: 20,
+                                    controller: _friendEmailCtrl,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                addVerticalSpace(10),
+                                ListTile(
+                                  title: AutoSizeText(
+                                    'MESSAGE:',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 4.w,
+                                    ),
+                                  ),
+                                  subtitle: TextFormField(
+                                    textInputAction: TextInputAction.next,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    maxLines: 4,
+                                    decoration: InputDecoration(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (val) {
+                                      if (_messageCtrl!.text.length < 5) {
+                                        return 'Please enter proper message ';
+                                      }
+                                      return null;
+                                    },
+                                    controller: _messageCtrl,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        addVerticalSpace(10),
-                        ListTile(
-                          title: AutoSizeText(
-                            'MESSAGE:',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 4.w,
-                            ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 64.w,
                           ),
-                          subtitle: TextFormField(
-                            textInputAction: TextInputAction.newline,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: (val) {
-                              if (_messageCtrl!.text.length < 5) {
-                                return 'Please enter proper message ';
-                              }
-                              return null;
-                            },
-                            controller: _messageCtrl,
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 4.w,
+                                    fontWeight: FontWeight.bold,
+                                    color: ConstantsVar.appColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  'Share',
+                                  style: TextStyle(
+                                    fontSize: 4.w,
+                                    fontWeight: FontWeight.bold,
+                                    color: ConstantsVar.appColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    final _formProvider =
+                                        Provider.of<cartCounter>(context,
+                                            listen: false);
+                                    _formProvider.shareMyWishlist(
+                                      customerId: customerId,
+                                      friendEmail: _friendEmailCtrl!.text,
+                                      customerEmail: _customerEmailCtrl!.text,
+                                      ctx: context,
+                                      apiToken: apiToken,
+                                      message: _messageCtrl!.text,
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 62.0.w),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontSize: 4.w,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      TextButton(
-                        child: Text(
-                          'Share',
-                          style: TextStyle(
-                            fontSize: 4.w,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            final _formProvider = Provider.of<cartCounter>(
-                                context,
-                                listen: false);
-                            _formProvider.shareMyWishlist(
-                              customerId: customerId,
-                              friendEmail: _friendEmailCtrl!.text,
-                              customerEmail: _customerEmailCtrl!.text,
-                              ctx: context,
-                              apiToken: apiToken,
-                              message: _messageCtrl!.text,
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+              );
+            },
+          )
+        : Fluttertoast.showToast(
+            msg: "Only Registered customer can use this feature.",
+            toastLength: Toast.LENGTH_LONG,
+          );
   }
 
   final colorizeTextStyle =

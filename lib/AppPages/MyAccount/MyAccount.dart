@@ -3,8 +3,10 @@ import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' show Platform;
 
@@ -141,80 +143,132 @@ class _MyAccountState extends State<MyAccount> {
                               showModalBottomSheet<void>(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return Container(
+                                  return Container                     (
                                     width: 100.w,
                                     decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                              'MyAssets/banner.jpg',
-                                            ))),
-                                    height: 40.h,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'MyAssets/banner.jpg',
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
+                                    height: 30.h,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: AutoSizeText(
-                                            'You are not logged in.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 5.w,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                        AutoSizeText(
+                                          'You are not logged in.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 5.w,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(
+                                                    10.0,
+                                                  ),
+                                                  color: ConstantsVar.appColor,
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    bottom: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    left: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    right: BorderSide(
+                                                      color: ConstantsVar.appColor,
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      LoginScreen(
-                                                    screenKey: 'My Account',
+                                                child: Center(
+                                                  child: LoadingButton(
+                                                    color: Colors.black,
+                                                    loadingWidget: SpinKitCircle(
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    height: 12.w,
+                                                    onPressed: () async {
+                                                      Navigator.of(context).pop();
+                                                      Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) => LoginScreen(
+                                                            screenKey: 'My Account',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    defaultWidget: AutoSizeText(
+                                                      "LOGIN",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Register',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                                margin: EdgeInsets.only(
+                                                  left: 16.0,
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      RegstrationPage(),
+                                                child: TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(
+                                                      Colors.black,
+                                                    ),
+                                                    shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                        side: BorderSide(
+                                                          color: ConstantsVar.appColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    overlayColor:
+                                                    MaterialStateProperty.all(Colors.red),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Future.delayed(
+                                                      Duration(
+                                                        milliseconds: 90,
+                                                      ),
+                                                          () => Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                          builder: (context) => RegstrationPage(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: AutoSizeText(
+                                                    "REGISTER",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -284,17 +338,18 @@ class _MyAccountState extends State<MyAccount> {
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                              'MyAssets/banner.jpg',
-                                            ))),
-                                    height: 40.h,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'MyAssets/banner.jpg',
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
+                                    height: 30.h,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         AutoSizeText(
                                           'You are not logged in.',
@@ -305,53 +360,107 @@ class _MyAccountState extends State<MyAccount> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(
+                                                    10.0,
+                                                  ),
+                                                  color: ConstantsVar.appColor,
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    bottom: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    left: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    right: BorderSide(
+                                                      color: ConstantsVar.appColor,
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      LoginScreen(
-                                                    screenKey: 'My Account',
+                                                child: Center(
+                                                  child: LoadingButton(
+                                                    color: Colors.black,
+                                                    loadingWidget: SpinKitCircle(
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    height: 12.w,
+                                                    onPressed: () async {
+                                                      Navigator.of(context).pop();
+                                                      Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) => LoginScreen(
+                                                            screenKey: 'My Account',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    defaultWidget: AutoSizeText(
+                                                      "LOGIN",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Register',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                                margin: EdgeInsets.only(
+                                                  left: 16.0,
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      RegstrationPage(),
+                                                child: TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(
+                                                      Colors.black,
+                                                    ),
+                                                    shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                        side: BorderSide(
+                                                          color: ConstantsVar.appColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    overlayColor:
+                                                    MaterialStateProperty.all(Colors.red),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Future.delayed(
+                                                      Duration(
+                                                        milliseconds: 90,
+                                                      ),
+                                                          () => Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                          builder: (context) => RegstrationPage(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: AutoSizeText(
+                                                    "REGISTER",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -424,17 +533,18 @@ class _MyAccountState extends State<MyAccount> {
                                   return Container(
                                     width: 100.w,
                                     decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                              'MyAssets/banner.jpg',
-                                            ))),
-                                    height: 40.h,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'MyAssets/banner.jpg',
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
+                                    height: 30.h,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         AutoSizeText(
                                           'You are not logged in.',
@@ -445,53 +555,107 @@ class _MyAccountState extends State<MyAccount> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(
+                                                    10.0,
+                                                  ),
+                                                  color: ConstantsVar.appColor,
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    bottom: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    left: BorderSide(
+                                                      color: ConstantsVar.appColor,
+                                                    ),
+                                                    right: BorderSide(
+                                                      color: ConstantsVar.appColor,
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      LoginScreen(
-                                                    screenKey: 'My Account',
+                                                child: Center(
+                                                  child: LoadingButton(
+                                                    color: Colors.black,
+                                                    loadingWidget: SpinKitCircle(
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                    height: 12.w,
+                                                    onPressed: () async {
+                                                      Navigator.of(context).pop();
+                                                      Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) => LoginScreen(
+                                                            screenKey: 'My Account',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    defaultWidget: AutoSizeText(
+                                                      "LOGIN",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            AppButton(
-                                              color: Colors.black,
+                                            Expanded(
                                               child: Container(
+                                                height: 12.w,
                                                 width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Register',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                                margin: EdgeInsets.only(
+                                                  left: 16.0,
                                                 ),
-                                              ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      RegstrationPage(),
+                                                child: TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(
+                                                      Colors.black,
+                                                    ),
+                                                    shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                        side: BorderSide(
+                                                          color: ConstantsVar.appColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    overlayColor:
+                                                    MaterialStateProperty.all(Colors.red),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Future.delayed(
+                                                      Duration(
+                                                        milliseconds: 90,
+                                                      ),
+                                                          () => Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                          builder: (context) => RegstrationPage(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: AutoSizeText(
+                                                    "REGISTER",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 14.0),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -556,90 +720,145 @@ class _MyAccountState extends State<MyAccount> {
                                 ConstantsVar.prefs.getString('userId');
 
                             if (customerId == null || customerId == '') {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
+                               showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      width: 100.w,
+                                      decoration: BoxDecoration(
                                         image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                              'MyAssets/banner.jpg',
-                                            ))),
-                                    height: 40.h,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          'You are not logged inA.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold),
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            'MyAssets/banner.jpg',
+                                          ),
                                         ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            AppButton(
-                                              color: Colors.black,
-                                              child: Container(
-                                                width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                      ),
+                                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                                      height: 30.h,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          AutoSizeText(
+                                            'You are not logged in.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(
+                                                      10.0,
+                                                    ),
+                                                    color: ConstantsVar.appColor,
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        color: ConstantsVar.appColor,
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        color: ConstantsVar.appColor,
+                                                      ),
+                                                      left: BorderSide(
+                                                        color: ConstantsVar.appColor,
+                                                      ),
+                                                      right: BorderSide(
+                                                        color: ConstantsVar.appColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: LoadingButton(
+                                                      color: Colors.black,
+                                                      loadingWidget: SpinKitCircle(
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
+                                                      height: 12.w,
+                                                      onPressed: () async {
+                                                        Navigator.of(context).pop();
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                            builder: (context) => LoginScreen(
+                                                              screenKey: 'My Account',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      defaultWidget: AutoSizeText(
+                                                        "LOGIN",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      LoginScreen(
-                                                    screenKey: 'My Account',
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  margin: EdgeInsets.only(
+                                                    left: 16.0,
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            AppButton(
-                                              color: Colors.black,
-                                              child: Container(
-                                                width: 30.w,
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Register',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                                  child: TextButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all(
+                                                        Colors.black,
+                                                      ),
+                                                      shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(10.0),
+                                                          side: BorderSide(
+                                                            color: ConstantsVar.appColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      overlayColor:
+                                                          MaterialStateProperty.all(Colors.red),
+                                                    ),
+                                                    onPressed: () async {
+                                                      Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 90,
+                                                        ),
+                                                        () => Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) => RegstrationPage(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: AutoSizeText(
+                                                      "REGISTER",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14.0),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              onTap: () =>
-                                                  Navigator.pushReplacement(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      RegstrationPage(),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
                             } else {
                               Navigator.push(
                                 context,

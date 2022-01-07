@@ -53,8 +53,10 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) =>
-                    NewProductDetails(productId: widget.productId.toString(), screenName: 'Cart Screen2',)));
+                builder: (context) => NewProductDetails(
+                      productId: widget.productId.toString(),
+                      screenName: 'Cart Screen2',
+                    )));
       },
       child: Container(
         height: 24.h,
@@ -230,48 +232,43 @@ class _CartItemState extends State<CartItem> with WidgetsBindingObserver {
                                         radius: 36,
                                         onTap: () async {
                                           print('SomeOne Tap on Me');
-                                          if (widget.quantity < 11) {
-                                            SchedulerBinding.instance!
-                                                .addPostFrameCallback(
-                                                    (timeStamp) {
-                                              setState(() {
-                                                widget.quantity =
-                                                    widget.quantity + 1;
 
-                                                ApiCalls.updateCart(
-                                                        widget.id,
-                                                        widget.quantity
-                                                            .toString(),
-                                                        widget.itemID,
-                                                        context)
+                                          SchedulerBinding.instance!
+                                              .addPostFrameCallback(
+                                                  (timeStamp) {
+                                            setState(() {
+                                              widget.quantity =
+                                                  widget.quantity + 1;
+
+                                              ApiCalls.updateCart(
+                                                      widget.id,
+                                                      widget.quantity
+                                                          .toString(),
+                                                      widget.itemID,
+                                                      context)
+                                                  .then((value) {
+                                                var val = 0;
+
+                                                ApiCalls.readCounter(
+                                                        customerGuid: ConstantsVar
+                                                            .prefs
+                                                            .getString(
+                                                                'guestGUID')!)
                                                     .then((value) {
-                                                  var val = 0;
-
-                                                  ApiCalls.readCounter(
-                                                          customerGuid: ConstantsVar
-                                                              .prefs
-                                                              .getString(
-                                                                  'guestGUID')!)
-                                                      .then((value) {
-                                                    setState(() {
-                                                      val = value;
-                                                    });
-                                                    context
-                                                        .read<cartCounter>()
-                                                        .changeCounter(val);
+                                                  setState(() {
+                                                    val = value;
                                                   });
-
-                                                  widget.reload();
+                                                  context
+                                                      .read<cartCounter>()
+                                                      .changeCounter(val);
                                                 });
+
+                                                widget.reload();
                                               });
                                             });
-                                            print('${widget.quantity}');
-                                            // });
-                                          } else {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    'Quantity cannot be exceeds 11');
-                                          }
+                                          });
+                                          print('${widget.quantity}');
+                                          // });
                                         },
                                         child: Container(
                                           width: 24,

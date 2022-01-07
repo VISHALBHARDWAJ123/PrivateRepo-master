@@ -107,15 +107,15 @@ class ConstantsVar {
 
   static void excecptionMessage(Exception e) {
     if (e is FormatException) {
-      Fluttertoast.showToast(msg: 'Url mismatch.');
+      Fluttertoast.showToast(msg: 'Url not found.');
     } else if (e is SocketException) {
-      Fluttertoast.showToast(msg: 'Please check your internet.');
+      Fluttertoast.showToast(msg: internetException);
     } else if (e is TimeoutException) {
-      Fluttertoast.showToast(msg: 'Timeout.');
+      Fluttertoast.showToast(msg: timeoutException);
     } else if (e is NoSuchMethodError) {
-      Fluttertoast.showToast(msg: 'Data does\'nt exist.');
+      Fluttertoast.showToast(msg: dataNotExist);
     } else if (e is DeferredLoadException) {
-      Fluttertoast.showToast(msg: 'Failed to load library.');
+      Fluttertoast.showToast(msg: libraryFailed);
     } else if (e is IntegerDivisionByZeroException) {
       Fluttertoast.showToast(msg: 'Number can\'t be divided by Zero.');
     }
@@ -179,7 +179,31 @@ class ConstantsVar {
     "Vases",
     "Wall Lamps",
     "Wall Lamps FUSION"
-
-
   ];
 }
+
+const String internetException =
+    'Please ensure WiFi or Mobile Data is turned on and try again.';
+const String dataNotExist = 'Data does not exist.';
+const String timeoutException =
+    'Sorry your session has timed out please try again.';
+const libraryFailed = 'Sorry loading has failed, please try again.';
+const notifyMessage =
+    'Click Notify Me for an email when product is available again';
+const subscribeMessage =
+    'You will be notify notified soon when the this product is available again.';
+const addToCartMessage =
+    'Product was successfully added to the your Shopping Cart.';
+const cartLimitMessage = 'Your quantity exceeds the stock on hand.';
+const stockOutMessage =
+    'Product is out of stock, please subscribe for updates.';
+const removeCartItemMessage = 'Item Successfully Removed.';
+const loginFailedMessage =
+    '\'Wrong Details\.\’Your account or password is incorrect.';
+const customerDeleteMessage = 'Customer account has been deleted.';
+const successfullyLoginMessage = "Successfully logged in.";
+const registrationDetailsMissingMessage = 'Please provide all details.';
+const otpMessage = 'You will receive a security code shortly.';
+const otpWrongMessage = 'Something went wrong\! Please try again.';
+const otpVerificationFailedMessage = 'Verification failed please try again\.';
+const registrationCompleteMessage=' Registration completed';
