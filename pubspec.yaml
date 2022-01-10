@@ -131,6 +131,9 @@ dependencies:
   screenshot: ^1.2.3
   share: ^2.0.4
   favorite_button: ^0.0.4
+  device_preview: ^1.0.0
+  pausable_timer: ^1.0.0+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

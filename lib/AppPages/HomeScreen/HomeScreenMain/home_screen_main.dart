@@ -59,9 +59,14 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       case AppLifecycleState.paused:
         print('appLifeCycleState paused');
         break;
+      case AppLifecycleState.detached:
+        // TODO: Handle this case.
+        print('I am detached');
+        break;
     }
   }
 
+  var _previousTimeStamp;
   String bannerImage = '';
   List<TopicItems> modelList = [];
   List<Bannerxx> banners = [];
@@ -87,6 +92,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   var _suggestController = ScrollController();
 
   String _titleName = '';
+  late AdsResponse adsResponse;
 
   // ScrollController _scrollController = ScrollController();
   String listString = '';
@@ -95,7 +101,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   late ScrollController _productController,
       _serviceController,
       _recentlyProductController;
-  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  ContainerTransitionType _transitionType = ContainerTransitionType.fadeThrough;
 
   var isVisibled = false;
 
@@ -109,12 +115,16 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   Future initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
 
+    print(_previousTimeStamp);
+
     setState(() {});
   }
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     initSharedPrefs().whenComplete(() => getRecentlyViewedProduct());
+
     _productController = new ScrollController();
     _recentlyProductController = new ScrollController();
     _serviceController =
@@ -122,10 +132,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
 
-    getApiToken().then((value) {
+    getApiToken().then((value) async {
       if (mounted) setState(() {});
 
-      showAdDialog().whenComplete(() => apiCallToHomeScreen(value));
+      await showAdDialog().whenComplete(() {
+        apiCallToHomeScreen(value);
+      });
     });
     setState(() {});
 
@@ -143,29 +155,75 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       color: Colors.red,
       size: 90,
     ));
+    setState(() {
+      _previousTimeStamp =
+          ConstantsVar.prefs.getString('previousTimeStamp') ?? '';
+    });
     progressDialog.show();
     final url = Uri.parse(BuildConfig.base_url + 'apis/GetHomeScreenPopup');
+    print('Ads Url'+url.toString());
     try {
       var response = await get(url, headers: ApiCalls.header);
       progressDialog.dismiss();
       setState(() {
-        AdsResponse adsResponse = AdsResponse.fromJson(
+        adsResponse = AdsResponse.fromJson(
           jsonDecode(response.body),
         );
-        if (adsResponse.active == true &&
-            adsResponse.status.contains('Success') &&
-            (userId == null || userId == '')) {
-          showDialog(
-                  // barrierColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return isVisibled
-                        ? Container()
-                        : AdsDialog(
-                            responseHtml: adsResponse.responseData,
-                          );
-                  },
-                  context: context)
-              .then((value) => progressDialog.dismiss());
+        Fluttertoast.showToast(msg: 'Hi there i am ad');
+        if (_previousTimeStamp != '' && _previousTimeStamp != null) {
+          var _currentTimeStamp = DateTime.now();
+          Fluttertoast.showToast(msg: 'Hi there i am ad');
+          if (adsResponse.active == true &&
+              adsResponse.status.contains('Success') &&
+              (userId == null || userId == '') &&
+              _currentTimeStamp
+                      .difference(DateTime.parse(_previousTimeStamp))
+                      .inMinutes >=
+                  adsResponse.intervalTime) {
+            Fluttertoast.showToast(msg: 'Greater then');
+            showDialog(
+                    // barrierColor: Colors.transparent,
+                    builder: (BuildContext context) {
+                      return isVisibled
+                          ? Container()
+                          : AdsDialog(
+                              responseHtml: adsResponse.responseData,
+                            );
+                    },
+                    context: context)
+                .then((value) {
+              progressDialog.dismiss();
+            });
+            print('TimeDifference:-');
+            ConstantsVar.prefs.setString(
+                'previousTimeStamp',
+              _currentTimeStamp
+                    .toIso8601String());
+          } else {
+            Fluttertoast.showToast(msg: 'Not Greater then');
+          }
+        } else {
+          if (adsResponse.active == true &&
+              adsResponse.status.contains('Success') &&
+              (userId == null || userId == '')) {
+            showDialog(
+                    // barrierColor: Colors.transparent,
+                    builder: (BuildContext context) {
+                      return isVisibled
+                          ? Container()
+                          : AdsDialog(
+                              responseHtml: adsResponse.responseData,
+                            );
+                    },
+                    context: context)
+                .then((value) {
+              progressDialog.dismiss();
+            });
+          }
+          ConstantsVar.prefs.setString(
+              'previousTimeStamp',
+         DateTime.now().toIso8601String()
+                  );
         }
       });
     } on Exception catch (e) {
@@ -192,6 +250,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void dispose() {
     // TODO: implement dispose
     _suggestController.dispose();
+    _productController.dispose();
+    _serviceController.dispose();
+    _recentlyProductController.dispose();
+    print('Hi There I am dispose');
     super.dispose();
   }
 
@@ -279,8 +341,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                 child: RawAutocomplete<String>(
                                   optionsBuilder:
                                       (TextEditingValue textEditingValue) {
-                                    if (textEditingValue.text == null ||
-                                        textEditingValue.text == '' ||
+                                    if (textEditingValue.text == '' ||
                                         textEditingValue.text.length < 3) {
                                       return const Iterable<String>.empty();
                                     }
@@ -984,71 +1045,66 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     setState(() {});
   }
 
-  InkWell listContainer(HomePageProductImage list) {
-    return InkWell(
-      onTap: () {
-        print('${list.id}');
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return new NewProductDetails(
-            // customerId: ConstantsVar.customerID,
-            productId: list.id, screenName: 'Home Screen',
-          );
-        }));
-      },
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            // height: Adaptive.w(50),
-            color: Colors.white,
-            width: Adaptive.w(34),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Container(
-                    color: Colors.white,
-                    width: 33.w,
-                    padding: EdgeInsets.all(1.w),
-                    height: 33.w,
-                    // width: Adaptive.w(32),
-                    // height: Adaptive.w(40),
-                    child: Hero(
-                      tag: 'ProductImage${list.id}',
-                      transitionOnUserGestures: true,
-                      child: CachedNetworkImage(
-                        imageUrl: list.imageUrl[0],
-                        fit: BoxFit.fill,
+  OpenContainer listContainer(HomePageProductImage list) {
+    return OpenContainer(
+      closedElevation: 0,
+      clipBehavior: Clip.hardEdge,
+      closedBuilder: (BuildContext context, void Function() action) {
+        return Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              // height: Adaptive.w(50),
+              color: Colors.white,
+              width: Adaptive.w(34),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Container(
+                      color: Colors.white,
+                      width: 33.w,
+                      padding: EdgeInsets.all(1.w),
+                      height: 33.w,
+                      // width: Adaptive.w(32),
+                      // height: Adaptive.w(40),
+                      child: Hero(
+                        tag: 'ProductImage${list.id}',
+                        transitionOnUserGestures: true,
+                        child: CachedNetworkImage(
+                          imageUrl: list.imageUrl[0],
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 36.w,
-                  child: Center(
-                    child: AutoSizeText(
-                      list.price.splitBefore('incl'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        wordSpacing: 4,
-                        color: Colors.grey,
-                        fontSize: 4.1.w,
-                        fontWeight: FontWeight.bold,
+                  Container(
+                    width: 36.w,
+                    child: Center(
+                      child: AutoSizeText(
+                        list.price.splitBefore('incl'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          wordSpacing: 4,
+                          color: Colors.grey,
+                          fontSize: 4.1.w,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Visibility(
-            visible: list.discountPercentage.trim().length != 0 ? true : false,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Align(
+            Visibility(
+              visible:
+                  list.discountPercentage.trim().length != 0 ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
                     width: 10.w,
@@ -1073,113 +1129,118 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                         )
                       ],
                     ),
-                  )),
-            ),
-          )
-        ],
-      ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+      openBuilder:
+          (BuildContext context, void Function({Object? returnValue}) action) {
+        return NewProductDetails(productId: list.id, screenName: 'HomeScreen');
+      },
+      onClosed: (context) async {
+        await getRecentlyViewedProduct();
+      },
     );
   }
 
-  InkWell _listContainer(Product list) {
-    return InkWell(
-      onTap: () {
-        print('${list.id}');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new NewProductDetails(
-                // customerId: ConstantsVar.customerID,
-                productId: list.id, screenName: 'Home Screen',
-              );
-            },
-          ),
+  OpenContainer _listContainer(Product list) {
+    return OpenContainer(
+      closedElevation: 0,
+      openBuilder:
+          (BuildContext context, void Function({Object? returnValue}) action) {
+        return NewProductDetails(productId: list.id, screenName: 'HomeScreen');
+      },
+      onClosed: (context) async {
+        await getRecentlyViewedProduct();
+      },
+      closedBuilder: (BuildContext context, void Function() action) {
+        return Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              // height: Adaptive.w(50),
+              color: Colors.white,
+              width: Adaptive.w(34),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Container(
+                      color: Colors.white,
+                      width: 33.w,
+                      padding: EdgeInsets.all(1.w),
+                      height: 33.w,
+                      // width: Adaptive.w(32),
+                      // height: Adaptive.w(40),
+                      child: Hero(
+                        tag: 'ProductImage${list.id}',
+                        transitionOnUserGestures: true,
+                        child: CachedNetworkImage(
+                          imageUrl: list.imageUrl[0],
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 36.w,
+                    child: Center(
+                      child: AutoSizeText(
+                        list.price.splitBefore('incl'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          wordSpacing: 4,
+                          color: Colors.grey,
+                          fontSize: 4.1.w,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: list.discountPercent != null ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      width: 10.w,
+                      height: 10.w,
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            'MyAssets/plaincircle.png',
+                            width: 10.w,
+                            height: 10.w,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              list.discountPercent.toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 3.w,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+            )
+          ],
         );
       },
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            // height: Adaptive.w(50),
-            color: Colors.white,
-            width: Adaptive.w(34),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Container(
-                    color: Colors.white,
-                    width: 33.w,
-                    padding: EdgeInsets.all(1.w),
-                    height: 33.w,
-                    // width: Adaptive.w(32),
-                    // height: Adaptive.w(40),
-                    child: Hero(
-                      tag: 'ProductImage${list.id}',
-                      transitionOnUserGestures: true,
-                      child: CachedNetworkImage(
-                        imageUrl: list.imageUrl[0],
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 36.w,
-                  child: Center(
-                    child: AutoSizeText(
-                      list.price.splitBefore('incl'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        wordSpacing: 4,
-                        color: Colors.grey,
-                        fontSize: 4.1.w,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: list.discountPercent != null ? true : false,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Container(
-                    width: 10.w,
-                    height: 10.w,
-                    child: Stack(
-                      children: [
-                        Image.asset(
-                          'MyAssets/plaincircle.png',
-                          width: 10.w,
-                          height: 10.w,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            list.discountPercent.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 3.w,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -1222,7 +1283,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     }
   }
 
-  /* Api call to home screen */
+/* Api call to home screen */
   Future<http.Response> apiCallToHomeScreen(String value) async {
     getSearchSuggestions();
     getTopicPage();
@@ -1245,14 +1306,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     );
 // response.headers
     if (response.statusCode == 200) {
-      const start = "samesite=lax,";
-      const end = "; expires";
-
       mounted
           ? setState(() {
               showLoading = false;
             })
-          : null;
+          :
+      null;
       // print(response.body);
       HomeResponse1 homeResponse =
           HomeResponse1.fromJson(jsonDecode(response.body));

@@ -16,20 +16,21 @@ class AdsResponse {
     required this.message,
     required this.active,
     required this.responseData,
+    required this.intervalTime,
   });
 
   String status;
   dynamic message;
   bool active;
   String responseData;
+  int intervalTime;
 
   factory AdsResponse.fromJson(Map<String, dynamic> json) => AdsResponse(
         status: json["Status"],
         message: json["Message"],
         active: json["Active"],
-        responseData: json["ResponseData"] == null
-            ? 'No Data Available'
-            : json["ResponseData"],
+        responseData: json["ResponseData"] ?? 'No Data Available',
+        intervalTime: json['interval'] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

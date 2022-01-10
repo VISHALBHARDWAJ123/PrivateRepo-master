@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,7 +11,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -19,62 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:untitled2/utils/CartBadgeCounter/SearchModel/SearchNotifier.dart';
-import 'package:workmanager/workmanager.dart';
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
 
-const simpleTaskKey = "simpleTask";
-const rescheduledTaskKey = "rescheduledTask";
-const failedTaskKey = "failedTask";
-const simpleDelayedTask = "simpleDelayedTask";
-const simplePeriodicTask = "simplePeriodicTask";
-const simplePeriodic1HourTask = "simplePeriodic1HourTask";
 
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    Fluttertoast.showToast(msg: 'Hi There');
-    switch (task) {
-      case simpleTaskKey:
-        print("$simpleTaskKey was executed. inputData = $inputData");
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setBool("test", true);
-        print("Bool from prefs: ${prefs.getBool("test")}");
-        break;
-      case rescheduledTaskKey:
-        final key = inputData!['key']!;
-        final prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey('unique-$key')) {
-          print('has been running before, task is successful');
-          return true;
-        } else {
-          await prefs.setBool('unique-$key', true);
-          print('reschedule task');
-          return false;
-        }
-      case failedTaskKey:
-        print('failed task');
-        return Future.error('failed');
-      case simpleDelayedTask:
-        print("$simpleDelayedTask was executed");
-        break;
-      case simplePeriodicTask:
-        print("$simplePeriodicTask was executed");
-        break;
-      case simplePeriodic1HourTask:
-        print("$simplePeriodic1HourTask was executed");
-        break;
-      case Workmanager.iOSBackgroundTask:
-        print("The iOS background fetch was triggered");
-        Directory? tempDir = Directory.systemTemp;
-        String? tempPath = tempDir.path;
-        print(
-            "You can access other plugins in the background, for example Directory.getTemporaryDirectory(): $tempPath");
-        break;
-    }
 
-    return Future.value(true);
-  });
-}
+
 
 Future<void> setFireStoreData(
   RemoteMessage message,
@@ -168,51 +117,54 @@ Future<void> main() async {
             _messageHandler(event);
           });
           // FirebaseMessaging.onMessage.;
-          runApp(MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) => cartCounter(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => SearchModel(),
-              ),
-            ],
-            child: Phoenix(
-              child: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'The One',
-                builder: (context, child) {
-                  // final mediaQueryData = MediaQuery.of(context);
-                  // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
-                  return MediaQuery(
-                    child: child!,
-                    data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
-                  );
-                },
-                home: SplashScreen(),
-                darkTheme: ThemeData(
-                  pageTransitionsTheme: PageTransitionsTheme(
-                    builders: {
-                      TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                      TargetPlatform.iOS:
-                          CupertinoWillPopScopePageTransionsBuilder(),
-                    },
-                  ),
-                  fontFamily: 'Arial',
-                  primarySwatch: MaterialColor(0xFF800E4F, color),
-                  primaryColor: ConstantsVar.appColor,
+          runApp(DevicePreview(
+            enabled: false,
+            builder:(context)=> MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => cartCounter(),
                 ),
-                theme: ThemeData(
-                  pageTransitionsTheme: PageTransitionsTheme(
-                    builders: {
-                      TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                      TargetPlatform.iOS:
-                          CupertinoWillPopScopePageTransionsBuilder(),
-                    },
+                ChangeNotifierProvider(
+                  create: (_) => SearchModel(),
+                ),
+              ],
+              child: Phoenix(
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'The One',
+                  builder: (context, child) {
+                    // final mediaQueryData = MediaQuery.of(context);
+                    // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
+                    return MediaQuery(
+                      child: child!,
+                      data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
+                    );
+                  },
+                  home: SplashScreen(),
+                  darkTheme: ThemeData(
+                    pageTransitionsTheme: PageTransitionsTheme(
+                      builders: {
+                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                        TargetPlatform.iOS:
+                            CupertinoWillPopScopePageTransionsBuilder(),
+                      },
+                    ),
+                    fontFamily: 'Arial',
+                    primarySwatch: MaterialColor(0xFF800E4F, color),
+                    primaryColor: ConstantsVar.appColor,
                   ),
-                  fontFamily: 'Arial',
-                  primarySwatch: MaterialColor(0xFF800E4F, color),
-                  primaryColor: ConstantsVar.appColor,
+                  theme: ThemeData(
+                    pageTransitionsTheme: PageTransitionsTheme(
+                      builders: {
+                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                        TargetPlatform.iOS:
+                            CupertinoWillPopScopePageTransionsBuilder(),
+                      },
+                    ),
+                    fontFamily: 'Arial',
+                    primarySwatch: MaterialColor(0xFF800E4F, color),
+                    primaryColor: ConstantsVar.appColor,
+                  ),
                 ),
               ),
             ),

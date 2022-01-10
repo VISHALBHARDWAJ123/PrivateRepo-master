@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -11,7 +10,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/AppWishlist/AddToWishlistResponse.dart';
 import 'package:untitled2/AppPages/AppWishlist/RemoveItemWishListReposnse.dart';
-import 'package:untitled2/AppPages/AppWishlist/ShareResponse.dart';
 import 'package:untitled2/AppPages/AppWishlist/WishlistResponse.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';

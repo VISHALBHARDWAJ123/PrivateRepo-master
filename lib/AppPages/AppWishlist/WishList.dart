@@ -272,7 +272,7 @@ class _WishlistScreenState extends State<WishlistScreen>
                             return Container(
                               width: 100.w,
                               child: Container(
-                                height: 20.h,
+                                height: 22.h,
                                 child: Stack(
                                   children: <Widget>[
                                     Container(
@@ -666,54 +666,58 @@ class _WishlistScreenState extends State<WishlistScreen>
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 64.w,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    fontSize: 4.w,
-                                    fontWeight: FontWeight.bold,
-                                    color: ConstantsVar.appColor,
+                        SafeArea(
+                          bottom: true,
+                          maintainBottomViewPadding: true,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: 64.w,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      fontSize: 4.w,
+                                      fontWeight: FontWeight.bold,
+                                      color: ConstantsVar.appColor,
+                                    ),
                                   ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              TextButton(
-                                child: Text(
-                                  'Share',
-                                  style: TextStyle(
-                                    fontSize: 4.w,
-                                    fontWeight: FontWeight.bold,
-                                    color: ConstantsVar.appColor,
+                                TextButton(
+                                  child: Text(
+                                    'Share',
+                                    style: TextStyle(
+                                      fontSize: 4.w,
+                                      fontWeight: FontWeight.bold,
+                                      color: ConstantsVar.appColor,
+                                    ),
                                   ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      final _formProvider =
+                                          Provider.of<cartCounter>(context,
+                                              listen: false);
+                                      _formProvider.shareMyWishlist(
+                                        customerId: customerId,
+                                        friendEmail: _friendEmailCtrl!.text,
+                                        customerEmail: _customerEmailCtrl!.text,
+                                        ctx: context,
+                                        apiToken: apiToken,
+                                        message: _messageCtrl!.text,
+                                      );
+                                    }
+                                  },
                                 ),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _formKey.currentState!.save();
-                                    final _formProvider =
-                                        Provider.of<cartCounter>(context,
-                                            listen: false);
-                                    _formProvider.shareMyWishlist(
-                                      customerId: customerId,
-                                      friendEmail: _friendEmailCtrl!.text,
-                                      customerEmail: _customerEmailCtrl!.text,
-                                      ctx: context,
-                                      apiToken: apiToken,
-                                      message: _messageCtrl!.text,
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
