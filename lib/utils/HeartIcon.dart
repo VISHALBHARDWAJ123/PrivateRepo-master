@@ -70,6 +70,9 @@ class HeartIcon {
 
   static const IconData delete_sweep = IconData(0xe800, fontFamily: _kFontFamDelete, );
 
+  static const _kFontFamHeart = 'HeartIcom';
+
+  static const IconData heart2 = IconData(0xe800, fontFamily: _kFontFamHeart,fontPackage: _kFontPkg );
 
   // static const IconData instagramNew = IconData(0xf16d, fontFamily: _kFontFamInsta, );
 

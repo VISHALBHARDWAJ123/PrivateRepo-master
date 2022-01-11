@@ -51,6 +51,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
   var isWishListed = false;
   bool _willGo = true;
 
+  var _preSelected;
+
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     if (mounted)
@@ -98,6 +100,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
   List<String> _selectedList = [];
   var customerGuid;
   bool isExtra = false;
+  String _attributeText = '';
   bool isListIdSelected = false;
 
   bool _isVisibility = false;
@@ -201,6 +204,16 @@ class _NewProductDetailsState extends State<NewProductDetails>
                   isExtra = true;
                   productAttributeName =
                       initialDatas!.productAttributes![0].name;
+                  if (initialDatas!.productAttributes![0].values.length != 0) {
+                    String _xyz = ' included \n' +
+                        '\[' +
+                        initialDatas!
+                            .productAttributes![0].values[0].priceAdjustment +
+                        '\]';
+                    _attributeText = productAttributeName + _xyz;
+                    _preSelected = initialDatas!
+                        .productAttributes![0].values[0].isPreSelected;
+                  }
                 });
                 for (int i = 0;
                     i < initialDatas!.productAttributes![0].values.length;
@@ -230,6 +243,8 @@ class _NewProductDetailsState extends State<NewProductDetails>
                 setState(() {
                   _isVisibility = true;
                   assemblyCharges = '';
+                  _attributeText = '';
+                  _preSelected = false;
                 });
               }
             })
@@ -799,165 +814,204 @@ class _NewProductDetailsState extends State<NewProductDetails>
                           ),
                           Visibility(
                             visible: isExtra,
-                            child: InkWell(
-                              onTap: () async {
-                                showModalBottomSheet<dynamic>(
-                                  // context and builder are
-                                  // required properties in this widget
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (BuildContext context) {
-                                    // we set up a container inside which
-                                    // we create center column and display text
-                                    return Container(
-                                      width: 100.w,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.65,
+                            child: _preSelected == false
+                                ? InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet<dynamic>(
+                                        // context and builder are
+                                        // required properties in this widget
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          // we set up a container inside which
+                                          // we create center column and display text
+                                          return Container(
+                                            width: 100.w,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.65,
 
-                                      // height: 60.h,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 6.0),
-                                            child: AutoSizeText(
-                                              productAttributeName,
-                                              maxLines: 1,
-                                              maxFontSize: 18,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Scrollbar(
-                                              isAlwaysShown: true,
-                                              child: ListView(
-                                                children: [
-                                                  SimpleGroupedCheckbox<String>(
-                                                    isLeading: true,
-                                                    itemsTitle:
-                                                        _giftCardPriceList
-                                                            .map((e) => e.name)
-                                                            .toList(),
-                                                    controller:
-                                                        _groupController!,
-                                                    values: _giftCardPriceList
-                                                        .map((e) => e.id)
-                                                        .toList(),
-                                                    onItemSelected: (val) {
-                                                      _selectedList.clear();
-                                                      _selectedList.addAll(val);
-                                                      data = '';
-                                                      data = _groupController!
-                                                          .selectedItem
-                                                          .join(",");
-
-                                                      print(data);
-                                                      setState(() {});
-                                                    },
+                                            // height: 60.h,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6.0),
+                                                  child: AutoSizeText(
+                                                    productAttributeName,
+                                                    maxLines: 1,
+                                                    maxFontSize: 18,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 8.0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Scrollbar(
+                                                    isAlwaysShown: true,
+                                                    child: ListView(
                                                       children: [
-                                                        InkWell(
-                                                          onTap: () {
-                                                            if (mounted)
-                                                              Future.delayed(
-                                                                      Duration
-                                                                          .zero)
-                                                                  .then((value) =>
-                                                                      setState(
-                                                                          () {
-                                                                        _groupController!
-                                                                            .deselectAll();
-                                                                        data =
-                                                                            '';
-                                                                        _selectedList
-                                                                            .clear();
-                                                                      }));
-                                                            Navigator.pop(
-                                                                context);
+                                                        SimpleGroupedCheckbox<
+                                                            String>(
+                                                          isLeading: true,
+                                                          itemsTitle:
+                                                              _giftCardPriceList
+                                                                  .map((e) =>
+                                                                      e.name)
+                                                                  .toList(),
+                                                          controller:
+                                                              _groupController!,
+                                                          values:
+                                                              _giftCardPriceList
+                                                                  .map((e) =>
+                                                                      e.id)
+                                                                  .toList(),
+                                                          onItemSelected:
+                                                              (val) {
+                                                            _selectedList
+                                                                .clear();
+                                                            _selectedList
+                                                                .addAll(val);
+                                                            data = '';
+                                                            data =
+                                                                _groupController!
+                                                                    .selectedItem
+                                                                    .join(",");
+
+                                                            print(data);
+                                                            setState(() {});
                                                           },
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .red)),
-                                                            width: 30.w,
-                                                            height: 35,
-                                                            child: Center(
-                                                                child: Text(
-                                                                    'Cancel')),
-                                                          ),
-                                                          // color: Colors.transparent,
                                                         ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .red)),
-                                                            width: 30.w,
-                                                            height: 35,
-                                                            child: Center(
-                                                                child: Text(
-                                                                    'Apply')),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      8.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  if (mounted)
+                                                                    Future.delayed(Duration
+                                                                            .zero)
+                                                                        .then((value) =>
+                                                                            setState(() {
+                                                                              _groupController!.deselectAll();
+                                                                              data = '';
+                                                                              _selectedList.clear();
+                                                                            }));
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              Colors.red)),
+                                                                  width: 30.w,
+                                                                  height: 35,
+                                                                  child: Center(
+                                                                      child: Text(
+                                                                          'Cancel')),
+                                                                ),
+                                                                // color: Colors.transparent,
+                                                              ),
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              Colors.red)),
+                                                                  width: 30.w,
+                                                                  height: 35,
+                                                                  child: Center(
+                                                                      child: Text(
+                                                                          'Apply')),
+                                                                ),
+                                                                // color: Colors.transparent,
+                                                              ),
+                                                            ],
                                                           ),
-                                                          // color: Colors.transparent,
                                                         ),
                                                       ],
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 4.6.h,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4.0,
+                                        ),
+                                        child: Center(
+                                          child: AutoSizeText(
+                                            productAttributeName,
+                                            maxLines: 1,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                height: 4.6.h,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4.0,
-                                  ),
-                                  child: Center(
-                                    child: AutoSizeText(
-                                      productAttributeName,
-                                      maxLines: 1,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Visibility(
+                                    visible:
+                                        _attributeText == '' ? false : true,
+                                    child: Container(
+                                      height: 4.6.h,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 2,
+                                          horizontal: 2,
+                                        ),
+                                        child: AutoSizeText(
+                                          _attributeText,
+                                          wrapWords: true,
+                                          softWrap: true,
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: ConstantsVar.appColor,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: ConstantsVar.appColor,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
                           ),
                         ],
                       ),

@@ -77,13 +77,7 @@ class _ProductListState extends State<ProductList> {
         child: Scaffold(
           appBar: new AppBar(
             actions: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
-                child: InkWell(
-                  child: Icon(Icons.search),
-                ),
-              ),
+
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),

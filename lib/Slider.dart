@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:play_kit/play_kit.dart';
@@ -203,59 +205,66 @@ class _SliderClassState extends State<SliderClass> {
                     elevation: 10,
                     shape: CircleBorder(),
                     child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: LikeButton(
-                        onTap: (isLiked) async {
-                          _isLiked == false
-                              ? checkGiftCard()
-                              : await ApiCalls.removeFromWishlist(
-                                  apiToken: apiToken,
-                                  customerId: customerId,
-                                  productId: productId,
-                                  productName: productName,
-                                  imageUrl: images[0],
-                                  context: context,
-                                ).then(
-                                  (value) => setState(() => _isLiked = value));
+                      padding: const EdgeInsets.only(top: 6,left: 6,bottom: 4,right: 4),
+                      child: Center(
+                        child: LikeButton(
 
-                          return _isLiked;
-                        },
-                        size: IconTheme.of(context).size! + 4,
-                        circleColor: CircleColor(
-                          start: ConstantsVar.appColor,
-                          end: ConstantsVar.appColor,
+                          bubblesSize: 15,
+                          circleSize: 20,
+                          onTap: (isLiked) async {
+                            _isLiked == false
+                                ? checkGiftCard()
+                                : await ApiCalls.removeFromWishlist(
+                                    apiToken: apiToken,
+                                    customerId: customerId,
+                                    productId: productId,
+                                    productName: productName,
+                                    imageUrl: images[0],
+                                    context: context,
+                                  ).then((value) =>
+                                    setState(() => _isLiked = value));
+
+                            return _isLiked;
+                          },
+                          // size: IconTheme.of(context).size! + 4,
+                          circleColor: CircleColor(
+                            start: ConstantsVar.appColor,
+                            end: ConstantsVar.appColor,
+                          ),
+                          isLiked: _isLiked,
+                          bubblesColor: BubblesColor(
+                            dotPrimaryColor: ConstantsVar.appColor,
+                            dotSecondaryColor: Colors.green,
+                          ),
+                          // isLiked: isWishlisted,
+                          likeBuilder: (bool isLiked) {
+                            return Center(
+                              child: Icon(
+                                FontAwesomeIcons.solidHeart,
+                                color: isLiked ? _color : Colors.grey,
+                                size: IconTheme.of(context).size!,
+                              ),
+                            );
+                          },
                         ),
-                        isLiked: _isLiked,
-                        bubblesColor: BubblesColor(
-                          dotPrimaryColor: ConstantsVar.appColor,
-                          dotSecondaryColor: ConstantsVar.appColor,
-                        ),
-                        // isLiked: isWishlisted,
-                        likeBuilder: (bool isLiked) {
-                          return Icon(
-                            HeartIcon.heart,
-                            color: isLiked ? _color : Colors.grey,
-                            size: IconTheme.of(context).size!,
-                          );
-                        },
                       ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () async {
-                      await myKey
-                          .capture()
-                          .then((image) async {
+                      await myKey.capture().then((image) async {
                         if (image != null) {
                           final directory =
                               await getApplicationDocumentsDirectory();
                           final imagePath =
                               await File('${directory.path}/image.png')
                                   .create();
-                          await imagePath.writeAsBytes(image).whenComplete(() async=> await Share.shareFiles([imagePath.path],
-                              text:
-                              'View product: $productUrl'));
-print(image);
+                          await imagePath.writeAsBytes(image).whenComplete(
+                              () async => await Share.shareFiles(
+                                  [imagePath.path],
+                                  text: 'View product: $productUrl'));
+                          print(image);
+
                           /// Share Plugin
 
                         }
@@ -265,10 +274,12 @@ print(image);
                       elevation: 10,
                       shape: CircleBorder(),
                       child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Icon(
-                          Icons.share,
-                          color: ConstantsVar.appColor,
+                        padding: const EdgeInsets.only(top:7.0,right: 9,left: 7,bottom: 7),
+                        child: Center(
+                          child: Icon(
+                            Icons.share,
+                            color: ConstantsVar.appColor,
+                          ),
                         ),
                       ),
                     ),
@@ -291,8 +302,7 @@ print(image);
           widget.senderEmail.isEmpty ||
           widget.senderEmail == '' ||
           widget.senderName.isEmpty ||
-          widget.senderName == ''
-          ) {
+          widget.senderName == '') {
         Fluttertoast.showToast(
             msg:
                 'Please check following fields: Recipient Name,\nRecipient Email,\nSender Name,\nSender Email,\nTHE Special On Gift Card UAE.');

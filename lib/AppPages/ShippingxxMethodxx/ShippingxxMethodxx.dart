@@ -134,6 +134,7 @@ class _ShippingMethodState extends State<ShippingMethod> {
                         return Card(
                           child: Container(
                             child: CheckboxListTile(
+                              activeColor: ConstantsVar.appColor,
                               value: isSelected,
                               onChanged: (bool? value) {
                                 setState(() {

@@ -47,6 +47,8 @@ class HomeScreenMain extends StatefulWidget {
 
 class _HomeScreenMainState extends State<HomeScreenMain>
     with WidgetsBindingObserver {
+  var isFirstTime;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -60,6 +62,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         print('appLifeCycleState paused');
         break;
       case AppLifecycleState.detached:
+        ConstantsVar.prefs.setBool('isFirstTime', true);
         // TODO: Handle this case.
         print('I am detached');
         break;
@@ -114,8 +117,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   Future initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
+    isFirstTime = ConstantsVar.prefs.getBool('isFirstTime') ?? true;
 
-    print(_previousTimeStamp);
+    print('Is First Time:- ${isFirstTime}');
 
     setState(() {});
   }
@@ -161,7 +165,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     });
     progressDialog.show();
     final url = Uri.parse(BuildConfig.base_url + 'apis/GetHomeScreenPopup');
-    print('Ads Url'+url.toString());
+    print('Ads Url' + url.toString());
     try {
       var response = await get(url, headers: ApiCalls.header);
       progressDialog.dismiss();
@@ -169,61 +173,96 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         adsResponse = AdsResponse.fromJson(
           jsonDecode(response.body),
         );
-        Fluttertoast.showToast(msg: 'Hi there i am ad');
-        if (_previousTimeStamp != '' && _previousTimeStamp != null) {
-          var _currentTimeStamp = DateTime.now();
-          Fluttertoast.showToast(msg: 'Hi there i am ad');
-          if (adsResponse.active == true &&
-              adsResponse.status.contains('Success') &&
-              (userId == null || userId == '') &&
-              _currentTimeStamp
-                      .difference(DateTime.parse(_previousTimeStamp))
-                      .inMinutes >=
-                  adsResponse.intervalTime) {
-            Fluttertoast.showToast(msg: 'Greater then');
-            showDialog(
-                    // barrierColor: Colors.transparent,
-                    builder: (BuildContext context) {
-                      return isVisibled
-                          ? Container()
-                          : AdsDialog(
-                              responseHtml: adsResponse.responseData,
-                            );
-                    },
-                    context: context)
-                .then((value) {
-              progressDialog.dismiss();
-            });
-            print('TimeDifference:-');
-            ConstantsVar.prefs.setString(
-                'previousTimeStamp',
-              _currentTimeStamp
-                    .toIso8601String());
+
+        if ((userId == null || userId == '' )&& isFirstTime == true) {
+          print('Guest user ');
+          /*Ads For Guest User for first time*/
+          showDialog(
+                  // barrierColor: Colors.transparent,
+                  builder: (BuildContext context) {
+                    return isVisibled
+                        ? Container()
+                        : AdsDialog(
+                            responseHtml: adsResponse.responseData,
+                          );
+                  },
+                  context: context)
+              .then((value) {
+            progressDialog.dismiss();
+          });
+          ConstantsVar.prefs.setBool('isFirstTime', false);
+        } else
+          if ((userId == null || userId == '') && isFirstTime == false) {
+          /*Ads For Guest User when ads appeared already*/
+                     print('Guest user after ads appear once $_previousTimeStamp');
+          if (_previousTimeStamp != '' && _previousTimeStamp != null) {
+            var _currentTimeStamp = DateTime.now();
+
+            if (adsResponse.active == true &&
+                adsResponse.status.contains('Success') &&
+                _currentTimeStamp
+                        .difference(DateTime.parse(_previousTimeStamp))
+                        .inHours >=
+
+                    adsResponse.intervalTime) {
+              showDialog(
+                      // barrierColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return isVisibled
+                            ? Container()
+                            : AdsDialog(
+                                responseHtml: adsResponse.responseData,
+                              );
+                      },
+                      context: context)
+                  .then((value) {
+                progressDialog.dismiss();
+              });
+              print('TimeDifference:-');
+              ConstantsVar.prefs.setString(
+                  'previousTimeStamp', _currentTimeStamp.toIso8601String());
+            }
           } else {
-            Fluttertoast.showToast(msg: 'Not Greater then');
+            print('Sorry Can\;t show popup now');
+            print('Guest user after ads appear once but no time stamp');
+            ConstantsVar.prefs.setString(
+                'previousTimeStamp', DateTime.now().toIso8601String());
           }
         } else {
-          if (adsResponse.active == true &&
-              adsResponse.status.contains('Success') &&
-              (userId == null || userId == '')) {
-            showDialog(
-                    // barrierColor: Colors.transparent,
-                    builder: (BuildContext context) {
-                      return isVisibled
-                          ? Container()
-                          : AdsDialog(
-                              responseHtml: adsResponse.responseData,
-                            );
-                    },
-                    context: context)
-                .then((value) {
-              progressDialog.dismiss();
-            });
+          /*Ads For Login User*/
+            print('Logged in  user ');
+          if (_previousTimeStamp != '' && _previousTimeStamp != null) {
+            var _currentTimeStamp = DateTime.now();
+
+            if (adsResponse.active == true &&
+                adsResponse.status.contains('Success') &&
+                _currentTimeStamp
+                        .difference(DateTime.parse(_previousTimeStamp))
+                        .inHours >=
+                    adsResponse.intervalTime) {
+              showDialog(
+                      // barrierColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return isVisibled
+                            ? Container()
+                            : AdsDialog(
+                                responseHtml: adsResponse.responseData,
+                              );
+                      },
+                      context: context)
+                  .then((value) {
+                progressDialog.dismiss();
+              });
+              print('TimeDifference:-');
+              ConstantsVar.prefs.setString(
+                  'previousTimeStamp', _currentTimeStamp.toIso8601String());
+            }
+          } else {
+            print('Sorry Can\;t show popup now');
+
+            ConstantsVar.prefs.setString(
+                'previousTimeStamp', DateTime.now().toIso8601String());
           }
-          ConstantsVar.prefs.setString(
-              'previousTimeStamp',
-         DateTime.now().toIso8601String()
-                  );
         }
       });
     } on Exception catch (e) {
@@ -283,7 +322,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         }
       },
       child: Container(
-        color: Colors.black,
+        color: Colors.white,
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: <Widget>[
@@ -1310,8 +1349,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           ? setState(() {
               showLoading = false;
             })
-          :
-      null;
+          : null;
       // print(response.body);
       HomeResponse1 homeResponse =
           HomeResponse1.fromJson(jsonDecode(response.body));

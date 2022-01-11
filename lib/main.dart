@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
@@ -11,7 +10,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,16 +20,12 @@ import 'package:untitled2/utils/CartBadgeCounter/SearchModel/SearchNotifier.dart
 import 'AppPages/SplashScreen/SplashScreen.dart';
 import 'Constants/ConstantVariables.dart';
 
-
-
-
-
 Future<void> setFireStoreData(
   RemoteMessage message,
 ) async {
-  Firebase.initializeApp();
   String formattedDate =
-      DateFormat('yyyy-MM-dd – kk:mm').format(message.sentTime!);
+      DateFormat('dd-MM-yyyy hh:mm').format(message.sentTime!);
+
   final refrence = FirebaseFirestore.instance.collection('UserNotifications');
   Map<String, dynamic> data = {
     'Title': message.notification!.title,
@@ -46,16 +41,14 @@ Future<void> _messageHandler(RemoteMessage message) async {
   print('background message message got ');
 }
 
-
-// Toggle this for testing Crashlytics in your app locally.
-
-
 Future<void> main() async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
+      FirebaseMessaging.onBackgroundMessage(_messageHandler);
       ConstantsVar.prefs = await SharedPreferences.getInstance();
+      ConstantsVar.prefs.setBool('isFirstTime', true);
       AwesomeNotifications().initialize(
         'resource://drawable/playstore', // icon for your app notification
         [
@@ -112,14 +105,14 @@ Future<void> main() async {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
             .then((_) async {
           FirebaseMessaging.instance;
-          FirebaseMessaging.onBackgroundMessage(_messageHandler);
+
           FirebaseMessaging.onMessage.listen((event) {
             _messageHandler(event);
           });
           // FirebaseMessaging.onMessage.;
           runApp(DevicePreview(
             enabled: false,
-            builder:(context)=> MultiProvider(
+            builder: (context) => MultiProvider(
               providers: [
                 ChangeNotifierProvider(
                   create: (_) => cartCounter(),
@@ -137,7 +130,8 @@ Future<void> main() async {
                     // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
                     return MediaQuery(
                       child: child!,
-                      data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
+                      data:
+                          MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
                     );
                   },
                   home: SplashScreen(),

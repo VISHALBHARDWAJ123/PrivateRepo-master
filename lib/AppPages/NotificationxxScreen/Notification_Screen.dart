@@ -95,7 +95,7 @@ class _NotificationClassState extends State<NotificationClass> {
                 title: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: AutoSizeText(
-                    doc['Title'],
+                    doc['Title']??'',
                     style: TextStyle(
                       fontSize: 4.5.w,
                       color: Colors.black,
@@ -117,11 +117,14 @@ class _NotificationClassState extends State<NotificationClass> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: AutoSizeText(
-                  doc['Time'] == null ? '' : doc['Time'],
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: AutoSizeText(
+                     doc['Time']??'',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               )
