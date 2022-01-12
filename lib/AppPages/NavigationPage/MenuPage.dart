@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:untitled2/AppPages/AppWishlist/WishList.dart';
@@ -520,10 +521,13 @@ class _MenuPageState extends State<MenuPage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Card(
-                                  child: Icon(
-                                    Icons.shopping_cart,
-                                    color: ConstantsVar.appColor,
-                                    size: 34,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Icon(
+                                      FontAwesomeIcons.solidHeart,
+                                      color: ConstantsVar.appColor,
+                                      size: 30,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(

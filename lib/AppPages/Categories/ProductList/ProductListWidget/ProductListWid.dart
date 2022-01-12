@@ -90,7 +90,7 @@ class _ProdListWidgetState extends State<ProdListWidget> {
         isLoading = true;
         pageIndex1 = pageIndex1 + 1;
         print('$pageIndex1');
-        ApiCalls.getCategoryById('${widget.id}', context, pageIndex1)
+        ApiCalls.getCategoryById('${widget.id}', context, pageIndex1, customerId: widget.guestCustomerId)
             .then((value) {
           ProductListModel model = ProductListModel.fromJson(value);
           if (widget.products.length == model.productCount) {

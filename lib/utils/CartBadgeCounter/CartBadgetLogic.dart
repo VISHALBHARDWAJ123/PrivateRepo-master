@@ -65,11 +65,12 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  void getSearchCategory() async {
+  void getSearchCategory({required String customerId}) async {
+    print('Search Screen CustomerId for categories:- $customerId');
     _isVisible = true;
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetCategoryPage');
     _isVisible = true;
-    _searchCategoryList = await ApiCalls.getSearchCategory();
+    _searchCategoryList = await ApiCalls.getSearchCategory(customerId: '');
     _isVisible = false;
     notifyListeners();
   }
@@ -82,13 +83,14 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
     _isVisible = false;
     notifyListeners();
   }
+
   void shareMyWishlist(
       {required String apiToken,
-        required String customerId,
-        required String message,
-        required String customerEmail,
-        required String friendEmail,
-        required BuildContext ctx}) async {
+      required String customerId,
+      required String message,
+      required String customerEmail,
+      required String friendEmail,
+      required BuildContext ctx}) async {
     CustomProgressDialog _progressDialog = CustomProgressDialog(
       ctx,
       loadingWidget: SpinKitRipple(
@@ -114,15 +116,15 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
       jsonDecode(response)['status'].toString() != 'Failed'
           ? Fluttertoast.showToast(msg: 'Wishlist Shared!')
           : showDialog(
-        context: ctx,
-        builder: (ctx) => CustomDialogBox(
-          descriptions: 'Sharing Failed!\n' +
-              jsonDecode(response)['Message'].toString(),
-          text: 'Not Go',
-          img: 'MyAssets/logo.png',
-          isOkay: false,
-        ),
-      );
+              context: ctx,
+              builder: (ctx) => CustomDialogBox(
+                descriptions: 'Sharing Failed!\n' +
+                    jsonDecode(response)['Message'].toString(),
+                text: 'Not Go',
+                img: 'MyAssets/logo.png',
+                isOkay: false,
+              ),
+            );
 
       _progressDialog.dismiss();
     }
@@ -131,8 +133,8 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
 
   void deleteWishlist(
       {required String apiToken,
-        required String customerId,
-        required BuildContext ctx}) async {
+      required String customerId,
+      required BuildContext ctx}) async {
     CustomProgressDialog _progressDialog = CustomProgressDialog(
       ctx,
       loadingWidget: SpinKitRipple(
@@ -156,24 +158,24 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
       jsonDecode(response)['status'].toString() != 'Failed'
           ? _resetWishlist(apiToken: apiToken, customerId: customerId)
           : showDialog(
-        context: ctx,
-        builder: (ctx) => CustomDialogBox(
-          descriptions: 'Can\'t delete Wishlist!\n' +
-              jsonDecode(response)['Message'].toString(),
-          text: 'Not Go',
-          img: 'MyAssets/logo.png',
-          isOkay: false,
-        ),
-      );
+              context: ctx,
+              builder: (ctx) => CustomDialogBox(
+                descriptions: 'Can\'t delete Wishlist!\n' +
+                    jsonDecode(response)['Message'].toString(),
+                text: 'Not Go',
+                img: 'MyAssets/logo.png',
+                isOkay: false,
+              ),
+            );
 
       _progressDialog.dismiss();
     }
     notifyListeners();
   }
 
-  _resetWishlist({required String customerId,required String apiToken}) {
-    Fluttertoast.showToast(msg: 'Wishlist Deleted',toastLength: Toast.LENGTH_LONG);
+  _resetWishlist({required String customerId, required String apiToken}) {
+    Fluttertoast.showToast(
+        msg: 'Wishlist Deleted', toastLength: Toast.LENGTH_LONG);
     getWishlist(customerId: customerId, apiToken: apiToken);
   }
-
 }

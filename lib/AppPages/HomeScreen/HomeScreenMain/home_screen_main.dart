@@ -164,7 +164,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           ConstantsVar.prefs.getString('previousTimeStamp') ?? '';
     });
     progressDialog.show();
-    final url = Uri.parse(BuildConfig.base_url + 'apis/GetHomeScreenPopup');
+    print(
+        'Show ads popup Customer Id:-${ConstantsVar.prefs.getString('guestCustomerID')}');
+    final url = Uri.parse(BuildConfig.base_url +
+        'apis/GetHomeScreenPopup?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print('Ads Url' + url.toString());
     try {
       var response = await get(url, headers: ApiCalls.header);
@@ -174,7 +177,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           jsonDecode(response.body),
         );
 
-        if ((userId == null || userId == '' )&& isFirstTime == true) {
+        if ((userId == null || userId == '') && isFirstTime == true) {
           print('Guest user ');
           /*Ads For Guest User for first time*/
           showDialog(
@@ -191,10 +194,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             progressDialog.dismiss();
           });
           ConstantsVar.prefs.setBool('isFirstTime', false);
-        } else
-          if ((userId == null || userId == '') && isFirstTime == false) {
+        } else if ((userId == null || userId == '') && isFirstTime == false) {
           /*Ads For Guest User when ads appeared already*/
-                     print('Guest user after ads appear once $_previousTimeStamp');
+          print('Guest user after ads appear once $_previousTimeStamp');
           if (_previousTimeStamp != '' && _previousTimeStamp != null) {
             var _currentTimeStamp = DateTime.now();
 
@@ -203,7 +205,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                 _currentTimeStamp
                         .difference(DateTime.parse(_previousTimeStamp))
                         .inHours >=
-
                     adsResponse.intervalTime) {
               showDialog(
                       // barrierColor: Colors.transparent,
@@ -230,7 +231,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           }
         } else {
           /*Ads For Login User*/
-            print('Logged in  user ');
+          print('Logged in  user ');
           if (_previousTimeStamp != '' && _previousTimeStamp != null) {
             var _currentTimeStamp = DateTime.now();
 
@@ -334,10 +335,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                   Positioned(
                     top: .1,
                     child: Container(
-                      height: 50.h,
+                      constraints: BoxConstraints.tightFor(
+                        width: 100.w,
+                        height: 38.h,
+                      ),
                       child: Image.asset(
                         "MyAssets/banner.jpg",
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -1287,10 +1291,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     _productIds = ConstantsVar.prefs.getStringList('RecentProducts')!;
     // _productIds = List<String>.from(dynamicList).toList();
     apiToken = ConstantsVar.prefs.getString('apiTokken')!;
-    print('Hello There' + _productIds.join(','));
+    print('Recently Viewed Products CustomerId:-' +
+        ConstantsVar.prefs.getString('guestCustomerID')!);
+
     setState(() {});
-    final url =
-        Uri.parse(BuildConfig.base_url + 'apis/GetRecentlyViewedProducts');
+    final url = Uri.parse(BuildConfig.base_url +
+        'apis/GetRecentlyViewedProducts?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print('.Nop.RecentlyViewedProducts=${_productIds.join(',')}');
     try {
       var jsonResponse = await http.get(
@@ -1334,8 +1340,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       color: Colors.red,
       size: 90,
     ));
+    print(
+        'Home Screen Customer Id:- ${ConstantsVar.prefs.getString('guestCustomerID')}');
     progressDialog.show();
-    String url = BuildConfig.base_url + BuildConfig.banners;
+    String url = BuildConfig.base_url +
+        BuildConfig.banners +
+        '?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}';
 
     print('home_url $url');
 
@@ -1695,7 +1705,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       context, CupertinoPageRoute(builder: (context) => className));
 
   void getSearchSuggestions() async {
-    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetActiveUAECategories');
+    print(
+        'Search Suggestion Customer Id:- ${ConstantsVar.prefs.getString('guestCustomerID')}');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetActiveUAECategories?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
 
     var response = await http.get(
       uri,
@@ -1719,6 +1732,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   }
 
   Future getTopicPage() async {
+    print(
+        'Topic Page Customer Id:- ${ConstantsVar.prefs.getString('guestCustomerID')}');
     final uri = Uri.parse(BuildConfig.base_url + 'apis/GetAppTopics');
     try {
       var response = await http.get(uri, headers: ApiCalls.header);

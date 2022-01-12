@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
     Map<String, dynamic> data = {
       'Title': message.notification!.title,
       'Desc': message.notification!.body,
-      'Time': formattedDate
+      'Time':Timestamp.fromDate(message.sentTime!)
     };
     refrence.add(data);
   }

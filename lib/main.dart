@@ -25,12 +25,12 @@ Future<void> setFireStoreData(
 ) async {
   String formattedDate =
       DateFormat('dd-MM-yyyy hh:mm').format(message.sentTime!);
-
+  Fluttertoast.showToast(msg: '${Timestamp.fromDate(message.sentTime!)}');
   final refrence = FirebaseFirestore.instance.collection('UserNotifications');
   Map<String, dynamic> data = {
     'Title': message.notification!.title,
     'Desc': message.notification!.body,
-    'Time': formattedDate
+    'Time': Timestamp.fromDate(message.sentTime!)
   };
   refrence.doc().set(data);
 }

@@ -47,7 +47,7 @@ class _ProductListState extends State<ProductList> {
     super.initState();
     print('Hi Myself Product List Page');
     getId().whenComplete(() =>
-        ApiCalls.getCategoryById('${widget.categoryId}', context, 0)
+        ApiCalls.getCategoryById('${widget.categoryId}', context, 0, customerId: guestCustomerId)
             .then((value) {
           setState(() {
             try {

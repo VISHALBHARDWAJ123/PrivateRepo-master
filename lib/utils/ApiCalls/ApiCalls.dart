@@ -31,12 +31,15 @@ class ApiCalls {
   static final String cookie = '.Nop.Customer=' + customerGuid!;
   static final header = {'Cookie': cookie.trim()};
 
-  static Future getCategoryById(
-      String id, BuildContext context, int pageIndex) async {
+  /*Product List*/
+  static Future getCategoryById(String id, BuildContext context, int pageIndex,
+      {required String customerId}) async {
     print('Testing Api');
 
+    print('Products List Customer Id:- ' + customerId);
+
     final baseUrl = Uri.parse(BuildConfig.base_url +
-        'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16');
+        'apis/GetProductsByCategoryId?CategoryId=$id&pageindex=$pageIndex&pagesize=16&CustId=$customerId');
 
     print('Product List Api>>>>' + baseUrl.toString());
 
@@ -51,6 +54,7 @@ class ApiCalls {
     }
   }
 
+  /*Get Api Token*/
   static Future getApiTokken(BuildContext context) async {
     print('I am being beaten');
     final body = {'email': 'apitest@gmail.com', 'password': '12345'};
@@ -79,6 +83,7 @@ class ApiCalls {
     }
   }
 
+  /*Login*/
   static Future login(
     BuildContext context,
     String email,
@@ -222,6 +227,7 @@ class ApiCalls {
     }
   }
 
+  /*Forgot Password*/
   static Future forgotPass(
     BuildContext context,
     String email,
@@ -242,8 +248,12 @@ class ApiCalls {
     }
   }
 
-  static Future getCategory(BuildContext context) async {
-    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetCategoryPage');
+  /*Get Categories*/
+  static Future getCategory(BuildContext context,
+      {required String customerId}) async {
+    print('Category Customer Id:- $customerId');
+    final uri = Uri.parse(
+        BuildConfig.base_url + 'apis/GetCategoryPage?CustId=$customerId');
     try {
       var response = await http.get(uri, headers: header);
       dynamic result = jsonDecode(response.body);
@@ -254,6 +264,7 @@ class ApiCalls {
     }
   }
 
+  /*Show Product Details*/
   static Future getProductData(String productId, BuildContext ctx,
       [String? customerid]) async {
     final url = BuildConfig.base_url +
@@ -271,6 +282,7 @@ class ApiCalls {
     }
   }
 
+  /*Add To Cart*/
   static Future addToCart(
       String customerId,
       String productId,
@@ -346,6 +358,7 @@ class ApiCalls {
     }
   }
 
+  /*Show Cart*/
   static Future showCart(String customerId) async {
     //
     final uri = Uri.parse(BuildConfig.base_url +
@@ -399,12 +412,6 @@ class ApiCalls {
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
     }
-  }
-
-  static Stream<dynamic> cartFun(String customerId) {
-    return Stream.periodic(
-      Duration(minutes: 1),
-    ).asyncMap((event) => showCart(customerId));
   }
 
   /// Apply coupon code on the cart //
@@ -757,6 +764,7 @@ class ApiCalls {
     }
   }
 
+/*Add New Address*/
   static Future addNewAddress(BuildContext context, String uriName,
       String apiToken, String customerId, String snippingModel) async {
     final body = {
@@ -780,6 +788,7 @@ class ApiCalls {
     }
   }
 
+  /*Add and select new billing address*/
   static Future addBillingORShippingAddress(
       BuildContext context,
       String uriName,
@@ -817,6 +826,7 @@ class ApiCalls {
     }
   }
 
+  /*Add and select new shipping address*/
   static Future addAndSelectShippingAddress(
       String apiToken, String customerId, String id2) async {
     final uri = Uri.parse(
@@ -843,12 +853,13 @@ class ApiCalls {
     }
   }
 
-// For BadgeCounter
+  /*For Badge Count*/
+
   static Future readCounter({required String customerGuid}) async {
     int count = 0;
     // print(header);
-    final uri = Uri.parse(
-        BuildConfig.base_url + 'apis/CartCount?cutomerGuid=$customerGuid');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/CartCount?cutomerGuid=$customerGuid&CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     // var response = await http.get(uri, headers: header);
 
     var response = await http.get(uri, headers: header);
@@ -876,12 +887,13 @@ class ApiCalls {
 
   /* Edit and save address */
   static Future editAndSaveAddress(
-      BuildContext context,
-      String apiToken,
-      String customerId,
-      String addressId,
-      String data,
-      bool isEditAddress) async {
+    BuildContext context,
+    String apiToken,
+    String customerId,
+    String addressId,
+    String data,
+    bool isEditAddress,
+  ) async {
     context.loaderOverlay.show(
       widget: SpinKitRipple(
         color: Colors.red,
@@ -948,6 +960,7 @@ class ApiCalls {
     }
   }
 
+/*Show Billing Address*/
   static Future getBillingAddress(
       String apiToken, String customerId, BuildContext ctx) async {
     final queryParameters = {
@@ -980,6 +993,7 @@ class ApiCalls {
     }
   }
 
+  /*Subscribe Product*/
   static Future subscribeProdcut(
       {required String productId,
       required String customerId,
@@ -1043,7 +1057,9 @@ class ApiCalls {
     }
   }
 
-  static Future<List<ResponseDatum>> getSearchCategory() async {
+  /*Search Categories*/
+  static Future<List<ResponseDatum>> getSearchCategory(
+      {required String customerId}) async {
     List<ResponseDatum> _searchCategoryList = [];
     final uri =
         Uri.parse(BuildConfig.base_url + 'apis/GetSearchScreenCategories');
@@ -1063,6 +1079,7 @@ class ApiCalls {
     }
   }
 
+  /*Add To Wishlist*/
   static Future<bool> addToWishlist({
     required String apiToken,
     required String customerId,
@@ -1124,6 +1141,7 @@ class ApiCalls {
     }
   }
 
+  /*Show Wishlist*/
   static Future<List<WishlistItem>> getWishlist(
       {required String apiToken, required String customerId}) async {
     List<WishlistItem> items = [];
@@ -1160,6 +1178,7 @@ class ApiCalls {
     }
   }
 
+  /*Remove Product from Wishlist*/
   static Future<bool> removeFromWishlist(
       {required String apiToken,
       required String customerId,
@@ -1206,6 +1225,7 @@ class ApiCalls {
     }
   }
 
+  /*Save Recently View Product */
   static void saveRecentProduct({required String productId}) {
     List<String> productIDs = ConstantsVar.prefs
         .getStringList('RecentProducts')!
@@ -1236,6 +1256,7 @@ class ApiCalls {
     }
   }
 
+  /*Logic for rotating recently viewed products*/
   static void justRotate({
     required List<String> someArray,
     required String productId,
@@ -1251,6 +1272,7 @@ class ApiCalls {
     ConstantsVar.prefs.setStringList('RecentProducts', someArray);
   }
 
+  /*Share Wishlist*/
   static Future<String> shareWishlist({
     required String customerEmail,
     required String friendEmail,
@@ -1278,6 +1300,7 @@ class ApiCalls {
     return result;
   }
 
+  /*Delete Wishlist*/
   static Future<String> deleteWishlist({
     required String apiToken,
     required String customerId,

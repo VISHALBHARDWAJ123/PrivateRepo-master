@@ -315,8 +315,8 @@ class _HomeCategoryState extends State<HomeCategory> {
                 ),
                 Container(
                   height: 100.h,
-                  child: FutureBuilder<dynamic>(
-                    future: ApiCalls.getCategory(context),
+                  child: FutureBuilder<dynamic>(                                          
+                    future: ApiCalls.getCategory(context, customerId: ConstantsVar.prefs.getString('guestCustomerID')??''),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.hasData) {

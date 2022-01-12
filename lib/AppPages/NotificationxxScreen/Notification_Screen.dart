@@ -5,6 +5,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -79,57 +80,68 @@ class _NotificationClassState extends State<NotificationClass> {
             )));
   }
 
-  Card buildListTile(DocumentSnapshot doc) => Card(
-        child: Container(
-          height: 16.h,
-          child: Stack(
-            children: [
-              ListTile(
-                leading: CircleAvatar(
-                  child: ClipOval(
-                    child: Image.asset(
-                      'MyAssets/logo.png',
-                    ),
+  Card buildListTile(DocumentSnapshot doc) {
+    return Card(
+      child: Container(
+        height: 16.h,
+        child: Stack(
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                child: ClipOval(
+                  child: Image.asset(
+                    'MyAssets/logo.png',
                   ),
                 ),
-                title: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: AutoSizeText(
-                    doc['Title']??'',
-                    style: TextStyle(
-                      fontSize: 4.5.w,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ),
-                subtitle: Padding(
-                  child: AutoSizeText(
-                    doc['Desc'],
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    maxLines: 3,
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                ),
-                // trailing: ,
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: AutoSizeText(
-                     doc['Time']??'',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: AutoSizeText(
+                  doc['Title'] ?? '',
+                  style: TextStyle(
+                    fontSize: 4.5.w,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+              subtitle: Padding(
+                child: AutoSizeText(
+                  doc['Desc'],
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  maxLines: 3,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+              ),
+              // trailing: ,
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: AutoSizeText(
+                  getTimefromTimeStamp(
+                        timestamp: doc['Time'],
+                      ) ??
+                      '',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
-      );
+      ),
+    );
+  }
+
+  String getTimefromTimeStamp({required Timestamp timestamp}) {
+    final DateTime date = timestamp.toDate();
+
+    return DateFormat('dd-MM-yyyy hh:mm a').format(date.toLocal());
+  }
 }

@@ -160,11 +160,8 @@ class _SearchPageState extends State<SearchPage>
     // Fluttertoast.showToast(msg: initialData);
     if (widget.isScreen == true) {
       if (initialData.toLowerCase().contains('return') ||
-          initialData.toLowerCase().contains('policy')||
-          initialData
-              .toString()
-              .toLowerCase()
-              .contains('refund')) {
+          initialData.toLowerCase().contains('policy') ||
+          initialData.toString().toLowerCase().contains('refund')) {
         _returnBool = true;
         widget.enableCategory = false;
         // etState(() => );
@@ -344,20 +341,19 @@ class _SearchPageState extends State<SearchPage>
                                                     .contains('return') ||
                                                 val
                                                     .toLowerCase()
-                                                    .contains('policy')||
+                                                    .contains('policy') ||
                                                 val
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains('refund')) {
                                               _returnBool = true;
                                               widget.enableCategory = false;
-                                              searchedProducts=[];
-                                              isFilterVisible=false;
+                                              searchedProducts = [];
+                                              isFilterVisible = false;
                                               // etState(() => );
                                               setState(() {});
                                               // Fluttertoast.showToast(msg: 'YEAH BOIE!!!!!!!!');
                                             } else {
-
                                               searchProducts(val, 0, '', '')
                                                   .then(
                                                       (value) => print(value));
@@ -425,15 +421,15 @@ class _SearchPageState extends State<SearchPage>
                                                     _searchController.text
                                                         .toString()
                                                         .toLowerCase()
-                                                        .contains('policy')||
+                                                        .contains('policy') ||
                                                     _searchController.text
                                                         .toString()
                                                         .toLowerCase()
                                                         .contains('refund')) {
                                                   _returnBool = true;
                                                   widget.enableCategory = false;
-                                                  searchedProducts=[];
-                                                  isFilterVisible=false;
+                                                  searchedProducts = [];
+                                                  isFilterVisible = false;
                                                   // etState(() => );
                                                   setState(() {});
                                                   // Fluttertoast.showToast(msg: 'YEAH BOIE!!!!!!!!');
@@ -541,8 +537,10 @@ class _SearchPageState extends State<SearchPage>
                                                                 _height = 0.h;
                                                                 noMore = false;
                                                                 _catId = '';
-                                                                searchedProducts=[];
-                                                                isFilterVisible=false;
+                                                                searchedProducts =
+                                                                    [];
+                                                                isFilterVisible =
+                                                                    false;
                                                                 pageIndex = 0;
                                                               });
 
@@ -689,103 +687,142 @@ class _SearchPageState extends State<SearchPage>
                                             // elevation: 2,
                                             child: OpenContainer(
                                               closedElevation: 2,
-                                              openBuilder: (BuildContext context,
-                                                  void Function({Object? returnValue})
-                                                  action) {
+                                              openBuilder: (BuildContext
+                                                      context,
+                                                  void Function(
+                                                          {Object? returnValue})
+                                                      action) {
                                                 print(searchedProducts[index]
                                                     .discountedPrice);
                                                 return NewProductDetails(
                                                   productId:
-                                                  searchedProducts[index].id.toString(),
+                                                      searchedProducts[index]
+                                                          .id
+                                                          .toString(),
                                                   screenName: 'Product List',
                                                   // customerId: ConstantsVar.customerID,
                                                 );
                                               },
-                                              closedBuilder: (BuildContext context,
-                                                  void Function() action) {
+                                              closedBuilder:
+                                                  (BuildContext context,
+                                                      void Function() action) {
                                                 return Column(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                                      CrossAxisAlignment.center,
                                                   children: [
                                                     Container(
                                                       constraints:
-                                                      BoxConstraints
-                                                          .tightFor(
+                                                          BoxConstraints
+                                                              .tightFor(
                                                         width: 42.w,
                                                         height: 42.w,
                                                       ),
                                                       color: Colors.white,
-                                                      padding: EdgeInsets.all(4.0),
+                                                      padding:
+                                                          EdgeInsets.all(4.0),
                                                       child: CachedNetworkImage(
-                                                        imageUrl: searchedProducts[index].productPicture,
+                                                        imageUrl:
+                                                            searchedProducts[
+                                                                    index]
+                                                                .productPicture,
                                                         fit: BoxFit.cover,
-                                                        placeholder: (context, reason) =>
-                                                        new SpinKitRipple(
+                                                        placeholder: (context,
+                                                                reason) =>
+                                                            new SpinKitRipple(
                                                           color: Colors.red,
                                                           size: 90,
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
-                                                      padding: EdgeInsets.symmetric(
-                                                          vertical: 8.0, horizontal: 8.0),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 8.0,
+                                                              horizontal: 8.0),
                                                       width:
-                                                      MediaQuery.of(context).size.width,
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
                                                       // color: Color(0xFFe0e1e0),
                                                       child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
                                                         crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
                                                           // sorry mam nahi hua!
                                                           Container(
                                                             child: Text(
-                                                              searchedProducts[index].name,
+                                                              searchedProducts[
+                                                                      index]
+                                                                  .name,
                                                               overflow:
-                                                              TextOverflow.ellipsis,
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               maxLines: 3,
                                                               // minFontSize:.w,
                                                               style: TextStyle(
-                                                                  color: Colors.black,
-                                                                  fontSize: 4.5.w,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      4.5.w,
                                                                   fontWeight:
-                                                                  FontWeight.bold),
-                                                              textAlign: TextAlign.start,
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
                                                             ),
                                                             constraints:
-                                                            BoxConstraints.tightFor(
-                                                                width: 48.w,
-                                                                height: 18.w),
+                                                                BoxConstraints
+                                                                    .tightFor(
+                                                                        width: 48
+                                                                            .w,
+                                                                        height:
+                                                                            18.w),
                                                           ),
                                                           Padding(
                                                             padding:
-                                                            const EdgeInsets.symmetric(
-                                                                vertical: 6.0),
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        6.0),
                                                             child: Column(
                                                               crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               children: [
                                                                 AutoSizeText(
-                                                                 searchedProducts[index]
-                                                                      .discountedPrice ==''
-                                                                      ? searchedProducts[index]
-                                                                      .price
-                                                                      : searchedProducts[index]
-                                                                      .discountedPrice,
+                                                                  searchedProducts[index]
+                                                                              .discountedPrice ==
+                                                                          ''
+                                                                      ? searchedProducts[
+                                                                              index]
+                                                                          .price
+                                                                      : searchedProducts[
+                                                                              index]
+                                                                          .discountedPrice,
                                                                   maxLines: 1,
                                                                   style: TextStyle(
                                                                       height: 1,
                                                                       color: Colors
-                                                                          .grey.shade600,
-                                                                      fontSize: 4.w,
+                                                                          .grey
+                                                                          .shade600,
+                                                                      fontSize:
+                                                                          4.w,
                                                                       fontWeight:
-                                                                      FontWeight.bold),
+                                                                          FontWeight
+                                                                              .bold),
                                                                   textAlign:
-                                                                  TextAlign.start,
+                                                                      TextAlign
+                                                                          .start,
                                                                 ),
                                                               ],
                                                             ),
@@ -794,35 +831,59 @@ class _SearchPageState extends State<SearchPage>
                                                       ),
                                                     ),
                                                     AddCartBtn(
-                                                      productId: searchedProducts[index].id,
+                                                      productId:
+                                                          searchedProducts[
+                                                                  index]
+                                                              .id,
                                                       // width: 2.w,
                                                       isTrue: true,
                                                       guestCustomerId:
-                                                      guestCustomerId,
-                                                      checkIcon: searchedProducts[index].stockQuantity
-                                                          .contains('Out of stock')
-                                                          ? Icon(HeartIcon.cross)
+                                                          guestCustomerId,
+                                                      checkIcon: searchedProducts[
+                                                                  index]
+                                                              .stockQuantity
+                                                              .contains(
+                                                                  'Out of stock')
+                                                          ? Icon(
+                                                              HeartIcon.cross)
                                                           : Icon(Icons.check),
-                                                      text: searchedProducts[index].stockQuantity
-                                                          .contains('Out of stock')
-                                                          ? 'Out of Stock'.toUpperCase()
-                                                          : 'ADD TO CArt'.toUpperCase(),
-                                                      color: searchedProducts[index].stockQuantity
-                                                          .contains('Out of stock')
+                                                      text: searchedProducts[
+                                                                  index]
+                                                              .stockQuantity
+                                                              .contains(
+                                                                  'Out of stock')
+                                                          ? 'Out of Stock'
+                                                              .toUpperCase()
+                                                          : 'ADD TO CArt'
+                                                              .toUpperCase(),
+                                                      color: searchedProducts[
+                                                                  index]
+                                                              .stockQuantity
+                                                              .contains(
+                                                                  'Out of stock')
                                                           ? Colors.grey
-                                                          : ConstantsVar.appColor,
-                                                      isGiftCard: searchedProducts[index].isGiftCard,
+                                                          : ConstantsVar
+                                                              .appColor,
+                                                      isGiftCard:
+                                                          searchedProducts[
+                                                                  index]
+                                                              .isGiftCard,
                                                       isProductAttributeAvail:
-                                                      false,
+                                                          false,
                                                       attributeId: '',
                                                       recipEmail: '',
                                                       email: '',
                                                       message: '',
                                                       name: '',
                                                       recipName: '',
-                                                      productImage: searchedProducts[index].productPicture,
+                                                      productImage:
+                                                          searchedProducts[
+                                                                  index]
+                                                              .productPicture,
                                                       productName:
-                                                      searchedProducts[index].name,
+                                                          searchedProducts[
+                                                                  index]
+                                                              .name,
                                                       // fontSize: 12,
                                                     )
                                                   ],
@@ -831,14 +892,16 @@ class _SearchPageState extends State<SearchPage>
                                             ),
                                           ),
                                           Visibility(
-                                            visible: searchedProducts[index].discountPercent
-                                                .trim()
-                                                .length !=
-                                                0
+                                            visible: searchedProducts[index]
+                                                        .discountPercent
+                                                        .trim()
+                                                        .length !=
+                                                    0
                                                 ? true
                                                 : false,
                                             child: Padding(
-                                              padding: const EdgeInsets.all(4.0),
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
                                               child: Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Container(
@@ -852,14 +915,19 @@ class _SearchPageState extends State<SearchPage>
                                                           height: 15.w,
                                                         ),
                                                         Align(
-                                                          alignment: Alignment.center,
+                                                          alignment:
+                                                              Alignment.center,
                                                           child: Text(
-                                                            searchedProducts[index]
+                                                            searchedProducts[
+                                                                    index]
                                                                 .discountPercent,
                                                             style: TextStyle(
-                                                              fontWeight: FontWeight.w800,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
                                                               fontSize: 4.8.w,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                             ),
                                                           ),
                                                         )
@@ -883,8 +951,9 @@ class _SearchPageState extends State<SearchPage>
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) =>
-                                        TopicPage(paymentUrl: 'https://www.theone.com/terms-conditions-3'),
+                                    builder: (context) => TopicPage(
+                                        paymentUrl:
+                                            'https://www.theone.com/terms-conditions-3'),
                                   ),
                                 );
                               },
@@ -1032,8 +1101,10 @@ class _SearchPageState extends State<SearchPage>
       isListVisible = false;
       _mainString = _selectedSeatsId + _selectedColorsId + _selectedFaimlyId;
     });
+    print('Search Product Customer Id:- ' +
+        ConstantsVar.prefs.getString('guestCustomerID')!);
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$productName&pagesize=10&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice&specId=$_mainString');
+        'apis/GetSearch?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}&keyword=$productName&pagesize=10&pageindex=$pageNumber&minPrice=$minPrice&maxPrice=$maxPrice&specId=$_mainString');
 
     print(uri);
     try {
@@ -1151,8 +1222,12 @@ class _SearchPageState extends State<SearchPage>
       pageIndex++;
       print(pageIndex);
     });
+
+
+    print('Loading new searched product customerID:- '+ConstantsVar.prefs.getString('guestCustomerID')!);
+
     final uri = Uri.parse(BuildConfig.base_url +
-        'apis/GetSearch?keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId = $_mainString');
+        'apis/GetSearch?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}&keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId = $_mainString');
     print(uri);
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
@@ -1263,7 +1338,7 @@ class _SearchPageState extends State<SearchPage>
                             pageIndex = 0;
                             _selectedSeatsId = '';
                             _selectedSeatsId = value.id + ',';
-                            searchedProducts=[];
+                            searchedProducts = [];
                             searchProducts(_searchController.text, pageIndex);
                           });
                         },
@@ -1281,7 +1356,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedSeatsId = '';
                             pageIndex = 0;
-                            searchedProducts=[];
+                            searchedProducts = [];
                             searchProducts(_searchController.text, pageIndex);
                           });
                         },
@@ -1332,7 +1407,7 @@ class _SearchPageState extends State<SearchPage>
                             _selectedColorsId = value.id + ',';
                             pageIndex = 0;
                             _selectedColors = value.name;
-                            searchedProducts=[];
+                            searchedProducts = [];
                           });
                           searchProducts(_searchController.text, pageIndex);
                         },
@@ -1348,7 +1423,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedColorsId = '';
                             pageIndex = 0;
-                            searchedProducts=[];
+                            searchedProducts = [];
                             searchProducts(_searchController.text, pageIndex);
                           });
                         },
@@ -1398,7 +1473,7 @@ class _SearchPageState extends State<SearchPage>
                             _selectedFaimlyId = '';
                             _selectedFaimlyId = value.id + ',';
                             pageIndex = 0;
-                            searchedProducts=[];
+                            searchedProducts = [];
                             searchProducts(_searchController.text, pageIndex);
                           });
                         },
@@ -1417,7 +1492,7 @@ class _SearchPageState extends State<SearchPage>
 
                             _selectedFaimlyId = '';
                             pageIndex = 0;
-                            searchedProducts=[];
+                            searchedProducts = [];
                             searchProducts(_searchController.text, pageIndex);
                           });
                         },
@@ -1515,7 +1590,7 @@ class _SearchPageState extends State<SearchPage>
                         _height = 0;
                         isAlreadySet = true;
                         pageIndex = 0;
-                        searchedProducts=[];
+                        searchedProducts = [];
                         setState(() => isVisible = false);
                       });
 
@@ -1661,8 +1736,16 @@ class _SearchCategoriesState extends State<SearchCategories> {
   @override
   void initState() {
     super.initState();
+    initSharedPrefs();
     final postMdl = Provider.of<cartCounter>(context, listen: false);
-    postMdl.getSearchCategory();
+    postMdl.getSearchCategory(
+        customerId: ConstantsVar.prefs.getString('guestCustomerID')!);
+    setState(() {});
+  }
+
+  void initSharedPrefs() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
+    setState(() {});
   }
 
   @override
