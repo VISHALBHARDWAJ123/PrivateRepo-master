@@ -1734,7 +1734,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   Future getTopicPage() async {
     print(
         'Topic Page Customer Id:- ${ConstantsVar.prefs.getString('guestCustomerID')}');
-    final uri = Uri.parse(BuildConfig.base_url + 'apis/GetAppTopics');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetAppTopics?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
+    print('Topic Page Url:- ${uri}');
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
       TopicPageResponse result = TopicPageResponse.fromJson(

@@ -134,7 +134,8 @@ class _NotificationClassState extends State<NotificationClass> {
               ),
             )
           ],
-        ),
+        )
+        ,
       ),
     );
   }
