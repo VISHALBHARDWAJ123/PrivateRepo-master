@@ -138,9 +138,8 @@ Future<void> main() async {
                   darkTheme: ThemeData(
                     pageTransitionsTheme: PageTransitionsTheme(
                       builders: {
-                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                        TargetPlatform.iOS:
-                            CupertinoWillPopScopePageTransionsBuilder(),
+                        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
                       },
                     ),
                     fontFamily: 'Arial',

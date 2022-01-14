@@ -5,6 +5,7 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:like_button/like_button.dart';
@@ -51,6 +52,8 @@ class _WishlistScreenState extends State<WishlistScreen>
   String _customerEmail = '';
   TextEditingController? _customerEmailCtrl, _friendEmailCtrl, _messageCtrl;
 
+  // late FocusScopeNode currentFocus;
+
   void initSharedPrefs() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance().whenComplete(
       () => setState(
@@ -74,6 +77,8 @@ class _WishlistScreenState extends State<WishlistScreen>
 
   @override
   Widget build(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
     return SafeArea(
       top: true,
       bottom: true,
@@ -245,7 +250,381 @@ class _WishlistScreenState extends State<WishlistScreen>
                                   color: ConstantsVar.appColor,
                                 ),
                                 iconSize: 22,
-                                onPressed: _showModelSheet,
+                                onPressed: () {
+                                  if (!currentFocus.hasPrimaryFocus) {
+                                    currentFocus.unfocus();
+                                  }
+
+                                  FocusScope.of(context).requestFocus(FocusNode());
+
+                                  _loginId != '' || _loginId.length != 0
+                                      ? showModalBottomSheet<void>(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(13)),
+                                          backgroundColor: Colors.white,
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (BuildContext context) {
+                                            return Form(
+                                              key: _formKey,
+                                              child: Container(
+                                                width: 100.w,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.80,
+
+                                                // height: 60.h,
+                                                child: Scaffold(
+                                                  resizeToAvoidBottomInset:
+                                                      true,
+                                                  body: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 6.0),
+                                                        child: AutoSizeText(
+                                                          'SHARE YOUR WISHLIST',
+                                                          maxLines: 1,
+                                                          maxFontSize: 18,
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        child: VsScrollbar(
+                                                          controller:
+                                                              _scrollController,
+                                                          isAlwaysShown: true,
+                                                          child: ListView(
+                                                            controller:
+                                                                _scrollController,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 2.h,
+                                                              ),
+                                                              ListTile(
+                                                                title:
+                                                                    AutoSizeText(
+                                                                  'YOUR EMAIL:',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        4.w,
+                                                                  ),
+                                                                ),
+                                                                subtitle:
+                                                                    TextFormField(
+                                                                  autovalidateMode:
+                                                                      AutovalidateMode
+                                                                          .onUserInteraction,
+                                                                  validator:
+                                                                      (email) {
+                                                                    if (isEmailValid(
+                                                                        email!))
+                                                                      return null;
+                                                                    else
+                                                                      return 'Enter a valid email address';
+                                                                  },
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    border:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  controller:
+                                                                      _customerEmailCtrl,
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .next,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              addVerticalSpace(
+                                                                  10),
+                                                              ListTile(
+                                                                title:
+                                                                    AutoSizeText(
+                                                                  'FRIEND\'S EMAIL:',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        4.w,
+                                                                  ),
+                                                                ),
+                                                                subtitle:
+                                                                    TextFormField(
+                                                                  autovalidateMode:
+                                                                      AutovalidateMode
+                                                                          .onUserInteraction,
+                                                                  validator:
+                                                                      (email) {
+                                                                    if (isEmailValid(
+                                                                        email!))
+                                                                      return null;
+                                                                    else
+                                                                      return 'Enter a valid email address';
+                                                                  },
+
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    border:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .next,
+
+                                                                  maxLines: 1,
+                                                                  // maxLength: 20,
+                                                                  controller:
+                                                                      _friendEmailCtrl,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              addVerticalSpace(
+                                                                  10),
+                                                              ListTile(
+                                                                title:
+                                                                    AutoSizeText(
+                                                                  'MESSAGE:',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        4.w,
+                                                                  ),
+                                                                ),
+                                                                subtitle:
+                                                                    TextFormField(
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .next,
+                                                                  autovalidateMode:
+                                                                      AutovalidateMode
+                                                                          .onUserInteraction,
+                                                                  maxLines: 4,
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                    border:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: ConstantsVar
+                                                                            .appColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  controller:
+                                                                      _messageCtrl,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SafeArea(
+                                                        bottom: true,
+                                                        maintainBottomViewPadding:
+                                                            true,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            left: 64.w,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              TextButton(
+                                                                child: Text(
+                                                                  'Cancel',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        4.w,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: ConstantsVar
+                                                                        .appColor,
+                                                                  ),
+                                                                ),
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              ),
+                                                              TextButton(
+                                                                child: Text(
+                                                                  'Share',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        4.w,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: ConstantsVar
+                                                                        .appColor,
+                                                                  ),
+                                                                ),
+                                                                onPressed: () {
+                                                                  SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+
+                                                                  if (_formKey
+                                                                      .currentState!
+                                                                      .validate()) {
+                                                                    _formKey
+                                                                        .currentState!
+                                                                        .save();
+                                                                    final _formProvider = Provider.of<
+                                                                            cartCounter>(
+                                                                        context,
+                                                                        listen:
+                                                                            false);
+                                                                    _formProvider
+                                                                        .shareMyWishlist(
+                                                                      customerId:
+                                                                          customerId,
+                                                                      friendEmail:
+                                                                          _friendEmailCtrl!
+                                                                              .text,
+                                                                      customerEmail:
+                                                                          _customerEmailCtrl!
+                                                                              .text,
+                                                                      ctx:
+                                                                          context,
+                                                                      apiToken:
+                                                                          apiToken,
+                                                                      message:
+                                                                          _messageCtrl!
+                                                                              .text,
+                                                                    );
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Fluttertoast.showToast(
+                                          msg:
+                                              "Only Registered customer can use this feature.",
+                                          toastLength: Toast.LENGTH_LONG,
+                                        );
+                                },
                               ),
                             ],
                           ),
@@ -482,255 +861,6 @@ class _WishlistScreenState extends State<WishlistScreen>
     //         child: ,
     //       );
     //     });
-
-    _loginId != '' || _loginId.length != 0
-        ? showModalBottomSheet<void>(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
-            backgroundColor: Colors.white,
-            context: context,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return Form(
-                key: _formKey,
-                child: Container(
-                  width: 100.w,
-                  height: MediaQuery.of(context).size.height * 0.65,
-
-                  // height: 60.h,
-                  child: Scaffold(
-                    resizeToAvoidBottomInset: true,
-                    body: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6.0),
-                          child: AutoSizeText(
-                            'SHARE YOUR WISHLIST',
-                            maxLines: 1,
-                            maxFontSize: 18,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: VsScrollbar(
-                            controller: _scrollController,
-                            isAlwaysShown: true,
-                            child: ListView(
-                              controller: _scrollController,
-                              children: [
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                ListTile(
-                                  title: AutoSizeText(
-                                    'YOUR EMAIL:',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 4.w,
-                                    ),
-                                  ),
-                                  subtitle: TextFormField(
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (email) {
-                                      if (isEmailValid(email!))
-                                        return null;
-                                      else
-                                        return 'Enter a valid email address';
-                                    },
-                                    decoration: InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                    ),
-                                    maxLines: 1,
-                                    controller: _customerEmailCtrl,
-                                    textInputAction: TextInputAction.next,
-
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(10),
-                                ListTile(
-                                  title: AutoSizeText(
-                                    'FRIEND\'S EMAIL:',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 4.w,
-                                    ),
-                                  ),
-                                  subtitle: TextFormField(
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (email) {
-                                      if (isEmailValid(email!))
-                                        return null;
-                                      else
-                                        return 'Enter a valid email address';
-                                    },
-
-                                    decoration: InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                    ),
-                                    textInputAction: TextInputAction.next,
-
-                                    maxLines: 1,
-                                    // maxLength: 20,
-                                    controller: _friendEmailCtrl,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(10),
-                                ListTile(
-                                  title: AutoSizeText(
-                                    'MESSAGE:',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 4.w,
-                                    ),
-                                  ),
-                                  subtitle: TextFormField(
-                                    textInputAction: TextInputAction.next,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    maxLines: 4,
-                                    decoration: InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: ConstantsVar.appColor,
-                                        ),
-                                      ),
-                                    ),
-                                    validator: (val) {
-                                      if (_messageCtrl!.text.length < 5) {
-                                        return 'Please enter proper message ';
-                                      }
-                                      return null;
-                                    },
-                                    controller: _messageCtrl,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SafeArea(
-                          bottom: true,
-                          maintainBottomViewPadding: true,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 64.w,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      fontSize: 4.w,
-                                      fontWeight: FontWeight.bold,
-                                      color: ConstantsVar.appColor,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text(
-                                    'Share',
-                                    style: TextStyle(
-                                      fontSize: 4.w,
-                                      fontWeight: FontWeight.bold,
-                                      color: ConstantsVar.appColor,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _formKey.currentState!.save();
-                                      final _formProvider =
-                                          Provider.of<cartCounter>(context,
-                                              listen: false);
-                                      _formProvider.shareMyWishlist(
-                                        customerId: customerId,
-                                        friendEmail: _friendEmailCtrl!.text,
-                                        customerEmail: _customerEmailCtrl!.text,
-                                        ctx: context,
-                                        apiToken: apiToken,
-                                        message: _messageCtrl!.text,
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          )
-        : Fluttertoast.showToast(
-            msg: "Only Registered customer can use this feature.",
-            toastLength: Toast.LENGTH_LONG,
-          );
   }
 
   final colorizeTextStyle =

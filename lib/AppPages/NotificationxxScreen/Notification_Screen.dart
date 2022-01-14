@@ -124,8 +124,7 @@ class _NotificationClassState extends State<NotificationClass> {
                 child: AutoSizeText(
                   getTimefromTimeStamp(
                         timestamp: doc['Time'],
-                      ) ??
-                      '',
+                      ),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
