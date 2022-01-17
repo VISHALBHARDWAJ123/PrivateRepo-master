@@ -348,7 +348,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     // final uri = Uri.parse(
     //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
 
-    final uri = Uri.parse(BuildConfig.base_url + 'customer/SendOTP');
+    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/SendOTP');
     print(uri);
     final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
 
@@ -423,7 +423,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
       'otpReference': otpRefs,
     };
     print(body);
-    String url2 = BuildConfig.base_url + 'customer/VerifyOTP';
+    String url2 = BuildConfig.base_url + 'AppCustomer/VerifyOTP';
     final url = Uri.parse(url2);
     print('OTP Verification Url>>>>>>>>>>>>>>>>>' + url.toString());
 
@@ -469,7 +469,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     String dataBody = ConstantsVar.prefs.getString('regBody')!;
     print(dataBody);
 
-    String urL = BuildConfig.base_url + 'Customer/CustomerRegister';
+    String urL = BuildConfig.base_url + 'AppCustomer/CustomerRegister';
 
     final body = {'apiToken': apiToken, 'CustomerGuid': guid, 'data': dataBody};
     final url = Uri.parse(urL);

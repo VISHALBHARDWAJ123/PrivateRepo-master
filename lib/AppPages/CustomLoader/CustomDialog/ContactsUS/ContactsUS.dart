@@ -280,9 +280,12 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                         },
                         defaultWidget: Text(
                           'SUBMIT',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                         color: ConstantsVar.appColor,
-                        type: LoadingButtonType.Raised,
+                        type: LoadingButtonType.Flat,
                         borderRadius: 0,
                       ),
                     ),
@@ -331,11 +334,11 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
     });
 
     // String url = ;
-    final uri =
-        Uri.parse(BuildConfig.base_url + 'customer/SendContactUsEnquiry?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'AppCustomer/SendContactUsEnquiry?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print(uri);
     try {
-      var response = await post(uri, body: body,headers: ApiCalls.header);
+      var response = await post(uri, body: body, headers: ApiCalls.header);
 
       print('${jsonDecode(response.body)}');
       showSucessDialog(jsonDecode(response.body));

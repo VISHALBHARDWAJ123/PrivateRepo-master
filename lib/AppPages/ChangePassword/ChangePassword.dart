@@ -390,7 +390,7 @@ class _ChangePasswordState extends State<ChangePassword>
       ),
     };
     final uri =
-        Uri.parse(BuildConfig.base_url + 'customer/ChangeCustomerPassword?');
+        Uri.parse(BuildConfig.base_url + 'AppCustomer/ChangeCustomerPassword?');
     var resp = await post(uri, body: body,headers:ApiCalls.header);
 
     try {

@@ -1,10 +1,10 @@
 class BuildConfig {
-  static final String base_url = 'https://www.theone.com/';
-  static final String base_url_for_apis = 'www.theone.com';
+  static final String base_url = 'https://dev.theone.com/';
+  static final String base_url_for_apis = 'dev.theone.com';
 
   static final String banners = 'apis/GetBanners';
   static final String token_url = 'token/GetToken';
-  static final String remove_cart_item_url = 'customer/RemoveCartItems';
+  static final String remove_cart_item_url = 'AppCustomer/RemoveCartItems';
   static final String apply_coupon_url = 'apis/ApplyCoupon';
   static final String remove_coupon_url = 'apis/RemoveCoupon';
   static final String gift_card_url = 'apis/ApplyGiftCard';
@@ -20,12 +20,12 @@ class BuildConfig {
   static final String show_order_summary_url = 'apis/GetOrderSummary';
   static final String update_cart_url = 'apis/UpdateCart';
 
-  static final String edit_address = "Customer/EditAddress";
+  static final String edit_address = "AppCustomer/EditAddress";
 
   static var countryCode = '971';
 
   static var uaeCountryCode = '+971';
   static const phnVal = 9;
 
-  static final String delete_address = 'customer/DeleteCustomerAddress';
+  static final String delete_address = 'AppCustomer/DeleteCustomerAddress';
 }

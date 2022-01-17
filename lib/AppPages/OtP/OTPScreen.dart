@@ -70,7 +70,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
     // final uri = Uri.parse(
     //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
 
-    final uri = Uri.parse(BuildConfig.base_url + 'customer/SendOTP');
+    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/SendOTP');
     print(uri);
     final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
     try {
@@ -309,7 +309,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
       'otpReference': otpRefs,
     };
     print(body);
-    String url2 = BuildConfig.base_url + 'customer/VerifyOTP';
+    String url2 = BuildConfig.base_url + 'AppCustomer/VerifyOTP';
     final url = Uri.parse(url2);
     print(url);
 
@@ -339,7 +339,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
     String dataBody = ConstantsVar.prefs.getString('regBody')!;
     print(dataBody);
 
-    String urL = BuildConfig.base_url + 'Customer/CustomerRegister';
+    String urL = BuildConfig.base_url + 'AppCustomer/CustomerRegister';
     context.loaderOverlay.show(
         widget: SpinKitRipple(
       size: 90,

@@ -91,18 +91,19 @@ class ApiCalls {
     String screenName,
   ) async {
     print(password);
-
+    print('CustomerId:>>>' + ConstantsVar.prefs.getString('guestCustomerID')!);
     ConstantsVar.prefs = await SharedPreferences.getInstance();
     var guestUId = ConstantsVar.prefs.getString('guestGUID');
     ConstantsVar.prefs.setString('sepGuid', guestUId!);
     ConstantsVar.isVisible = true;
-    final uri = Uri.parse(BuildConfig.base_url + 'Customer/LogIn');
+    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/LogIn');
     print(uri);
     print(guestUId);
     final body = {
       'apiToken': ConstantsVar.apiTokken,
       'email': email,
       'UserName': '',
+      "CustId": ConstantsVar.prefs.getString('guestCustomerID'),
       'Password': password,
       'Guid': guestUId
     };
@@ -234,7 +235,7 @@ class ApiCalls {
   ) async {
     String message = '';
     final uri = Uri.parse(BuildConfig.base_url +
-        'customer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
+        'AppCustomer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
 
     try {
       var response = await http.get(uri, headers: header);
@@ -362,7 +363,7 @@ class ApiCalls {
   static Future showCart(String customerId) async {
     //
     final uri = Uri.parse(BuildConfig.base_url +
-        'customer/Cart?apiToken=${ConstantsVar.apiTokken}&CustomerId=$customerId');
+        'AppCustomer/Cart?apiToken=${ConstantsVar.apiTokken}&CustomerId=$customerId');
     print(uri);
     try {
       var response = await http.get(uri, headers: header);
@@ -774,7 +775,7 @@ class ApiCalls {
     };
 
     final uri =
-        Uri.parse(BuildConfig.base_url + 'customer/AddCustomerAddress?');
+        Uri.parse(BuildConfig.base_url + 'AppCustomer/AddCustomerAddress?');
     print(uri);
     try {
       var response = await http.post(uri, body: body, headers: header);
@@ -1147,7 +1148,7 @@ class ApiCalls {
     List<WishlistItem> items = [];
 
     final url = Uri.parse(BuildConfig.base_url +
-        'customer/Wishlist?apiToken=$apiToken&CustId=$customerId');
+        'AppCustomer/Wishlist?apiToken=$apiToken&CustId=$customerId');
     late WishlistResponse response;
     try {
       var jsonResponse = await http.get(url, headers: header);
@@ -1187,7 +1188,7 @@ class ApiCalls {
       required String imageUrl,
       required BuildContext context}) async {
     final url = Uri.parse(BuildConfig.base_url +
-        'customer/RemoveItemWishlist?apiToken=$apiToken&CustId=$customerId&productid=$productId');
+        'AppCustomer/RemoveItemWishlist?apiToken=$apiToken&CustId=$customerId&productid=$productId');
     try {
       var jsonResponse = await http.get(url, headers: header);
       if (jsonDecode(jsonResponse.body)['status'].toString() == 'Success') {
@@ -1281,7 +1282,7 @@ class ApiCalls {
     required String message,
   }) async {
     String result = '';
-    final url = Uri.parse(BuildConfig.base_url + 'Customer/ShareWishlist?');
+    final url = Uri.parse(BuildConfig.base_url + 'AppCustomer/ShareWishlist?');
     try {
       var response = await http.post(url,
           body: {
@@ -1306,7 +1307,7 @@ class ApiCalls {
     required String customerId,
   }) async {
     String result = '';
-    final url = Uri.parse(BuildConfig.base_url + 'Customer/DeleteWishlist');
+    final url = Uri.parse(BuildConfig.base_url + 'AppCustomer/DeleteWishlist');
     try {
       var response = await http.post(url,
           body: {

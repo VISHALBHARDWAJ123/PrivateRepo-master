@@ -100,7 +100,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
               getPickupPoints(addressString);
               paymentUrl = BuildConfig.base_url +
-                  'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=$id&PaymentMethod=Payments.CyberSource';
+                  'AppCustomer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=$id&PaymentMethod=Payments.CyberSource';
               /*************************Get all order summary*********************/
               ApiCalls.showOrderSummary(ConstantsVar.apiTokken.toString(), id)
                   .then(

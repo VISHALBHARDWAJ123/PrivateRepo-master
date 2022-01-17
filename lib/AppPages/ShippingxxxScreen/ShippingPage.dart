@@ -420,7 +420,7 @@ class _ShippingDetailsState extends State<ShippingDetails>
                                 print(value);
                                 context.loaderOverlay.hide();
                                 String paymentUrl = BuildConfig.base_url +
-                                    'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.customerId.toString()}&PaymentMethod=Payments.CyberSource';
+                                    'AppCustomer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.customerId.toString()}&PaymentMethod=Payments.CyberSource';
                                 Navigator.pushReplacement(
                                   context,
                                   CupertinoPageRoute(

@@ -7,6 +7,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:untitled2/AppPages/ShippingxxMethodxx/ShippingxxMethodxx.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/SelectBillingAddressModel/SelectBillAdd.dart';
@@ -129,14 +130,13 @@ class _AddressItemState extends State<AddressItem> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: CustomTextStyle.textFormFieldBold
-                      .copyWith(fontSize: 16),
+                  style:
+                      CustomTextStyle.textFormFieldBold.copyWith(fontSize: 16),
                 ),
               ),
               Utils.getSizedBox(null, 6),
               Container(child: AutoSizeText('Email - ' + widget.email)),
               Utils.getSizedBox(null, 6),
-
               Container(
                 child: AutoSizeText(
                   'Address -' + widget.address1,
@@ -145,15 +145,11 @@ class _AddressItemState extends State<AddressItem> {
                 ),
               ),
               Utils.getSizedBox(null, 6),
-
               Container(
-                  child: AutoSizeText(
-                      'Phone -' + ' ' + widget.phoneNumber)),
+                  child: AutoSizeText('Phone -' + ' ' + widget.phoneNumber)),
               Utils.getSizedBox(null, 6),
-
               Container(
-                  child: AutoSizeText(
-                      'Country -' + ' ' + widget.countryName)),
+                  child: AutoSizeText('Country -' + ' ' + widget.countryName)),
               addVerticalSpace(12),
               Container(
                 color: ConstantsVar.appColor,
@@ -166,49 +162,51 @@ class _AddressItemState extends State<AddressItem> {
                       size: 30,
                     ),
                     onPressed: () async {
+                      CustomProgressDialog _dialog = CustomProgressDialog(
+                        context,
+                        loadingWidget: SpinKitRipple(
+                          color: Colors.red,
+                          size: 40,
+                        ),
+                        dismissable: false,
+                      );
                       print('button bill clicked');
                       if (widget.buttonName.contains('Bill')) {
+                        _dialog.show();
                         await ApiCalls.selectBillingAddress(
                                 ConstantsVar.apiTokken.toString(),
                                 '$guestId',
                                 widget.id.toString())
                             .then((value) {
-                          ConstantsVar.prefs
-                              .setString('addressJsonString', '');
+                          _dialog.dismiss();
+                          ConstantsVar.prefs.setString('addressJsonString', '');
                           SelectBillingAddress map =
                               SelectBillingAddress.fromJson(value);
                           // String
                           if (map.error == null) {
                             //means no error..
-                            context.loaderOverlay.hide();
+                            _dialog.dismiss();
 
-                            var fName = map.selectedaddress.firstName
-                                .toString();
-                            var lName =
-                                map.selectedaddress.lastName.toString();
-                            var email =
-                                map.selectedaddress.email.toString();
+                            var fName =
+                                map.selectedaddress.firstName.toString();
+                            var lName = map.selectedaddress.lastName.toString();
+                            var email = map.selectedaddress.email.toString();
                             var company =
                                 map.selectedaddress.company.toString();
-                            var countryId = map
-                                .selectedaddress.countryId
-                                .toString();
-                            var city =
-                                map.selectedaddress.city.toString();
+                            var countryId =
+                                map.selectedaddress.countryId.toString();
+                            var city = map.selectedaddress.city.toString();
                             var stateProvincId = 12;
                             var address1 =
                                 map.selectedaddress.address1.toString();
                             var address2 =
                                 map.selectedaddress.address2.toString();
-                            var postalCode = map
-                                .selectedaddress.zipPostalCode
-                                .toString();
-                            var phoneNumner = map
-                                .selectedaddress.phoneNumber
-                                .toString();
-                            var faxNumber = map
-                                .selectedaddress.faxNumber
-                                .toString();
+                            var postalCode =
+                                map.selectedaddress.zipPostalCode.toString();
+                            var phoneNumner =
+                                map.selectedaddress.phoneNumber.toString();
+                            var faxNumber =
+                                map.selectedaddress.faxNumber.toString();
 
                             Map<String, dynamic> addressBody = {
                               'FirstName': fName,
@@ -227,8 +225,8 @@ class _AddressItemState extends State<AddressItem> {
 
                             addressJsonString = jsonEncode(addressBody);
                             ConstantsVar.prefs
-                                .setString('addressJsonString',
-                                    addressJsonString)
+                                .setString(
+                                    'addressJsonString', addressJsonString)
                                 .whenComplete(
                                   () => Navigator.push(
                                     context,
@@ -240,24 +238,25 @@ class _AddressItemState extends State<AddressItem> {
                                   ),
                                 );
                           } else {
-                            Fluttertoast.showToast(
-                                msg: map.error.toString());
+                            _dialog.dismiss();
+                            Fluttertoast.showToast(msg: map.error.toString());
                           }
                         });
                       } else {
                         //Means shipping button is clicked on shipping screen
-
+                        _dialog.show();
                         await ApiCalls.selectShippingAddress(
                                 ConstantsVar.apiTokken.toString(),
                                 widget.guestId,
                                 widget.id.toString())
-                            .then((value) {
-                          print('$value');
+                            .then(
+                          (value) {
+                            print('$value');
+                            _dialog.dismiss();
+                            String paymentUrl = BuildConfig.base_url +
+                                'AppCustomer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
 
-                          String paymentUrl = BuildConfig.base_url +
-                              'customer/CreateCustomerOrder?apiToken=${ConstantsVar.apiTokken.toString()}&CustomerId=${widget.guestId.toString()}&PaymentMethod=Payments.CyberSource';
-
-                          Navigator.pushReplacement(
+                            Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => ShippingMethod(
@@ -265,8 +264,10 @@ class _AddressItemState extends State<AddressItem> {
                                   paymentUrl: paymentUrl,
                                   // paymentUrl: paymentUrl),
                                 ),
-                              ));
-                        });
+                              ),
+                            );
+                          },
+                        );
                       }
                     },
                     defaultWidget: AutoSizeText(
@@ -281,7 +282,6 @@ class _AddressItemState extends State<AddressItem> {
                 ),
               ),
               Utils.getSizedBox(null, 6),
-
             ],
           ),
         ),
