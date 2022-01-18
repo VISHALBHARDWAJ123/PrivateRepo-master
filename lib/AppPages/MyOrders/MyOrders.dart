@@ -478,13 +478,13 @@ class _MyOrdersState extends State<MyOrders> with WidgetsBindingObserver {
                                                         ),
                                                       ),
                                                       Visibility(
-                                                        visible: isReturnAvail,
+                                                        visible: false,
                                                         child: SizedBox(
                                                           height: 15,
                                                         ),
                                                       ),
                                                       Visibility(
-                                                        visible: isReturnAvail,
+                                                        visible: false,
                                                         child: Container(
                                                           color: ConstantsVar
                                                               .appColor,

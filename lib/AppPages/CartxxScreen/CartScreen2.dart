@@ -201,6 +201,7 @@ class _CartScreen2State extends State<CartScreen2>
           bottom: true,
           maintainBottomViewPadding: true,
           child: Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: new AppBar(
               leading: widget.isOtherScren == true ? setBackIcon() : null,
               backgroundColor: ConstantsVar.appColor,
@@ -740,7 +741,11 @@ class _CartScreen2State extends State<CartScreen2>
                             ),
                           ),
                           SizedBox(
-                            height: 10.w,
+                            height: 5.w,
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: bottomButtons(context),
                           ),
                         ],
                       ),
@@ -753,10 +758,7 @@ class _CartScreen2State extends State<CartScreen2>
                             child: showloader()),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: bottomButtons(context),
-                    ),
+
                   ],
                 ),
               ),

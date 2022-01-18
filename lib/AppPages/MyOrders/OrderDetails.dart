@@ -543,46 +543,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                 ),
                               ),
                             ),
-                            Visibility(
-                              visible: isReturnAvail,
-                              child: SizedBox(
-                                height: 15,
-                              ),
-                            ),
-                            Visibility(
-                              visible: isReturnAvail,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: AppButton(
-                                    color: ConstantsVar.appColor,
-                                    child: Container(
-                                      width: 100.w,
-                                      height: 2.7.h,
-                                      child: Center(
-                                        child: AutoSizeText(
-                                          'Return'.toUpperCase(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 4.4.w,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () async {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) => ReturnScreen(
-                                            orderId: widget.orderId.toString(),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
+
                             Container(
                               padding: EdgeInsets.all(8.0),
                               width: double.infinity,
@@ -1072,7 +1033,7 @@ class _OrderDetailsState extends State<OrderDetails>
                                   ),
                                 ),
                                 Visibility(
-                                  visible:!isAddressAvailable,
+                                  visible: !isAddressAvailable,
                                   child: Card(
                                     child: Container(
                                       width: 100.w,
@@ -1167,6 +1128,41 @@ class _OrderDetailsState extends State<OrderDetails>
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 4.w,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                         
+                            Visibility(
+                              visible: isReturnAvail,
+                              child:     GestureDetector(
+                                onTap: () async {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ReturnScreen(
+                                        orderId: widget.orderId.toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  child: Container(
+                                    color: Colors.white60,
+                                    width: 100.w,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(3.8.w),
+                                        child: AutoSizeText(
+                                          'Return'.toUpperCase(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 5.5.w,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),

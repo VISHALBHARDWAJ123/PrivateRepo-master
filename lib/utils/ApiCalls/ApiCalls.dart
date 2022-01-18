@@ -76,7 +76,9 @@ class ApiCalls {
         print(responseData);
         return responseData;
       } else {
-        Fluttertoast.showToast(msg: 'Something went wrong');
+        Fluttertoast.showToast(
+            msg: 'Something went wrong. Please try again or reinstall the app',
+            toastLength: Toast.LENGTH_LONG);
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -130,11 +132,14 @@ class ApiCalls {
           context.loaderOverlay.hide();
           return false;
         } else if (responseData.toString().contains('Account is not active')) {
-          Fluttertoast.showToast(msg: 'Account is not active yet.');
+          Fluttertoast.showToast(
+              msg: 'Account is not active yet.',
+              toastLength: Toast.LENGTH_LONG);
 
           return false;
         } else if (responseData.toString().contains('Customer is deleted')) {
-          Fluttertoast.showToast(msg: customerDeleteMessage);
+          Fluttertoast.showToast(
+              msg: customerDeleteMessage, toastLength: Toast.LENGTH_LONG);
         } else {
           Fluttertoast.showToast(
             msg: successfullyLoginMessage,
@@ -407,7 +412,8 @@ class ApiCalls {
       } else {
         progressDialog.dismiss();
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again',
+          toastLength: Toast.LENGTH_LONG,
         );
       }
     } on Exception catch (e) {
@@ -448,11 +454,17 @@ class ApiCalls {
             refresh.requestRefresh(needMove: true);
             success = 'true';
           }
-          Fluttertoast.showToast(msg: data[0]);
+          Fluttertoast.showToast(
+            msg: data[0],
+            toastLength: Toast.LENGTH_LONG,
+          );
         } else {
           List<dynamic> data = map["Message"];
           print(data[0]);
-          Fluttertoast.showToast(msg: data[0]);
+          Fluttertoast.showToast(
+            msg: data[0],
+            toastLength: Toast.LENGTH_LONG,
+          );
         }
       }
     } on Exception catch (e) {
@@ -491,7 +503,10 @@ class ApiCalls {
           refresh.requestRefresh(needMove: true);
         }
         success = 'true';
-        Fluttertoast.showToast(msg: data);
+        Fluttertoast.showToast(
+          msg: data,
+          toastLength: Toast.LENGTH_LONG,
+        );
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -525,7 +540,10 @@ class ApiCalls {
           success = 'true';
         }
 
-        Fluttertoast.showToast(msg: map['Message']);
+        Fluttertoast.showToast(
+          msg: map['Message'],
+          toastLength: Toast.LENGTH_LONG,
+        );
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -561,7 +579,10 @@ class ApiCalls {
           refreshController.requestRefresh(needMove: true);
         }
 
-        Fluttertoast.showToast(msg: map['Message']);
+        Fluttertoast.showToast(
+          msg: map['Message'],
+          toastLength: Toast.LENGTH_LONG,
+        );
       }
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -589,7 +610,8 @@ class ApiCalls {
       } else {
         // apiresult = false;
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again.',
+          toastLength: Toast.LENGTH_LONG,
         );
       }
     } on Exception catch (e) {
@@ -620,7 +642,8 @@ class ApiCalls {
         return result;
       } else {
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again',
+          toastLength: Toast.LENGTH_LONG,
         );
       }
     } on Exception catch (e) {
@@ -647,7 +670,8 @@ class ApiCalls {
         return result;
       } else {
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again.',
+          toastLength: Toast.LENGTH_LONG,
         );
       }
     } on Exception catch (e) {
@@ -676,7 +700,8 @@ class ApiCalls {
         return result;
       } else {
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again',
+          toastLength: Toast.LENGTH_LONG,
         );
       }
     } on Exception catch (e) {
@@ -703,7 +728,7 @@ class ApiCalls {
         return result;
       } else {
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again.',
         );
       }
     } on Exception catch (e) {
@@ -714,11 +739,7 @@ class ApiCalls {
   ///Update cart url
   static Future updateCart(
       String customerId, String quantity, int itemId, BuildContext ctx) async {
-    ctx.loaderOverlay.show(
-        widget: SpinKitRipple(
-      size: 90,
-      color: Colors.red,
-    ));
+
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/UpdateCart?ShoppingCartItemIds=$itemId&Qty=$quantity&CustomerId=$customerId');
     // String success = 'false';
@@ -953,7 +974,7 @@ class ApiCalls {
       progressDialog.dismiss();
 
       print(jsonDecode(response.body));
-      Fluttertoast.showToast(msg: 'Address deleted');
+      Fluttertoast.showToast(msg: 'Address deleted.');
     } on Exception catch (e) {
       progressDialog.dismiss();
 
@@ -984,7 +1005,7 @@ class ApiCalls {
       } else {
         // apiresult = false;
         Fluttertoast.showToast(
-          msg: 'Something went wrong',
+          msg: 'Something went wrong. Please try again.',
         );
       }
     } on Exception catch (e) {
@@ -1013,7 +1034,7 @@ class ApiCalls {
       print(response.body);
       if (_status.contains('Failed')) {
         if (_message.contains('No Customer Found with Id: $customerId')) {
-          Fluttertoast.showToast(msg: 'Customer Id does not exist.');
+          Fluttertoast.showToast(msg: 'Customer Id does not exist.',toastLength: Toast.LENGTH_LONG,);
           _message = 'Notify Me\!';
           return _message;
         } else if (_message

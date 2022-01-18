@@ -107,17 +107,24 @@ class ConstantsVar {
 
   static void excecptionMessage(Exception e) {
     if (e is FormatException) {
-      Fluttertoast.showToast(msg: 'Url not found.');
+      Fluttertoast.showToast(
+        msg: 'Url not found.',
+      );
     } else if (e is SocketException) {
-      Fluttertoast.showToast(msg: internetException);
+      Fluttertoast.showToast(
+          msg: internetException, toastLength: Toast.LENGTH_LONG);
     } else if (e is TimeoutException) {
-      Fluttertoast.showToast(msg: timeoutException);
+      Fluttertoast.showToast(
+          msg: timeoutException, toastLength: Toast.LENGTH_LONG);
     } else if (e is NoSuchMethodError) {
-      Fluttertoast.showToast(msg: dataNotExist);
+      Fluttertoast.showToast(msg: dataNotExist, toastLength: Toast.LENGTH_LONG);
     } else if (e is DeferredLoadException) {
-      Fluttertoast.showToast(msg: libraryFailed);
+      Fluttertoast.showToast(
+          msg: libraryFailed, toastLength: Toast.LENGTH_LONG);
     } else if (e is IntegerDivisionByZeroException) {
-      Fluttertoast.showToast(msg: 'Number can\'t be divided by Zero.');
+      Fluttertoast.showToast(
+          msg: 'Number can\'t be divided by Zero.',
+          toastLength: Toast.LENGTH_LONG);
     }
   }
 
@@ -206,4 +213,4 @@ const registrationDetailsMissingMessage = 'Please provide all details.';
 const otpMessage = 'You will receive a security code shortly.';
 const otpWrongMessage = 'Something went wrong\! Please try again.';
 const otpVerificationFailedMessage = 'Verification failed please try again\.';
-const registrationCompleteMessage=' Registration completed';
+const registrationCompleteMessage = ' Registration completed';
