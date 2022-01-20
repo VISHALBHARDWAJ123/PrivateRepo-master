@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cupertino_back_gesture/cupertino_back_gesture.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -110,53 +111,57 @@ Future<void> main() async {
             _messageHandler(event);
           });
           // FirebaseMessaging.onMessage.;
-          runApp(DevicePreview(
-            enabled: false,
-            builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (_) => cartCounter(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => SearchModel(),
-                ),
-              ],
-              child: Phoenix(
-                child: MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: 'The One',
-                  builder: (context, child) {
-                    // final mediaQueryData = MediaQuery.of(context);
-                    // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
-                    return MediaQuery(
-                      child: child!,
-                      data:
-                          MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
-                    );
-                  },
-                  home: SplashScreen(),
-                  darkTheme: ThemeData(
-                    pageTransitionsTheme: PageTransitionsTheme(
-                      builders: {
-                        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                      },
-                    ),
-                    fontFamily: 'Arial',
-                    primarySwatch: MaterialColor(0xFF800E4F, color),
-                    primaryColor: ConstantsVar.appColor,
+          runApp(BackGestureWidthTheme(
+            backGestureWidth: BackGestureWidth.fraction(1 / 4),
+            child: DevicePreview(
+              enabled: false,
+              builder: (context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(
+                    create: (_) => cartCounter(),
                   ),
-                  theme: ThemeData(
-                    pageTransitionsTheme: PageTransitionsTheme(
-                      builders: {
-                        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                        TargetPlatform.iOS:
-                            CupertinoWillPopScopePageTransionsBuilder(),
-                      },
+                  ChangeNotifierProvider(
+                    create: (_) => SearchModel(),
+                  ),
+                ],
+                child: Phoenix(
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'The One',
+                    builder: (context, child) {
+                      // final mediaQueryData = MediaQuery.of(context);
+                      // final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
+                      return MediaQuery(
+                        child: child!,
+                        data:
+                            MediaQuery.of(context).copyWith(textScaleFactor: 0.9),
+                      );
+                    },
+                    home: SplashScreen(),
+                    darkTheme: ThemeData(
+                      platform: TargetPlatform.iOS,
+                      pageTransitionsTheme: PageTransitionsTheme(
+                        builders: {
+                          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                          TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+                        },
+                      ),
+                      fontFamily: 'Arial',
+                      primarySwatch: MaterialColor(0xFF800E4F, color),
+                      primaryColor: ConstantsVar.appColor,
                     ),
-                    fontFamily: 'Arial',
-                    primarySwatch: MaterialColor(0xFF800E4F, color),
-                    primaryColor: ConstantsVar.appColor,
+                    theme: ThemeData(
+                      pageTransitionsTheme: PageTransitionsTheme(
+                        builders: {
+                          TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                          TargetPlatform.iOS:
+                              CupertinoWillPopScopePageTransionsBuilder(),
+                        },
+                      ),
+                      fontFamily: 'Arial',
+                      primarySwatch: MaterialColor(0xFF800E4F, color),
+                      primaryColor: ConstantsVar.appColor,
+                    ),
                   ),
                 ),
               ),
@@ -173,14 +178,14 @@ Future<void> main() async {
 
 Map<int, Color> color = {
   // 10: Color.fromRGBO(255, 255, 255, 1)
-  50: Color.fromRGBO(136, 14, 79, .1),
-  100: Color.fromRGBO(136, 14, 79, .2),
-  200: Color.fromRGBO(136, 14, 79, .3),
-  300: Color.fromRGBO(136, 14, 79, .4),
-  400: Color.fromRGBO(136, 14, 79, .5),
-  500: Color.fromRGBO(136, 14, 79, .6),
-  600: Color.fromRGBO(136, 14, 79, .7),
-  700: Color.fromRGBO(136, 14, 79, .8),
+  50: Color.fromRGBO(225,17,75, .1),
+  100: Color.fromRGBO(225,17,75, .2),
+  200: Color.fromRGBO(225,17,75, .3),
+  300: Color.fromRGBO(225,17,75, .4),
+  400: Color.fromRGBO(225,17,75, .5),
+  500: Color.fromRGBO(225,17,75, .6),
+  600: Color.fromRGBO(225,17,75, .7),
+  700: Color.fromRGBO(225,17,75, .8),
   800: Color.fromRGBO(255, 255, 255, .9),
-  900: Color.fromRGBO(136, 14, 79, 1),
+  900: Color.fromRGBO(225,17,75, 1),
 };

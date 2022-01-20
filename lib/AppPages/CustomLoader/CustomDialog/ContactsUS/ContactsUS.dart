@@ -179,6 +179,8 @@ class _ContactUSState extends State<ContactUS> with InputValidationMixin {
                                   },
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
+                                    focusedBorder:  OutlineInputBorder(),
+                                    enabledBorder:  OutlineInputBorder(),
                                   ),
                                   maxLines: 1,
                                   controller: name,

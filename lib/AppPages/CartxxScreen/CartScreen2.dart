@@ -564,7 +564,7 @@ class _CartScreen2State extends State<CartScreen2>
                                                           4) {
                                                     Fluttertoast.showToast(
                                                         msg:
-                                                            'Enter coupon code');
+                                                            'Enter valid coupon code');
                                                   } else {
                                                     await ApiCalls.applyCoupon(
                                                             ConstantsVar
@@ -581,6 +581,9 @@ class _CartScreen2State extends State<CartScreen2>
                                                         if (value == 'true') {
                                                           removeCouponCode =
                                                               true;
+                                                        } else {
+                                                          discountController
+                                                              .text = '';
                                                         }
                                                       });
                                                     });
@@ -694,11 +697,11 @@ class _CartScreen2State extends State<CartScreen2>
                                               onPressed: () async {
                                                 if (giftCardController.text
                                                         .toString()
-                                                        .length ==
-                                                    0) {
+                                                        .length <=
+                                                    4) {
                                                   Fluttertoast.showToast(
                                                       msg:
-                                                          'Please enter gift card number');
+                                                          'Enter valid gift card number');
                                                 } else {
                                                   await ApiCalls.applyGiftCard(
                                                           ConstantsVar.apiTokken
@@ -758,7 +761,6 @@ class _CartScreen2State extends State<CartScreen2>
                             child: showloader()),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -816,14 +818,17 @@ class _CartScreen2State extends State<CartScreen2>
             ),
             body: Container(
               child: Center(
-                child: AutoSizeText(
-                  'No Item\(s\) in cart.\n\n\nAn empty home is an empty heart, fill your heart with LOVE from THE One\.Home is where the Heart is\.\.\.\.\.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      letterSpacing: 1,
-                      height: 2,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.dp),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: AutoSizeText(
+                    'No Item\(s\) in cart.\n\n\nAn empty home is an empty heart, fill your heart with LOVE from THE One\.\nHome is where the Heart is\.\.\.\.  ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        letterSpacing: .8,
+                        height: 2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17.dp),
+                  ),
                 ),
               ),
             ),

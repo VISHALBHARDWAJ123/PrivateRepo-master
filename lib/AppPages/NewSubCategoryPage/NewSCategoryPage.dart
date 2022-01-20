@@ -72,39 +72,45 @@ class _SubCatNewState extends State<SubCatNew> {
   Widget build(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
-    return GestureDetector(
-      onTap: () {
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: SafeArea(
-        top: true,
-        bottom: true,
-        maintainBottomViewPadding: true,
-        child: Scaffold(
-          appBar: new AppBar(
-            toolbarHeight: 18.w,
-            backgroundColor: ConstantsVar.appColor,
-            centerTitle: true,
+    return SafeArea(
+      top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
+      child: Scaffold(
+        appBar: new AppBar(
+          toolbarHeight: 18.w,
+          backgroundColor: ConstantsVar.appColor,
+          centerTitle: true,
 
-            // leading: Icon(Icons.arrow_back_ios),
-            title: InkWell(
-              onTap: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => MyHomePage(
-                            pageIndex: 0,
-                          )),
-                  (route) => false),
-              child: Image.asset(
-                'MyAssets/logo.png',
-                width: 15.w,
-                height: 15.w,
-              ),
+          // leading: Icon(Icons.arrow_back_ios),
+          title: InkWell(
+            onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => MyHomePage(
+                          pageIndex: 0,
+                        )),
+                (route) => false),
+            child: Image.asset(
+              'MyAssets/logo.png',
+              width: 15.w,
+              height: 15.w,
             ),
           ),
-          body: ListView(
+        ),
+        body: GestureDetector(
+
+          onHorizontalDragUpdate: (details) {
+            if (details.delta.direction <= 0) {
+              Navigator.pop(context);
+            }
+          },
+          onTap: () {
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: ListView(
             physics: NeverScrollableScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
@@ -373,7 +379,7 @@ class _SubCatNewState extends State<SubCatNew> {
 
   Future getSubCategories(String catId) async {
     final uri = Uri.parse(
-        BuildConfig.base_url + 'apis/GetSubCategories?categoryid=$catId');
+        BuildConfig.base_url + 'apis/GetSubCategories?categoryid=$catId&CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print(uri);
     try {
       var response = await http.get(

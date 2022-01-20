@@ -139,6 +139,7 @@ class _SliderClassState extends State<SliderClass> {
                             );
                           },
                           child: Screenshot(
+
                             controller: myKey,
                             child: CachedNetworkImage(
                               fit: BoxFit.fill,

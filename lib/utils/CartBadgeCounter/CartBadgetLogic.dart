@@ -114,7 +114,7 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
       _progressDialog.dismiss();
     } else {
       jsonDecode(response)['status'].toString() != 'Failed'
-          ? Fluttertoast.showToast(msg: 'Wishlist Shared!')
+          ? okay(ctx: ctx)
           : showDialog(
               context: ctx,
               builder: (ctx) => CustomDialogBox(
@@ -178,4 +178,9 @@ class cartCounter extends ChangeNotifier with DiagnosticableTreeMixin {
         msg: 'Wishlist Deleted', toastLength: Toast.LENGTH_LONG);
     getWishlist(customerId: customerId, apiToken: apiToken);
   }
+
+ void okay({required BuildContext ctx}) {
+   Fluttertoast.showToast(msg: 'Wishlist Shared!');
+   Navigator.pop(ctx);
+ }
 }

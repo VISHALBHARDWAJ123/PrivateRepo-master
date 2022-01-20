@@ -83,191 +83,215 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _willGoBack,
-      child: SafeArea(
-        top: true,
-        bottom: true,
-        maintainBottomViewPadding: true,
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          extendBodyBehindAppBar: true,
-          body: GestureDetector(
-            onTap: () {
-              FocusScopeNode currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus) {
-                currentFocus.unfocus();
-              }
-            },
-            child: FlutterSizer(
-              builder: (
-                context,
-                ori,
-                screenType,
-              ) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.white10,
-                  child: Form(
-                    key: _loginKey,
-                    child: ListView(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Center(
-                          child: Container(
-                            height: 25.h,
-                            width: 25.h,
-                            child: InkWell(
-                              onTap: () => Navigator.pop(context),
-                              child: Image.asset(
-                                "MyAssets/logo.png",
-                                width: 23.h,
-                                height: 23.h,
-                              ),
+    return SafeArea(
+      top: true,
+      bottom: true,
+      maintainBottomViewPadding: true,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        extendBodyBehindAppBar: true,
+        body: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: FlutterSizer(
+            builder: (
+              context,
+              ori,
+              screenType,
+            ) {
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.white10,
+                child: Form(
+                  key: _loginKey,
+                  child: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      Center(
+                        child: Container(
+                          height: 25.h,
+                          width: 25.h,
+                          child: InkWell(
+                            onTap: () => Navigator.pop(context),
+                            child: Image.asset(
+                              "MyAssets/logo.png",
+                              width: 23.h,
+                              height: 23.h,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 20,
+                        ),
+                        child: Center(
+                          child: AutoSizeText(
+                            loginString,
+                            // maxLines: 3,
+                            wrapWords: true,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 8.w,
+                          right: 8.w,
+                        ),
+                        child: Container(
+                          width: 100.w,
                           child: Center(
                             child: AutoSizeText(
-                              loginString,
-                              // maxLines: 3,
-                              wrapWords: true,
-                              textAlign: TextAlign.center,
+                              "CUSTOMER LOGIN",
                               style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 26.dp,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 2,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Padding(
+                      ),
+                      addVerticalSpace(
+                        3.h,
+                      ),
+                      AutofillGroup(
+                        onDisposeAction: AutofillContextAction.commit,
+                        child: Padding(
                           padding: EdgeInsets.only(
                             left: 8.w,
                             right: 8.w,
                           ),
                           child: Container(
-                            width: 100.w,
-                            child: Center(
-                              child: AutoSizeText(
-                                "CUSTOMER LOGIN",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 26.dp,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        addVerticalSpace(
-                          3.h,
-                        ),
-                        AutofillGroup(
-                          onDisposeAction: AutofillContextAction.commit,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 8.w,
-                              right: 8.w,
-                            ),
-                            child: Container(
-                              height: 43.h,
-                              child: ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: [
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        12.0,
-                                      ),
-                                    ),
-                                    elevation: 8.0,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      width: 90.w,
-                                      child: TextFormField(
-                                        autofillHints: <String>[
-                                          AutofillHints.email,
-                                          AutofillHints.username
-                                        ],
-                                        autofocus: true,
-                                        textInputAction: TextInputAction.next,
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        validator: (val) {
-                                          if (isEmailValid(val!)) {
-                                            return null;
-                                          }
-                                          return 'Please enter a valid email address!';
-                                        },
-                                        controller: emailController,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14.0,
-                                        ),
-                                        decoration: editBoxDecoration(
-                                            'E-mail Address',
-                                            Icon(
-                                              Icons.email,
-                                              color:
-                                                  AppColor.PrimaryAccentColor,
-                                            ),
-                                            false),
-                                      ),
+                            height: 43.h,
+                            child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      12.0,
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 1.h,
-                                  ),
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        12.0,
-                                      ),
+                                  elevation: 8.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
                                     ),
-                                    elevation: 8.0,
-                                    child: Container(
-                                      width: 90.w,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                        vertical: 2,
-                                      ),
-                                      child: TextFormField(
-                                        autofillHints: <String>[
-                                          AutofillHints.password
-                                        ],
-                                        textInputAction: TextInputAction.done,
-                                        obscureText: passError,
+                                    width: 90.w,
+                                    child: TextFormField(
+                                      autofillHints: <String>[
+                                        AutofillHints.email,
+                                        AutofillHints.username
+                                      ],
+                                      autofocus: true,
+                                      textInputAction: TextInputAction.next,
+                                      keyboardType:
+                                          TextInputType.emailAddress,
+                                      validator: (val) {
+                                        if (isEmailValid(val!)) {
+                                          return null;
+                                        }
+                                        return 'Please enter a valid email address!';
+                                      },
+                                      cursorColor: ConstantsVar.appColor,
 
-                                        keyboardType:
-                                            TextInputType.visiblePassword,
-                                        // validator: (inputz) =>
-                                        //     input!.isValidPass() ? null : "Check your Password",
-                                        controller: passController,
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        cursorColor: Colors.black,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14.0,
+                                      controller: emailController,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                      ),
+                                      decoration: editBoxDecoration(
+                                          'E-mail Address',
+                                          Icon(
+                                            Icons.email,
+                                            color:
+                                                AppColor.PrimaryAccentColor,
+                                          ),
+                                          false),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      12.0,
+                                    ),
+                                  ),
+                                  elevation: 8.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    width: 90.w,
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: TextFormField(
+                                            autofocus: true,
+
+                                            autofillHints: <String>[
+                                              AutofillHints.password
+                                            ],
+                                            textInputAction: TextInputAction.done,
+                                            obscureText: passError,
+
+                                            keyboardType:
+                                                TextInputType.visiblePassword,
+                                            // validator: (inputz) =>
+                                            //     input!.isValidPass() ? null : "Check your Password",
+                                            controller: passController,
+                                            autovalidateMode:
+                                                AutovalidateMode.onUserInteraction,
+                                            cursorColor: ConstantsVar.appColor,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14.0,
+                                            ),
+                                            decoration: new InputDecoration(
+                                              // suffix: ,
+                                              prefixIcon: Icon(
+                                                Icons.password_rounded,
+                                                color: ConstantsVar.appColor,
+                                              ),
+                                              labelStyle: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
+                                              labelText: 'Password',
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+
                                         ),
-                                        decoration: new InputDecoration(
-                                          suffix: ClipOval(
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 4.0),
+                                          child: ClipOval(
                                             child: RoundCheckBox(
                                               borderColor: Colors.white,
                                               uncheckedColor: Colors.white,
@@ -291,184 +315,9 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                               uncheckedWidget: Center(
                                                 child: Icon(
                                                   Icons.visibility_off,
-                                                  color: ConstantsVar.appColor,
+                                                  color:
+                                                  ConstantsVar.appColor,
                                                   size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          prefixIcon: Icon(
-                                            Icons.password_rounded,
-                                            color: ConstantsVar.appColor,
-                                          ),
-                                          labelStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                          labelText: 'Password',
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: EdgeInsets.symmetric(
-                                      vertical: 3.h,
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Expanded(
-                                          child: IgnorePointer(
-                                            ignoring: connectionStatus == true
-                                                ? false
-                                                : true,
-                                            child: Container(
-                                              height: 12.w,
-                                              width: 30.w,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  10.0,
-                                                ),
-                                                color: ConstantsVar.appColor,
-                                                border: Border(
-                                                  top: BorderSide(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                  ),
-                                                  bottom: BorderSide(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                  ),
-                                                  left: BorderSide(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                  ),
-                                                  right: BorderSide(
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: LoadingButton(
-                                                  color: ConstantsVar.appColor,
-                                                  loadingWidget: SpinKitCircle(
-                                                    color: Colors.white,
-                                                    size: 30,
-                                                  ),
-                                                  height: 12.w,
-                                                  onPressed: () async {
-                                                    if (_loginKey.currentState!
-                                                        .validate()) {
-                                                      _loginKey.currentState!
-                                                          .save();
-                                                      setState(() =>
-                                                          _willGo = false);
-                                                      await ApiCalls.login(
-                                                        context,
-                                                        emailController.text
-                                                            .toString()
-                                                            .trim(),
-                                                        passController.text,
-                                                        widget.screenKey,
-                                                      ).then(
-                                                        (val) {
-                                                          setState(() =>
-                                                              _willGo = false);
-                                                          val == true
-                                                              ? getCartBagdge(0)
-                                                                  .then(
-                                                                  (value) => context
-                                                                      .read<
-                                                                          cartCounter>()
-                                                                      .changeCounter(
-                                                                          value),
-                                                                )
-                                                              : null;
-                                                        },
-                                                      );
-                                                    } else {
-                                                      Fluttertoast.showToast(
-                                                        msg:
-                                                            'Please Enter Correct Details',
-                                                      );
-                                                    }
-                                                  },
-                                                  defaultWidget: AutoSizeText(
-                                                    "LOGIN",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 12.w,
-                                            width: 30.w,
-                                            margin: EdgeInsets.only(
-                                              left: 16.0,
-                                            ),
-                                            child: IgnorePointer(
-                                              ignoring: connectionStatus == true
-                                                  ? false
-                                                  : true,
-                                              child: TextButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                    ConstantsVar.appColor,
-                                                  ),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      side: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  overlayColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.red),
-                                                ),
-                                                onPressed: () async {
-                                                  Future.delayed(
-                                                    Duration(
-                                                      milliseconds: 90,
-                                                    ),
-                                                    () => Navigator.of(context)
-                                                        .push(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RegstrationPage(),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: AutoSizeText(
-                                                  "REGISTER",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
                                                 ),
                                               ),
                                             ),
@@ -477,41 +326,207 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 20,
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: 3.h,
                                   ),
-                                  Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ForgotPassScreen(),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                        child: IgnorePointer(
+                                          ignoring: connectionStatus == true
+                                              ? false
+                                              : true,
+                                          child: Container(
+                                            height: 12.w,
+                                            width: 30.w,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                10.0,
+                                              ),
+                                              color: ConstantsVar.appColor,
+                                              border: Border(
+                                                top: BorderSide(
+                                                  color:
+                                                      ConstantsVar.appColor,
+                                                ),
+                                                bottom: BorderSide(
+                                                  color:
+                                                      ConstantsVar.appColor,
+                                                ),
+                                                left: BorderSide(
+                                                  color:
+                                                      ConstantsVar.appColor,
+                                                ),
+                                                right: BorderSide(
+                                                  color:
+                                                      ConstantsVar.appColor,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: LoadingButton(
+                                                color: ConstantsVar.appColor,
+                                                loadingWidget: SpinKitCircle(
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                                height: 12.w,
+                                                onPressed: () async {
+                                                  if (_loginKey.currentState!
+                                                      .validate()) {
+                                                    _loginKey.currentState!
+                                                        .save();
+                                                    setState(() =>
+                                                        _willGo = false);
+                                                    await ApiCalls.login(
+                                                      context,
+                                                      emailController.text
+                                                          .toString()
+                                                          .trim(),
+                                                      passController.text,
+                                                      widget.screenKey,
+                                                    ).then(
+                                                      (val) {
+                                                        setState(() =>
+                                                            _willGo = false);
+                                                        val == true
+                                                            ? getCartBagdge(0)
+                                                                .then(
+                                                                (value) => context
+                                                                    .read<
+                                                                        cartCounter>()
+                                                                    .changeCounter(
+                                                                        value),
+                                                              )
+                                                            : null;
+                                                      },
+                                                    );
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                      msg:
+                                                          'Please Enter Correct Details',
+                                                    );
+                                                  }
+                                                },
+                                                defaultWidget: AutoSizeText(
+                                                  "LOGIN",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      child: AutoSizeText(
-                                        'Forgot Password?',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 12.w,
+                                          width: 30.w,
+                                          margin: EdgeInsets.only(
+                                            left: 16.0,
+                                          ),
+                                          child: IgnorePointer(
+                                            ignoring: connectionStatus == true
+                                                ? false
+                                                : true,
+                                            child: TextButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                  ConstantsVar.appColor,
+                                                ),
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    side: BorderSide(
+                                                      color: ConstantsVar
+                                                          .appColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                                overlayColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.red),
+                                              ),
+                                              onPressed: () async {
+                                                Future.delayed(
+                                                  Duration(
+                                                    milliseconds: 90,
+                                                  ),
+                                                  () => Navigator.of(context)
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegstrationPage(),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: AutoSizeText(
+                                                "REGISTER",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgotPassScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: AutoSizeText(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

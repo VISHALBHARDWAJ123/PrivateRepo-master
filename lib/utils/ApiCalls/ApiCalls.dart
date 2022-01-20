@@ -92,6 +92,14 @@ class ApiCalls {
     String password,
     String screenName,
   ) async {
+    CustomProgressDialog _dialog = CustomProgressDialog(context,
+        dismissable: false,
+        loadingWidget: SpinKitRipple(
+          color: Colors.red,
+
+          size: 40,
+        ));
+    _dialog.show();
     print(password);
     print('CustomerId:>>>' + ConstantsVar.prefs.getString('guestCustomerID')!);
     ConstantsVar.prefs = await SharedPreferences.getInstance();
@@ -116,6 +124,7 @@ class ApiCalls {
         headers: header,
       );
       if (response.statusCode == 200) {
+        _dialog.dismiss();
         var responseData = jsonDecode(response.body);
         print(responseData);
 
@@ -222,12 +231,14 @@ class ApiCalls {
         }
 
         // Fluttertoast.showToast(msg: responseData.toString().substring(0, 20));
-
+        _dialog.dismiss();
       } else {
+        _dialog.dismiss();
         ConstantsVar.showSnackbar(context, 'Unable to login', 5);
         return false;
       }
     } on Exception catch (e) {
+      _dialog.dismiss();
       ConstantsVar.excecptionMessage(e);
       return false;
     }
@@ -739,7 +750,6 @@ class ApiCalls {
   ///Update cart url
   static Future updateCart(
       String customerId, String quantity, int itemId, BuildContext ctx) async {
-
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/UpdateCart?ShoppingCartItemIds=$itemId&Qty=$quantity&CustomerId=$customerId');
     // String success = 'false';
@@ -1034,7 +1044,10 @@ class ApiCalls {
       print(response.body);
       if (_status.contains('Failed')) {
         if (_message.contains('No Customer Found with Id: $customerId')) {
-          Fluttertoast.showToast(msg: 'Customer Id does not exist.',toastLength: Toast.LENGTH_LONG,);
+          Fluttertoast.showToast(
+            msg: 'Customer Id does not exist.',
+            toastLength: Toast.LENGTH_LONG,
+          );
           _message = 'Notify Me\!';
           return _message;
         } else if (_message
@@ -1083,8 +1096,9 @@ class ApiCalls {
   static Future<List<ResponseDatum>> getSearchCategory(
       {required String customerId}) async {
     List<ResponseDatum> _searchCategoryList = [];
-    final uri =
-        Uri.parse(BuildConfig.base_url + 'apis/GetSearchScreenCategories');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetSearchScreenCategories?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
+    print(uri);
     try {
       var response = await http.get(uri, headers: header);
       // List<dynamic> result = ;

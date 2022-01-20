@@ -468,6 +468,7 @@ class _HomeCategoryState extends State<HomeCategory> {
                                                       horizontal: 12.0,
                                                     ),
                                                     child: OpenContainer(
+                                                      useRootNavigator: false,
                                                       closedElevation: 2,
                                                       openElevation: 0,
                                                       // padding: EdgeInsets.all(8.0),
