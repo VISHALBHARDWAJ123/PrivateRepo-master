@@ -97,630 +97,56 @@ class _MyAccountState extends State<MyAccount> {
                   height: 15.w,
                 ),
               )),
-          body: Container(
-            width: 100.w,
-            height: 100.h,
-            child: Column(
-              children: [
-                Container(
-                  width: 100.w,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: AutoSizeText(
-                        'my account'.toUpperCase(),
-                        style: TextStyle(shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.2),
-                            blurRadius: 3.0,
-                            color: Colors.grey.shade300,
-                          ),
-                          Shadow(
-                            offset: Offset(1.0, 1.2),
-                            blurRadius: 8.0,
-                            color: Colors.grey.shade300,
-                          ),
-                        ], fontSize: 5.w, fontWeight: FontWeight.bold),
+          body: GestureDetector(
+            onHorizontalDragUpdate: (dragDetails) {
+              Platform.isIOS
+                  ? checkBackSwipe(dragDetails)
+                  : print('Android Here');
+            },
+            child: Container(
+              width: 100.w,
+              height: 100.h,
+              child: Column(
+                children: [
+                  Container(
+                    width: 100.w,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Center(
+                        child: AutoSizeText(
+                          'my account'.toUpperCase(),
+                          style: TextStyle(shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(1.0, 1.2),
+                              blurRadius: 3.0,
+                              color: Colors.grey.shade300,
+                            ),
+                            Shadow(
+                              offset: Offset(1.0, 1.2),
+                              blurRadius: 8.0,
+                              color: Colors.grey.shade300,
+                            ),
+                          ], fontSize: 5.w, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      DelayedDisplay(
-                        delay: Duration(
-                          milliseconds: 70,
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            ConstantsVar.prefs =
-                                await SharedPreferences.getInstance();
-                            var customerId =
-                                ConstantsVar.prefs.getString('userId');
-
-                            if (customerId == null || customerId == '') {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Container                     (
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'MyAssets/banner.jpg',
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
-                                    height: 30.h,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          'You are not logged in.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(
-                                                    10.0,
-                                                  ),
-                                                  color: ConstantsVar.appColor,
-                                                  border: Border(
-                                                    top: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    bottom: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    left: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    right: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: LoadingButton(
-                                                    color: Colors.black,
-                                                    loadingWidget: SpinKitCircle(
-                                                      color: Colors.white,
-                                                      size: 30,
-                                                    ),
-                                                    height: 12.w,
-                                                    onPressed: () async {
-                                                      Navigator.of(context).pop();
-                                                      Navigator.push(
-                                                        context,
-                                                        CupertinoPageRoute(
-                                                          builder: (context) => LoginScreen(
-                                                            screenKey: 'My Account',
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    defaultWidget: AutoSizeText(
-                                                      "LOGIN",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                margin: EdgeInsets.only(
-                                                  left: 16.0,
-                                                ),
-                                                child: TextButton(
-                                                  style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(
-                                                      Colors.black,
-                                                    ),
-                                                    shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                        side: BorderSide(
-                                                          color: ConstantsVar.appColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    overlayColor:
-                                                    MaterialStateProperty.all(Colors.red),
-                                                  ),
-                                                  onPressed: () async {
-                                                    Future.delayed(
-                                                      Duration(
-                                                        milliseconds: 90,
-                                                      ),
-                                                          () => Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) => RegstrationPage(),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: AutoSizeText(
-                                                    "REGISTER",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => MyAddresses()));
-                            }
-                          },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.w,
-                                horizontal: 8.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    child: Icon(
-                                      HeartIcon.address,
-                                      color: ConstantsVar.appColor,
-                                      size: 34,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    child: AutoSizeText(
-                                      'my Addresses'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        DelayedDisplay(
+                          delay: Duration(
+                            milliseconds: 70,
                           ),
-                        ),
-                      ),
-                      DelayedDisplay(
-                        delay: Duration(
-                          milliseconds: 70,
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            ConstantsVar.prefs =
-                                await SharedPreferences.getInstance();
-                            var customerId =
-                                ConstantsVar.prefs.getString('userId');
+                          child: InkWell(
+                            onTap: () async {
+                              ConstantsVar.prefs =
+                                  await SharedPreferences.getInstance();
+                              var customerId =
+                                  ConstantsVar.prefs.getString('userId');
 
-                            if (customerId == null || customerId == '') {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'MyAssets/banner.jpg',
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
-                                    height: 30.h,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          'You are not logged in.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(
-                                                    10.0,
-                                                  ),
-                                                  color: ConstantsVar.appColor,
-                                                  border: Border(
-                                                    top: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    bottom: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    left: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    right: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: LoadingButton(
-                                                    color: Colors.black,
-                                                    loadingWidget: SpinKitCircle(
-                                                      color: Colors.white,
-                                                      size: 30,
-                                                    ),
-                                                    height: 12.w,
-                                                    onPressed: () async {
-                                                      Navigator.of(context).pop();
-                                                      Navigator.push(
-                                                        context,
-                                                        CupertinoPageRoute(
-                                                          builder: (context) => LoginScreen(
-                                                            screenKey: 'My Account',
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    defaultWidget: AutoSizeText(
-                                                      "LOGIN",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                margin: EdgeInsets.only(
-                                                  left: 16.0,
-                                                ),
-                                                child: TextButton(
-                                                  style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(
-                                                      Colors.black,
-                                                    ),
-                                                    shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                        side: BorderSide(
-                                                          color: ConstantsVar.appColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    overlayColor:
-                                                    MaterialStateProperty.all(Colors.red),
-                                                  ),
-                                                  onPressed: () async {
-                                                    Future.delayed(
-                                                      Duration(
-                                                        milliseconds: 90,
-                                                      ),
-                                                          () => Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) => RegstrationPage(),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: AutoSizeText(
-                                                    "REGISTER",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => MyOrders(
-                                      isFromWeb: false,
-                                    ),
-                                  ));
-                            }
-                          },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.w,
-                                horizontal: 8.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    child: Icon(
-                                      HeartIcon.order,
-                                      color: ConstantsVar.appColor,
-                                      size: 34,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    child: AutoSizeText(
-                                      'my orders'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DelayedDisplay(
-                        delay: Duration(
-                          milliseconds: 70,
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            ConstantsVar.prefs =
-                                await SharedPreferences.getInstance();
-                            var customerId =
-                                ConstantsVar.prefs.getString('userId');
-
-                            if (customerId == null || customerId == '') {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'MyAssets/banner.jpg',
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(top: 5.h, bottom: 3.h),
-                                    height: 30.h,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          'You are not logged in.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 5.w,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(
-                                                    10.0,
-                                                  ),
-                                                  color: ConstantsVar.appColor,
-                                                  border: Border(
-                                                    top: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    bottom: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    left: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                    right: BorderSide(
-                                                      color: ConstantsVar.appColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: LoadingButton(
-                                                    color: Colors.black,
-                                                    loadingWidget: SpinKitCircle(
-                                                      color: Colors.white,
-                                                      size: 30,
-                                                    ),
-                                                    height: 12.w,
-                                                    onPressed: () async {
-                                                      Navigator.of(context).pop();
-                                                      Navigator.push(
-                                                        context,
-                                                        CupertinoPageRoute(
-                                                          builder: (context) => LoginScreen(
-                                                            screenKey: 'My Account',
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    defaultWidget: AutoSizeText(
-                                                      "LOGIN",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                height: 12.w,
-                                                width: 30.w,
-                                                margin: EdgeInsets.only(
-                                                  left: 16.0,
-                                                ),
-                                                child: TextButton(
-                                                  style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(
-                                                      Colors.black,
-                                                    ),
-                                                    shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                        side: BorderSide(
-                                                          color: ConstantsVar.appColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    overlayColor:
-                                                    MaterialStateProperty.all(Colors.red),
-                                                  ),
-                                                  onPressed: () async {
-                                                    Future.delayed(
-                                                      Duration(
-                                                        milliseconds: 90,
-                                                      ),
-                                                          () => Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) => RegstrationPage(),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: AutoSizeText(
-                                                    "REGISTER",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => ChangePassword(),
-                                  ));
-                            }
-                          },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.w,
-                                horizontal: 8.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    child: Icon(
-                                      Icons.password,
-                                      color: ConstantsVar.appColor,
-                                      size: 34,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    child: AutoSizeText(
-                                      'change password'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DelayedDisplay(
-                        delay: Duration(
-                          milliseconds: 70,
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            ConstantsVar.prefs =
-                                await SharedPreferences.getInstance();
-                            var customerId =
-                                ConstantsVar.prefs.getString('userId');
-
-                            if (customerId == null || customerId == '') {
-                               showModalBottomSheet<void>(
+                              if (customerId == null || customerId == '') {
+                                showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return Container(
@@ -733,11 +159,14 @@ class _MyAccountState extends State<MyAccount> {
                                           ),
                                         ),
                                       ),
-                                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                                      padding: EdgeInsets.only(
+                                          top: 5.h, bottom: 3.h),
                                       height: 30.h,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           AutoSizeText(
                                             'You are not logged in.',
@@ -748,57 +177,72 @@ class _MyAccountState extends State<MyAccount> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Expanded(
                                                 child: Container(
                                                   height: 12.w,
                                                   width: 30.w,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
                                                       10.0,
                                                     ),
-                                                    color: ConstantsVar.appColor,
+                                                    color:
+                                                        ConstantsVar.appColor,
                                                     border: Border(
                                                       top: BorderSide(
-                                                        color: ConstantsVar.appColor,
+                                                        color: ConstantsVar
+                                                            .appColor,
                                                       ),
                                                       bottom: BorderSide(
-                                                        color: ConstantsVar.appColor,
+                                                        color: ConstantsVar
+                                                            .appColor,
                                                       ),
                                                       left: BorderSide(
-                                                        color: ConstantsVar.appColor,
+                                                        color: ConstantsVar
+                                                            .appColor,
                                                       ),
                                                       right: BorderSide(
-                                                        color: ConstantsVar.appColor,
+                                                        color: ConstantsVar
+                                                            .appColor,
                                                       ),
                                                     ),
                                                   ),
                                                   child: Center(
                                                     child: LoadingButton(
                                                       color: Colors.black,
-                                                      loadingWidget: SpinKitCircle(
+                                                      loadingWidget:
+                                                          SpinKitCircle(
                                                         color: Colors.white,
                                                         size: 30,
                                                       ),
                                                       height: 12.w,
                                                       onPressed: () async {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                         Navigator.push(
                                                           context,
                                                           CupertinoPageRoute(
-                                                            builder: (context) => LoginScreen(
-                                                              screenKey: 'My Account',
+                                                            builder:
+                                                                (context) =>
+                                                                    LoginScreen(
+                                                              screenKey:
+                                                                  'My Account',
                                                             ),
                                                           ),
                                                         );
                                                       },
-                                                      defaultWidget: AutoSizeText(
+                                                      defaultWidget:
+                                                          AutoSizeText(
                                                         "LOGIN",
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: 14.0,
                                                         ),
                                                       ),
@@ -815,29 +259,40 @@ class _MyAccountState extends State<MyAccount> {
                                                   ),
                                                   child: TextButton(
                                                     style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
                                                         Colors.black,
                                                       ),
-                                                      shape: MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                      shape: MaterialStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(10.0),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
                                                           side: BorderSide(
-                                                            color: ConstantsVar.appColor,
+                                                            color: ConstantsVar
+                                                                .appColor,
                                                           ),
                                                         ),
                                                       ),
                                                       overlayColor:
-                                                          MaterialStateProperty.all(Colors.red),
+                                                          MaterialStateProperty
+                                                              .all(Colors.red),
                                                     ),
                                                     onPressed: () async {
                                                       Future.delayed(
                                                         Duration(
                                                           milliseconds: 90,
                                                         ),
-                                                        () => Navigator.of(context).push(
+                                                        () => Navigator.of(
+                                                                context)
+                                                            .push(
                                                           MaterialPageRoute(
-                                                            builder: (context) => RegstrationPage(),
+                                                            builder: (context) =>
+                                                                RegstrationPage(),
                                                           ),
                                                         ),
                                                       );
@@ -846,7 +301,8 @@ class _MyAccountState extends State<MyAccount> {
                                                       "REGISTER",
                                                       style: TextStyle(
                                                           color: Colors.white,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
                                                   ),
@@ -859,58 +315,742 @@ class _MyAccountState extends State<MyAccount> {
                                     );
                                   },
                                 );
-                            } else {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) =>
-                                      OrderReturnDetailScreen(),
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => MyAddresses()));
+                              }
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6.w,
+                                  horizontal: 8.w,
                                 ),
-                              );
-                            }
-                          },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.w,
-                                horizontal: 8.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    child: Icon(
-                                      HeartIcon.order,
-                                      color: ConstantsVar.appColor,
-                                      size: 34,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Card(
+                                      child: Icon(
+                                        HeartIcon.address,
+                                        color: ConstantsVar.appColor,
+                                        size: 34,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    child: AutoSizeText(
-                                      'Return Request(s)'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 5.w,
-                                          fontWeight: FontWeight.bold),
+                                    SizedBox(
+                                      width: 20,
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                      child: AutoSizeText(
+                                        'my Addresses'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 5.w,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        DelayedDisplay(
+                          delay: Duration(
+                            milliseconds: 70,
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              ConstantsVar.prefs =
+                                  await SharedPreferences.getInstance();
+                              var customerId =
+                                  ConstantsVar.prefs.getString('userId');
+
+                              if (customerId == null || customerId == '') {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      width: 100.w,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            'MyAssets/banner.jpg',
+                                          ),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                          top: 5.h, bottom: 3.h),
+                                      height: 30.h,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          AutoSizeText(
+                                            'You are not logged in.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10.0,
+                                                    ),
+                                                    color:
+                                                        ConstantsVar.appColor,
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      left: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      right: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: LoadingButton(
+                                                      color: Colors.black,
+                                                      loadingWidget:
+                                                          SpinKitCircle(
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
+                                                      height: 12.w,
+                                                      onPressed: () async {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    LoginScreen(
+                                                              screenKey:
+                                                                  'My Account',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      defaultWidget:
+                                                          AutoSizeText(
+                                                        "LOGIN",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  margin: EdgeInsets.only(
+                                                    left: 16.0,
+                                                  ),
+                                                  child: TextButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                        Colors.black,
+                                                      ),
+                                                      shape: MaterialStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          side: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      overlayColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.red),
+                                                    ),
+                                                    onPressed: () async {
+                                                      Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 90,
+                                                        ),
+                                                        () => Navigator.of(
+                                                                context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegstrationPage(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: AutoSizeText(
+                                                      "REGISTER",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => MyOrders(
+                                        isFromWeb: false,
+                                      ),
+                                    ));
+                              }
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6.w,
+                                  horizontal: 8.w,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Card(
+                                      child: Icon(
+                                        HeartIcon.order,
+                                        color: ConstantsVar.appColor,
+                                        size: 34,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      child: AutoSizeText(
+                                        'my orders'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 5.w,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        DelayedDisplay(
+                          delay: Duration(
+                            milliseconds: 70,
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              ConstantsVar.prefs =
+                                  await SharedPreferences.getInstance();
+                              var customerId =
+                                  ConstantsVar.prefs.getString('userId');
+
+                              if (customerId == null || customerId == '') {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      width: 100.w,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            'MyAssets/banner.jpg',
+                                          ),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                          top: 5.h, bottom: 3.h),
+                                      height: 30.h,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          AutoSizeText(
+                                            'You are not logged in.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10.0,
+                                                    ),
+                                                    color:
+                                                        ConstantsVar.appColor,
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      left: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      right: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: LoadingButton(
+                                                      color: Colors.black,
+                                                      loadingWidget:
+                                                          SpinKitCircle(
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
+                                                      height: 12.w,
+                                                      onPressed: () async {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    LoginScreen(
+                                                              screenKey:
+                                                                  'My Account',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      defaultWidget:
+                                                          AutoSizeText(
+                                                        "LOGIN",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  margin: EdgeInsets.only(
+                                                    left: 16.0,
+                                                  ),
+                                                  child: TextButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                        Colors.black,
+                                                      ),
+                                                      shape: MaterialStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          side: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      overlayColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.red),
+                                                    ),
+                                                    onPressed: () async {
+                                                      Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 90,
+                                                        ),
+                                                        () => Navigator.of(
+                                                                context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegstrationPage(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: AutoSizeText(
+                                                      "REGISTER",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ChangePassword(),
+                                    ));
+                              }
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6.w,
+                                  horizontal: 8.w,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Card(
+                                      child: Icon(
+                                        Icons.password,
+                                        color: ConstantsVar.appColor,
+                                        size: 34,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      child: AutoSizeText(
+                                        'change password'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 5.w,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        DelayedDisplay(
+                          delay: Duration(
+                            milliseconds: 70,
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              ConstantsVar.prefs =
+                                  await SharedPreferences.getInstance();
+                              var customerId =
+                                  ConstantsVar.prefs.getString('userId');
+
+                              if (customerId == null || customerId == '') {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      width: 100.w,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            'MyAssets/banner.jpg',
+                                          ),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                          top: 5.h, bottom: 5.h),
+                                      height: 30.h,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          AutoSizeText(
+                                            'You are not logged in.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 5.w,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10.0,
+                                                    ),
+                                                    color:
+                                                        ConstantsVar.appColor,
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      left: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                      right: BorderSide(
+                                                        color: ConstantsVar
+                                                            .appColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: LoadingButton(
+                                                      color: Colors.black,
+                                                      loadingWidget:
+                                                          SpinKitCircle(
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
+                                                      height: 12.w,
+                                                      onPressed: () async {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    LoginScreen(
+                                                              screenKey:
+                                                                  'My Account',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      defaultWidget:
+                                                          AutoSizeText(
+                                                        "LOGIN",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 12.w,
+                                                  width: 30.w,
+                                                  margin: EdgeInsets.only(
+                                                    left: 16.0,
+                                                  ),
+                                                  child: TextButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                        Colors.black,
+                                                      ),
+                                                      shape: MaterialStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          side: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      overlayColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.red),
+                                                    ),
+                                                    onPressed: () async {
+                                                      Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 90,
+                                                        ),
+                                                        () => Navigator.of(
+                                                                context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegstrationPage(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: AutoSizeText(
+                                                      "REGISTER",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        OrderReturnDetailScreen(),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 6.w,
+                                  horizontal: 8.w,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Card(
+                                      child: Icon(
+                                        HeartIcon.order,
+                                        color: ConstantsVar.appColor,
+                                        size: 34,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      child: AutoSizeText(
+                                        'Return Request(s)'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 5.w,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  checkBackSwipe(DragUpdateDetails dragDetails) {
+    if (dragDetails.delta.direction <= 0) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => MyHomePage(
+              pageIndex: 4,
+            ),
+          ),
+          (route) => false);
+    }
   }
 }

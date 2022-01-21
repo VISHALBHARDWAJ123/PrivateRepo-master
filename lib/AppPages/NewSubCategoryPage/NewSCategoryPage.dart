@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -99,11 +100,8 @@ class _SubCatNewState extends State<SubCatNew> {
           ),
         ),
         body: GestureDetector(
-
           onHorizontalDragUpdate: (details) {
-            if (details.delta.direction <= 0) {
-              Navigator.pop(context);
-            }
+            Platform.isIOS?checkBackSwipe(details):print('Android Here');
           },
           onTap: () {
             if (!currentFocus.hasPrimaryFocus) {
@@ -164,7 +162,8 @@ class _SubCatNewState extends State<SubCatNew> {
                                       CupertinoPageRoute(
                                         builder: (context) => SearchPage(
                                           isScreen: true,
-                                          keyword: value, enableCategory: false,
+                                          keyword: value,
+                                          enableCategory: false,
                                         ),
                                       ),
                                     )
@@ -208,7 +207,8 @@ class _SubCatNewState extends State<SubCatNew> {
                                           CupertinoPageRoute(
                                             builder: (context) => SearchPage(
                                               isScreen: true,
-                                              keyword: value, enableCategory: false,
+                                              keyword: value,
+                                              enableCategory: false,
                                             ),
                                           ),
                                         )
@@ -275,7 +275,8 @@ class _SubCatNewState extends State<SubCatNew> {
                                                   builder: (context) =>
                                                       SearchPage(
                                                     keyword: option,
-                                                    isScreen: true, enableCategory: false,
+                                                    isScreen: true,
+                                                    enableCategory: false,
                                                   ),
                                                 ),
                                               ).then((value) => setState(() {
@@ -378,8 +379,8 @@ class _SubCatNewState extends State<SubCatNew> {
   }
 
   Future getSubCategories(String catId) async {
-    final uri = Uri.parse(
-        BuildConfig.base_url + 'apis/GetSubCategories?categoryid=$catId&CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
+    final uri = Uri.parse(BuildConfig.base_url +
+        'apis/GetSubCategories?categoryid=$catId&CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print(uri);
     try {
       var response = await http.get(
@@ -390,6 +391,12 @@ class _SubCatNewState extends State<SubCatNew> {
       return json.decode(response.body)['ResponseData'];
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
+    }
+  }
+
+  checkBackSwipe(DragUpdateDetails details) {
+    if (details.delta.direction <= 0 ) {
+      Navigator.pop(context);
     }
   }
 }
@@ -454,7 +461,8 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                 horizontal: 12.0,
               ),
               child: OpenContainer(
-                closedElevation: 2,openElevation: 0,
+                closedElevation: 2,
+                openElevation: 0,
                 middleColor: Colors.white,
                 transitionType: _transitionType,
                 openBuilder: (BuildContext context,
@@ -520,9 +528,7 @@ class _SubCatWidgetState extends State<SubCatWidget> {
                                       .toUpperCase(),
                                   // maxLines: 2,
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(
-
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],

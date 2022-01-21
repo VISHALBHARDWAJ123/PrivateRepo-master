@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
     //   }
     // });
     animationController = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 5));
+        vsync: this, duration: new Duration(seconds: 3));
     animation =
         new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
     animationController.forward();
     getCheckNotificationPermStatus();
     Future.delayed(
-      Duration(seconds: 4, milliseconds: 80),
+      Duration(seconds: 2, milliseconds: 80),
     ).then((value) => setState(() => isVisible = true));
     initilaize().then((value) {
       _guestCustomerID = ConstantsVar.prefs.getString('guestCustomerID');
@@ -94,19 +94,20 @@ class _SplashScreenState extends State<SplashScreen>
           ConstantsVar.prefs.setString('guestGUID', _guestGUID);
           ConstantsVar.prefs.setString('sepGuid', _guestGUID!);
           int val = 0;
-          ApiCalls.readCounter(
-                  customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
-              .then((value) {
-            setState(() {
-              val = value;
-            });
-            context.read<cartCounter>().changeCounter(val);
-            Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => MyApp(),
-                ));
-          });
+          Navigator.pushReplacement(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MyApp(),
+              ));
+          // ApiCalls.readCounter(
+          //         customerGuid: ConstantsVar.prefs.getString('guestGUID')!)
+          //     .then((value) {
+          //   setState(() {
+          //     val = value;
+          //   });
+          //   context.read<cartCounter>().changeCounter(val);
+          //
+          // });
         }
             // },
             );
@@ -114,7 +115,7 @@ class _SplashScreenState extends State<SplashScreen>
         // int val = 0;
         getCartBagdge().then(
           (value) => Future.delayed(
-            Duration(seconds: 6),
+            Duration(seconds: 4),
             () => Navigator.pushReplacement(
               context,
               CupertinoPageRoute(

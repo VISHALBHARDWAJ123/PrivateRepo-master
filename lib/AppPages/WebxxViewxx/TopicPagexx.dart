@@ -132,57 +132,219 @@ class _TopicPageState extends State<TopicPage> {
               ),
             ),
           ),
-          body:Platform.isIOS? Container(
-            width: 100.w,
-            height: 100.h,
-            child: KeyboardActions(
-              tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
-              config: KeyboardActionsConfig(
-                keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-                keyboardBarColor: Colors.grey[200],
-                nextFocus: true,
-                actions: [],
-              ),
-              child: Container(
-                width: 100.w,
-                height: 100.h,
-                child: Stack(
-                  children: [
-                    FutureBuilder<WebViewController>(
-                      future: _webViewControllerFuture,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<WebViewController> snapshot) {
-                        final bool webViewReady =
-                            snapshot.connectionState == ConnectionState.done;
-                        final WebViewController? controller = snapshot.data;
-                        var controllerGlobal = controller;
+          body: Platform.isIOS
+              ? Container(
+                  width: 100.w,
+                  height: 100.h,
+                  child: KeyboardActions(
+                    tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
+                    config: KeyboardActionsConfig(
+                      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+                      keyboardBarColor: Colors.grey[200],
+                      nextFocus: true,
+                      actions: [],
+                    ),
+                    child: Container(
+                      width: 100.w,
+                      height: 100.h,
+                      child: Stack(
+                        children: [
+                          FutureBuilder<WebViewController>(
+                            future: _webViewControllerFuture,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<WebViewController> snapshot) {
+                              final bool webViewReady =
+                                  snapshot.connectionState ==
+                                      ConnectionState.done;
+                              final WebViewController? controller =
+                                  snapshot.data;
+                              var controllerGlobal = controller;
 
-                        return WillPopScope(
-                          onWillPop: !webViewReady
-                              ? null
-                              : () async {
-                                  if (await controller!.canGoBack()) {
-                                    controller.goBack();
-                                    return false;
-                                  } else {
-                                    Navigator.pop(context);
-                                    // Scaffold.of(context).showSnackBar(
-                                    //   const SnackBar(
-                                    //       content: Text("No back history item")),
-                                    // );
-                                    return true;
-                                  }
-                                },
-                          child: Container(
-                            width: 100.w,
-                            height: 100.h,
-                            child:  Scaffold(
-                              resizeToAvoidBottomInset: false,
-                              body: WebView(
+                              return WillPopScope(
+                                onWillPop: !webViewReady
+                                    ? null
+                                    : () async {
+                                        if (await controller!.canGoBack()) {
+                                          controller.goBack();
+                                          return false;
+                                        } else {
+                                          Navigator.pop(context);
+                                          // Scaffold.of(context).showSnackBar(
+                                          //   const SnackBar(
+                                          //       content: Text("No back history item")),
+                                          // );
+                                          return true;
+                                        }
+                                      },
+                                child: Container(
+                                  width: 100.w,
+                                  height: 100.h,
+                                  child: Scaffold(
+                                    resizeToAvoidBottomInset: false,
+                                    body: WebView(
+                                      gestureRecognizers: Set()
+                                        ..add(
+                                          Factory<
+                                              VerticalDragGestureRecognizer>(
+                                            () =>
+                                                VerticalDragGestureRecognizer(),
+                                          ), // or null
+                                        ),
+                                      initialUrl:
+                                          Uri.encodeFull(widget.paymentUrl),
+                                      // userAgent:
+                                      //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
+                                      javascriptMode:
+                                          JavascriptMode.unrestricted,
+                                      onWebViewCreated: (WebViewController
+                                          webViewController) {
+                                        _controller.complete(webViewController);
+                                      },
+                                      onProgress: (int progress) {
+                                        setState(() {
+                                          isLoading = true;
+                                          progressCount = progress;
+                                        });
+                                      },
+                                      javascriptChannels: <JavascriptChannel>{
+                                        _toasterJavascriptChannel(context),
+                                      },
+                                      navigationDelegate:
+                                          (NavigationRequest request) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        if (request.url.contains(
+                                            'customercare@theone.com')) {
+                                          ApiCalls.launchUrl(request.url);
+                                          return NavigationDecision.prevent;
+                                        }
+                                        if (request.url.startsWith(
+                                            'https://www.youtube.com/')) {
+                                          print(
+                                              'blocking navigation to $request}');
+                                          return NavigationDecision.prevent;
+                                        }
+
+                                        if (request.url
+                                            .contains('GetProductModelById')) {
+                                          var url = request.url;
+                                          Navigator.push(context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) {
+                                            return NewProductDetails(
+                                                productId:
+                                                    url.splitAfter('id='),
+                                                screenName: 'Topic Screen');
+                                          }));
+                                          return NavigationDecision.prevent;
+                                        }
+
+                                        if (request.url
+                                            .contains('GetCategoryPage')) {
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      MyHomePage(pageIndex: 1)),
+                                              (route) => false);
+                                          return NavigationDecision.prevent;
+                                        }
+
+                                        if (request.url.contains(
+                                            'http://theone.createsend.com/')) {
+                                          return NavigationDecision.navigate;
+                                        }
+                                        // if (request.url.contains('www.theone.com/')) {
+                                        //   return NavigationDecision.navigate;
+                                        // }
+                                        print(
+                                            'allowing navigation to $request');
+                                        return NavigationDecision.navigate;
+                                      },
+                                      onPageStarted: (String url) {
+                                        setState(() {
+                                          _willGo = false;
+                                          isLoading = true;
+                                        });
+
+                                        print('Page started loading: $url');
+                                      },
+                                      onPageFinished: (String url) {
+                                        print('Page finished loading: $url');
+                                        setState(() {
+                                          context.loaderOverlay.hide();
+                                          _willGo = true;
+                                          isLoading = false;
+                                        });
+                                      },
+                                      gestureNavigationEnabled: true,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          isLoading
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: [
+                                      SpinKitRipple(
+                                        color: Colors.red,
+                                        size: 90,
+                                      ),
+                                      Text('Loading Please Wait!.........' +
+                                          progressCount.toString() +
+                                          '%'),
+                                    ],
+                                  ))
+                              : Stack(),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: 100.w,
+                  height: 100.h,
+                  child: Stack(
+                    children: [
+                      FutureBuilder<WebViewController>(
+                        future: _webViewControllerFuture,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<WebViewController> snapshot) {
+                          final bool webViewReady =
+                              snapshot.connectionState == ConnectionState.done;
+                          final WebViewController? controller = snapshot.data;
+                          var controllerGlobal = controller;
+
+                          return WillPopScope(
+                            onWillPop: !webViewReady
+                                ? null
+                                : () async {
+                                    if (await controller!.canGoBack()) {
+                                      controller.goBack();
+                                      return false;
+                                    } else {
+                                      Navigator.pop(context);
+                                      // Scaffold.of(context).showSnackBar(
+                                      //   const SnackBar(
+                                      //       content: Text("No back history item")),
+                                      // );
+                                      return true;
+                                    }
+                                  },
+                            child: Container(
+                              width: 100.w,
+                              height: 100.h,
+                              child: Scaffold(
+                                resizeToAvoidBottomInset: false,
+                                body: WebView(
                                   gestureRecognizers: Set()
                                     ..add(
                                       Factory<VerticalDragGestureRecognizer>(
-                                            () => VerticalDragGestureRecognizer(),
+                                        () => VerticalDragGestureRecognizer(),
                                       ), // or null
                                     ),
                                   initialUrl: Uri.encodeFull(widget.paymentUrl),
@@ -202,14 +364,15 @@ class _TopicPageState extends State<TopicPage> {
                                   javascriptChannels: <JavascriptChannel>{
                                     _toasterJavascriptChannel(context),
                                   },
-                                  navigationDelegate: (NavigationRequest request) {
+                                  navigationDelegate:
+                                      (NavigationRequest request) {
                                     if (request.url
                                         .contains('customercare@theone.com')) {
                                       ApiCalls.launchUrl(request.url);
                                       return NavigationDecision.prevent;
                                     }
-                                    if (request.url
-                                        .startsWith('https://www.youtube.com/')) {
+                                    if (request.url.startsWith(
+                                        'https://www.youtube.com/')) {
                                       print('blocking navigation to $request}');
                                       return NavigationDecision.prevent;
                                     }
@@ -218,7 +381,8 @@ class _TopicPageState extends State<TopicPage> {
                                         .contains('GetProductModelById')) {
                                       var url = request.url;
                                       Navigator.push(context,
-                                          CupertinoPageRoute(builder: (context) {
+                                          CupertinoPageRoute(
+                                              builder: (context) {
                                         return NewProductDetails(
                                             productId: url.splitAfter('id='),
                                             screenName: 'Home Screen');
@@ -226,7 +390,8 @@ class _TopicPageState extends State<TopicPage> {
                                       return NavigationDecision.prevent;
                                     }
 
-                                    if (request.url.contains('GetCategoryPage')) {
+                                    if (request.url
+                                        .contains('GetCategoryPage')) {
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           CupertinoPageRoute(
@@ -264,176 +429,29 @@ class _TopicPageState extends State<TopicPage> {
                                   },
                                   gestureNavigationEnabled: true,
                                 ),
-                            ),
-                            ),
-                          
-                        );
-                      },
-                    ),
-                    isLoading
-                        ? Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              children: [
-                                SpinKitRipple(
-                                  color: Colors.red,
-                                  size: 90,
-                                ),
-                                Text('Loading Please Wait!.........' +
-                                    progressCount.toString() +
-                                    '%'),
-                              ],
-                            ))
-                        : Stack(),
-                  ],
-                ),
-              ),
-            ),
-          ): Container(
-            width: 100.w,
-            height: 100.h,
-            child: Stack(
-              children: [
-                FutureBuilder<WebViewController>(
-                  future: _webViewControllerFuture,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<WebViewController> snapshot) {
-                    final bool webViewReady =
-                        snapshot.connectionState == ConnectionState.done;
-                    final WebViewController? controller = snapshot.data;
-                    var controllerGlobal = controller;
-
-                    return WillPopScope(
-                      onWillPop: !webViewReady
-                          ? null
-                          : () async {
-                        if (await controller!.canGoBack()) {
-                          controller.goBack();
-                          return false;
-                        } else {
-                          Navigator.pop(context);
-                          // Scaffold.of(context).showSnackBar(
-                          //   const SnackBar(
-                          //       content: Text("No back history item")),
-                          // );
-                          return true;
-                        }
-                      },
-                      child: Container(
-                        width: 100.w,
-                        height: 100.h,
-                        child:  Scaffold(
-                          resizeToAvoidBottomInset: false,
-                          body: WebView(
-                            gestureRecognizers: Set()
-                              ..add(
-                                Factory<VerticalDragGestureRecognizer>(
-                                      () => VerticalDragGestureRecognizer(),
-                                ), // or null
                               ),
-                            initialUrl: Uri.encodeFull(widget.paymentUrl),
-                            // userAgent:
-                            //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
-                            javascriptMode: JavascriptMode.unrestricted,
-                            onWebViewCreated:
-                                (WebViewController webViewController) {
-                              _controller.complete(webViewController);
-                            },
-                            onProgress: (int progress) {
-                              setState(() {
-                                isLoading = true;
-                                progressCount = progress;
-                              });
-                            },
-                            javascriptChannels: <JavascriptChannel>{
-                              _toasterJavascriptChannel(context),
-                            },
-                            navigationDelegate: (NavigationRequest request) {
-                              if (request.url
-                                  .contains('customercare@theone.com')) {
-                                ApiCalls.launchUrl(request.url);
-                                return NavigationDecision.prevent;
-                              }
-                              if (request.url
-                                  .startsWith('https://www.youtube.com/')) {
-                                print('blocking navigation to $request}');
-                                return NavigationDecision.prevent;
-                              }
-
-                              if (request.url
-                                  .contains('GetProductModelById')) {
-                                var url = request.url;
-                                Navigator.push(context,
-                                    CupertinoPageRoute(builder: (context) {
-                                      return NewProductDetails(
-                                          productId: url.splitAfter('id='),
-                                          screenName: 'Home Screen');
-                                    }));
-                                return NavigationDecision.prevent;
-                              }
-
-                              if (request.url.contains('GetCategoryPage')) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) =>
-                                            MyHomePage(pageIndex: 1)),
-                                        (route) => false);
-                                return NavigationDecision.prevent;
-                              }
-
-                              if (request.url.contains(
-                                  'http://theone.createsend.com/')) {
-                                return NavigationDecision.navigate;
-                              }
-                              // if (request.url.contains('www.theone.com/')) {
-                              //   return NavigationDecision.navigate;
-                              // }
-                              print('allowing navigation to $request');
-                              return NavigationDecision.navigate;
-                            },
-                            onPageStarted: (String url) {
-                              setState(() {
-                                _willGo = false;
-                                isLoading = true;
-                              });
-
-                              print('Page started loading: $url');
-                            },
-                            onPageFinished: (String url) {
-                              print('Page finished loading: $url');
-                              setState(() {
-                                context.loaderOverlay.hide();
-                                _willGo = true;
-                                isLoading = false;
-                              });
-                            },
-                            gestureNavigationEnabled: true,
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-
-                    );
-                  },
+                      isLoading
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  SpinKitRipple(
+                                    color: Colors.red,
+                                    size: 90,
+                                  ),
+                                  Text('Loading Please Wait!.........' +
+                                      progressCount.toString() +
+                                      '%'),
+                                ],
+                              ))
+                          : Stack(),
+                    ],
+                  ),
                 ),
-                isLoading
-                    ? Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        SpinKitRipple(
-                          color: Colors.red,
-                          size: 90,
-                        ),
-                        Text('Loading Please Wait!.........' +
-                            progressCount.toString() +
-                            '%'),
-                      ],
-                    ))
-                    : Stack(),
-              ],
-            ),
-          ),
         ),
       ),
     );

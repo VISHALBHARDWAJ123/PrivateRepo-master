@@ -385,7 +385,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
             body: initialDatas! != null
                 ? GestureDetector(
                     onHorizontalDragUpdate: (details) {
-                      if (details.delta.direction <= 0) {
+                      if (details.delta.direction <= 0&&Platform.isIOS) {
                         Navigator.pop(context);
                       }
                     },
@@ -697,11 +697,13 @@ class _NewProductDetailsState extends State<NewProductDetails>
                     ),
                   )
                 : GestureDetector(
-                    onHorizontalDragUpdate: (details) {
-                      if (details.delta.direction <= 0) {
-                        Navigator.pop(context);
-                      }
-                    },
+                    onHorizontalDragUpdate: Platform.isIOS
+                        ? (details) {
+                            cehckBackSwipe(details: details);
+                          }
+                        : (details) {
+                            print('Android Here');
+                          },
                     onTap: () {
                       if (!currentFocus.hasPrimaryFocus) {
                         currentFocus.unfocus();
@@ -1394,6 +1396,12 @@ class _NewProductDetailsState extends State<NewProductDetails>
         ),
       ],
     );
+  }
+
+  cehckBackSwipe({required DragUpdateDetails details}) {
+    if (details.delta.direction <= 0) {
+      Navigator.pop(context);
+    }
   }
 }
 

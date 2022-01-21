@@ -1,6 +1,7 @@
 // import 'dart:html';
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -90,7 +91,8 @@ class _ProdListWidgetState extends State<ProdListWidget> {
         isLoading = true;
         pageIndex1 = pageIndex1 + 1;
         print('$pageIndex1');
-        ApiCalls.getCategoryById('${widget.id}', context, pageIndex1, customerId: widget.guestCustomerId)
+        ApiCalls.getCategoryById('${widget.id}', context, pageIndex1,
+                customerId: widget.guestCustomerId)
             .then((value) {
           ProductListModel model = ProductListModel.fromJson(value);
           if (widget.products.length == model.productCount) {
@@ -127,6 +129,9 @@ class _ProdListWidgetState extends State<ProdListWidget> {
   Widget build(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
     return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        Platform.isIOS ? checkBackSwipe(details) : print('Android Here');
+      },
       onTap: () {
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
@@ -518,11 +523,16 @@ class _ProdListWidgetState extends State<ProdListWidget> {
                                                   children: [
                                                     AutoSizeText(
                                                       widget.products[index]
-                                                                  .discountPrice ==
-                                                              null ||        widget.products[index]
-                                                          .discountPrice ==''
-                                                          ? widget.products[index]
-                                                          .price
+                                                                      .discountPrice ==
+                                                                  null ||
+                                                              widget
+                                                                      .products[
+                                                                          index]
+                                                                      .discountPrice ==
+                                                                  ''
+                                                          ? widget
+                                                              .products[index]
+                                                              .price
                                                           : widget
                                                               .products[index]
                                                               .discountPrice,
@@ -533,8 +543,7 @@ class _ProdListWidgetState extends State<ProdListWidget> {
                                                               .grey.shade600,
                                                           fontSize: 4.w,
                                                           fontWeight:
-                                                              FontWeight
-                                                                  .bold),
+                                                              FontWeight.bold),
                                                       textAlign:
                                                           TextAlign.start,
                                                     ),
@@ -637,5 +646,11 @@ class _ProdListWidgetState extends State<ProdListWidget> {
         ],
       ),
     );
+  }
+
+  checkBackSwipe(DragUpdateDetails details) {
+    if (details.delta.direction <= 0) {
+      Navigator.pop(context);
+    }
   }
 }
