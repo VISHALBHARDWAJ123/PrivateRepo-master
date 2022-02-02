@@ -149,168 +149,175 @@ class _MyAccountState extends State<MyAccount> {
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'MyAssets/banner.jpg',
+                                    return SafeArea(
+                                      bottom: true,
+                                      maintainBottomViewPadding: true,
+                                      child: Container(
+                                        width: 100.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          top: 5.h, bottom: 3.h),
-                                      height: 30.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 5.w,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.0,
-                                                    ),
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    border: Border(
-                                                      top: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      bottom: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      left: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      right: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: LoadingButton(
-                                                      color: Colors.black,
-                                                      loadingWidget:
-                                                          SpinKitCircle(
-                                                        color: Colors.white,
-                                                        size: 30,
-                                                      ),
+                                        padding: EdgeInsets.only(
+                                            top: 5.h, bottom: 3.h),
+                                        height: 27.h,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            AutoSizeText(
+                                              'You are not logged in.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  Expanded(
+                                                    child: Container(
                                                       height: 12.w,
-                                                      onPressed: () async {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    LoginScreen(
-                                                              screenKey:
-                                                                  'My Account',
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      defaultWidget:
-                                                          AutoSizeText(
-                                                        "LOGIN",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0,
+                                                      width: 30.w,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                          10.0,
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  margin: EdgeInsets.only(
-                                                    left: 16.0,
-                                                  ),
-                                                  child: TextButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                        Colors.black,
-                                                      ),
-                                                      shape: MaterialStateProperty
-                                                          .all<
-                                                              RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          side: BorderSide(
+                                                        color:
+                                                            ConstantsVar.appColor,
+                                                        border: Border(
+                                                          top: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                          bottom: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                          left: BorderSide(
+                                                            color: ConstantsVar
+                                                                .appColor,
+                                                          ),
+                                                          right: BorderSide(
                                                             color: ConstantsVar
                                                                 .appColor,
                                                           ),
                                                         ),
                                                       ),
-                                                      overlayColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors.red),
-                                                    ),
-                                                    onPressed: () async {
-                                                      Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 90,
-                                                        ),
-                                                        () => Navigator.of(
-                                                                context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RegstrationPage(),
+                                                      child: Center(
+                                                        child: LoadingButton(
+                                                          color: Colors.black,
+                                                          loadingWidget:
+                                                              SpinKitCircle(
+                                                            color: Colors.white,
+                                                            size: 30,
+                                                          ),
+                                                          height: 12.w,
+                                                          onPressed: () async {
+                                                            Navigator.of(context)
+                                                                .pop();
+                                                            Navigator.push(
+                                                              context,
+                                                              CupertinoPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        LoginScreen(
+                                                                  screenKey:
+                                                                      'My Account',
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          defaultWidget:
+                                                              AutoSizeText(
+                                                            "LOGIN",
+                                                            style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              fontSize: 14.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      );
-                                                    },
-                                                    child: AutoSizeText(
-                                                      "REGISTER",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      height: 12.w,
+                                                      width: 30.w,
+                                                      margin: EdgeInsets.only(
+                                                        left: 16.0,
+                                                      ),
+                                                      child: TextButton(
+                                                        style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(
+                                                            Colors.black,
+                                                          ),
+                                                          shape: MaterialStateProperty
+                                                              .all<
+                                                                  RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                              side: BorderSide(
+                                                                color: ConstantsVar
+                                                                    .appColor,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          overlayColor:
+                                                              MaterialStateProperty
+                                                                  .all(Colors.red),
+                                                        ),
+                                                        onPressed: () async {
+                                                          Future.delayed(
+                                                            Duration(
+                                                              milliseconds: 90,
+                                                            ),
+                                                            () => Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    RegstrationPage(),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: AutoSizeText(
+                                                          "REGISTER",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              fontSize: 14.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
@@ -371,168 +378,172 @@ class _MyAccountState extends State<MyAccount> {
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'MyAssets/banner.jpg',
+                                    return SafeArea(
+                                      bottom: true,
+                                      maintainBottomViewPadding: true,
+                                      child: Container(
+                                        width: 100.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          top: 5.h, bottom: 3.h),
-                                      height: 30.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 5.w,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.0,
+                                        padding: EdgeInsets.only(
+                                            top: 5.h, bottom: 3.h),
+                                        height: 27.h,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            AutoSizeText(
+                                              'You are not logged in.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10.0,
+                                                      ),
+                                                      color:
+                                                          ConstantsVar.appColor,
+                                                      border: Border(
+                                                        top: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        bottom: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        left: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        right: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    border: Border(
-                                                      top: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      bottom: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      left: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      right: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
+                                                    child: Center(
+                                                      child: LoadingButton(
+                                                        color: Colors.black,
+                                                        loadingWidget:
+                                                            SpinKitCircle(
+                                                          color: Colors.white,
+                                                          size: 30,
+                                                        ),
+                                                        height: 12.w,
+                                                        onPressed: () async {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      LoginScreen(
+                                                                screenKey:
+                                                                    'My Account',
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        defaultWidget:
+                                                            AutoSizeText(
+                                                          "LOGIN",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  child: Center(
-                                                    child: LoadingButton(
-                                                      color: Colors.black,
-                                                      loadingWidget:
-                                                          SpinKitCircle(
-                                                        color: Colors.white,
-                                                        size: 30,
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    margin: EdgeInsets.only(
+                                                      left: 16.0,
+                                                    ),
+                                                    child: TextButton(
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                          Colors.black,
+                                                        ),
+                                                        shape: MaterialStateProperty
+                                                            .all<
+                                                                RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            side: BorderSide(
+                                                              color: ConstantsVar
+                                                                  .appColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        overlayColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors.red),
                                                       ),
-                                                      height: 12.w,
                                                       onPressed: () async {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    LoginScreen(
-                                                              screenKey:
-                                                                  'My Account',
+                                                        Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 90,
+                                                          ),
+                                                          () => Navigator.of(
+                                                                  context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegstrationPage(),
                                                             ),
                                                           ),
                                                         );
                                                       },
-                                                      defaultWidget:
-                                                          AutoSizeText(
-                                                        "LOGIN",
+                                                      child: AutoSizeText(
+                                                        "REGISTER",
                                                         style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0,
-                                                        ),
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  margin: EdgeInsets.only(
-                                                    left: 16.0,
-                                                  ),
-                                                  child: TextButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                        Colors.black,
-                                                      ),
-                                                      shape: MaterialStateProperty
-                                                          .all<
-                                                              RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          side: BorderSide(
-                                                            color: ConstantsVar
-                                                                .appColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      overlayColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors.red),
-                                                    ),
-                                                    onPressed: () async {
-                                                      Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 90,
-                                                        ),
-                                                        () => Navigator.of(
-                                                                context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RegstrationPage(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: AutoSizeText(
-                                                      "REGISTER",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
@@ -596,168 +607,172 @@ class _MyAccountState extends State<MyAccount> {
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'MyAssets/banner.jpg',
+                                    return SafeArea(
+                                      bottom: true,
+                                      maintainBottomViewPadding: true,
+                                      child: Container(
+                                        width: 100.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          top: 5.h, bottom: 3.h),
-                                      height: 30.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 5.w,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.0,
+                                        padding: EdgeInsets.only(
+                                            top: 5.h, bottom: 3.h),
+                                        height: 27.h,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            AutoSizeText(
+                                              'You are not logged in.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10.0,
+                                                      ),
+                                                      color:
+                                                          ConstantsVar.appColor,
+                                                      border: Border(
+                                                        top: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        bottom: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        left: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        right: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    border: Border(
-                                                      top: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      bottom: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      left: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      right: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
+                                                    child: Center(
+                                                      child: LoadingButton(
+                                                        color: Colors.black,
+                                                        loadingWidget:
+                                                            SpinKitCircle(
+                                                          color: Colors.white,
+                                                          size: 30,
+                                                        ),
+                                                        height: 12.w,
+                                                        onPressed: () async {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      LoginScreen(
+                                                                screenKey:
+                                                                    'My Account',
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        defaultWidget:
+                                                            AutoSizeText(
+                                                          "LOGIN",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  child: Center(
-                                                    child: LoadingButton(
-                                                      color: Colors.black,
-                                                      loadingWidget:
-                                                          SpinKitCircle(
-                                                        color: Colors.white,
-                                                        size: 30,
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    margin: EdgeInsets.only(
+                                                      left: 16.0,
+                                                    ),
+                                                    child: TextButton(
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                          Colors.black,
+                                                        ),
+                                                        shape: MaterialStateProperty
+                                                            .all<
+                                                                RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            side: BorderSide(
+                                                              color: ConstantsVar
+                                                                  .appColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        overlayColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors.red),
                                                       ),
-                                                      height: 12.w,
                                                       onPressed: () async {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    LoginScreen(
-                                                              screenKey:
-                                                                  'My Account',
+                                                        Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 90,
+                                                          ),
+                                                          () => Navigator.of(
+                                                                  context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegstrationPage(),
                                                             ),
                                                           ),
                                                         );
                                                       },
-                                                      defaultWidget:
-                                                          AutoSizeText(
-                                                        "LOGIN",
+                                                      child: AutoSizeText(
+                                                        "REGISTER",
                                                         style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0,
-                                                        ),
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  margin: EdgeInsets.only(
-                                                    left: 16.0,
-                                                  ),
-                                                  child: TextButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                        Colors.black,
-                                                      ),
-                                                      shape: MaterialStateProperty
-                                                          .all<
-                                                              RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          side: BorderSide(
-                                                            color: ConstantsVar
-                                                                .appColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      overlayColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors.red),
-                                                    ),
-                                                    onPressed: () async {
-                                                      Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 90,
-                                                        ),
-                                                        () => Navigator.of(
-                                                                context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RegstrationPage(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: AutoSizeText(
-                                                      "REGISTER",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
@@ -819,168 +834,172 @@ class _MyAccountState extends State<MyAccount> {
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(
-                                      width: 100.w,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'MyAssets/banner.jpg',
+                                    return SafeArea(
+                                      bottom: true,
+                                      maintainBottomViewPadding: true,
+                                      child: Container(
+                                        width: 100.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'MyAssets/banner.jpg',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          top: 5.h, bottom: 5.h),
-                                      height: 30.h,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            'You are not logged in.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 5.w,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      10.0,
+                                        padding: EdgeInsets.only(
+                                            top: 5.h, bottom: 5.h),
+                                        height: 27.h,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            AutoSizeText(
+                                              'You are not logged in.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 5.w,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10.0,
+                                                      ),
+                                                      color:
+                                                          ConstantsVar.appColor,
+                                                      border: Border(
+                                                        top: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        bottom: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        left: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                        right: BorderSide(
+                                                          color: ConstantsVar
+                                                              .appColor,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    color:
-                                                        ConstantsVar.appColor,
-                                                    border: Border(
-                                                      top: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      bottom: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      left: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
-                                                      ),
-                                                      right: BorderSide(
-                                                        color: ConstantsVar
-                                                            .appColor,
+                                                    child: Center(
+                                                      child: LoadingButton(
+                                                        color: Colors.black,
+                                                        loadingWidget:
+                                                            SpinKitCircle(
+                                                          color: Colors.white,
+                                                          size: 30,
+                                                        ),
+                                                        height: 12.w,
+                                                        onPressed: () async {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      LoginScreen(
+                                                                screenKey:
+                                                                    'My Account',
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        defaultWidget:
+                                                            AutoSizeText(
+                                                          "LOGIN",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  child: Center(
-                                                    child: LoadingButton(
-                                                      color: Colors.black,
-                                                      loadingWidget:
-                                                          SpinKitCircle(
-                                                        color: Colors.white,
-                                                        size: 30,
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 12.w,
+                                                    width: 30.w,
+                                                    margin: EdgeInsets.only(
+                                                      left: 16.0,
+                                                    ),
+                                                    child: TextButton(
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                          Colors.black,
+                                                        ),
+                                                        shape: MaterialStateProperty
+                                                            .all<
+                                                                RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            side: BorderSide(
+                                                              color: ConstantsVar
+                                                                  .appColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        overlayColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors.red),
                                                       ),
-                                                      height: 12.w,
                                                       onPressed: () async {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    LoginScreen(
-                                                              screenKey:
-                                                                  'My Account',
+                                                        Future.delayed(
+                                                          Duration(
+                                                            milliseconds: 90,
+                                                          ),
+                                                          () => Navigator.of(
+                                                                  context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegstrationPage(),
                                                             ),
                                                           ),
                                                         );
                                                       },
-                                                      defaultWidget:
-                                                          AutoSizeText(
-                                                        "LOGIN",
+                                                      child: AutoSizeText(
+                                                        "REGISTER",
                                                         style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0,
-                                                        ),
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 12.w,
-                                                  width: 30.w,
-                                                  margin: EdgeInsets.only(
-                                                    left: 16.0,
-                                                  ),
-                                                  child: TextButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                        Colors.black,
-                                                      ),
-                                                      shape: MaterialStateProperty
-                                                          .all<
-                                                              RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          side: BorderSide(
-                                                            color: ConstantsVar
-                                                                .appColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      overlayColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors.red),
-                                                    ),
-                                                    onPressed: () async {
-                                                      Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 90,
-                                                        ),
-                                                        () => Navigator.of(
-                                                                context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RegstrationPage(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: AutoSizeText(
-                                                      "REGISTER",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },

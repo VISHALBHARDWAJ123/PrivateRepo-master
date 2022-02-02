@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future initilaize() async {
     ConstantsVar.prefs = await SharedPreferences.getInstance();
-    if(ConstantsVar.prefs.getStringList('RecentProducts') == null) {
+    if (ConstantsVar.prefs.getStringList('RecentProducts') == null) {
       ConstantsVar.prefs.setStringList('RecentProducts', []);
     }
     // setState(())
@@ -113,14 +113,12 @@ class _SplashScreenState extends State<SplashScreen>
             );
       } else {
         // int val = 0;
-        getCartBagdge().then(
-          (value) => Future.delayed(
-            Duration(seconds: 4),
-            () => Navigator.pushReplacement(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MyApp(),
-              ),
+        Future.delayed(
+          Duration(seconds: 1, milliseconds: 10),
+          () => Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => MyApp(),
             ),
           ),
         );
@@ -157,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                       tag: 'HomeImage',
                       child: Image.asset(name),
                       transitionOnUserGestures: true,
-                      placeholderBuilder: (context,_,widget) {
+                      placeholderBuilder: (context, _, widget) {
                         return Container(
                           height: 15.w,
                           width: 15.w,

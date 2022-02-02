@@ -821,7 +821,7 @@ class _CartScreen2State extends State<CartScreen2>
                 child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: AutoSizeText(
-                    'No Item\(s\) in cart.\n\n\nAn empty home is an empty heart, fill your heart with LOVE from THE One\.\nHome is where the Heart is\.\.\.\.  ',
+                    'No Item\(s\) in cart.\n\n\nAn empty home is an empty heart, fill your heart with LOVE from THE One\.\nHome is where the Heart is\.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         letterSpacing: .8,

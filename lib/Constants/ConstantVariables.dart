@@ -10,7 +10,7 @@ class ConstantsVar {
 
   static double width = MediaQueryData.fromWindow(window).size.width;
   static double height = MediaQueryData.fromWindow(window).size.height;
-  static String customerID = prefs.getString('guestCustomerID')!;
+  static String customerID = prefs.getString('userId')??prefs.getString('guestCustomerID')!;
   static bool isCart = true;
   static late SharedPreferences prefs;
   static bool isVisible = false;

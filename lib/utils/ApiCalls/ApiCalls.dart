@@ -47,6 +47,7 @@ class ApiCalls {
       var response = await http.get(baseUrl, headers: header);
 
       print(jsonDecode(response.body)['ResponseData']);
+      print(jsonEncode(response.headers));
       return jsonDecode(response.body);
     } on Exception catch (e) {
       ConstantsVar.excecptionMessage(e);
@@ -96,7 +97,6 @@ class ApiCalls {
         dismissable: false,
         loadingWidget: SpinKitRipple(
           color: Colors.red,
-
           size: 40,
         ));
     _dialog.show();
@@ -291,7 +291,7 @@ class ApiCalls {
     try {
       final response = await http.get(Uri.parse(url), headers: header);
 
-      print(jsonDecode(response.body));
+      print(jsonEncode(response.headers));
 
       return jsonDecode(response.body);
     } on Exception catch (e) {
@@ -778,7 +778,7 @@ class ApiCalls {
     return Future.value(true);
   }
 
-  static launchUrl(String myUrl) async {
+  static Future launchUrl(String myUrl) async {
     if (await canLaunch(myUrl)) {
       await launch(
         myUrl, forceWebView: false,
@@ -894,11 +894,18 @@ class ApiCalls {
         'apis/CartCount?cutomerGuid=$customerGuid&CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     // var response = await http.get(uri, headers: header);
 
-    var response = await http.get(uri, headers: header);
+
+
+    print('Read Count header>>>>>>>>>>>>>>>>>>>>' + jsonEncode(header));
+
     print('Read Count Api>>>>>>>>>>>>>>>>>>>>>>>' + uri.toString());
     try {
+      var response = await http.get(uri, headers: header);
+
       // print(cookie);
       dynamic result = jsonDecode(response.body);
+      print('Auto Generated Read Count header>>>>>>>>>>>>>>>>>>>>' +
+          jsonEncode(response.headers));
       print(result);
       if (result['ResponseData'] != null &&
           result['status'].contains('success')) {
@@ -965,6 +972,7 @@ class ApiCalls {
   /* Delete address from my account */
   static Future deleteAddress(BuildContext context, String apiToken,
       String customerId, String addressId) async {
+    // Fluttertoast.showToast(msg: customerId);
     final body = {
       ApiParams.PARAM_API_TOKEN: apiToken,
       ApiParams.PARAM_CUSTOMER_ID: customerId,
