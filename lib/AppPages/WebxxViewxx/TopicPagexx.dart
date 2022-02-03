@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-
+import 'package:nb_utils/nb_utils.dart';
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
-import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
@@ -23,7 +21,7 @@ import 'WebController.dart';
 
 class TopicPage extends StatefulWidget {
   TopicPage({Key? key, required this.paymentUrl}) : super(key: key);
-  String paymentUrl;
+  final String paymentUrl;
 
   @override
   _TopicPageState createState() => _TopicPageState();
@@ -31,7 +29,7 @@ class TopicPage extends StatefulWidget {
 
 class _TopicPageState extends State<TopicPage> {
   final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  Completer<WebViewController>();
   var progressCount;
   bool isLoading = true;
   bool _willGo = true;
@@ -52,19 +50,7 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> _willGoBack() async {
-      Navigator.pushAndRemoveUntil(
-          context,
-          CupertinoPageRoute(
-              builder: (context) => MyOrders(
-                    isFromWeb: true,
-                  )),
-          (route) => false);
-      setState(() {
-        _willGo = true;
-      });
-      return _willGo;
-    }
+
 
     FocusScopeNode currentFocus = FocusScope.of(context);
     return GestureDetector(
@@ -94,7 +80,6 @@ class _TopicPageState extends State<TopicPage> {
                   final bool webViewReady =
                       snapshot.connectionState == ConnectionState.done;
                   final WebViewController? controller = snapshot.data;
-                  var controllerGlobal = controller;
 
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -107,8 +92,8 @@ class _TopicPageState extends State<TopicPage> {
                             onPressed: !webViewReady
                                 ? null
                                 : () {
-                                    controller!.reload();
-                                  },
+                              controller!.reload();
+                            },
                           ),
                         ),
                       ],
@@ -122,8 +107,8 @@ class _TopicPageState extends State<TopicPage> {
                 context.loaderOverlay.hide();
                 Navigator.pushAndRemoveUntil(context,
                     CupertinoPageRoute(builder: (context) {
-                  return MyApp();
-                }), (route) => false);
+                      return MyApp();
+                    }), (route) => false);
               },
               child: Image.asset(
                 'MyAssets/logo.png',
@@ -134,341 +119,381 @@ class _TopicPageState extends State<TopicPage> {
           ),
           body: Platform.isIOS
               ? Container(
-                  width: 100.w,
-                  height: 100.h,
-                  child: KeyboardActions(
-                    tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
-                    config: KeyboardActionsConfig(
-                      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-                      keyboardBarColor: Colors.grey[200],
-                      nextFocus: true,
-                      actions: [],
-                    ),
-                    child: Container(
-                      width: 100.w,
-                      height: 100.h,
-                      child: Stack(
-                        children: [
-                          FutureBuilder<WebViewController>(
-                            future: _webViewControllerFuture,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<WebViewController> snapshot) {
-                              final bool webViewReady =
-                                  snapshot.connectionState ==
-                                      ConnectionState.done;
-                              final WebViewController? controller =
-                                  snapshot.data;
-                              var controllerGlobal = controller;
+            width: 100.w,
+            height: 100.h,
+            child: KeyboardActions(
+              tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
+              config: KeyboardActionsConfig(
+                keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+                keyboardBarColor: Colors.grey[200],
+                nextFocus: true,
+                actions: [],
+              ),
+              child: Container(
+                width: 100.w,
+                height: 100.h,
+                child: Stack(
+                  children: [
+                    FutureBuilder<WebViewController>(
+                      future: _webViewControllerFuture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<WebViewController> snapshot) {
+                        final bool webViewReady =
+                            snapshot.connectionState ==
+                                ConnectionState.done;
+                        final WebViewController? controller =
+                            snapshot.data;
 
-                              return WillPopScope(
-                                onWillPop: !webViewReady
-                                    ? null
-                                    : () async {
-                                        if (await controller!.canGoBack()) {
-                                          controller.goBack();
-                                          return false;
-                                        } else {
-                                          Navigator.pop(context);
-                                          // Scaffold.of(context).showSnackBar(
-                                          //   const SnackBar(
-                                          //       content: Text("No back history item")),
-                                          // );
-                                          return true;
-                                        }
-                                      },
-                                child: Container(
-                                  width: 100.w,
-                                  height: 100.h,
-                                  child: Scaffold(
-                                    resizeToAvoidBottomInset: false,
-                                    body: WebView(
-                                      gestureRecognizers: Set()
-                                        ..add(
-                                          Factory<
-                                              VerticalDragGestureRecognizer>(
-                                            () =>
-                                                VerticalDragGestureRecognizer(),
-                                          ), // or null
-                                        ),
-                                      initialUrl:
-                                          Uri.encodeFull(widget.paymentUrl),
-                                      // userAgent:
-                                      //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
-                                      javascriptMode:
-                                          JavascriptMode.unrestricted,
-                                      onWebViewCreated: (WebViewController
-                                          webViewController) {
-                                        _controller.complete(webViewController);
-                                      },
-                                      onProgress: (int progress) {
-                                        setState(() {
-                                          isLoading = true;
-                                          progressCount = progress;
-                                        });
-                                      },
-                                      javascriptChannels: <JavascriptChannel>{
-                                        _toasterJavascriptChannel(context),
-                                      },
-                                      navigationDelegate:
-                                          (NavigationRequest request) {
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                        if (request.url.contains(
-                                            'customercare@theone.com')) {
-                                          ApiCalls.launchUrl(request.url);
-                                          return NavigationDecision.prevent;
-                                        }
-                                        if (request.url.startsWith(
-                                            'https://www.youtube.com/')) {
-                                          print(
-                                              'blocking navigation to $request}');
-                                          return NavigationDecision.prevent;
-                                        }
-
-                                        if (request.url
-                                            .contains('GetProductModelById')) {
-                                          var url = request.url;
-                                          Navigator.push(context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) {
-                                            return NewProductDetails(
-                                                productId:
-                                                    url.splitAfter('id='),
-                                                screenName: 'Topic Screen');
-                                          }));
-                                          return NavigationDecision.prevent;
-                                        }
-
-                                        if (request.url
-                                            .contains('GetCategoryPage')) {
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      MyHomePage(pageIndex: 1)),
-                                              (route) => false);
-                                          return NavigationDecision.prevent;
-                                        }
-
-                                        if (request.url.contains(
-                                            'http://theone.createsend.com/')) {
-                                          return NavigationDecision.navigate;
-                                        }
-                                        // if (request.url.contains('www.theone.com/')) {
-                                        //   return NavigationDecision.navigate;
-                                        // }
-                                        print(
-                                            'allowing navigation to $request');
-                                        return NavigationDecision.navigate;
-                                      },
-                                      onPageStarted: (String url) {
-                                        setState(() {
-                                          _willGo = false;
-                                          isLoading = true;
-                                        });
-
-                                        print('Page started loading: $url');
-                                      },
-                                      onPageFinished: (String url) {
-                                        print('Page finished loading: $url');
-                                        setState(() {
-                                          context.loaderOverlay.hide();
-                                          _willGo = true;
-                                          isLoading = false;
-                                        });
-                                      },
-                                      gestureNavigationEnabled: true,
-                                    ),
+                        return WillPopScope(
+                          onWillPop: !webViewReady
+                              ? null
+                              : () async {
+                            if (await controller!.canGoBack()) {
+                              controller.goBack();
+                              return false;
+                            } else {
+                              Navigator.pop(context);
+                              // Scaffold.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //       content: Text("No back history item")),
+                              // );
+                              return true;
+                            }
+                          },
+                          child: Container(
+                            width: 100.w,
+                            height: 100.h,
+                            child: Scaffold(
+                              resizeToAvoidBottomInset: false,
+                              body: WebView(
+                                gestureRecognizers: Set()
+                                  ..add(
+                                    Factory<
+                                        VerticalDragGestureRecognizer>(
+                                          () =>
+                                          VerticalDragGestureRecognizer(),
+                                    ), // or null
                                   ),
-                                ),
-                              );
-                            },
+                                initialUrl:
+                                Uri.encodeFull(widget.paymentUrl),
+                                // userAgent:
+                                //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
+                                javascriptMode:
+                                JavascriptMode.unrestricted,
+                                onWebViewCreated: (WebViewController
+                                webViewController) {
+                                  _controller.complete(webViewController);
+                                },
+                                onProgress: (int progress) {
+                                  setState(() {
+                                    isLoading = true;
+                                    progressCount = progress;
+                                  });
+                                },
+                                javascriptChannels: <JavascriptChannel>{
+                                  _toasterJavascriptChannel(context),
+                                },
+                                navigationDelegate:
+                                    (NavigationRequest request) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (request.url.contains(
+                                      'customercare@theone.com')) {
+                                    ApiCalls.launchUrl(request.url)
+                                        .then((value) => setState(() {
+                                      isLoading = false;
+                                      controller!.reload();
+                                    }));
+                                    return NavigationDecision.prevent;
+                                  }
+                                  if (request.url.startsWith(
+                                      'https://www.youtube.com/')) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    controller!.reload();
+
+                                    print(
+                                        'blocking navigation to $request}');
+                                    return NavigationDecision.prevent;
+                                  }
+
+                                  if (request.url
+                                      .contains('GetProductModelById')) {
+                                    var url = request.url;
+                                    Navigator.push(context,
+                                        CupertinoPageRoute(
+                                            builder: (context) {
+                                              return NewProductDetails(
+                                                  productId:
+                                                  url.splitAfter('id='),
+                                                  screenName: 'Topic Screen');
+                                            })).then((value) => setState(() {
+                                      isLoading = false;
+                                      controller!.reload();
+                                    }));
+                                    return NavigationDecision.prevent;
+                                  }
+
+                                  if (request.url
+                                      .contains('GetCategoryPage')) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) =>
+                                              MyHomePage(
+                                                  pageIndex: 1),
+                                        ),
+                                            (route) => false)
+                                        .then((value) => setState(() {
+                                      controller!.reload();
+
+                                      isLoading = false;
+                                    }));
+                                    return NavigationDecision.prevent;
+                                  }
+
+                                  if (request.url.contains(
+                                      'http://theone.createsend.com/')) {
+                                    setState(() {
+                                      isLoading = false;
+                                      controller!.reload();
+                                    });
+                                    return NavigationDecision.navigate;
+                                  }
+
+                                  print(
+                                      'allowing navigation to $request');
+                                  return NavigationDecision.navigate;
+                                },
+                                onPageStarted: (String url) {
+                                  setState(() {
+                                    _willGo = false;
+                                    isLoading = true;
+                                  });
+
+                                  print('Page started loading: $url');
+                                },
+                                onPageFinished: (String url) {
+                                  print('Page finished loading: $url');
+                                  setState(() {
+                                    context.loaderOverlay.hide();
+                                    _willGo = true;
+                                    isLoading = false;
+                                  });
+                                },
+                                gestureNavigationEnabled: true,
+                              ),
+                            ),
                           ),
-                          isLoading
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    children: [
-                                      SpinKitRipple(
-                                        color: Colors.red,
-                                        size: 90,
-                                      ),
-                                      Text('Loading Please Wait!.........' +
-                                          progressCount.toString() +
-                                          '%'),
-                                    ],
-                                  ))
-                              : Stack(),
-                        ],
+                        );
+                      },
+                    ),
+                    isLoading
+                        ? Visibility(
+                      visible: isLoading,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            SpinKitRipple(
+                              color: Colors.red,
+                              size: 90,
+                            ),
+                            Text('Loading Please Wait!.........' +
+                                progressCount.toString() +
+                                '%'),
+                          ],
+                        ),
                       ),
+                    )
+                        : Stack(),
+                  ],
+                ),
+              ),
+            ),
+          )
+              : Container(
+            width: 100.w,
+            height: 100.h,
+            child: Stack(
+              children: [
+                FutureBuilder<WebViewController>(
+                  future: _webViewControllerFuture,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WebViewController> snapshot) {
+                    final bool webViewReady =
+                        snapshot.connectionState == ConnectionState.done;
+                    final WebViewController? controller = snapshot.data;
+
+                    return WillPopScope(
+                      onWillPop: !webViewReady
+                          ? null
+                          : () async {
+                        if (await controller!.canGoBack()) {
+                          controller.goBack();
+                          return false;
+                        } else {
+                          Navigator.pop(context);
+                          // Scaffold.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //       content: Text("No back history item")),
+                          // );
+                          return true;
+                        }
+                      },
+                      child: Container(
+                        width: 100.w,
+                        height: 100.h,
+                        child: Scaffold(
+                          resizeToAvoidBottomInset: false,
+                          body: WebView(
+                            gestureRecognizers: Set()
+                              ..add(
+                                Factory<VerticalDragGestureRecognizer>(
+                                      () => VerticalDragGestureRecognizer(),
+                                ), // or null
+                              ),
+                            initialUrl: Uri.encodeFull(widget.paymentUrl),
+                            // userAgent:
+                            //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
+                            javascriptMode: JavascriptMode.unrestricted,
+                            onWebViewCreated:
+                                (WebViewController webViewController) {
+                              _controller.complete(webViewController);
+                            },
+                            onProgress: (int progress) {
+                              setState(() {
+                                isLoading = true;
+                                progressCount = progress;
+                              });
+                            },
+                            javascriptChannels: <JavascriptChannel>{
+                              _toasterJavascriptChannel(context),
+                            },
+                            navigationDelegate:
+                                (NavigationRequest request) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (request.url.contains(
+                                  'customercare@theone.com')) {
+                                ApiCalls.launchUrl(request.url)
+                                    .then((value) => setState(() {
+                                  isLoading = false;
+                                  controller!.reload();
+                                }));
+                                return NavigationDecision.prevent;
+                              }
+                              if (request.url.startsWith(
+                                  'https://www.youtube.com/')) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                controller!.reload();
+
+                                print(
+                                    'blocking navigation to $request}');
+                                return NavigationDecision.prevent;
+                              }
+
+                              if (request.url
+                                  .contains('GetProductModelById')) {
+                                var url = request.url;
+                                Navigator.push(context,
+                                    CupertinoPageRoute(
+                                        builder: (context) {
+                                          return NewProductDetails(
+                                              productId:
+                                              url.splitAfter('id='),
+                                              screenName: 'Topic Screen');
+                                        })).then((value) => setState(() {
+                                  isLoading = false;
+                                  controller!.reload();
+                                }));
+                                return NavigationDecision.prevent;
+                              }
+
+                              if (request.url
+                                  .contains('GetCategoryPage')) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          MyHomePage(
+                                              pageIndex: 1),
+                                    ),
+                                        (route) => false)
+                                    .then((value) => setState(() {
+                                  controller!.reload();
+
+                                  isLoading = false;
+                                }));
+                                return NavigationDecision.prevent;
+                              }
+
+                              if (request.url.contains(
+                                  'http://theone.createsend.com/')) {
+                                setState(() {
+                                  isLoading = false;
+                                  controller!.reload();
+                                });
+                                return NavigationDecision.navigate;
+                              }
+
+                              print(
+                                  'allowing navigation to $request');
+                              return NavigationDecision.navigate;
+                            },
+                            onPageStarted: (String url) {
+                              setState(() {
+                                _willGo = false;
+                                isLoading = true;
+                              });
+
+                              print('Page started loading: $url');
+                            },
+                            onPageFinished: (String url) {
+                              print('Page finished loading: $url');
+                              setState(() {
+                                context.loaderOverlay.hide();
+                                _willGo = true;
+                                isLoading = false;
+                              });
+                            },
+                            gestureNavigationEnabled: true,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Visibility(
+                  visible: isLoading,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        SpinKitRipple(
+                          color: Colors.red,
+                          size: 90,
+                        ),
+                        Text('Loading Please Wait!.........' +
+                            progressCount.toString() +
+                            '%'),
+                      ],
                     ),
                   ),
                 )
-              : Container(
-                  width: 100.w,
-                  height: 100.h,
-                  child: Stack(
-                    children: [
-                      FutureBuilder<WebViewController>(
-                        future: _webViewControllerFuture,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<WebViewController> snapshot) {
-                          final bool webViewReady =
-                              snapshot.connectionState == ConnectionState.done;
-                          final WebViewController? controller = snapshot.data;
-                          var controllerGlobal = controller;
-
-                          return WillPopScope(
-                            onWillPop: !webViewReady
-                                ? null
-                                : () async {
-                                    if (await controller!.canGoBack()) {
-                                      controller.goBack();
-                                      return false;
-                                    } else {
-                                      Navigator.pop(context);
-                                      // Scaffold.of(context).showSnackBar(
-                                      //   const SnackBar(
-                                      //       content: Text("No back history item")),
-                                      // );
-                                      return true;
-                                    }
-                                  },
-                            child: Container(
-                              width: 100.w,
-                              height: 100.h,
-                              child: Scaffold(
-                                resizeToAvoidBottomInset: false,
-                                body: WebView(
-                                  gestureRecognizers: Set()
-                                    ..add(
-                                      Factory<VerticalDragGestureRecognizer>(
-                                        () => VerticalDragGestureRecognizer(),
-                                      ), // or null
-                                    ),
-                                  initialUrl: Uri.encodeFull(widget.paymentUrl),
-                                  // userAgent:
-                                  //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0",
-                                  javascriptMode: JavascriptMode.unrestricted,
-                                  onWebViewCreated:
-                                      (WebViewController webViewController) {
-                                    _controller.complete(webViewController);
-                                  },
-                                  onProgress: (int progress) {
-                                    setState(() {
-                                      isLoading = true;
-                                      progressCount = progress;
-                                    });
-                                  },
-                                  javascriptChannels: <JavascriptChannel>{
-                                    _toasterJavascriptChannel(context),
-                                  },
-                                  navigationDelegate:
-                                      (NavigationRequest request) {
-                                    if (request.url
-                                        .contains('customercare@theone.com')) {
-                                      ApiCalls.launchUrl(request.url);
-                                      return NavigationDecision.prevent;
-                                    }
-                                    if (request.url.startsWith(
-                                        'https://www.youtube.com/')) {
-                                      print('blocking navigation to $request}');
-                                      return NavigationDecision.prevent;
-                                    }
-
-                                    if (request.url
-                                        .contains('GetProductModelById')) {
-                                      var url = request.url;
-                                      Navigator.push(context,
-                                          CupertinoPageRoute(
-                                              builder: (context) {
-                                        return NewProductDetails(
-                                            productId: url.splitAfter('id='),
-                                            screenName: 'Home Screen');
-                                      }));
-                                      return NavigationDecision.prevent;
-                                    }
-
-                                    if (request.url
-                                        .contains('GetCategoryPage')) {
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  MyHomePage(pageIndex: 1)),
-                                          (route) => false);
-                                      return NavigationDecision.prevent;
-                                    }
-
-                                    if (request.url.contains(
-                                        'http://theone.createsend.com/')) {
-                                      return NavigationDecision.navigate;
-                                    }
-                                    // if (request.url.contains('www.theone.com/')) {
-                                    //   return NavigationDecision.navigate;
-                                    // }
-                                    print('allowing navigation to $request');
-                                    return NavigationDecision.navigate;
-                                  },
-                                  onPageStarted: (String url) {
-                                    setState(() {
-                                      _willGo = false;
-                                      isLoading = true;
-                                    });
-
-                                    print('Page started loading: $url');
-                                  },
-                                  onPageFinished: (String url) {
-                                    print('Page finished loading: $url');
-                                    setState(() {
-                                      context.loaderOverlay.hide();
-                                      _willGo = true;
-                                      isLoading = false;
-                                    });
-                                  },
-                                  gestureNavigationEnabled: true,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      isLoading
-                          ? Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                children: [
-                                  SpinKitRipple(
-                                    color: Colors.red,
-                                    size: 90,
-                                  ),
-                                  Text('Loading Please Wait!.........' +
-                                      progressCount.toString() +
-                                      '%'),
-                                ],
-                              ))
-                          : Stack(),
-                    ],
-                  ),
-                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Future<bool> _willPopUp() async {
-    context.loaderOverlay.hide();
 
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(
-            builder: (context) => MyHomePage(
-                  pageIndex: 0,
-                )),
-        (route) => false);
-    return true;
-  }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(

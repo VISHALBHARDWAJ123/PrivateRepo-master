@@ -60,8 +60,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
           print(values);
           setState(() {
             addressResponse = AllAddressesResponse.fromJson(values);
-            existingAddress =
-                addressResponse.customeraddresslist.addresses;
+            existingAddress = addressResponse.customeraddresslist.addresses;
             print('address>>> $addressResponse');
             showAddresses = true;
             showLoading = false;
@@ -77,7 +76,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
 
   void callApiAllAddresses() {
     ApiCalls.allAddresses(
-            ConstantsVar.apiTokken.toString(), guestCustomerId, context)
+        ConstantsVar.apiTokken.toString(), guestCustomerId, context)
         .then((value) {
       print('Resumed>>>  $value');
       setState(() {
@@ -97,13 +96,12 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         ApiCalls.allAddresses(
-                ConstantsVar.apiTokken.toString(), guestCustomerId, context)
+            ConstantsVar.apiTokken.toString(), guestCustomerId, context)
             .then((value) {
           print('Resumed>>>  $value');
           setState(() {
             addressResponse = AllAddressesResponse.fromJson(value);
-            existingAddress =
-                addressResponse.customeraddresslist.addresses;
+            existingAddress = addressResponse.customeraddresslist.addresses;
             print('address>>> $addressResponse');
             showAddresses = true;
           });
@@ -139,11 +137,12 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop:  _willGo?null:() async => false,
+      onWillPop: _willGo ? null : () async => false,
       child: SafeArea(
         top: true,
         bottom: true,
-        maintainBottomViewPadding: true,        child: Scaffold(
+        maintainBottomViewPadding: true,
+        child: Scaffold(
             appBar: AppBar(
               toolbarHeight: 18.w,
               backgroundColor: ConstantsVar.appColor,
@@ -152,9 +151,11 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                   Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => MyHomePage(pageIndex: 0,),
+                        builder: (context) => MyHomePage(
+                          pageIndex: 0,
+                        ),
                       ),
-                      (route) => false);
+                          (route) => false);
                 },
                 child: Image.asset(
                   'MyAssets/logo.png',
@@ -165,7 +166,7 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
               centerTitle: true,
             ),
             body: Stack(children: [
-             Column(
+              Column(
                 children: <Widget>[
                   Visibility(
                       visible: existingAddress.isEmpty ? false : true,
@@ -182,22 +183,22 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                         onPressed: () async {
                           Route route = CupertinoPageRoute(
                               builder: (context) => AddressScreen(
-                                    uri: 'MyAccountAddAddress',
-                                    isShippingAddress: false,
-                                    isEditAddress: false,
-                                    firstName: '',
-                                    lastName: '',
-                                    email: '',
-                                    address1: '',
-                                    countryName: '',
-                                    city: '',
-                                    phoneNumber: '',
-                                    id: 0,
-                                    company: '',
-                                    faxNumber: '',
-                                    title: 'Add a new address',
-                                    btnTitle: 'Add new address',
-                                  ));
+                                uri: 'MyAccountAddAddress',
+                                isShippingAddress: false,
+                                isEditAddress: false,
+                                firstName: '',
+                                lastName: '',
+                                email: '',
+                                address1: '',
+                                countryName: '',
+                                city: '',
+                                phoneNumber: '',
+                                id: 0,
+                                company: '',
+                                faxNumber: '',
+                                title: 'Add a new address',
+                                btnTitle: 'Add new address',
+                              ));
 
                           Navigator.pushReplacement(context, route);
                         },
@@ -230,262 +231,251 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                           header: ClassicHeader(),
                           controller: _refreshController,
                           child: ListView(
-
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             children: List.generate(
-                                existingAddress.length,
-                                (index)
-                                {
-                                      return Container(
-                                        margin: EdgeInsets.only(
-                                            left: 10.0,
-                                            right: 10.0,
-                                            top: 6.0,
-                                            bottom: 6.0),
-                                        child: Card(
-                                          elevation: 5,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          color: Colors.white,
-                                          child: Container(
-                                            height: 25.h,
-                                            margin: EdgeInsets.only(
-                                              left: 10,
-                                              right: 10,
-                                              bottom: 3.2,
-                                            ),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    // padding: const EdgeInsets.all(4.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      right: 8,
-                                                                      top: 4),
-                                                              child:
-                                                                  AutoSizeText(
-                                                                existingAddress[
-                                                                            index]
-                                                                        .firstName +
-                                                                    ' ' +
-                                                                    existingAddress[
-                                                                            index]
-                                                                        .lastName,
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                softWrap: true,
-                                                                style: CustomTextStyle
-                                                                    .textFormFieldBold
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            16),
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                                child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              children: <
-                                                                  Widget>[
-                                                                GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    print(
-                                                                        'edit clicked');
-                                                                    //open popup
-                                                                    Navigator.pushReplacement(
-                                                                        context,
-                                                                        CupertinoPageRoute(builder:
-                                                                            (context) {
-                                                                      return AddressScreen(
-                                                                        uri:
-                                                                            'EditAddress',
-                                                                        isShippingAddress:
-                                                                            false,
-                                                                        isEditAddress:
-                                                                            true,
-                                                                        firstName:
-                                                                            existingAddress[index].firstName,
-                                                                        lastName:
-                                                                            existingAddress[index].lastName,
-                                                                        email: existingAddress[index]
-                                                                            .email,
-                                                                        address1:
-                                                                            existingAddress[index].address1,
-                                                                        countryName:
-                                                                            existingAddress[index].countryName,
-                                                                        city: existingAddress[index]
-                                                                            .city,
-                                                                        phoneNumber:
-                                                                            existingAddress[index].phoneNumber,
-                                                                        id: existingAddress[index]
-                                                                            .id,
-                                                                        company: existingAddress[index].company ==
-                                                                                null
-                                                                            ? ''
-                                                                            : existingAddress[index].company,
-                                                                        faxNumber: existingAddress[index].faxNumber ==
-                                                                                null
-                                                                            ? ''
-                                                                            : existingAddress[index].faxNumber,
-                                                                        title:
-                                                                            'Edit Address',
-                                                                        btnTitle:
-                                                                            'Save Address',
-                                                                      );
-                                                                    }));
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons.edit,
-                                                                    color: AppColor
-                                                                        .PrimaryAccentColor,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ),
-                                                                addHorizontalSpace(
-                                                                    10),
-                                                                GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    setState(() =>
-                                                                        _willGo =
-                                                                            false);
-                                                                    print(
-                                                                        'delete clicked');
-                                                                    ApiCalls.deleteAddress(
-                                                                            context,
-                                                                            ConstantsVar.apiTokken
-                                                                                .toString(),
-                                                                            ConstantsVar
-                                                                                .customerID,
-                                                                            existingAddress[index]
-                                                                                .id
-                                                                                .toString())
-                                                                        .then(
-                                                                            (value) {
-                                                                      _refreshController
-                                                                          .requestRefresh();
-
-                                                                      setState(() =>
-                                                                          _willGo =
-                                                                              true);
-                                                                    });
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    color: AppColor
-                                                                        .PrimaryAccentColor,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )),
-                                                          ],
+                              existingAddress.length,
+                                  (index) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                      left: 10.0,
+                                      right: 10.0,
+                                      top: 6.0,
+                                      bottom: 6.0),
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    color: Colors.white,
+                                    child: Container(
+                                      height: 25.h,
+                                      margin: EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 3.2,
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              // padding: const EdgeInsets.all(4.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        padding:
+                                                        EdgeInsets.only(
+                                                            right: 8,
+                                                            top: 4),
+                                                        child: AutoSizeText(
+                                                          existingAddress[index]
+                                                              .firstName +
+                                                              ' ' +
+                                                              existingAddress[
+                                                              index]
+                                                                  .lastName,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          softWrap: true,
+                                                          style: CustomTextStyle
+                                                              .textFormFieldBold
+                                                              .copyWith(
+                                                              fontSize: 16),
                                                         ),
-                                                        Utils.getSizedBox(
-                                                            null, 6),
-                                                        Container(
-                                                            child: AutoSizeText(
-                                                                'Email - ' +
-                                                                    existingAddress[
-                                                                            index]
-                                                                        .email)),
-                                                        Container(
+                                                      ),
+                                                      Container(
                                                           child: Row(
                                                             mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                            MainAxisAlignment
+                                                                .end,
                                                             children: <Widget>[
-                                                              Flexible(
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  'Address -' +
-                                                                      existingAddress[
+                                                              GestureDetector(
+                                                                onTap: () async {
+                                                                  print(
+                                                                      'edit clicked');
+                                                                  //open popup
+                                                                  Navigator.pushReplacement(
+                                                                      context,
+                                                                      CupertinoPageRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                            return AddressScreen(
+                                                                              uri:
+                                                                              'EditAddress',
+                                                                              isShippingAddress:
+                                                                              false,
+                                                                              isEditAddress:
+                                                                              true,
+                                                                              firstName: existingAddress[
                                                                               index]
-                                                                          .address1,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          15),
+                                                                                  .firstName,
+                                                                              lastName: existingAddress[
+                                                                              index]
+                                                                                  .lastName,
+                                                                              email: existingAddress[
+                                                                              index]
+                                                                                  .email,
+                                                                              address1: existingAddress[
+                                                                              index]
+                                                                                  .address1,
+                                                                              countryName:
+                                                                              existingAddress[
+                                                                              index]
+                                                                                  .countryName,
+                                                                              city: existingAddress[
+                                                                              index]
+                                                                                  .city,
+                                                                              phoneNumber:
+                                                                              existingAddress[
+                                                                              index]
+                                                                                  .phoneNumber,
+                                                                              id: existingAddress[
+                                                                              index]
+                                                                                  .id,
+                                                                              company: existingAddress[index]
+                                                                                  .company ==
+                                                                                  null
+                                                                                  ? ''
+                                                                                  : existingAddress[
+                                                                              index]
+                                                                                  .company,
+                                                                              faxNumber: existingAddress[index]
+                                                                                  .faxNumber ==
+                                                                                  null
+                                                                                  ? ''
+                                                                                  : existingAddress[
+                                                                              index]
+                                                                                  .faxNumber,
+                                                                              title:
+                                                                              'Edit Address',
+                                                                              btnTitle:
+                                                                              'Save Address',
+                                                                            );
+                                                                          }));
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.edit,
+                                                                  color: AppColor
+                                                                      .PrimaryAccentColor,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ),
+                                                              addHorizontalSpace(
+                                                                  10),
+                                                              GestureDetector(
+                                                                onTap: () async {
+                                                                  setState(() =>
+                                                                  _willGo =
+                                                                  false);
+                                                                  print(
+                                                                      'delete clicked');
+                                                                  ApiCalls.deleteAddress(
+                                                                      context,
+                                                                      ConstantsVar
+                                                                          .apiTokken
+                                                                          .toString(),
+                                                                      ConstantsVar
+                                                                          .prefs
+                                                                          .getString(
+                                                                          'userId')!,
+                                                                      existingAddress[
+                                                                      index]
+                                                                          .id
+                                                                          .toString())
+                                                                      .then(
+                                                                          (value) {
+                                                                        _refreshController
+                                                                            .requestRefresh();
+
+                                                                        setState(() =>
+                                                                        _willGo =
+                                                                        true);
+                                                                      });
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: AppColor
+                                                                      .PrimaryAccentColor,
+                                                                  size: 24.0,
                                                                 ),
                                                               ),
                                                             ],
+                                                          )),
+                                                    ],
+                                                  ),
+                                                  Utils.getSizedBox(null, 6),
+                                                  Container(
+                                                      child: AutoSizeText(
+                                                          'Email - ' +
+                                                              existingAddress[
+                                                              index]
+                                                                  .email)),
+                                                  Container(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: AutoSizeText(
+                                                            'Address -' +
+                                                                existingAddress[
+                                                                index]
+                                                                    .address1,
+                                                            overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                            style: TextStyle(
+                                                                fontSize: 15),
                                                           ),
                                                         ),
-                                                        Container(
-                                                            child: AutoSizeText(
-                                                                'Phone -' +
-                                                                    ' ' +
-                                                                    existingAddress[
-                                                                            index]
-                                                                        .phoneNumber)),
-                                                        Container(
-                                                            child: AutoSizeText(
-                                                                'Country -' +
-                                                                    ' ' +
-                                                                    existingAddress[
-                                                                            index]
-                                                                        .countryName)),
-                                                        addVerticalSpace(12),
                                                       ],
                                                     ),
                                                   ),
-                                                )
-                                              ],
+                                                  Container(
+                                                      child: AutoSizeText(
+                                                          'Phone -' +
+                                                              ' ' +
+                                                              existingAddress[
+                                                              index]
+                                                                  .phoneNumber)),
+                                                  Container(
+                                                      child: AutoSizeText(
+                                                          'Country -' +
+                                                              ' ' +
+                                                              existingAddress[
+                                                              index]
+                                                                  .countryName)),
+                                                  addVerticalSpace(12),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      );
-                                    },),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: !showLoading,
-                    child: Visibility(
-                      visible: existingAddress.isEmpty ? true : false,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          child: AutoSizeText(
-                            'No Address found',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
                       ),
                     ),
-                  )
+                  ),
+
                 ],
               ),
               // Container(child: isLoading ? Loader() : Container()),
@@ -493,9 +483,25 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
                 visible: showLoading,
                 child: Positioned(
                   child:
-                      Align(alignment: Alignment.center, child: showloader()),
+                  Align(alignment: Alignment.center, child: showloader()),
                 ),
-              ),
+              ),       Visibility(
+                visible: !showLoading,
+                child: Visibility(
+                  visible: existingAddress.isEmpty ? true : false,
+                  child: Center(
+                    child: Container(
+                      child: AutoSizeText(
+                        'No Address found',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ])),
       ),
     );
@@ -513,15 +519,14 @@ class _MyAddressesState extends State<MyAddresses> with WidgetsBindingObserver {
   void _onLoading() async {
     existingAddress.clear();
     ApiCalls.allAddresses(
-            ConstantsVar.apiTokken.toString(), guestCustomerId, context)
+        ConstantsVar.apiTokken.toString(), guestCustomerId, context)
         .then((value) {
       setState(() {
         addressResponse = AllAddressesResponse.fromJson(value);
-        existingAddress.addAll( addressResponse.customeraddresslist.addresses);
+        existingAddress.addAll(addressResponse.customeraddresslist.addresses);
         print('address>>> $addressResponse');
         showAddresses = true;
         _refreshController.refreshCompleted();
-
       });
     });
   }
