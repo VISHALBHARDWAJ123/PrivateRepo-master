@@ -86,7 +86,6 @@ Future<void> main() async {
             playSound: true,
             enableLights: true,
             enableVibration: true,
-            
             channelShowBadge: true,
             icon: 'resource://drawable/playstore',
           ),

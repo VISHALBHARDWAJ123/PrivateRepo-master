@@ -23,7 +23,7 @@ import 'WebController.dart';
 
 class TopicPage extends StatefulWidget {
   TopicPage({Key? key, required this.paymentUrl}) : super(key: key);
-  final String paymentUrl;
+  String paymentUrl;
 
   @override
   _TopicPageState createState() => _TopicPageState();
@@ -52,7 +52,19 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    Future<bool> _willGoBack() async {
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => MyOrders(
+                    isFromWeb: true,
+                  )),
+          (route) => false);
+      setState(() {
+        _willGo = true;
+      });
+      return _willGo;
+    }
 
     FocusScopeNode currentFocus = FocusScope.of(context);
     return GestureDetector(
@@ -82,6 +94,7 @@ class _TopicPageState extends State<TopicPage> {
                   final bool webViewReady =
                       snapshot.connectionState == ConnectionState.done;
                   final WebViewController? controller = snapshot.data;
+                  var controllerGlobal = controller;
 
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -145,6 +158,7 @@ class _TopicPageState extends State<TopicPage> {
                                       ConnectionState.done;
                               final WebViewController? controller =
                                   snapshot.data;
+                              var controllerGlobal = controller;
 
                               return WillPopScope(
                                 onWillPop: !webViewReady
@@ -202,18 +216,11 @@ class _TopicPageState extends State<TopicPage> {
                                         });
                                         if (request.url.contains(
                                             'customercare@theone.com')) {
-                                          ApiCalls.launchUrl(request.url)
-                                              .then((value) => setState(() {
-                                                    isLoading = false;
-                                                  }));
+                                          ApiCalls.launchUrl(request.url);
                                           return NavigationDecision.prevent;
                                         }
                                         if (request.url.startsWith(
                                             'https://www.youtube.com/')) {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-
                                           print(
                                               'blocking navigation to $request}');
                                           return NavigationDecision.prevent;
@@ -229,37 +236,28 @@ class _TopicPageState extends State<TopicPage> {
                                                 productId:
                                                     url.splitAfter('id='),
                                                 screenName: 'Topic Screen');
-                                          })).then((value) => setState(() {
-                                                isLoading = false;
-                                              }));
+                                          }));
                                           return NavigationDecision.prevent;
                                         }
 
                                         if (request.url
                                             .contains('GetCategoryPage')) {
                                           Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        MyHomePage(
-                                                            pageIndex: 1),
-                                                  ),
-                                                  (route) => false)
-                                              .then((value) => setState(() {
-
-                                                    isLoading = false;
-                                                  }));
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      MyHomePage(pageIndex: 1)),
+                                              (route) => false);
                                           return NavigationDecision.prevent;
                                         }
 
                                         if (request.url.contains(
                                             'http://theone.createsend.com/')) {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
                                           return NavigationDecision.navigate;
                                         }
-
+                                        // if (request.url.contains('www.theone.com/')) {
+                                        //   return NavigationDecision.navigate;
+                                        // }
                                         print(
                                             'allowing navigation to $request');
                                         return NavigationDecision.navigate;
@@ -288,9 +286,8 @@ class _TopicPageState extends State<TopicPage> {
                             },
                           ),
                           isLoading
-                              ? Visibility(
-                            visible: isLoading,
-                                child: Center(
+                              ? Align(
+                                  alignment: Alignment.center,
                                   child: Column(
                                     children: [
                                       SpinKitRipple(
@@ -301,9 +298,7 @@ class _TopicPageState extends State<TopicPage> {
                                           progressCount.toString() +
                                           '%'),
                                     ],
-                                  ),
-                                ),
-                              )
+                                  ))
                               : Stack(),
                         ],
                       ),
@@ -322,6 +317,7 @@ class _TopicPageState extends State<TopicPage> {
                           final bool webViewReady =
                               snapshot.connectionState == ConnectionState.done;
                           final WebViewController? controller = snapshot.data;
+                          var controllerGlobal = controller;
 
                           return WillPopScope(
                             onWillPop: !webViewReady
@@ -370,25 +366,14 @@ class _TopicPageState extends State<TopicPage> {
                                   },
                                   navigationDelegate:
                                       (NavigationRequest request) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    if (request.url.contains(
-                                        'customercare@theone.com')) {
-                                      ApiCalls.launchUrl(request.url)
-                                          .then((value) => setState(() {
-                                        isLoading = false;
-                                      }));
+                                    if (request.url
+                                        .contains('customercare@theone.com')) {
+                                      ApiCalls.launchUrl(request.url);
                                       return NavigationDecision.prevent;
                                     }
                                     if (request.url.startsWith(
                                         'https://www.youtube.com/')) {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-
-                                      print(
-                                          'blocking navigation to $request}');
+                                      print('blocking navigation to $request}');
                                       return NavigationDecision.prevent;
                                     }
 
@@ -398,12 +383,9 @@ class _TopicPageState extends State<TopicPage> {
                                       Navigator.push(context,
                                           CupertinoPageRoute(
                                               builder: (context) {
-                                                return NewProductDetails(
-                                                    productId:
-                                                    url.splitAfter('id='),
-                                                    screenName: 'Topic Screen');
-                                              })).then((value) => setState(() {
-                                        isLoading = false;
+                                        return NewProductDetails(
+                                            productId: url.splitAfter('id='),
+                                            screenName: 'Home Screen');
                                       }));
                                       return NavigationDecision.prevent;
                                     }
@@ -413,28 +395,20 @@ class _TopicPageState extends State<TopicPage> {
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           CupertinoPageRoute(
-                                            builder: (context) =>
-                                                MyHomePage(
-                                                    pageIndex: 1),
-                                          ),
-                                              (route) => false)
-                                          .then((value) => setState(() {
-
-                                        isLoading = false;
-                                      }));
+                                              builder: (context) =>
+                                                  MyHomePage(pageIndex: 1)),
+                                          (route) => false);
                                       return NavigationDecision.prevent;
                                     }
 
                                     if (request.url.contains(
                                         'http://theone.createsend.com/')) {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
                                       return NavigationDecision.navigate;
                                     }
-
-                                    print(
-                                        'allowing navigation to $request');
+                                    // if (request.url.contains('www.theone.com/')) {
+                                    //   return NavigationDecision.navigate;
+                                    // }
+                                    print('allowing navigation to $request');
                                     return NavigationDecision.navigate;
                                   },
                                   onPageStarted: (String url) {
@@ -460,23 +434,21 @@ class _TopicPageState extends State<TopicPage> {
                           );
                         },
                       ),
-                      Visibility(
-                        visible: isLoading,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Column(
-                            children: [
-                              SpinKitRipple(
-                                color: Colors.red,
-                                size: 90,
-                              ),
-                              Text('Loading Please Wait!.........' +
-                                  progressCount.toString() +
-                                  '%'),
-                            ],
-                          ),
-                        ),
-                      )
+                      isLoading
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  SpinKitRipple(
+                                    color: Colors.red,
+                                    size: 90,
+                                  ),
+                                  Text('Loading Please Wait!.........' +
+                                      progressCount.toString() +
+                                      '%'),
+                                ],
+                              ))
+                          : Stack(),
                     ],
                   ),
                 ),
@@ -485,7 +457,18 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
+  Future<bool> _willPopUp() async {
+    context.loaderOverlay.hide();
 
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(
+            builder: (context) => MyHomePage(
+                  pageIndex: 0,
+                )),
+        (route) => false);
+    return true;
+  }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(

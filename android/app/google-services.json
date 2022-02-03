@@ -7,42 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:150803512425:android:10673c140119f88b7476f8",
-        "android_client_info": {
-          "package_name": "com.theone.androidapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "150803512425-cg5bfo84o9fbatq7nhvrngq3s4h1qrca.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBoMLFhJ8ir_pT57X1qFtmYSS-CQQzoXuE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "150803512425-cg5bfo84o9fbatq7nhvrngq3s4h1qrca.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "150803512425-g0etic53qmce8979qc7rtst65j7k4b85.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.dev.theone"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:150803512425:android:a65f690de327e5cb7476f8",
         "android_client_info": {
           "package_name": "com.theone.app"

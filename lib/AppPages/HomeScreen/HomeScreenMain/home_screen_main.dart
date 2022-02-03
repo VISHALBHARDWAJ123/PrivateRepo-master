@@ -53,9 +53,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.inactive:
-        ConstantsVar.prefs.setBool('isFirstTime', true);
-        // TODO: Handle this case.
-        print(ConstantsVar.prefs.getBool('isFirstTime'));
         print('appLifeCycleState inactive');
         break;
       case AppLifecycleState.resumed:
@@ -67,7 +64,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       case AppLifecycleState.detached:
         ConstantsVar.prefs.setBool('isFirstTime', true);
         // TODO: Handle this case.
-        print(ConstantsVar.prefs.getBool('isFirstTime'));
         print('I am detached');
         break;
     }
@@ -120,6 +116,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   // var _recentlyProductController;
 
   Future initSharedPrefs() async {
+    ConstantsVar.prefs = await SharedPreferences.getInstance();
     isFirstTime = ConstantsVar.prefs.getBool('isFirstTime') ?? true;
 
     print('Is First Time:- ${isFirstTime}');
@@ -129,19 +126,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
 
   @override
   void initState() {
-    super.initState();
-    print('First Time >>>>>>>>' +
-        ConstantsVar.prefs.getBool('isFirstTime').toString());
-    initSharedPrefs();
     WidgetsBinding.instance!.addObserver(this);
-    getApiToken().then((value) async {
-      if (mounted) setState(() {});
-
-      await showAdDialog().whenComplete(() {
-        apiCallToHomeScreen(value);
-        initSharedPrefs().whenComplete(() => getRecentlyViewedProduct());
-      });
-    });
+    initSharedPrefs().whenComplete(() => getRecentlyViewedProduct());
 
     _productController = new ScrollController();
     _recentlyProductController = new ScrollController();
@@ -150,14 +136,23 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
 
+    getApiToken().then((value) async {
+      if (mounted) setState(() {});
+
+      await showAdDialog().whenComplete(() {
+        apiCallToHomeScreen(value);
+      });
+    });
     setState(() {});
+
+    super.initState();
   }
 
   Future showAdDialog() async {
     setState(() {
       userId = ConstantsVar.prefs.getString('email');
     });
-    print(userId);
+    print('I am triggered ');
     CustomProgressDialog progressDialog =
         CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
@@ -174,10 +169,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     final url = Uri.parse(BuildConfig.base_url +
         'apis/GetHomeScreenPopup?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print('Ads Url' + url.toString());
-
     try {
       var response = await get(url, headers: ApiCalls.header);
-      print('Ads Response>>>>>' + response.body);
       progressDialog.dismiss();
       setState(() {
         adsResponse = AdsResponse.fromJson(
@@ -190,9 +183,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           showDialog(
                   // barrierColor: Colors.transparent,
                   builder: (BuildContext context) {
-                    return AdsDialog(
-                      responseHtml: adsResponse.responseData,
-                    );
+                    return isVisibled
+                        ? Container()
+                        : AdsDialog(
+                            responseHtml: adsResponse.responseData,
+                          );
                   },
                   context: context)
               .then((value) {
@@ -891,65 +886,80 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                             .map((e) => Padding(
                                                   padding:
                                                       const EdgeInsets.all(5.0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(context, CupertinoPageRoute(builder:(context){    return TopicPage(
+                                                  child: OpenContainer(
+                                                    closedElevation: 0,
+                                                    openElevation: 0,
+                                                    transitionType:
+                                                        _transitionType,
+                                                    openBuilder: (BuildContext
+                                                            context,
+                                                        void Function(
+                                                                {Object?
+                                                                    returnValue})
+                                                            action) {
+                                                      return TopicPage(
                                                         paymentUrl: e.url,
                                                       );
-                                                      })) ;
                                                     },
-                                                    onLongPress: (){},
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            image:
-                                                                DecorationImage(
-                                                              image: CachedNetworkImageProvider(
-                                                                  e.imagePath),
-                                                              fit: BoxFit.fill,
+                                                    closedBuilder:
+                                                        (BuildContext context,
+                                                            void Function()
+                                                                action) {
+                                                      return Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: CachedNetworkImageProvider(
+                                                                    e.imagePath),
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
                                                             ),
+                                                            width: Adaptive.w(
+                                                                43.6),
+                                                            height:
+                                                                Adaptive.w(45),
                                                           ),
-                                                          width:
-                                                              Adaptive.w(43.6),
-                                                          height:
-                                                              Adaptive.w(45),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 2.0,
-                                                            vertical: 11,
-                                                          ),
-                                                          child: Container(
-                                                            width: 45.w,
-                                                            child: AutoSizeText(
-                                                              e.textToDisplay,
-                                                              maxLines: 1,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 2.0,
+                                                              vertical: 11,
+                                                            ),
+                                                            child: Container(
+                                                              width: 45.w,
+                                                              child:
+                                                                  AutoSizeText(
+                                                                e.textToDisplay,
+                                                                maxLines: 1,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                        ],
+                                                      );
+                                                    },
                                                   ),
                                                 ))
                                             .toList(),
@@ -1278,15 +1288,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   }
 
   Future getRecentlyViewedProduct() async {
+    _productIds = ConstantsVar.prefs.getStringList('RecentProducts')!;
+    // _productIds = List<String>.from(dynamicList).toList();
+    apiToken = ConstantsVar.prefs.getString('apiTokken')!;
     print('Recently Viewed Products CustomerId:-' +
         ConstantsVar.prefs.getString('guestCustomerID')!);
 
-    setState(() {
-      _productIds = ConstantsVar.prefs.getStringList('RecentProducts')!;
-      // _productIds = List<String>.from(dynamicList).toList();
-      apiToken = ConstantsVar.prefs.getString('guestGUID')!;
-    });
-    print("Api Token>>>>>>>>>>>>>" + apiToken);
+    setState(() {});
     final url = Uri.parse(BuildConfig.base_url +
         'apis/GetRecentlyViewedProducts?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print('.Nop.RecentlyViewedProducts=${_productIds.join(',')}');
@@ -1294,14 +1302,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       var jsonResponse = await http.get(
         url,
         headers: {
-          'Cookie': ApiCalls.cookie +
-              ';' +
-              '.Nop.RecentlyViewedProducts=${_productIds.join('%2C')}',
+          'Cookie': '.Nop.Customer=$apiToken',
+          "Cookie": '.Nop.RecentlyViewedProducts=${_productIds.join('%2C')}',
         },
       );
       if (jsonDecode(jsonResponse.body)['status'].contains('Success')) {
-        print('Recently View Product Headers>>>>>>>>' +
-            jsonEncode(jsonResponse.headers));
         RecentlyViewProductResponse _result =
             RecentlyViewProductResponse.fromJson(
           jsonDecode(jsonResponse.body),
@@ -1711,8 +1716,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     );
     try {
       var result = jsonDecode(response.body);
-      print('Search Suggestions Api Headers>>>>>>>' +
-          jsonEncode(response.headers));
       SearchSuggestionResponse suggestions =
           SearchSuggestionResponse.fromJson(result);
       print(suggestions.status);

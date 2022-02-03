@@ -2,6 +2,7 @@
 //
 //     final removeItemWishlistResponse = removeItemWishlistResponseFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RemoveItemWishlistResponse removeItemWishlistResponseFromJson(String str) => RemoveItemWishlistResponse.fromJson(json.decode(str));

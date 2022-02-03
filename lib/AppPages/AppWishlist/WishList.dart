@@ -59,7 +59,7 @@ class _WishlistScreenState extends State<WishlistScreen>
       () => setState(
         () {
           _loginId = ConstantsVar.prefs.getString('userId') ?? '';
-          customerId = ConstantsVar.prefs.getString('userId')??ConstantsVar.prefs.getString('guestCustomerID')!;
+          customerId = ConstantsVar.prefs.getString('guestCustomerID')!;
           apiToken = ConstantsVar.prefs.getString('apiTokken')!;
           _customerEmail = ConstantsVar.prefs.getString('email') ?? '';
           _customerEmailCtrl = TextEditingController(text: _customerEmail);

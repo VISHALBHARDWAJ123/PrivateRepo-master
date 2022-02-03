@@ -1,19 +1,16 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
-import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
 
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
-import 'package:untitled2/utils/utils/colors.dart';
+import 'package:untitled2/utils/CustomDialog/CustomxxLoginxxCheck.dart';
 
 class ForgotPassScreen extends StatefulWidget {
   const ForgotPassScreen({
@@ -88,51 +85,35 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 40.0,left: 30,right: 30),
-                          child:               Card(
-                            // color: Colors.white60,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                12.0,
-                              ),
-                            ),
-                            elevation: 2.0,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              child: Container(
-
-                                width: 90.w,
-                                child: TextFormField(
-                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  autofocus: true,
-                                  textInputAction: TextInputAction.next,
-                                  keyboardType:
-                                  TextInputType.emailAddress,
-                                  validator: (val) {
-                                    if (isEmailValid(val!)) {
-                                      return null;
-                                    }
-                                    return 'Please enter a valid email address!';
-                                  },
-                                  cursorColor: ConstantsVar.appColor,
-
-                                  controller: emailController,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14.0,
-                                  ),
-                                  decoration: editBoxDecoration(
-                                      'E-mail Address',
-                                      Icon(
-                                        Icons.email,
-                                        color:
-                                        AppColor.PrimaryAccentColor,
-                                      ),
-                                      false),
-                                ),
+                          padding: const EdgeInsets.only(top: 40.0),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            child: ListTile(
+                              title: TextFormField(
+                                maxLines: 1,
+                                textAlign: TextAlign.start,
+                                controller: emailController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                cursorColor: Colors.black,
+                                validator: (val) {
+                                  if (isEmailValid(val!)) {
+                                    return null;
+                                  }
+                                  return 'Please Enter a valid email';
+                                },
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                    suffixText: '*',
+                                    counterText: '',
+                                    border: OutlineInputBorder(gapPadding: 2),
+                                    errorText: emailController.text.length == 0
+                                        ? 'Please Enter Your Email'
+                                        : null,
+                                    focusColor: Colors.black,
+                                    hintText: "E-Mail Address",
+                                    hintStyle: TextStyle(color: Colors.black),
+                                    errorStyle: TextStyle(color: Colors.black)),
                               ),
                             ),
                           ),
@@ -220,26 +201,5 @@ class _ForgotPassScreenState extends State<ForgotPassScreen>
         ),
       ),
     );
-  }
-  InputDecoration editBoxDecoration(String name, Icon icon, bool isSuffix) {
-    return new InputDecoration(
-        suffix: isSuffix == false
-            ? null
-            : ClipOval(
-          child: RoundCheckBox(
-            border: Border.all(width: 0),
-            size: 24,
-            onTap: (selected) {},
-            checkedWidget: Icon(Icons.mood, color: Colors.white),
-            uncheckedWidget: Icon(Icons.mood_bad),
-            animationDuration: Duration(
-              seconds: 1,
-            ),
-          ),
-        ),
-        prefixIcon: icon,
-        labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
-        labelText: name,
-        border: InputBorder.none);
   }
 }

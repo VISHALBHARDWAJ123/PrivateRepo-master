@@ -178,7 +178,7 @@ class _MyAddressItemState extends State<MyAddressItem> {
                                   ApiCalls.deleteAddress(
                                           context,
                                           ConstantsVar.apiTokken.toString(),
-                                          ConstantsVar.prefs.getString('userId')!,
+                                          ConstantsVar.customerID,
                                           widget.id.toString())
                                       .then((value) {
                                     widget.callback();
