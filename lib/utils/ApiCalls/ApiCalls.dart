@@ -252,8 +252,8 @@ class ApiCalls {
       ) async {
     String message = '';
     final uri = Uri.parse(BuildConfig.base_url +
-        'AppCustomer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&email=$email');
-
+        'AppCustomer/ForgotPassword?apiToken=${ConstantsVar.apiTokken}&EMail=$email&CustId=${ConstantsVar.prefs.getString('userId') ?? ConstantsVar.prefs.getString('guestCustomerID')}');
+    print(uri);
     try {
       var response = await http.get(uri, headers: header);
       print('${jsonDecode(response.body)}');

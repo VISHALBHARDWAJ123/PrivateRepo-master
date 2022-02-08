@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/OtP/NewxxOTPxxScreen.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/Widgets/widgets/AppBar.dart';
+import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
@@ -123,11 +125,11 @@ class _RegstrationPageState extends State<RegstrationPage>
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                AppBarLogo('REGISTRATION', context),
                 Expanded(
                   child: ListView(
                     shrinkWrap: true,
                     children: [
+                      AppBarLogo('REGISTRATION', context),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(18.0),
@@ -300,10 +302,9 @@ class _RegstrationPageState extends State<RegstrationPage>
                                             color: Colors.black, fontSize: 14),
                                         decoration: InputDecoration(
                                             counterText: '',
-                                            prefixIcon: Icon(
-                                              Icons.home,
-                                              color: ConstantsVar.appColor,
-                                            ),
+                                            prefixIcon: Icon(Icons.home,
+                                                color: AppColor
+                                                    .PrimaryAccentColor),
                                             labelStyle: TextStyle(
                                                 fontSize: 5.w,
                                                 color: Colors.grey),
@@ -369,7 +370,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                           ),
                                           prefixIcon: Icon(
                                             Icons.password_rounded,
-                                            color: ConstantsVar.appColor,
+                                            color:  AppColor.PrimaryAccentColor,
                                           ),
                                           labelStyle: TextStyle(
                                               fontSize: 5.w,
@@ -388,71 +389,67 @@ class _RegstrationPageState extends State<RegstrationPage>
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: TextFormField(
-                                          enableInteractiveSelection: false,
-                                          validator: (password) {
-                                            if (isPasswordMatch(
-                                              pController.text.toString(),
-                                              cpController.text.toString(),
-                                            ))
-                                              return null;
-                                            else
-                                              return 'Password Mismatch!';
-                                          },
-                                          textInputAction: TextInputAction.done,
-                                          obscureText: cpError,
-                                          controller: cpController,
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          cursorColor: Colors.black,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                          decoration: InputDecoration(
-                                              suffix: ClipOval(
-                                                child: RoundCheckBox(
-                                                  borderColor: Colors.white,
-                                                  checkedColor: Colors.white,
-                                                  uncheckedColor: Colors.white,
-                                                  size: 20,
-                                                  onTap: (selected) {
-                                                    setState(() {
-                                                      print('Tera kaam  bngya');
-                                                      cpError
-                                                          ? cpError = selected!
-                                                          : cpError = selected!;
-                                                    });
-                                                  },
-                                                  isChecked: cpError,
-                                                  checkedWidget: Center(
-                                                    child: Icon(
-                                                      Icons.visibility,
-                                                      size: 20,
-                                                    ),
+                                    child: TextFormField(
+                                        enableInteractiveSelection: false,
+                                        validator: (password) {
+                                          if (isPasswordMatch(
+                                            pController.text.toString(),
+                                            cpController.text.toString(),
+                                          ))
+                                            return null;
+                                          else
+                                            return 'Password Mismatch!';
+                                        },
+                                        textInputAction: TextInputAction.done,
+                                        obscureText: cpError,
+                                        controller: cpController,
+                                        autovalidateMode: AutovalidateMode
+                                            .onUserInteraction,
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14),
+                                        decoration: InputDecoration(
+                                            suffix: ClipOval(
+                                              child: RoundCheckBox(
+                                                borderColor: Colors.white,
+                                                checkedColor: Colors.white,
+                                                uncheckedColor: Colors.white,
+                                                size: 20,
+                                                onTap: (selected) {
+                                                  setState(() {
+                                                    print('Tera kaam  bngya');
+                                                    cpError
+                                                        ? cpError = selected!
+                                                        : cpError = selected!;
+                                                  });
+                                                },
+                                                isChecked: cpError,
+                                                checkedWidget: Center(
+                                                  child: Icon(
+                                                    Icons.visibility,
+                                                    size: 20,
                                                   ),
-                                                  uncheckedWidget: Center(
-                                                    child: Icon(
-                                                      Icons.visibility_off,
-                                                      color:
-                                                          ConstantsVar.appColor,
-                                                      size: 20,
-                                                    ),
+                                                ),
+                                                uncheckedWidget: Center(
+                                                  child: Icon(
+                                                    Icons.visibility_off,
+                                                    color:
+                                                    AppColor.PrimaryAccentColor,
+                                                    size: 20,
                                                   ),
                                                 ),
                                               ),
-                                              prefixIcon: Icon(
-                                                Icons.password_rounded,
-                                                color: ConstantsVar.appColor,
-                                              ),
-                                              labelStyle: TextStyle(
-                                                  fontSize: 5.w,
-                                                  color: Colors.grey),
-                                              labelText: 'Confirm Password',
-                                              border: InputBorder.none)),
-                                    ),
+                                            ),
+                                            prefixIcon: Icon(
+                                              Icons.password_rounded,
+                                              color:  AppColor.PrimaryAccentColor,
+                                            ),
+                                            labelStyle: TextStyle(
+                                                fontSize: 5.w,
+                                                color: Colors.grey),
+                                            labelText: 'Confirm Password',
+                                            border: InputBorder.none)),
                                   ),
                                 ),
                               ],
@@ -460,7 +457,10 @@ class _RegstrationPageState extends State<RegstrationPage>
                           ),
                         ),
                       ),
-
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: buildText(context),
+                      )
                     ],
                   ),
                 ),
@@ -609,6 +609,43 @@ class _RegstrationPageState extends State<RegstrationPage>
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget buildText(BuildContext context) {
+    TextStyle defaultStyle = TextStyle(color: Colors.black, fontSize: 2.5.w);
+    TextStyle linkStyle = TextStyle(color: ConstantsVar.appColor);
+    return RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(text: 'By clicking Register, you agree to our '),
+          TextSpan(
+              text: 'Terms of Service',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => TopicPage(
+                            paymentUrl:
+                            'https://www.theone.com/terms-conditions-3',
+                          )));
+                }),
+          TextSpan(text: ' and that you have read our '),
+          TextSpan(
+              text: 'Privacy Policy',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Privacy Policy"');
+                  ApiCalls.launchUrl(
+                      'https://www.theone.com/privacy-policy-uae');
+                }),
+        ],
+      ),
+    );
+  }
 }
 
 mixin InputValidationMixin {

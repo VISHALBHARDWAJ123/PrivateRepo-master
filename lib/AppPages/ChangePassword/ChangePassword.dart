@@ -4,16 +4,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
-import 'package:loader_overlay/src/overlay_controller_widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
-
-// import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/CustomLoader/CustomDialog/CustomDialog.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
@@ -319,7 +315,6 @@ class _ChangePasswordState extends State<ChangePassword>
                             ),
                           ),
                         ),
-
                         // submit button
 
                         // sign up button
@@ -391,7 +386,7 @@ class _ChangePasswordState extends State<ChangePassword>
     };
     final uri =
         Uri.parse(BuildConfig.base_url + 'AppCustomer/ChangeCustomerPassword?');
-    var resp = await post(uri, body: body,headers:ApiCalls.header);
+    var resp = await post(uri, body: body, headers: ApiCalls.header);
 
     try {
       var result = jsonDecode(resp.body);
@@ -404,11 +399,13 @@ class _ChangePasswordState extends State<ChangePassword>
         status = result['Status'];
         message = result['Message'][0].toString();
       });
-      if (status == false ) {
-        setState((){errorMessage =   result['errorMessage'][0].toString();});
+      if (status == false) {
+        setState(() {
+          errorMessage = result['errorMessage'][0].toString();
+        });
         showErrorDialog(message);
       }
-      if (status.toString().contains('Failed') ) {
+      if (status.toString().contains('Failed')) {
         showErrorDialog(message);
       } else {
         showModalBottomSheet<void>(
@@ -512,5 +509,4 @@ class _ChangePasswordState extends State<ChangePassword>
   Future clearUserDetails() async {
     ConstantsVar.prefs.clear();
   }
-
 }

@@ -1337,7 +1337,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                 child: HtmlWidget(
                   initialDatas!.fullDescription,
                   onTapUrl: (url) async {
-                    Fluttertoast.showToast(msg: url);
+
                     print(url);
                     if (url.contains(
                         'terms-and-conditions-for-on-line-accessory-styling-service')) {

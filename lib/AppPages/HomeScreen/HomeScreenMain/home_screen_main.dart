@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'dart:ui';
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +14,6 @@ import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/SearchSuggestions/SearchSuggestion.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreenMain/TopicPageResponse/TopicPageResponse.dart';
@@ -38,7 +34,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import 'RecentlyViewedProductResponse.dart';
-
+import 'package:facebook_app_events/facebook_app_events.dart';
 class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
 
@@ -122,7 +118,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   Future initSharedPrefs() async {
     isFirstTime = ConstantsVar.prefs.getBool('isFirstTime') ?? true;
 
-    print('Is First Time:- ${isFirstTime}');
+    print('Is First Time:- $isFirstTime');
 
     setState(() {});
   }
@@ -130,6 +126,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   @override
   void initState() {
     super.initState();
+    FacebookAppEvents().logEvent(
+      name: 'button_clicked',
+      parameters: {
+        'button_id': 'the_clickme_button',
+      },
+    );
     print('First Time >>>>>>>>' +
         ConstantsVar.prefs.getBool('isFirstTime').toString());
     initSharedPrefs();
@@ -1733,7 +1735,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         'Topic Page Customer Id:- ${ConstantsVar.prefs.getString('guestCustomerID')}');
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetAppTopics?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
-    print('Topic Page Url:- ${uri}');
+    print('Topic Page Url:- $uri');
     try {
       var response = await http.get(uri, headers: ApiCalls.header);
       TopicPageResponse result = TopicPageResponse.fromJson(

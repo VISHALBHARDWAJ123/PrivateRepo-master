@@ -2,6 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/ForgotPass/ForgotPassword.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/Registration/RegistrationPage.dart';
+import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
@@ -86,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
     return SafeArea(
       top: true,
       bottom: true,
-      maintainBottomViewPadding: true,
+      // maintainBottomViewPadding: true,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         extendBodyBehindAppBar: true,
@@ -181,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                             right: 8.w,
                           ),
                           child: Container(
-                            height: 43.h,
+                            height: 50.h,
                             child: ListView(
                               physics: NeverScrollableScrollPhysics(),
                               children: [
@@ -205,8 +207,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                       ],
                                       autofocus: true,
                                       textInputAction: TextInputAction.next,
-                                      keyboardType:
-                                          TextInputType.emailAddress,
+                                      keyboardType: TextInputType.emailAddress,
                                       validator: (val) {
                                         if (isEmailValid(val!)) {
                                           return null;
@@ -214,7 +215,6 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                         return 'Please enter a valid email address!';
                                       },
                                       cursorColor: ConstantsVar.appColor,
-
                                       controller: emailController,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -224,8 +224,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                           'E-mail Address',
                                           Icon(
                                             Icons.email,
-                                            color:
-                                                AppColor.PrimaryAccentColor,
+                                            color: AppColor.PrimaryAccentColor,
                                           ),
                                           false),
                                     ),
@@ -248,7 +247,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                     ),
                                     width: 90.w,
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: TextFormField(
@@ -257,7 +257,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                             autofillHints: <String>[
                                               AutofillHints.password
                                             ],
-                                            textInputAction: TextInputAction.done,
+                                            textInputAction:
+                                                TextInputAction.done,
                                             obscureText: passError,
 
                                             keyboardType:
@@ -265,8 +266,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                             // validator: (inputz) =>
                                             //     input!.isValidPass() ? null : "Check your Password",
                                             controller: passController,
-                                            autovalidateMode:
-                                                AutovalidateMode.onUserInteraction,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             cursorColor: ConstantsVar.appColor,
                                             style: TextStyle(
                                               color: Colors.black,
@@ -286,11 +287,10 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                               border: InputBorder.none,
                                             ),
                                           ),
-
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 4.0),
+                                          padding:
+                                              const EdgeInsets.only(right: 4.0),
                                           child: ClipOval(
                                             child: RoundCheckBox(
                                               borderColor: Colors.white,
@@ -315,8 +315,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                               uncheckedWidget: Center(
                                                 child: Icon(
                                                   Icons.visibility_off,
-                                                  color:
-                                                  ConstantsVar.appColor,
+                                                  color: ConstantsVar.appColor,
                                                   size: 20,
                                                 ),
                                               ),
@@ -354,20 +353,16 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                               color: ConstantsVar.appColor,
                                               border: Border(
                                                 top: BorderSide(
-                                                  color:
-                                                      ConstantsVar.appColor,
+                                                  color: ConstantsVar.appColor,
                                                 ),
                                                 bottom: BorderSide(
-                                                  color:
-                                                      ConstantsVar.appColor,
+                                                  color: ConstantsVar.appColor,
                                                 ),
                                                 left: BorderSide(
-                                                  color:
-                                                      ConstantsVar.appColor,
+                                                  color: ConstantsVar.appColor,
                                                 ),
                                                 right: BorderSide(
-                                                  color:
-                                                      ConstantsVar.appColor,
+                                                  color: ConstantsVar.appColor,
                                                 ),
                                               ),
                                             ),
@@ -384,8 +379,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                       .validate()) {
                                                     _loginKey.currentState!
                                                         .save();
-                                                    setState(() =>
-                                                        _willGo = false);
+                                                    setState(
+                                                        () => _willGo = false);
                                                     await ApiCalls.login(
                                                       context,
                                                       emailController.text
@@ -420,8 +415,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                   "LOGIN",
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 14.0,
                                                   ),
                                                 ),
@@ -455,8 +449,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                         BorderRadius.circular(
                                                             10.0),
                                                     side: BorderSide(
-                                                      color: ConstantsVar
-                                                          .appColor,
+                                                      color:
+                                                          ConstantsVar.appColor,
                                                     ),
                                                   ),
                                                 ),
@@ -482,8 +476,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                                 "REGISTER",
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
                                             ),
@@ -517,11 +510,14 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                     ),
                                   ),
                                 ),
+
+
                               ],
                             ),
                           ),
                         ),
                       ),
+                      buildText(context),
                     ],
                   ),
                 ),
@@ -529,6 +525,54 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildText(BuildContext context) {
+    TextStyle defaultStyle = TextStyle(color: Colors.black, fontSize: 2.5.w);
+    TextStyle linkStyle = TextStyle(color: ConstantsVar.appColor);
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(
+              text: 'THEOne.com',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  
+                  ApiCalls.launchUrl('https://www.theone.com');
+                }),
+          TextSpan(text: ' - Our '),
+          TextSpan(
+              text: 'Terms of Service',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => TopicPage(
+                                paymentUrl:
+                                    'https://www.theone.com/terms-conditions-3',
+                              )));
+                }),
+          TextSpan(text: ' and  '),
+          TextSpan(
+              text: 'Privacy Policy',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Privacy Policy"');
+                  ApiCalls.launchUrl(
+                      'https://www.theone.com/privacy-policy-uae');
+                }),
+          TextSpan(
+            text: '\nCOPYRIGHT © 2022 THE ONE UAE. ALL RIGHTS RESERVED.  ',
+          ),
+        ],
       ),
     );
   }
