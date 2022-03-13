@@ -692,7 +692,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
                     recipName: _recNameController.text,
                     email: _yourEmailController.text,
                     productImage: imageList[0],
-                    productName: initialDatas!.name,
+                    productName: initialDatas!.name, productPrice: initialDatas!.productPrice.priceValue,
                   ),
                 )
               ],

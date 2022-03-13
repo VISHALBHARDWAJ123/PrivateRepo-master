@@ -1,14 +1,15 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
@@ -19,8 +20,6 @@ import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.d
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/SearchModel/SearchNotifier.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 
@@ -378,7 +377,9 @@ class _NewSearchPageState extends State<NewSearchPage> {
                                     message: '',
                                     productName: searchedProducts[index].name,
                                     productImage:
-                                        searchedProducts[index].productPicture,
+                                        searchedProducts[index].productPicture, productPrice:        searchedProducts[
+                                  index]
+                                      .priceValue,
                                     // fontSize: 12,
                                   ),
                                 )

@@ -1,18 +1,20 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_add_to_cart_button/flutter_add_to_cart_button.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled2/AppPages/CartxxScreen/CartScreen2.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/AddToCartResponse/AddToCartResponse.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/ApiCalls/CategoryModel.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 
 import 'ProductListWidget/ProductListWid.dart';
@@ -45,10 +47,19 @@ class _ProductListState extends State<ProductList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('Hi Myself Product List Page');
-    getId().whenComplete(() =>
-        ApiCalls.getCategoryById('${widget.categoryId}', context, 0, customerId: guestCustomerId)
-            .then((value) {
+
+    getId().whenComplete(() async => ApiCalls.getCategoryById(
+                '${widget.categoryId}', context, 0,
+                customerId: guestCustomerId)
+            .then((value) async {
+          await FacebookAppEvents()
+              .logViewContent(
+                type: 'Product List Screen',
+                id: widget.categoryId,
+                currency: CurrencyCode.AED.name,
+            
+              )
+              .whenComplete(() => print('Content Viewed on Product List Page'));
           setState(() {
             try {
               inititalData = ProductListModel.fromJson(value);
@@ -63,6 +74,7 @@ class _ProductListState extends State<ProductList> {
               }
             } on Exception catch (e) {
               isException = true;
+              print(e.toString);
             }
           });
         }));
@@ -77,7 +89,6 @@ class _ProductListState extends State<ProductList> {
         child: Scaffold(
           appBar: new AppBar(
             actions: [
-
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
@@ -296,27 +307,29 @@ class _ProductListState extends State<ProductList> {
 }
 
 class AddCartBtn extends StatefulWidget {
-  AddCartBtn({
-    Key? key,
-    this.productId,
-    required this.text,
-    required this.productName,
-    required this.productImage,
-    required this.isTrue,
-    required this.guestCustomerId,
-    required this.checkIcon,
-    required this.color,
-    required this.isProductAttributeAvail,
-    required this.isGiftCard,
-    required this.recipEmail,
-    required this.attributeId,
-    required this.message,
-    required this.name,
-    required this.email,
-    required this.recipName,
-  }) : super(key: key);
+  AddCartBtn(
+      {Key? key,
+      this.productId,
+      required this.text,
+      required this.productName,
+      required this.productImage,
+      required this.isTrue,
+      required this.guestCustomerId,
+      required this.checkIcon,
+      required this.color,
+      required this.isProductAttributeAvail,
+      required this.isGiftCard,
+      required this.recipEmail,
+      required this.attributeId,
+      required this.message,
+      required this.name,
+      required this.email,
+      required this.recipName,
+      required this.productPrice})
+      : super(key: key);
   final productId;
   final guestCustomerId;
+  final double productPrice;
   Icon checkIcon;
   String text;
   Color color;
@@ -389,7 +402,17 @@ class _AddCartBtnState extends State<AddCartBtn> {
   void checkStateId(
       AddToCartButtonStateId id, FocusScopeNode currentFocus) async {
     // bool giftCardAvail = false;
-
+    FacebookAppEvents().logAddToCart(
+      content: {
+        'fb_content_id': 'trail',
+        'fb_content_type': 'product',
+        'fb_currency': 'AED',
+      },
+      type: 'Add to cart',
+      price: widget.productPrice,
+      id: 'trail',
+      currency: 'AED',
+    ).then((value) => print('log event'));
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
@@ -469,18 +492,18 @@ class _AddCartBtnState extends State<AddCartBtn> {
             stateId = AddToCartButtonStateId.loading;
             AddToCartResponse result;
             ApiCalls.addToCart(
-                    widget.guestCustomerId,
-                    '${widget.productId}',
-                    context,
-                    widget.attributeId,
-                    widget.name,
-                    widget.recipName,
-                    widget.email,
-                    widget.recipEmail,
-                    widget.message,
+              widget.guestCustomerId,
+              '${widget.productId}',
+              context,
+              widget.attributeId,
+              widget.name,
+              widget.recipName,
+              widget.email,
+              widget.recipEmail,
+              widget.message,
               productName: widget.productName,
-              productImage: widget.productImage,)
-                .then((response) {
+              productImage: widget.productImage,
+            ).then((response) {
               setState(() {
                 int val = 0;
                 ApiCalls.readCounter(

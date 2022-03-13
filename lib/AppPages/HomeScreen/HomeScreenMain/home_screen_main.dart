@@ -35,6 +35,7 @@ import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import 'RecentlyViewedProductResponse.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
+
 class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
 
@@ -126,12 +127,6 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   @override
   void initState() {
     super.initState();
-    FacebookAppEvents().logEvent(
-      name: 'button_clicked',
-      parameters: {
-        'button_id': 'the_clickme_button',
-      },
-    );
     print('First Time >>>>>>>>' +
         ConstantsVar.prefs.getBool('isFirstTime').toString());
     initSharedPrefs();
@@ -142,13 +137,14 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       await showAdDialog().whenComplete(() {
         apiCallToHomeScreen(value);
         initSharedPrefs().whenComplete(() => getRecentlyViewedProduct());
+        FacebookAppEvents().logViewContent(type: 'Home Screen',id:'Home').whenComplete(() => print('View Content'));
       });
     });
 
     _productController = new ScrollController();
     _recentlyProductController = new ScrollController();
     _serviceController =
-    new ScrollController(initialScrollOffset: modelList.length + 30.w);
+        new ScrollController(initialScrollOffset: modelList.length + 30.w);
     // ApiCa readCounter(customerGuid: gUId).then((value) => context.read<cartCounter>().changeCounter(value));
     getSocialMediaLink();
 
@@ -161,7 +157,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     });
     print(userId);
     CustomProgressDialog progressDialog =
-    CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
@@ -190,13 +186,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           print('Guest user ');
           /*Ads For Guest User for first time*/
           showDialog(
-            // barrierColor: Colors.transparent,
-              builder: (BuildContext context) {
-                return AdsDialog(
-                  responseHtml: adsResponse.responseData,
-                );
-              },
-              context: context)
+                  // barrierColor: Colors.transparent,
+                  builder: (BuildContext context) {
+                    return AdsDialog(
+                      responseHtml: adsResponse.responseData,
+                    );
+                  },
+                  context: context)
               .then((value) {
             progressDialog.dismiss();
           });
@@ -210,19 +206,19 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             if (adsResponse.active == true &&
                 adsResponse.status.contains('Success') &&
                 _currentTimeStamp
-                    .difference(DateTime.parse(_previousTimeStamp))
-                    .inHours >=
+                        .difference(DateTime.parse(_previousTimeStamp))
+                        .inHours >=
                     adsResponse.intervalTime) {
               showDialog(
-                // barrierColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return isVisibled
-                        ? Container()
-                        : AdsDialog(
-                      responseHtml: adsResponse.responseData,
-                    );
-                  },
-                  context: context)
+                      // barrierColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return isVisibled
+                            ? Container()
+                            : AdsDialog(
+                                responseHtml: adsResponse.responseData,
+                              );
+                      },
+                      context: context)
                   .then((value) {
                 progressDialog.dismiss();
               });
@@ -245,19 +241,19 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             if (adsResponse.active == true &&
                 adsResponse.status.contains('Success') &&
                 _currentTimeStamp
-                    .difference(DateTime.parse(_previousTimeStamp))
-                    .inHours >=
+                        .difference(DateTime.parse(_previousTimeStamp))
+                        .inHours >=
                     adsResponse.intervalTime) {
               showDialog(
-                // barrierColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return isVisibled
-                        ? Container()
-                        : AdsDialog(
-                      responseHtml: adsResponse.responseData,
-                    );
-                  },
-                  context: context)
+                      // barrierColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return isVisibled
+                            ? Container()
+                            : AdsDialog(
+                                responseHtml: adsResponse.responseData,
+                              );
+                      },
+                      context: context)
                   .then((value) {
                 progressDialog.dismiss();
               });
@@ -285,10 +281,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     } else {
       await canLaunch(_url)
           ? await launch(
-        _url,
-        forceWebView: false,
-        forceSafariVC: false,
-      )
+              _url,
+              forceWebView: false,
+              forceSafariVC: false,
+            )
           : Fluttertoast.showToast(msg: 'Could not launch $_url');
     }
   }
@@ -356,7 +352,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                     height: 100.h,
                     child: ListView(
                       keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       // physics: NeverScrollableScrollPhysics(),
                       children: [
                         Padding(
@@ -412,7 +408,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   },
                                   fieldViewBuilder: (BuildContext context,
                                       TextEditingController
-                                      textEditingController,
+                                          textEditingController,
                                       FocusNode focusNode,
                                       VoidCallback onFieldSubmitted) {
                                     _searchController = textEditingController;
@@ -431,18 +427,18 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                             var value = _searchController.text;
                                             Navigator.of(context)
                                                 .push(
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    SearchPage(
+                                                  CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPage(
                                                       isScreen: true,
                                                       keyword: value,
                                                       enableCategory: false,
                                                     ),
-                                              ),
-                                            )
+                                                  ),
+                                                )
                                                 .then((value) => setState(() {
-                                              _searchController.clear();
-                                            }));
+                                                      _searchController.clear();
+                                                    }));
                                           });
 
                                         print('Pressed via keypad');
@@ -481,10 +477,10 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                   CupertinoPageRoute(
                                                     builder: (context) =>
                                                         SearchPage(
-                                                          isScreen: true,
-                                                          keyword: value,
-                                                          enableCategory: false,
-                                                        ),
+                                                      isScreen: true,
+                                                      keyword: value,
+                                                      enableCategory: false,
+                                                    ),
                                                   ),
                                                 );
                                               });
@@ -518,7 +514,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                   itemCount: options.length + 1,
                                                   itemBuilder:
                                                       (BuildContext context,
-                                                      int index) {
+                                                          int index) {
                                                     if (index >=
                                                         options.length) {
                                                       return Align(
@@ -529,11 +525,11 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                             'Clear',
                                                             style: TextStyle(
                                                               color:
-                                                              ConstantsVar
-                                                                  .appColor,
+                                                                  ConstantsVar
+                                                                      .appColor,
                                                               fontWeight:
-                                                              FontWeight
-                                                                  .bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                               fontSize: 16,
                                                             ),
                                                           ),
@@ -545,8 +541,8 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                       );
                                                     }
                                                     final String option =
-                                                    options
-                                                        .elementAt(index);
+                                                        options
+                                                            .elementAt(index);
                                                     return InkWell(
                                                         onTap: () {
                                                           if (!currentFocus
@@ -560,12 +556,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                             CupertinoPageRoute(
                                                               builder:
                                                                   (context) =>
-                                                                  SearchPage(
-                                                                    keyword: option,
-                                                                    isScreen: true,
-                                                                    enableCategory:
+                                                                      SearchPage(
+                                                                keyword: option,
+                                                                isScreen: true,
+                                                                enableCategory:
                                                                     false,
-                                                                  ),
+                                                              ),
                                                             ),
                                                           ).then((value) =>
                                                               setState(() {
@@ -578,28 +574,28 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                           width: 95.w,
                                                           child: Column(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .min,
+                                                                MainAxisSize
+                                                                    .min,
                                                             crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Container(
                                                                 width: 100.w,
                                                                 child:
-                                                                AutoSizeText(
+                                                                    AutoSizeText(
                                                                   '  ' + option,
                                                                   style:
-                                                                  TextStyle(
+                                                                      TextStyle(
                                                                     fontSize:
-                                                                    16,
+                                                                        16,
                                                                     wordSpacing:
-                                                                    2,
+                                                                        2,
                                                                     letterSpacing:
-                                                                    1,
+                                                                        1,
                                                                     fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                        FontWeight
+                                                                            .bold,
                                                                   ),
                                                                 ),
                                                               ),
@@ -616,18 +612,18 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                                           ),
                                                         )
 
-                                                      // ListTile(
-                                                      //   title: Text(option),
-                                                      //   subtitle: Container(
-                                                      //     width: 100.w,
-                                                      //     child: Divider(
-                                                      //       thickness: 1,
-                                                      //       color:
-                                                      //           ConstantsVar.appColor,
-                                                      //     ),
-                                                      //   ),
-                                                      // ),
-                                                    );
+                                                        // ListTile(
+                                                        //   title: Text(option),
+                                                        //   subtitle: Container(
+                                                        //     width: 100.w,
+                                                        //     child: Divider(
+                                                        //       thickness: 1,
+                                                        //       color:
+                                                        //           ConstantsVar.appColor,
+                                                        //     ),
+                                                        //   ),
+                                                        // ),
+                                                        );
                                                   },
                                                 ),
                                               ),
@@ -648,7 +644,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                               ),
                               child: CarouselSlider(
                                 options: CarouselOptions(
-                                  // enlargeStrategy: CenterPageEnlargeStrategy.height,
+                                    // enlargeStrategy: CenterPageEnlargeStrategy.height,
                                     disableCenter: true,
                                     pageSnapping: true,
                                     // height: 24.h,
@@ -704,13 +700,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                               visible: !showLoading,
                               child: Container(
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 7.0),
+                                    const EdgeInsets.symmetric(vertical: 7.0),
                                 color: Colors.white,
                                 height: 60.w,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
@@ -749,7 +745,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         child: ListView.builder(
                                             controller: _productController,
                                             clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
+                                                Clip.antiAliasWithSaveLayer,
                                             // padding: EdgeInsets.symmetric(vertical:6),
                                             scrollDirection: Axis.horizontal,
                                             itemCount: productList.length,
@@ -772,7 +768,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                 // margin: EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   mainAxisSize: MainAxisSize.max,
                                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: viewsList,
@@ -783,13 +779,13 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                               visible: products.length == 0 ? false : true,
                               child: Container(
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 7.0),
+                                    const EdgeInsets.symmetric(vertical: 7.0),
                                 color: Colors.white,
                                 height: 60.w,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
@@ -827,9 +823,9 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                         isAlwaysShown: true,
                                         child: ListView.builder(
                                             controller:
-                                            _recentlyProductController,
+                                                _recentlyProductController,
                                             clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
+                                                Clip.antiAliasWithSaveLayer,
                                             // padding: EdgeInsets.symmetric(vertical:6),
                                             scrollDirection: Axis.horizontal,
                                             itemCount: products.length,
@@ -888,72 +884,76 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                           horizontal: 6.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                         children: modelList
                                             .map((e) => Padding(
-                                          padding:
-                                          const EdgeInsets.all(5.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(context, CupertinoPageRoute(builder:(context){    return TopicPage(
-                                                paymentUrl: e.url,
-                                              );
-                                              })) ;
-                                            },
-                                            onLongPress: (){},
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .center,
-                                              children: [
-                                                Container(
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    image:
-                                                    DecorationImage(
-                                                      image: CachedNetworkImageProvider(
-                                                          e.imagePath),
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  ),
-                                                  width:
-                                                  Adaptive.w(43.6),
-                                                  height:
-                                                  Adaptive.w(45),
-                                                ),
-                                                Padding(
                                                   padding:
-                                                  const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 2.0,
-                                                    vertical: 11,
-                                                  ),
-                                                  child: Container(
-                                                    width: 45.w,
-                                                    child: AutoSizeText(
-                                                      e.textToDisplay,
-                                                      maxLines: 1,
-                                                      textAlign:
-                                                      TextAlign
-                                                          .center,
-                                                      style: TextStyle(
-                                                        color:
-                                                        Colors.grey,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold,
-                                                      ),
+                                                      const EdgeInsets.all(5.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(context,
+                                                          CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return TopicPage(
+                                                          paymentUrl: e.url,
+                                                        );
+                                                      }));
+                                                    },
+                                                    onLongPress: () {},
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            image:
+                                                                DecorationImage(
+                                                              image: CachedNetworkImageProvider(
+                                                                  e.imagePath),
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                          ),
+                                                          width:
+                                                              Adaptive.w(43.6),
+                                                          height:
+                                                              Adaptive.w(45),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 2.0,
+                                                            vertical: 11,
+                                                          ),
+                                                          child: Container(
+                                                            width: 45.w,
+                                                            child: AutoSizeText(
+                                                              e.textToDisplay,
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ))
+                                                ))
                                             .toList(),
                                       ),
                                     ),
@@ -1002,18 +1002,18 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   width: 100.w,
                                   child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: socialLinks
                                           .map((e) => InkWell(
-                                          onTap: () async =>
-                                              _launchURL(e.url),
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 6.0,
-                                            ),
-                                            child: e.icon,
-                                          )))
+                                              onTap: () async =>
+                                                  _launchURL(e.url),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 6.0,
+                                                ),
+                                                child: e.icon,
+                                              )))
                                           .toList()),
                                 ),
                                 SizedBox(
@@ -1136,7 +1136,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
             ),
             Visibility(
               visible:
-              list.discountPercentage.trim().length != 0 ? true : false,
+                  list.discountPercentage.trim().length != 0 ? true : false,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Align(
@@ -1305,7 +1305,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         print('Recently View Product Headers>>>>>>>>' +
             jsonEncode(jsonResponse.headers));
         RecentlyViewProductResponse _result =
-        RecentlyViewProductResponse.fromJson(
+            RecentlyViewProductResponse.fromJson(
           jsonDecode(jsonResponse.body),
         );
         products = _result.products;
@@ -1332,7 +1332,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     // ApiCalls.getRecentlyViewedProduct();
     // var guestCustomerId = ConstantsVar.prefs.getString('guestGUID')!;
     CustomProgressDialog progressDialog =
-    CustomProgressDialog(context, blur: 2, dismissable: false);
+        CustomProgressDialog(context, blur: 2, dismissable: false);
     progressDialog.setLoadingWidget(SpinKitRipple(
       color: Colors.red,
       size: 90,
@@ -1354,12 +1354,12 @@ class _HomeScreenMainState extends State<HomeScreenMain>
     if (response.statusCode == 200) {
       mounted
           ? setState(() {
-        showLoading = false;
-      })
+              showLoading = false;
+            })
           : null;
       // print(response.body);
       HomeResponse1 homeResponse =
-      HomeResponse1.fromJson(jsonDecode(response.body));
+          HomeResponse1.fromJson(jsonDecode(response.body));
       if (homeResponse == null) {
         print('NULL NO VALUE return');
       } else {
@@ -1367,47 +1367,47 @@ class _HomeScreenMainState extends State<HomeScreenMain>
         banners = homeResponse.banners;
         mounted
             ? setState(() {
-          var products = homeResponse.homePageProductImage;
-          var categories = homeResponse.homePageCategoriesImage;
-          if (products.length > 0) {
-            productList = products;
-            categoryList = categories;
-            String _categoryString = jsonEncode(categoryList);
-            String _productString = jsonEncode(productList);
-            ConstantsVar.prefs.setString('productString', _productString);
-            ConstantsVar.prefs
-                .setString('categoryString', _categoryString);
-            categoryVisible = true;
-            // getServiceList();
+                var products = homeResponse.homePageProductImage;
+                var categories = homeResponse.homePageCategoriesImage;
+                if (products.length > 0) {
+                  productList = products;
+                  categoryList = categories;
+                  String _categoryString = jsonEncode(categoryList);
+                  String _productString = jsonEncode(productList);
+                  ConstantsVar.prefs.setString('productString', _productString);
+                  ConstantsVar.prefs
+                      .setString('categoryString', _categoryString);
+                  categoryVisible = true;
+                  // getServiceList();
 
-            for (var i = 0; i < categoryList.length; i++) {
-              if (i % 2 == 0) {
-                viewsList.add(
-                  categroryLeftView(
-                      categoryList[i].name,
-                      categoryList[i].imageUrl,
-                      categoryList[i].id,
-                      categoryList[i].isSubCategory),
-                );
-              } else {
-                viewsList.add(
-                  categoryRightView(
-                      categoryList[i].name,
-                      categoryList[i].imageUrl,
-                      categoryList[i].id,
-                      categoryList[i].isSubCategory),
-                );
-              }
+                  for (var i = 0; i < categoryList.length; i++) {
+                    if (i % 2 == 0) {
+                      viewsList.add(
+                        categroryLeftView(
+                            categoryList[i].name,
+                            categoryList[i].imageUrl,
+                            categoryList[i].id,
+                            categoryList[i].isSubCategory),
+                      );
+                    } else {
+                      viewsList.add(
+                        categoryRightView(
+                            categoryList[i].name,
+                            categoryList[i].imageUrl,
+                            categoryList[i].id,
+                            categoryList[i].isSubCategory),
+                      );
+                    }
 
-              progressDialog.dismiss();
-            }
-          }
-        })
+                    progressDialog.dismiss();
+                  }
+                }
+              })
             : viewsList.add(
-          Container(
-            child: Text('Something Went Wrong'),
-          ),
-        );
+                Container(
+                  child: Text('Something Went Wrong'),
+                ),
+              );
       }
       progressDialog.dismiss();
     } else {
@@ -1446,7 +1446,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                   width: Adaptive.w(45),
                   height: Adaptive.w(45),
                   child:
-                  CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill),
+                      CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fill),
                 );
               },
               openBuilder: (BuildContext context,
@@ -1516,7 +1516,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   ),
                                   Padding(
                                     padding:
-                                    EdgeInsets.symmetric(vertical: 8.0),
+                                        EdgeInsets.symmetric(vertical: 8.0),
                                     child: Container(
                                       width: 15.w,
                                       child: Divider(
@@ -1525,7 +1525,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   ),
                                   Padding(
                                     padding:
-                                    EdgeInsets.symmetric(vertical: 8.0),
+                                        EdgeInsets.symmetric(vertical: 8.0),
                                     child: AutoSizeText('Shop Now',
                                         style: TextStyle(color: Colors.grey),
                                         textAlign: TextAlign.center),
@@ -1617,7 +1617,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   ),
                                   Padding(
                                     padding:
-                                    EdgeInsets.symmetric(vertical: 8.0),
+                                        EdgeInsets.symmetric(vertical: 8.0),
                                     child: Container(
                                       width: 15.w,
                                       child: Divider(
@@ -1626,7 +1626,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
                                   ),
                                   Padding(
                                     padding:
-                                    EdgeInsets.symmetric(vertical: 8.0),
+                                        EdgeInsets.symmetric(vertical: 8.0),
                                     child: AutoSizeText('Shop Now',
                                         style: TextStyle(color: Colors.grey),
                                         textAlign: TextAlign.center),
@@ -1716,7 +1716,7 @@ class _HomeScreenMainState extends State<HomeScreenMain>
       print('Search Suggestions Api Headers>>>>>>>' +
           jsonEncode(response.headers));
       SearchSuggestionResponse suggestions =
-      SearchSuggestionResponse.fromJson(result);
+          SearchSuggestionResponse.fromJson(result);
       print(suggestions.status);
       for (int i = 0; i < suggestions.responseData.length; i++) {
         searchSuggestions.add(suggestions.responseData[i].name);
@@ -1752,24 +1752,24 @@ class _HomeScreenMainState extends State<HomeScreenMain>
   forIos(String _url) async {
     await canLaunch(_url)
         ? await launch(
-      _url,
-      forceWebView: false,
-      forceSafariVC: false,
-    )
+            _url,
+            forceWebView: false,
+            forceSafariVC: false,
+          )
         : await launch(
-      'fb://profile/10150150309565478',
-      forceWebView: false,
-      forceSafariVC: false,
-    );
+            'fb://profile/10150150309565478',
+            forceWebView: false,
+            forceSafariVC: false,
+          );
   }
 
   forAndroid(String _url) async {
     await canLaunch(_url)
         ? await launch(
-      _url,
-      forceWebView: false,
-      forceSafariVC: false,
-    )
+            _url,
+            forceWebView: false,
+            forceSafariVC: false,
+          )
         : Fluttertoast.showToast(msg: 'Could not launch $_url');
   }
 

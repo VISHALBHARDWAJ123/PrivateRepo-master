@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -24,7 +25,7 @@ class RegstrationPage extends StatefulWidget {
 }
 
 class _RegstrationPageState extends State<RegstrationPage>
-    with AutomaticKeepAliveClientMixin, InputValidationMixin {
+    with AutomaticKeepAliveClientMixin, InputValidationMixin, WidgetsBindingObserver {
   TextEditingController fController = TextEditingController();
   TextEditingController lController = TextEditingController();
   TextEditingController eController = TextEditingController();
@@ -79,8 +80,30 @@ class _RegstrationPageState extends State<RegstrationPage>
         });
   }
 
+  double  _opacity = 1.0;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+      case AppLifecycleState.resumed:
+        setState(() {
+          _opacity = 1.0;
+        });
+        break;
+      case AppLifecycleState.paused:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+    }
+  }
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     initSharedPrefs();
     super.initState();
   }
@@ -130,301 +153,231 @@ class _RegstrationPageState extends State<RegstrationPage>
                     shrinkWrap: true,
                     children: [
                       AppBarLogo('REGISTRATION', context),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Form(
-                            key: formGlobalKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      maxLength: 100,
-                                      textInputAction: TextInputAction.next,
-                                      controller: fController,
-                                      validator: (firstName) {
-                                        if (isFirstName(firstName!))
-                                          return null;
-                                        else
-                                          return 'Enter a valid First Name';
-                                      },
-                                      cursorColor: Colors.black,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      decoration: editBoxDecoration(
-                                          'First Name',
-                                          Icon(
-                                            Icons.account_circle_outlined,
-                                            color: AppColor.PrimaryAccentColor,
-                                          ),
-                                          ''),
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                      maxLength: 100,
-                                      validator: (lastName) {
-                                        if (isLastName(lastName!))
-                                          return null;
-                                        else
-                                          return 'Enter your Last Name';
-                                      },
-                                      // textInputAction: TextInputAction.next,
-                                      controller: lController,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      cursorColor: Colors.black,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      decoration: editBoxDecoration(
-                                          'Last Name',
-                                          Icon(
-                                            Icons.account_circle_outlined,
-                                            color: AppColor.PrimaryAccentColor,
-                                          ),
-                                          ''),
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                      validator: (email) {
-                                        if (isEmailValid(email!))
-                                          return null;
-                                        else
-                                          return 'Enter a valid email address';
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.emailAddress,
-                                      controller: eController,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      cursorColor: Colors.black,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      decoration: editBoxDecoration(
-                                          'Email Address',
-                                          Icon(
-                                            Icons.email_outlined,
-                                            color: AppColor.PrimaryAccentColor,
-                                          ),
-                                          ''),
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    width: 88.w,
-                                    child: TextFormField(
-                                      maxLength: BuildConfig.phnVal,
-                                      textInputAction: TextInputAction.next,
-                                      validator: (mobInput) {
-                                        if (isPhoneNumber(mobInput!))
-                                          return 'Please Enter ${BuildConfig.phnVal} Digit Number';
-                                        else
-                                          return null;
-                                      },
-                                      keyboardType: TextInputType.phone,
-                                      controller: mController,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      cursorColor: Colors.black,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      decoration: editBoxDecoration(
-                                          'Mobile',
-                                          Icon(
-                                            Icons.phone_android_outlined,
-                                            color: AppColor.PrimaryAccentColor,
-                                          ),
-                                          '+971'),
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                        validator: (val) {
-                                          if (isAddress(val!.trim()))
-                                            return null;
-                                          else
-                                            return 'Enter your address';
-                                        },
-                                        textInputAction: TextInputAction.next,
-                                        maxLines: 3,
+                      Opacity(
+                        opacity: _opacity,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Form(
+                              key: formGlobalKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
-                                        controller: addressController,
+                                        maxLength: 100,
+                                        textInputAction: TextInputAction.next,
+                                        controller: fController,
+                                        validator: (firstName) {
+                                          if (isFirstName(firstName!))
+                                            return null;
+                                          else
+                                            return 'Enter a valid First Name';
+                                        },
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        decoration: editBoxDecoration(
+                                            'First Name',
+                                            Icon(
+                                              Icons.account_circle_outlined,
+                                              color: AppColor.PrimaryAccentColor,
+                                            ),
+                                            ''),
+                                      ),
+                                    ),
+                                  ),
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
+                                        maxLength: 100,
+                                        validator: (lastName) {
+                                          if (isLastName(lastName!))
+                                            return null;
+                                          else
+                                            return 'Enter your Last Name';
+                                        },
+                                        // textInputAction: TextInputAction.next,
+                                        controller: lController,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        decoration: editBoxDecoration(
+                                            'Last Name',
+                                            Icon(
+                                              Icons.account_circle_outlined,
+                                              color: AppColor.PrimaryAccentColor,
+                                            ),
+                                            ''),
+                                      ),
+                                    ),
+                                  ),
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
+                                        validator: (email) {
+                                          if (isEmailValid(email!))
+                                            return null;
+                                          else
+                                            return 'Enter a valid email address';
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.emailAddress,
+                                        controller: eController,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        decoration: editBoxDecoration(
+                                            'Email Address',
+                                            Icon(
+                                              Icons.email_outlined,
+                                              color: AppColor.PrimaryAccentColor,
+                                            ),
+                                            ''),
+                                      ),
+                                    ),
+                                  ),
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      width: 88.w,
+                                      child: TextFormField(
+                                        maxLength: BuildConfig.phnVal,
+                                        textInputAction: TextInputAction.next,
+                                        validator: (mobInput) {
+                                          if (isPhoneNumber(mobInput!))
+                                            return 'Please Enter ${BuildConfig.phnVal} Digit Number';
+                                          else
+                                            return null;
+                                        },
+                                        keyboardType: TextInputType.phone,
+                                        controller: mController,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        decoration: editBoxDecoration(
+                                            'Mobile',
+                                            Icon(
+                                              Icons.phone_android_outlined,
+                                              color: AppColor.PrimaryAccentColor,
+                                            ),
+                                            '+971'),
+                                      ),
+                                    ),
+                                  ),
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
+                                          validator: (val) {
+                                            if (isAddress(val!.trim()))
+                                              return null;
+                                            else
+                                              return 'Enter your address';
+                                          },
+                                          textInputAction: TextInputAction.next,
+                                          maxLines: 3,
+                                          autovalidateMode:
+                                              AutovalidateMode.onUserInteraction,
+                                          controller: addressController,
+                                          cursorColor: Colors.black,
+                                          style: TextStyle(
+                                              color: Colors.black, fontSize: 14),
+                                          decoration: InputDecoration(
+                                              counterText: '',
+                                              prefixIcon: Icon(Icons.home,
+                                                  color: AppColor
+                                                      .PrimaryAccentColor),
+                                              labelStyle: TextStyle(
+                                                  fontSize: 5.w,
+                                                  color: Colors.grey),
+                                              labelText: 'Address',
+                                              border: InputBorder.none)),
+                                    ),
+                                  ),
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
+                                        enableInteractiveSelection: false,
+                                        validator: (password) {
+                                          if (isPasswordValid(password!))
+                                            return 'Minimum 6 letters required ';
+                                          else
+                                            return null;
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: passError,
+                                        controller: pController,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
                                         cursorColor: Colors.black,
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                         decoration: InputDecoration(
-                                            counterText: '',
-                                            prefixIcon: Icon(Icons.home,
-                                                color: AppColor
-                                                    .PrimaryAccentColor),
-                                            labelStyle: TextStyle(
-                                                fontSize: 5.w,
-                                                color: Colors.grey),
-                                            labelText: 'Address',
-                                            border: InputBorder.none)),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                      enableInteractiveSelection: false,
-                                      validator: (password) {
-                                        if (isPasswordValid(password!))
-                                          return 'Minimum 6 letters required ';
-                                        else
-                                          return null;
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      obscureText: passError,
-                                      controller: pController,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      cursorColor: Colors.black,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      decoration: InputDecoration(
-                                          suffix: ClipOval(
-                                            child: RoundCheckBox(
-                                              uncheckedColor: Colors.white,
-                                              checkedColor: Colors.white,
-                                              size: 20,
-                                              onTap: (selected) {
-                                                setState(() {
-                                                  print('Tera kaam  bngya');
-                                                  passError
-                                                      ? passError = selected!
-                                                      : passError = selected!;
-                                                });
-                                              },
-                                              isChecked: passError,
-                                              borderColor: Colors.white,
-                                              checkedWidget: Center(
-                                                child: Icon(
-                                                  Icons.visibility,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                              uncheckedWidget: Center(
-                                                child: Icon(
-                                                  Icons.visibility_off,
-                                                  color: ConstantsVar.appColor,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          prefixIcon: Icon(
-                                            Icons.password_rounded,
-                                            color:  AppColor.PrimaryAccentColor,
-                                          ),
-                                          labelStyle: TextStyle(
-                                              fontSize: 5.w,
-                                              color: Colors.grey),
-                                          labelText: 'Password',
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                ),
-                                addVerticalSpace(14),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 8.0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 3),
-                                    child: TextFormField(
-                                        enableInteractiveSelection: false,
-                                        validator: (password) {
-                                          if (isPasswordMatch(
-                                            pController.text.toString(),
-                                            cpController.text.toString(),
-                                          ))
-                                            return null;
-                                          else
-                                            return 'Password Mismatch!';
-                                        },
-                                        textInputAction: TextInputAction.done,
-                                        obscureText: cpError,
-                                        controller: cpController,
-                                        autovalidateMode: AutovalidateMode
-                                            .onUserInteraction,
-                                        cursorColor: Colors.black,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14),
-                                        decoration: InputDecoration(
                                             suffix: ClipOval(
                                               child: RoundCheckBox(
-                                                borderColor: Colors.white,
-                                                checkedColor: Colors.white,
                                                 uncheckedColor: Colors.white,
+                                                checkedColor: Colors.white,
                                                 size: 20,
                                                 onTap: (selected) {
                                                   setState(() {
                                                     print('Tera kaam  bngya');
-                                                    cpError
-                                                        ? cpError = selected!
-                                                        : cpError = selected!;
+                                                    passError
+                                                        ? passError = selected!
+                                                        : passError = selected!;
                                                   });
                                                 },
-                                                isChecked: cpError,
+                                                isChecked: passError,
+                                                borderColor: Colors.white,
                                                 checkedWidget: Center(
                                                   child: Icon(
                                                     Icons.visibility,
@@ -434,8 +387,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                 uncheckedWidget: Center(
                                                   child: Icon(
                                                     Icons.visibility_off,
-                                                    color:
-                                                    AppColor.PrimaryAccentColor,
+                                                    color: ConstantsVar.appColor,
                                                     size: 20,
                                                   ),
                                                 ),
@@ -448,11 +400,85 @@ class _RegstrationPageState extends State<RegstrationPage>
                                             labelStyle: TextStyle(
                                                 fontSize: 5.w,
                                                 color: Colors.grey),
-                                            labelText: 'Confirm Password',
-                                            border: InputBorder.none)),
+                                            labelText: 'Password',
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  addVerticalSpace(14),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    elevation: 8.0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
+                                      child: TextFormField(
+                                          enableInteractiveSelection: false,
+                                          validator: (password) {
+                                            if (isPasswordMatch(
+                                              pController.text.toString(),
+                                              cpController.text.toString(),
+                                            ))
+                                              return null;
+                                            else
+                                              return 'Password Mismatch!';
+                                          },
+                                          textInputAction: TextInputAction.done,
+                                          obscureText: cpError,
+                                          controller: cpController,
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          cursorColor: Colors.black,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                          decoration: InputDecoration(
+                                              suffix: ClipOval(
+                                                child: RoundCheckBox(
+                                                  borderColor: Colors.white,
+                                                  checkedColor: Colors.white,
+                                                  uncheckedColor: Colors.white,
+                                                  size: 20,
+                                                  onTap: (selected) {
+                                                    setState(() {
+                                                      print('Tera kaam  bngya');
+                                                      cpError
+                                                          ? cpError = selected!
+                                                          : cpError = selected!;
+                                                    });
+                                                  },
+                                                  isChecked: cpError,
+                                                  checkedWidget: Center(
+                                                    child: Icon(
+                                                      Icons.visibility,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                  uncheckedWidget: Center(
+                                                    child: Icon(
+                                                      Icons.visibility_off,
+                                                      color:
+                                                      AppColor.PrimaryAccentColor,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              prefixIcon: Icon(
+                                                Icons.password_rounded,
+                                                color:  AppColor.PrimaryAccentColor,
+                                              ),
+                                              labelStyle: TextStyle(
+                                                  fontSize: 5.w,
+                                                  color: Colors.grey),
+                                              labelText: 'Confirm Password',
+                                              border: InputBorder.none)),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

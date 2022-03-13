@@ -5,6 +5,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -21,21 +22,19 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:untitled2/AppPages/Categories/DiscountxxWidget.dart';
 import 'package:untitled2/AppPages/Categories/ProductList/SubCatProducts.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchResponse/SearchResponse.dart';
 import 'package:untitled2/AppPages/StreamClass/NewPeoductPage/NewProductScreen.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
-
 // import 'package:untitled2/models/home_response.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
+import 'package:untitled2/utils/models/homeresponse.dart';
 import 'package:untitled2/utils/utils/build_config.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
-import 'package:untitled2/utils/models/homeresponse.dart';
 
 enum AniProps { color }
 
@@ -884,6 +883,10 @@ class _SearchPageState extends State<SearchPage>
                                                           searchedProducts[
                                                                   index]
                                                               .name,
+                                                      productPrice:
+                                                          searchedProducts[
+                                                                  index]
+                                                              .priceValue,
                                                       // fontSize: 12,
                                                     )
                                                   ],
@@ -1120,6 +1123,14 @@ class _SearchPageState extends State<SearchPage>
             progressDialog.dismiss();
           });
       } else {
+        FacebookAppEvents().logEvent(
+          name: 'Search',
+          parameters: {
+            'Content ID': 'Search',
+            'Content Type': 'Product Searching',
+            'ValueToSum': '',
+          },
+        ).then((value) => print('Search Event'));
         SearchResponse mySearchResponse = SearchResponse.fromJson(jsonMap);
         progressDialog.dismiss();
 
@@ -1223,8 +1234,8 @@ class _SearchPageState extends State<SearchPage>
       print(pageIndex);
     });
 
-
-    print('Loading new searched product customerID:- '+ConstantsVar.prefs.getString('guestCustomerID')!);
+    print('Loading new searched product customerID:- ' +
+        ConstantsVar.prefs.getString('guestCustomerID')!);
 
     final uri = Uri.parse(BuildConfig.base_url +
         'apis/GetSearch?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}&keyword=$prodName&pagesize=10&pageindex=$pageIndex&minPrice=$_minPRICE&maxPrice=$_maxPRICE&specId = $_mainString');

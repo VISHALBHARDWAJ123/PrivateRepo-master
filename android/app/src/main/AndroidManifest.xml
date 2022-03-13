@@ -24,6 +24,8 @@
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:label="THE One">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_tokken"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -37,7 +39,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="fb1755419398057154" />
+                <data android:scheme="fb485115409812800" />
             </intent-filter>
         </activity>
         <activity
@@ -76,8 +78,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="1755419398057154"/>
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="feae045e0f31fc08b264fc148288ff9e"/>
+
         ...
     </application>
 </manifest>

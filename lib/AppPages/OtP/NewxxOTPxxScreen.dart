@@ -118,7 +118,7 @@ class VerificationScreen2 extends StatefulWidget {
   _VerificationScreen2State createState() => _VerificationScreen2State();
 }
 
-class _VerificationScreen2State extends State<VerificationScreen2> {
+class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsBindingObserver {
   late List<TextStyle?> otpTextStyles;
 
   // CustomProgressDialog? _progressDialog;
@@ -127,6 +127,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
 
   String? guid;
 
+  double  _opacity = 1.0;
   String? databody;
 
   String? otpRefs;
@@ -141,7 +142,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
   @override
   void initState() {
     // TODO: implement initState
-
+  WidgetsBinding.instance!.addObserver(this);
     initSharedPrefs().then((val) => getOtp());
     setState(() {});
     // TODO: implement initState
@@ -154,7 +155,26 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
     });
     super.initState();
   }
-
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+      case AppLifecycleState.resumed:
+        setState(() {
+          _opacity = 1.0;
+        });
+        break;
+      case AppLifecycleState.paused:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -214,33 +234,39 @@ class _VerificationScreen2State extends State<VerificationScreen2> {
                     style: theme.textTheme.headline6),
               ),
               Spacer(flex: 2),
-              OtpTextField(
-                numberOfFields: 6,
-                borderColor: Color(0xFF512DA8),
-                focusedBorderColor: primaryColor,
-                obscureText: true,
-                showFieldAsBox: true,
-                textStyle: theme.textTheme.subtitle1,
-                onCodeChanged: (String value) {},
-                onSubmit: (String verificationCode) async {
-                  //navigate to different screen code goes here
-                  setState(() => myOtp = verificationCode);
+              Opacity(
+                opacity: _opacity,
+                child: OtpTextField(
+                  numberOfFields: 6,
+                  borderColor: Color(0xFF512DA8),
+                  focusedBorderColor: primaryColor,
+                  obscureText: true,
+                  showFieldAsBox: true,
+                  textStyle: theme.textTheme.subtitle1,
+                  onCodeChanged: (String value) {},
+                  onSubmit: (String verificationCode) async {
+                    //navigate to different screen code goes here
+                    setState(() => myOtp = verificationCode);
 
-                  await verifyOTP(int.parse('$verificationCode')).then((otp) {
-                    context.loaderOverlay.hide();
-                    // register();
-                  });
-                }, // end onSubmit
+                    await verifyOTP(int.parse('$verificationCode')).then((otp) {
+                      context.loaderOverlay.hide();
+                      // register();
+                    });
+                  }, // end onSubmit
+                ),
               ),
               Spacer(),
-              InkWell(
-                onTap: () {
-                  getOtp();
-                },
-                child: Center(
-                  child: AutoSizeText(
-                    "Didn't get code?",
-                    style: theme.textTheme.subtitle1,
+              Opacity(
+                opacity: _opacity,
+                child: InkWell(
+                  onTap: () {
+                    getOtp();
+                  },
+                  child: Center(
+                    child: AutoSizeText(
+                      "Didn't get code?",
+                      style: theme.textTheme.subtitle1,
+                    ),
                   ),
                 ),
               ),

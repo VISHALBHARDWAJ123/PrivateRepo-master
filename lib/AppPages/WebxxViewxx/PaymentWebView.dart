@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-
-
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/MyOrders/MyOrders.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
+import 'package:untitled2/utils/ApiCalls/CategoryModel.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -22,12 +22,14 @@ class PaymentPage extends StatefulWidget {
   _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _PaymentPageState extends State<PaymentPage> with WidgetsBindingObserver {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   var progressCount;
   bool isLoading = true;
   bool _willGo = true;
+
+  var _opacity = 1.0;
 
   Future<void> secureScreen() async {
     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
@@ -35,8 +37,31 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
+    WidgetsBinding.instance!.addObserver(this);
     secureScreen();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+      case AppLifecycleState.resumed:
+        setState(() {
+          _opacity = 1.0;
+        });
+        break;
+    case AppLifecycleState.paused:
+        setState(() {
+          _opacity = 0.0;
+        });
+        break;
+    }
   }
 
   @override
@@ -122,60 +147,69 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             body: Stack(
               children: <Widget>[
-                WebView(
-                  initialUrl: widget.paymentUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _controller.complete(webViewController);
-                  },
-                  onProgress: (int progress) {
-                    setState(() {
-                      isLoading = true;
-                      progressCount = progress;
-                    });
-                  },
-                  javascriptChannels: <JavascriptChannel>{
-                    _toasterJavascriptChannel(context),
-                  },
-                  navigationDelegate: (NavigationRequest request) {
-                    if (request.url.startsWith('https://www.youtube.com/')) {
-                      print('blocking navigation to $request}');
-                      return NavigationDecision.prevent;
-                    }
-                    print('allowing navigation to $request');
-                    return NavigationDecision.navigate;
-                  },
-                  onPageStarted: (String url) {
-                    setState(() {
-                      _willGo = false;
-                      isLoading = true;
-                    });
+                Opacity(
+                  opacity: _opacity,
+                  child: WebView(
+                    initialUrl: widget.paymentUrl,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      _controller.complete(webViewController);
+                    },
+                    onProgress: (int progress) {
+                      setState(() {
+                        isLoading = true;
+                        progressCount = progress;
+                      });
+                    },
+                    javascriptChannels: <JavascriptChannel>{
+                      _toasterJavascriptChannel(context),
+                    },
+                    navigationDelegate: (NavigationRequest request) {
+                      if (request.url.contains(
+                          "https://secureacceptance.cybersource.com/billing")) {
+                        FacebookAppEvents().logPurchase(
+                            amount: 0.0, currency: CurrencyCode.AED.name);
+                        return NavigationDecision.navigate;
+                      }
+                      if (request.url.startsWith('https://www.youtube.com/')) {
+                        print('blocking navigation to $request}');
+                        return NavigationDecision.prevent;
+                      }
+                      print('allowing navigation to $request');
+                      return NavigationDecision.navigate;
+                    },
+                    onPageStarted: (String url) {
+                      setState(() {
+                        _willGo = false;
+                        isLoading = true;
+                      });
 
-                    print('Page started loading: $url');
-                  },
-                  onPageFinished: (String url) {
-                    print('Page finished loading: $url');
-                    setState(() {
-                      _willGo = true;
-                      isLoading = false;
-                    });
-                  },
-                  gestureNavigationEnabled: true,
+                      print('Page started loading: $url');
+                    },
+                    onPageFinished: (String url) {
+                      print('Page finished loading: $url');
+                      setState(() {
+                        _willGo = true;
+                        isLoading = false;
+                      });
+                    },
+                    gestureNavigationEnabled: true,
+                  ),
                 ),
                 isLoading
                     ? Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        SpinKitRipple(
-                          color: Colors.red,
-                          size: 90,
-                        ),
-                        Text('Loading Please Wait!.........' +
-                            progressCount.toString() +
-                            '%'),
-                      ],
-                    ))
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            SpinKitRipple(
+                              color: Colors.red,
+                              size: 90,
+                            ),
+                            Text('Loading Please Wait!.........' +
+                                progressCount.toString() +
+                                '%'),
+                          ],
+                        ))
                     : Stack(),
               ],
             ),
@@ -184,8 +218,6 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
   }
-
-
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(

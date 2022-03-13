@@ -14,7 +14,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 // import 'package:untitled2/AppPages/CartxxScreen/ConstantVariables.dart';
 import 'package:untitled2/AppPages/NewSubCategoryPage/ModelClass/NewSubCatProductModel.dart';
 import 'package:untitled2/AppPages/SearchPage/SearchPage.dart';
@@ -586,7 +585,7 @@ class _ProdListWidgetState extends State<ProdListWidget> {
                                           productImage: widget
                                               .products[index].productPicture,
                                           productName:
-                                              widget.products[index].name,
+                                              widget.products[index].name, productPrice: widget.products[index].priceValue,
                                           // fontSize: 12,
                                         )
                                       ],

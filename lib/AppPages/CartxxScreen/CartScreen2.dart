@@ -1,13 +1,16 @@
-import 'dart:io' show Platform;
 import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_loading_button/progress_loading_button.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
@@ -17,13 +20,12 @@ import 'package:untitled2/AppPages/ShippingxxxScreen/BillingxxScreen/BillingScre
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/PojoClass/NetworkModelClass/CartModelClass/CartModel.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
+import 'package:untitled2/utils/ApiCalls/CategoryModel.dart';
 import 'package:untitled2/utils/CartBadgeCounter/CartBadgetLogic.dart';
 import 'package:untitled2/utils/HeartIcon.dart';
-import 'package:untitled2/utils/utils/colors.dart';
 import 'package:untitled2/utils/utils/general_functions.dart';
 
 import 'CartItems.dart';
-import 'package:provider/provider.dart';
 
 class CartScreen2 extends StatefulWidget {
   final bool isOtherScren;
@@ -144,6 +146,7 @@ class _CartScreen2State extends State<CartScreen2>
         taxPrice = model.orderTotalsModel.tax;
         totalAmount = model.orderTotalsModel.orderTotal;
         discountPrice = model.orderTotalsModel.orderTotalDiscount;
+        quantity = cartItems.length;
         if (model.listCart.discountBox.appliedDiscountsWithCodes.length == 0) {
           discountCoupon = '';
         } else {
@@ -879,6 +882,11 @@ class _CartScreen2State extends State<CartScreen2>
             });
           }
         } else {
+          await FacebookAppEvents().logInitiatedCheckout(
+            totalPrice: 0,
+            currency: CurrencyCode.AED.name,
+            numItems:               quantity
+          );
           Navigator.push(context, CupertinoPageRoute(builder: (context) {
             return BillingDetails();
           }));
