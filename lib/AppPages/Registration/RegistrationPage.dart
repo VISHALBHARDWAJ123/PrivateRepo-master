@@ -214,7 +214,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                           else
                                             return 'Enter your Last Name';
                                         },
-                                        // textInputAction: TextInputAction.next,
+                                        textInputAction: TextInputAction.next,
                                         controller: lController,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,

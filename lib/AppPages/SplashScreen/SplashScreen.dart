@@ -363,10 +363,11 @@ class _SplashScreenState extends State<SplashScreen>
                     'Your Device is a simulator. Cannot run this app on this device.')
             .then((value) => Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
       }, onMissingSecureEnclaveDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Your Device is not enclave secure. Cannot run this app on this device.')
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+//
+//        Fluttertoast.showToast(
+                //msg:
+            //       'Your Device is not enclave secure. Cannot run this app on this device.')
+          //  .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
       }, onDeviceIdDetected: () {
         setState(() {});
       }),

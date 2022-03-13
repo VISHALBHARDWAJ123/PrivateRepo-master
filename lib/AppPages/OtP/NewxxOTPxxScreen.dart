@@ -373,13 +373,15 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
     // await SmsAutoFill().listenForCode;
     // final uri = Uri.parse(
     //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
-
-    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/SendOTP');
+                                               var _phnNumber = BuildConfig.countryCode + widget.phoneNumber;
+    print(widget.phoneNumber) ;
+    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/SendOTP?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
     print(uri);
-    final body = {'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber};
-
     try {
-      var response = await post(uri, body: body);
+      var response = await post(uri, body: jsonEncode(
+          {
+            'PhoneNumber': jsonEncode(_phnNumber)
+          }),headers: {"Content-Type":"application/json"});
       print(response.body);
       if (jsonDecode(response.body)['Status'].toString() != 'Failed') {
         _progressDialog.dismiss();

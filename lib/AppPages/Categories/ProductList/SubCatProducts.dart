@@ -55,7 +55,7 @@ class _ProductListState extends State<ProductList> {
           await FacebookAppEvents()
               .logViewContent(
                 type: 'Product List Screen',
-                id: widget.categoryId,
+                id: widget.categoryId.toString(),
                 currency: CurrencyCode.AED.name,
             
               )

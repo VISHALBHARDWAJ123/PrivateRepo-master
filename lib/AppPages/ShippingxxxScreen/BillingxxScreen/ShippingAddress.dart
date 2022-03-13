@@ -1,16 +1,14 @@
 import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
 import 'package:untitled2/AppPages/ShippingxxxScreen/ShippingxxModel/ShippingxxModel.dart';
@@ -26,7 +24,8 @@ import 'package:untitled2/utils/utils/general_functions.dart';
 import '../AddressItem.dart';
 import '../ShippingPage.dart';
 
-class ShippingAddress extends StatefulWidget {
+class
+ShippingAddress extends StatefulWidget {
   @override
   _ShippingAddressState createState() => _ShippingAddressState();
 }
@@ -309,6 +308,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         content: Container(
+                                          width: 30.w,
+                                          height: 20.h,
                                           child: RichText(
                                             textAlign: TextAlign.center,
                                             text: TextSpan(
