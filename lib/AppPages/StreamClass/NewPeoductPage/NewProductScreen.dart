@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:expandable/expandable.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -61,6 +62,7 @@ class _NewProductDetailsState extends State<NewProductDetails>
         searchSuggestions = testingList.cast<String>();
         print(searchSuggestions.length.toString());
       });
+    FacebookAppEvents().logViewContent(type: 'Product Screen',id:'Home').whenComplete(() => print('View Content'));
   }
 
   List<String> searchSuggestions = [];
