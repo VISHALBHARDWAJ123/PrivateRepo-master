@@ -325,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen>
                                                 size: 20,
                                                 onTap: (selected) {
                                                   setState(() {
-                                                    print('Tera kaam  bngya');
+
                                                     passError
                                                         ? passError = selected!
                                                         : passError = selected!;
@@ -596,7 +596,7 @@ class _LoginScreenState extends State<LoginScreen>
               style: linkStyle,
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  print('Privacy Policy"');
+
                   ApiCalls.launchUrl(
                       'https://www.theone.com/privacy-policy-uae');
                 }),

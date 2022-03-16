@@ -107,18 +107,20 @@ class VerificationScreen2 extends StatefulWidget {
   String email;
 
   String password;
-
+Map<String,dynamic> registerBody;
   VerificationScreen2({
     required this.phoneNumber,
     required this.email,
     required this.password,
+    required this.registerBody,
   });
 
   @override
   _VerificationScreen2State createState() => _VerificationScreen2State();
 }
 
-class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsBindingObserver {
+class _VerificationScreen2State extends State<VerificationScreen2>
+    with WidgetsBindingObserver {
   late List<TextStyle?> otpTextStyles;
 
   // CustomProgressDialog? _progressDialog;
@@ -127,7 +129,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
 
   String? guid;
 
-  double  _opacity = 1.0;
+  double _opacity = 1.0;
   String? databody;
 
   String? otpRefs;
@@ -142,7 +144,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
   @override
   void initState() {
     // TODO: implement initState
-  WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     initSharedPrefs().then((val) => getOtp());
     setState(() {});
     // TODO: implement initState
@@ -151,10 +153,11 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
     setState(() {
       apiToken = ConstantsVar.prefs.getString('apiTokken');
       guid = ConstantsVar.prefs.getString('guestGUID');
-      databody = ConstantsVar.prefs.getString('regBody');
+      databody = jsonEncode(widget.registerBody);
     });
     super.initState();
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -175,6 +178,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -275,7 +279,10 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -289,7 +296,10 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
                             shape: RoundedRectangleBorder(),
                             child: SizedBox(
                               height: 50,
-                              width: MediaQuery.of(context).size.width / 2,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 2,
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
@@ -314,7 +324,7 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
                               setState(() {
                                 otpString = string;
                               });
-                              print(otpString);
+
                               if (myOtp.length == 0 ||
                                   myOtp.length < 6 ||
                                   myOtp.length > 6) {
@@ -334,7 +344,10 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
                             shape: RoundedRectangleBorder(),
                             child: SizedBox(
                               height: 50,
-                              width: MediaQuery.of(context).size.width / 2,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 2,
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
@@ -370,24 +383,27 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
       dismissable: false,
     );
     _progressDialog.show();
+
     // await SmsAutoFill().listenForCode;
     // final uri = Uri.parse(
     //    PhoneNumber=${BuildConfig.countryCode}${widget.phoneNumber}');
-                                               var _phnNumber = BuildConfig.countryCode + widget.phoneNumber;
-    print(widget.phoneNumber) ;
-    final uri = Uri.parse(BuildConfig.base_url + 'AppCustomer/SendOTP?CustId=${ConstantsVar.prefs.getString('guestCustomerID')}');
-    print(uri);
+    var _phnNumber = BuildConfig.countryCode + widget.phoneNumber;
+
+    final uri = Uri.parse(BuildConfig.base_url +
+        'AppCustomer/SendOTP?CustId=${ConstantsVar.prefs.getString(
+            'guestCustomerID')}&PhoneNumber=$_phnNumber');
+
     try {
-      var response = await post(uri, body: jsonEncode(
-          {
-            'PhoneNumber': jsonEncode(_phnNumber)
-          }),headers: {"Content-Type":"application/json"});
-      print(response.body);
+      var response = await post(
+        uri,
+        // body: {'PhoneNumber': jsonEncode(_phnNumber)},
+      );
+
       if (jsonDecode(response.body)['Status'].toString() != 'Failed') {
         _progressDialog.dismiss();
 
         OtpResponse otpResponse =
-            OtpResponse.fromJson(jsonDecode(response.body));
+        OtpResponse.fromJson(jsonDecode(response.body));
         if (otpResponse.status.contains('Success')) {
           setState(() {
             otpRefs = otpResponse.responseData.otpReference;
@@ -445,15 +461,18 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
     );
     _progressDialog.show();
 
+
     final body = {
       'PhoneNumber': BuildConfig.countryCode + widget.phoneNumber,
-      'otp': Uri.encodeComponent(otp.toString()),
+      'otp': myOtp,
       'otpReference': otpRefs,
+      'CustId': ConstantsVar.prefs.getString('guestCustomerID')
     };
-    print(body);
+    
+
     String url2 = BuildConfig.base_url + 'AppCustomer/VerifyOTP';
     final url = Uri.parse(url2);
-    print('OTP Verification Url>>>>>>>>>>>>>>>>>' + url.toString());
+
 
     try {
       var response = await post(url, body: body);
@@ -461,11 +480,12 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
       // final result = jsonDecode(response.body);
       _progressDialog.dismiss();
 
-      print(response.body);
+
       if (jsonDecode(response.body)['Status'].toString() == 'Failed') {
         Fluttertoast.showToast(
-          msg: otpVerificationFailedMessage,
+          msg: otpVerificationFailedMessage+'\n'+jsonDecode(response.body)['ResponseData']['procResponse'],
           toastLength: Toast.LENGTH_LONG,
+          fontSize: 12
         );
         _progressDialog.dismiss();
       } else {
@@ -494,18 +514,22 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
     );
     _progressDialog.show();
 
-    String dataBody = ConstantsVar.prefs.getString('regBody')!;
-    print(dataBody);
+
 
     String urL = BuildConfig.base_url + 'AppCustomer/CustomerRegister';
 
-    final body = {'apiToken': apiToken, 'CustomerGuid': guid, 'data': dataBody};
+    final body = {
+      'apiToken': apiToken,
+      'CustomerGuid': guid,
+      'data': databody,
+      'CustId': ConstantsVar.prefs.getString('guestCustomerID'),
+    };
     final url = Uri.parse(urL);
 
     try {
       var response = await post(url, body: body);
       var result = jsonDecode(response.body);
-      print(result);
+
       String status = result['status'];
       if (status.contains(statusSus)) {
         ApiCalls.login(context, widget.email, widget.password, 'OTP Screen')
@@ -519,13 +543,13 @@ class _VerificationScreen2State extends State<VerificationScreen2> with WidgetsB
 
         setState(() => reason = result['Message']);
         showErrorDialog(reason);
-        print(result);
+
       }
     } on Exception catch (e) {
       _progressDialog.dismiss();
 
       ConstantsVar.excecptionMessage(e);
-      print(e.toString());
+
     }
   }
 

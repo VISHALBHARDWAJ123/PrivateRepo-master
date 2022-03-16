@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:facebook_app_events/facebook_app_events.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -1372,4 +1373,15 @@ class ApiCalls {
     }
     return result;
   }
+
+
+  static Future sendAnalytics({required  Map<String, dynamic> map, required String eventName}) async{
+    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+    await analytics.logEvent(
+      name: eventName,
+      parameters: map,
+    ).whenComplete(() => print('Log has been send'));
+  }
+
 }

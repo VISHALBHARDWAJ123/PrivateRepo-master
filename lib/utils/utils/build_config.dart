@@ -22,10 +22,10 @@ class BuildConfig {
 
   static final String edit_address = "AppCustomer/EditAddress";
 
-  static var countryCode = '91';
+  static var countryCode = '971';
 
-  static var uaeCountryCode = '+91';
-  static const phnVal = 10;
+  static var uaeCountryCode = '+971';
+  static const phnVal = 9;
 
   static final String delete_address = 'AppCustomer/DeleteCustomerAddress';
 }

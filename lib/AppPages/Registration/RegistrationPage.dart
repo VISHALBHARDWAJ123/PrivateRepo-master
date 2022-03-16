@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -370,7 +368,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                 size: 20,
                                                 onTap: (selected) {
                                                   setState(() {
-                                                    print('Tera kaam  bngya');
+
                                                     passError
                                                         ? passError = selected!
                                                         : passError = selected!;
@@ -443,7 +441,7 @@ class _RegstrationPageState extends State<RegstrationPage>
                                                   size: 20,
                                                   onTap: (selected) {
                                                     setState(() {
-                                                      print('Tera kaam  bngya');
+
                                                       cpError
                                                           ? cpError = selected!
                                                           : cpError = selected!;
@@ -556,19 +554,18 @@ class _RegstrationPageState extends State<RegstrationPage>
                                         BuildConfig.uaeCountryCode + phnNumber,
                                     'Newsletter': false,
                                   };
-                                  print(pController.text);
-                                  String jsonString = jsonEncode(regBody);
-                                  ConstantsVar.prefs
-                                      .setString('regBody', jsonString)
-                                      .then(
-                                        (val) => Navigator.push(
+
+                                  
+
+
+                                       Navigator.push(
                                           context,
                                           CupertinoPageRoute(
                                             builder: (context) =>
                                                 VerificationScreen2(
                                               phoneNumber: phnNumbe,
                                               email: eController.text,
-                                              password: cpController.text,
+                                              password: cpController.text, registerBody: regBody,
                                             )
                                             // OTP_Screen(
                                             // title: 'OTP SCREEN',
@@ -580,8 +577,8 @@ class _RegstrationPageState extends State<RegstrationPage>
                                             // password: cpController.text)
                                             ,
                                           ),
-                                        ),
-                                      );
+                                        ) ;
+
                                 }
                               },
                               color: ConstantsVar.appColor,
@@ -664,7 +661,7 @@ class _RegstrationPageState extends State<RegstrationPage>
               style: linkStyle,
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  print('Privacy Policy"');
+
                   ApiCalls.launchUrl(
                       'https://www.theone.com/privacy-policy-uae');
                 }),

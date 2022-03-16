@@ -9,16 +9,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
 // import 'package:facebook_event/facebook_event.dart';
 // import 'dart:convert';
 import 'package:freerasp/talsec_app.dart';
-// import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
+
 // import '../LoginScreen/LoginScreen.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled2/AppPages/HomeScreen/HomeScreen.dart';
+
 // import 'package:untitled2/AppPages/SplashScreen/GuestxxResponsexx/GuestResponsexx.dart';
 import 'package:untitled2/AppPages/SplashScreen/TokenResponse/TokenxxResponsexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
@@ -56,13 +59,8 @@ class _SplashScreenState extends State<SplashScreen>
       // If the system can show an authorization request dialog
       if (await AppTrackingTransparency.trackingAuthorizationStatus ==
           TrackingStatus.notDetermined) {
-        // Show a custom explainer dialog before the system dialog
-        if (await showCustomTrackingDialog(context)) {
-          // Wait for dialog popping animation
-          await Future.delayed(const Duration(milliseconds: 200));
-          // Request system's tracking authorization dialog
-          await AppTrackingTransparency.requestTrackingAuthorization();
-        }
+        // Request system's tracking authorization dialog
+        await AppTrackingTransparency.requestTrackingAuthorization();
       }
     } on PlatformException {
       // Unexpected exception was thrown
@@ -78,9 +76,8 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    // WidgetsBinding.instance!.addPostFrameCallback((_) => initPlugin());
     initSecurityState().whenComplete(() {
-      WidgetsBinding.instance!.addPostFrameCallback((_) => initPlugin());
-
       animationController = new AnimationController(
           vsync: this, duration: new Duration(seconds: 3));
       animation = new CurvedAnimation(
@@ -272,14 +269,9 @@ class _SplashScreenState extends State<SplashScreen>
 
       // If the system can show an authorization request dialog
       if (status == TrackingStatus.notDetermined) {
+        await AppTrackingTransparency.requestTrackingAuthorization();
         // Show a custom explainer dialog before the system dialog
-        if (await showCustomTrackingDialog(context)) {
-          // Wait for dialog popping animation
-          await Future.delayed(const Duration(milliseconds: 200));
-          // Request system's tracking authorization dialog
-          final TrackingStatus status =
-              await AppTrackingTransparency.requestTrackingAuthorization();
-        }
+
       }
     } on PlatformException {
       Fluttertoast.showToast(msg: 'Something went wrong');
@@ -291,13 +283,19 @@ class _SplashScreenState extends State<SplashScreen>
   //   print('Android Hash Key'+hashKey!);
   // }
   Future<void> initSecurityState() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     print('init security');
-                                  if(await FlutterJailbreakDetection.developerMode){
-                                    Fluttertoast.showToast(
-                                        msg:
-                                        'Developer Mode is on. Cannot run this app on this device.')
-                                        .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
-                                  }
+    if (await FlutterJailbreakDetection.developerMode) {
+      ApiCalls.sendAnalytics(
+              map: {'device_information': deviceInfoPlugin.deviceInfo},
+              eventName: 'developer_mode')
+          .whenComplete(() => Fluttertoast.showToast(
+                  msg:
+                      'Developer Mode is on. Cannot run this app on this device.')
+              .then((value) => Future.delayed(Duration(seconds: 2))
+                  .whenComplete(() => FirebaseCrashlytics.instance.crash())));
+    }
+
     /// Provide TalsecConfig your expected data and then use them in TalsecApp
     TalsecConfig config = TalsecConfig(
       /// For Android
@@ -319,55 +317,95 @@ class _SplashScreenState extends State<SplashScreen>
 
     TalsecCallback callback = TalsecCallback(
       /// For Android
-      androidCallback: AndroidCallback(onRootDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Your Device is rooted. Cannot run this app on this device.',
-                toastLength: Toast.LENGTH_LONG)
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash())) ;
+      androidCallback: AndroidCallback(onRootDetected: () async {
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'rooted_device')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Your Device is rooted. Cannot run this app on this device.',
+                    toastLength: Toast.LENGTH_LONG)
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onEmulatorDetected: () {
         print('Emulator detected');
-        Fluttertoast.showToast(
-                msg:
-                    'Your Device is an emulator. Cannot run this app on this device.')
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'emulator_device')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Your Device is an emulator. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onHookDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Hooking Process is detected. Cannot run this app on this device.')
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        print('Hooking detected');
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'hooking_detected')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Hooking Process is detected. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onTamperDetected: () {
-       }, onDeviceBindingDetected: () {
+        ApiCalls.sendAnalytics(map: {
+          'device_information': deviceInfoPlugin.deviceInfo,
+          'reason': 'may be developer mode is on.'
+        }, eventName: 'tamper_detection');
+      }, onDeviceBindingDetected: () {
         setState(() {});
       }, onUntrustedInstallationDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Untrusted Installation Source Detected. Cannot run this app on this device.')
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'untrusted_installation_source')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Untrusted Installation Source Detected. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }),
 
       /// For iOS
       iosCallback: IOScallback(onRuntimeManipulationDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Runtime Manipulation Detected. Cannot run this app on this device.')
-            .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'runtime_manipulation_detected')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Runtime Manipulation Detected. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onJailbreakDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Your Device is jailbreak. Cannot run this app on this device.')
-            .then((value) => Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'jailbreak_detected_on_this_device')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Your Device is jailbreak. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onSimulatorDetected: () {
-        Fluttertoast.showToast(
-                msg:
-                    'Your Device is a simulator. Cannot run this app on this device.')
-            .then((value) => Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'simulator_device')
+            .whenComplete(() => Fluttertoast.showToast(
+                    msg:
+                        'Your Device is a simulator. Cannot run this app on this device.')
+                .then((value) => Future.delayed(Duration(seconds: 2))
+                    .whenComplete(() => FirebaseCrashlytics.instance.crash())));
       }, onMissingSecureEnclaveDetected: () {
-//
-//        Fluttertoast.showToast(
-                //msg:
-            //       'Your Device is not enclave secure. Cannot run this app on this device.')
-          //  .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+        ApiCalls.sendAnalytics(
+                map: {'device_information': deviceInfoPlugin.deviceInfo},
+                eventName: 'secure_enclave_missing')
+            .whenComplete(
+          () => Fluttertoast.showToast(
+                  msg:
+                      'Your Device is not enclave secure. Cannot run this app on this device.')
+              .then(
+            (value) => Future.delayed(Duration(seconds: 2))
+                .whenComplete(() => FirebaseCrashlytics.instance.crash()),
+          ),
+        );
       }, onDeviceIdDetected: () {
         setState(() {});
       }),
@@ -378,9 +416,10 @@ class _SplashScreenState extends State<SplashScreen>
           _debuggerState = 'Detected';
           print('Debugging Enabled');
           Fluttertoast.showToast(
-              msg:
-              'Debugging Mode is on. Cannot run this app on this device.')
-              .then((value) =>Future.delayed(Duration(seconds:2)).whenComplete(() => FirebaseCrashlytics.instance.crash()));
+                  msg:
+                      'Debugging Mode is on. Cannot run this app on this device.')
+              .then((value) => Future.delayed(Duration(seconds: 2))
+                  .whenComplete(() => FirebaseCrashlytics.instance.crash()));
         });
       },
     );
