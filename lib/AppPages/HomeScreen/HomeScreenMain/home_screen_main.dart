@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -25,7 +27,6 @@ import 'package:untitled2/AppPages/THEOneAds/TheOneAdd.dart';
 import 'package:untitled2/AppPages/WebxxViewxx/TopicPagexx.dart';
 import 'package:untitled2/Constants/ConstantVariables.dart';
 import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
-
 // import 'package:untitled2/utils/ApiCalls/ApiCalls.dart';
 import 'package:untitled2/utils/NewIcons.dart';
 import 'package:untitled2/utils/models/homeresponse.dart';
@@ -34,7 +35,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import 'RecentlyViewedProductResponse.dart';
-import 'package:facebook_app_events/facebook_app_events.dart';
 
 class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
@@ -182,90 +182,93 @@ class _HomeScreenMainState extends State<HomeScreenMain>
           jsonDecode(response.body),
         );
 
-        if ((userId == null || userId == '') && isFirstTime == true) {
-          print('Guest user ');
-          /*Ads For Guest User for first time*/
-          showDialog(
-                  // barrierColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return AdsDialog(
-                      responseHtml: adsResponse.responseData,
-                    );
-                  },
-                  context: context)
-              .then((value) {
-            progressDialog.dismiss();
-          });
-          ConstantsVar.prefs.setBool('isFirstTime', false);
-        } else if ((userId == null || userId == '') && isFirstTime == false) {
-          /*Ads For Guest User when ads appeared already*/
-          print('Guest user after ads appear once $_previousTimeStamp');
-          if (_previousTimeStamp != '' && _previousTimeStamp != null) {
-            var _currentTimeStamp = DateTime.now();
+        if(adsResponse.active == true){
+          if ((userId == null || userId == '') && isFirstTime == true) {
+            print('Guest user ');
+            /*Ads For Guest User for first time*/
+            showDialog(
+                    // barrierColor: Colors.transparent,
+                    builder: (BuildContext context) {
+                      return AdsDialog(
+                        responseHtml: adsResponse.responseData,
+                      );
+                    },
+                    context: context)
+                .then((value) {
+              progressDialog.dismiss();
+            });
+            ConstantsVar.prefs.setBool('isFirstTime', false);
+          } else if ((userId == null || userId == '') && isFirstTime == false) {
+            /*Ads For Guest User when ads appeared already*/
+            print('Guest user after ads appear once $_previousTimeStamp');
+            if (_previousTimeStamp != '' && _previousTimeStamp != null) {
+              var _currentTimeStamp = DateTime.now();
 
-            if (adsResponse.active == true &&
-                adsResponse.status.contains('Success') &&
-                _currentTimeStamp
-                        .difference(DateTime.parse(_previousTimeStamp))
-                        .inHours >=
-                    adsResponse.intervalTime) {
-              showDialog(
-                      // barrierColor: Colors.transparent,
-                      builder: (BuildContext context) {
-                        return isVisibled
-                            ? Container()
-                            : AdsDialog(
-                                responseHtml: adsResponse.responseData,
-                              );
-                      },
-                      context: context)
-                  .then((value) {
-                progressDialog.dismiss();
-              });
-              print('TimeDifference:-');
+              if (adsResponse.active == true &&
+                  adsResponse.status.contains('Success') &&
+                  _currentTimeStamp
+                          .difference(DateTime.parse(_previousTimeStamp))
+                          .inHours >=
+                      adsResponse.intervalTime) {
+                showDialog(
+                        // barrierColor: Colors.transparent,
+                        builder: (BuildContext context) {
+                          return isVisibled
+                              ? Container()
+                              : AdsDialog(
+                                  responseHtml: adsResponse.responseData,
+                                );
+                        },
+                        context: context)
+                    .then((value) {
+                  progressDialog.dismiss();
+                });
+                print('TimeDifference:-');
+                ConstantsVar.prefs.setString(
+                    'previousTimeStamp', _currentTimeStamp.toIso8601String());
+              }
+            } else
+            {
+              print('Sorry Can\;t show popup now');
+              print('Guest user after ads appear once but no time stamp');
               ConstantsVar.prefs.setString(
-                  'previousTimeStamp', _currentTimeStamp.toIso8601String());
+                  'previousTimeStamp', DateTime.now().toIso8601String());
             }
           } else {
-            print('Sorry Can\;t show popup now');
-            print('Guest user after ads appear once but no time stamp');
-            ConstantsVar.prefs.setString(
-                'previousTimeStamp', DateTime.now().toIso8601String());
-          }
-        } else {
-          /*Ads For Login User*/
-          print('Logged in  user ');
-          if (_previousTimeStamp != '' && _previousTimeStamp != null) {
-            var _currentTimeStamp = DateTime.now();
+            /*Ads For Login User*/
+            print('Logged in  user ');
+            if (_previousTimeStamp != '' && _previousTimeStamp != null) {
+              var _currentTimeStamp = DateTime.now();
 
-            if (adsResponse.active == true &&
-                adsResponse.status.contains('Success') &&
-                _currentTimeStamp
-                        .difference(DateTime.parse(_previousTimeStamp))
-                        .inHours >=
-                    adsResponse.intervalTime) {
-              showDialog(
-                      // barrierColor: Colors.transparent,
-                      builder: (BuildContext context) {
-                        return isVisibled
-                            ? Container()
-                            : AdsDialog(
-                                responseHtml: adsResponse.responseData,
-                              );
-                      },
-                      context: context)
-                  .then((value) {
-                progressDialog.dismiss();
-              });
-              print('TimeDifference:-');
+              if (adsResponse.active == true &&
+                  adsResponse.status.contains('Success') &&
+                  _currentTimeStamp
+                          .difference(DateTime.parse(_previousTimeStamp))
+                          .inHours >=
+                      adsResponse.intervalTime) {
+                showDialog(
+                        // barrierColor: Colors.transparent,
+                        builder: (BuildContext context) {
+                          return isVisibled
+                              ? Container()
+                              : AdsDialog(
+                                  responseHtml: adsResponse.responseData,
+                                );
+                        },
+                        context: context)
+                    .then((value) {
+                  progressDialog.dismiss();
+                });
+                print('TimeDifference:-');
+                ConstantsVar.prefs.setString(
+                    'previousTimeStamp', _currentTimeStamp.toIso8601String());
+              }
+            } else {
+              print('Sorry Can\;t show popup now');
+
               ConstantsVar.prefs.setString(
-                  'previousTimeStamp', _currentTimeStamp.toIso8601String());
+                  'previousTimeStamp', DateTime.now().toIso8601String());
             }
-          } else {
-            print('Sorry Can\;t show popup now');
-
-            ConstantsVar.prefs.setString(
-                'previousTimeStamp', DateTime.now().toIso8601String());
           }
         }
       });
